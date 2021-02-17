@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "pinstripejs.org",
+  "version": "0.5.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "deploy": "bash deploy.sh"
+  }
+}

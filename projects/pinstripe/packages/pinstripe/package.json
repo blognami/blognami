@@ -1,0 +1,14 @@
+{
+  "type": "module",
+  "name": "pinstripe",
+  "description": "Pinstripe - A fullstack web framework.",
+  "version": "0.5.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "bin": {
+    "pinstripe": "./cli.js"
+  },
+  "dependencies": {
+    "@pinstripe/core": "^0.5.0"
+  }
+}

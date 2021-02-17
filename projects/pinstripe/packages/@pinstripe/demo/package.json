@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@pinstripe/demo",
+  "version": "0.5.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "node-sass lib/static/stylesheets/style.scss lib/static/stylesheets/style.css",
+    "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
+    "watch": "nodemon -e js,scss --exec 'yarn start' --ignore pinstripe.js",
+    "clean": "rm -rf ./node_modules && rm -rf ./demo/public/javascripts",
+    "test": "yarn test:e2e",
+    "test:e2e": "yarn test:e2e:reset-database && yarn test:e2e:start-server-and-test",
+    "test:e2e:reset-database": "IS_LOCAL_PINSTRIPE=true pinstripe reset-database",
+    "test:e2e:start-server-and-test": "start-server-and-test 'yarn start' http://localhost:3000 'yarn cypress:run'",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run"
+  },
+  "dependencies": {
+    "pinstripe": "^0.5.0"
+  },
+  "devDependencies": {
+    "bulma": "^0.9.1",
+    "cypress": "^4.8.0",
+    "debug": "~2.6.9",
+    "faker": "^4.1.0",
+    "node-sass": "^4.14.1",
+    "nodemon": "^2.0.4",
+    "start-server-and-test": "^1.11.0"
+  },
+  "pinstripe": {
+    "autoimport": true
+  }
+}

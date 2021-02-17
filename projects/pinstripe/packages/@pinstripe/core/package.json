@@ -1,0 +1,32 @@
+{
+  "type": "module",
+  "name": "@pinstripe/core",
+  "version": "0.5.0",
+  "main": "lib/index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "rollup --config",
+    "watch": "nodemon -e js,scss --exec 'yarn build && yarn start' --ignore pinstripe.js",
+    "clean": "rm -rf ./node_modules && rm -rf ./lib/static/javascripts/pinstripe.js*",
+    "test": "yarn test:unit",
+    "test:unit": "NODE_OPTIONS=--experimental-vm-modules jest lib"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "babel-jest": "^25.1.0",
+    "jest": "^26.6",
+    "ramda": "^0.27.0",
+    "rollup": "^2.0.2"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "co-body": "^6.1.0",
+    "mime-types": "^2.1.28",
+    "mysql": "^2.18.1",
+    "qs": "^6.9.4"
+  },
+  "pinstripe": {
+    "autoimport": true
+  }
+}

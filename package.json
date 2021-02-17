@@ -1,0 +1,23 @@
+{
+    "private": true,
+    "workspaces": [
+        "projects/pinstripe/packages/*",
+        "projects/pinstripe/packages/@pinstripe/*"
+    ],
+    "dependencies": {
+        "lerna": "^3.20.2",
+        "nodemon": "^2.0.2"
+    },
+    "scripts": {
+        "clean": "lerna run --parallel clean && rm -rf ./node_modules",
+        "build": "lerna run build",
+        "test": "yarn build && yarn test:unit && yarn test:e2e",
+        "test:unit": "lerna run test:unit --stream",
+        "test:e2e": "lerna run test:e2e --stream",
+        "prerelease": "yarn build",
+        "release": "lerna publish",
+        "start": "lerna run start --scope @pinstripe/demo --stream",
+        "watch": "nodemon  --exec 'yarn build && yarn start' --ignore pinstripe.js",
+        "deploy": "lerna run deploy --scope pinstripejs.org --stream"
+    }
+}

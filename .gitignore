@@ -1,0 +1,12 @@
+
+node_modules/
+.vscode/
+screenshots/
+build/
+*.log
+*.css
+*.css.map
+.DS_Store
+pinstripe.js
+pinstripe.js.map
+id_rsa
