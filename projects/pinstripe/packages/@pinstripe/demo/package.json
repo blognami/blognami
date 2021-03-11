@@ -28,8 +28,5 @@
     "node-sass": "^4.14.1",
     "nodemon": "^2.0.4",
     "start-server-and-test": "^1.11.0"
-  },
-  "pinstripe": {
-    "autoimport": true
   }
 }

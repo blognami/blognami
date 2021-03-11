@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import { Environment, importAll, project } from '@pinstripe/core';
+import { Environment, importAll, project, Command } from '@pinstripe/core';
 import { spawn } from 'child_process';
 
 (async () => {
-    const { mainPath, localPinstripePath } = await project;
+    const { mainPath, localPinstripePath, exists: projectExists, config: projectConfig } = await project;
     const { argv, env, execPath } = process;
     const args = argv.slice(2);
 
@@ -19,6 +19,17 @@ import { spawn } from 'child_process';
             await import(mainPath);
             await importAll();
         }
+
+        if(!projectExists || projectConfig?.workspaces){
+            Object.keys(Command.classes).forEach((commandName) => {
+                if(!['generate-project', 'list-commands'].includes(commandName)){
+                    Command.unregister(commandName);
+                }
+            })
+        } else {
+            Command.unregister('generate-project');
+        }
+
         Environment.new().run(...args);
     }
 })();
