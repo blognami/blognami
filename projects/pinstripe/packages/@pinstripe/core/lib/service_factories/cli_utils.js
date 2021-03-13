@@ -25,8 +25,8 @@ serviceFactory('cliUtils', ({ args: _args }) => {
     };
 
     const extractFields = () => extractArgs().map(arg => {
-        const matches = arg.match(/^(\*|)([^:]*)(:|)(.*)$/);
-        const mandatory = matches[1] == '*';
+        const matches = arg.match(/^(\^|)([^:]*)(:|)(.*)$/);
+        const mandatory = matches[1] == '^';
         const name = Inflector.camelize(matches[2]);
         const type =  matches[4] || 'string';
         return {
