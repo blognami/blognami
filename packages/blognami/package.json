@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "name": "blognami",
+  "version": "0.8.0",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf ./node_modules"
+  },
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "dependencies": {
+    "markdown-it": "^12.2.0",
+    "pinstripe": "^0.8.0"
+  }
+}
