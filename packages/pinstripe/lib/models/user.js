@@ -1,44 +1,44 @@
 import { hash, compare } from 'bcrypt';
 import { defineModel } from 'pinstripe';
 
-defineModel('user', ({ hasMany, mustNotBeBlank, mustBeAValidEmail, beforeValidation, props }) => {
-    hasMany('sessions');
+defineModel('user', {
+    meta(){
+        this.hasMany('sessions');
 
-    mustNotBeBlank('name');
-    mustNotBeBlank('email');
-    mustBeAValidEmail('email');
-    mustNotBeBlank('encryptedPassword');
+        this.mustNotBeBlank('name');
+        this.mustNotBeBlank('email');
+        this.mustBeAValidEmail('email');
+        this.mustNotBeBlank('encryptedPassword');
 
-    beforeValidation(async function(){
-        if(this.password){
-            this.encryptedPassword = await new Promise((resolve, reject) => {
-                hash(this.password, 10, (error, encryptedPassword) => {
-                    if(error){
-                        reject(error)
-                    } else {
-                        resolve(encryptedPassword)
-                    }
+        this.beforeValidation(async function(){
+            if(this.password){
+                this.encryptedPassword = await new Promise((resolve, reject) => {
+                    hash(this.password, 10, (error, encryptedPassword) => {
+                        if(error){
+                            reject(error)
+                        } else {
+                            resolve(encryptedPassword)
+                        }
+                    });
                 });
-            });
-        }
-    });
+            }
+        });
+    },
 
-    props({
-        initialize(...args){
-            this.constructor.parent.prototype.initialize.call(this, ...args);
-            this.password = null;
-        },
+    initialize(...args){
+        this.constructor.parent.prototype.initialize.call(this, ...args);
+        this.password = null;
+    },
 
-        comparePassword(password){
-            return new Promise((resolve, reject) => {
-                compare(password, this.encryptedPassword, (error, isEqual) => {
-                    if(error){
-                        reject(error);
-                    } else {
-                        resolve(isEqual);
-                    }
-                });
+    comparePassword(password){
+        return new Promise((resolve, reject) => {
+            compare(password, this.encryptedPassword, (error, isEqual) => {
+                if(error){
+                    reject(error);
+                } else {
+                    resolve(isEqual);
+                }
             });
-        }
-    });
+        });
+    }
 });

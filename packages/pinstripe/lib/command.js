@@ -3,6 +3,7 @@ import { Base } from './base.js';
 import { Registrable } from './registrable.js';
 import { dasherize } from './inflector.js';
 import { overload } from './overload.js';
+import { thatify } from './thatify.js';
 
 export const Command = Base.extend().open(Class => Class
     .include(Registrable)
@@ -17,14 +18,6 @@ export const Command = Base.extend().open(Class => Class
     .staticProps({
         run(name = 'list-commands', ...args){
             return this.create(name, ...args).run();
-        },
-
-        define(name, fn){
-            return this.register(name).props({
-                run(){
-                    return fn(this);
-                }
-            });
         }
     })
     .props({
@@ -44,11 +37,11 @@ export const Command = Base.extend().open(Class => Class
 
 
 export const defineCommand = overload({
+    ['string, object'](name, include){
+        Command.register(name).include(include);
+    },
+
     ['string, function'](name, fn){
-        Command.register(name).props({
-            run(){
-                return fn(this);
-            }
-        });
+        defineCommand(name, { run: thatify(fn) });
     }
 });

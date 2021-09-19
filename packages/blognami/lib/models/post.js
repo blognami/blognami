@@ -3,11 +3,13 @@ import { defineModel } from 'pinstripe';
 
 import { Pageable } from './pageable.js';
 
-defineModel('post', ({ include, belongsTo, mustNotBeBlank }) => {
-    include(Pageable);
+defineModel('post', {
+    meta(){
+        this.include(Pageable);
 
-    belongsTo('user');
+        this.belongsTo('user');
 
-    mustNotBeBlank('userId');
-    mustNotBeBlank('title');
+        this.mustNotBeBlank('userId');
+        this.mustNotBeBlank('title');
+    }
 });

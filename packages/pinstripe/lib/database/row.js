@@ -74,10 +74,6 @@ export const Row = Base.extend().open(Class => Class
                 }
             })
             return this;
-        },
-
-        define(name){
-            return this.register(name);
         }
     })
     .props({
@@ -225,23 +221,7 @@ export const Row = Base.extend().open(Class => Class
 const includes = {};
 
 export const defineModel = overload({
-    ['string, function'](name, fn){
-        const Class = Row.register(name);
-
-        const dsl = {
-            include(fn){
-                fn(dsl)
-            }
-        };
-        [
-            'hasMany', 'hasOne', 'belongsTo',
-            'beforeValidation', 'beforeInsert', 'beforeUpdate', 'beforeInsertOrUpdate',
-            'mustNotBeBlank', 'mustMatchPattern', 'mustBeAValidEmail',
-            'canBe', 'props'
-        ].forEach(name => {
-            dsl[name] = (...args) => Class[name](...args);
-        });
-
-        fn(dsl);
+    ['string, object'](name, include){
+        Row.register(name).include(include);
     }
 });

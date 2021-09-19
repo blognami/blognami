@@ -6,14 +6,6 @@ export const Renderable = Class => (Class
     .staticProps({
         render(...args){
             return this.create(...args).render();
-        },
-
-        define(name, fn){
-            return this.register(name).props({
-                render(){
-                    return fn(this);
-                }
-            });
         }
     })
     .props({

@@ -28,13 +28,13 @@ defineCommand('generate-model', async ({
 
         await generateFile(`lib/models/${name}.js`, () => {
             line();
-            line(`import { Model } from 'pinstripe';`);
+            line(`import { defineModel } from 'pinstripe';`);
             line();
-            line(`Model.define('${name}').open(Class => Class`);
+            line(`defineModel('${name}', {`);
             indent(() => {
                 line();
             });
-            line(');');
+            line('});');
             line();
         });
 

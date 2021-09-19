@@ -24,9 +24,9 @@ defineCommand('generate-migration', async ({
 
         await generateFile(`lib/migrations/${name}.js`, () => {
             line();
-            line(`import { Migration } from 'pinstripe';`);
+            line(`import { defineMigration } from 'pinstripe';`);
             line();
-            line(`Migration.define('${name}', async ({ database }) => {`);
+            line(`defineMigration('${name}', async ({ database }) => {`);
             indent(() => {
                 line();
                 if(table && fields.length){

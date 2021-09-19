@@ -4,6 +4,7 @@ import { Registrable } from './registrable.js';
 import { AsyncPathBuilder } from './async_path_builder.js';
 import { camelize } from './inflector.js';
 import { overload } from './overload.js';
+import { thatify } from './thatify.js';
 
 export const ServiceFactory = Base.extend().open(Class => Class
     .include(Registrable)
@@ -37,7 +38,7 @@ export const ServiceFactory = Base.extend().open(Class => Class
         },
         
         create(){
-
+            return this;
         },
 
         __getMissing(name){
@@ -47,17 +48,11 @@ export const ServiceFactory = Base.extend().open(Class => Class
 );
 
 export const defineService = overload({
-    ['string, object, function'](name, options, fn){
-        const { scope = 'current' } = options;
-
-        ServiceFactory.register(name).staticProps({ scope }).props({
-            create(){
-                return fn(this.environment);
-            }
-        });
+    ['string, object'](name, include){
+        ServiceFactory.register(name).include(include);
     },
 
     ['string, function'](name, fn){
-        defineService(name, {}, fn);
+        defineService(name, { create: thatify(fn) });
     }
 });

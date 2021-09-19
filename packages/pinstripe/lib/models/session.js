@@ -1,10 +1,11 @@
 
 import { defineModel } from 'pinstripe';
 
-defineModel('session', ({ belongsTo, mustNotBeBlank }) => {
-    belongsTo('user')
+defineModel('session', {
+    meta(){
+        this.belongsTo('user')
 
-    mustNotBeBlank('passString')
-    mustNotBeBlank('userId')
-
+        this.mustNotBeBlank('passString')
+        this.mustNotBeBlank('userId')
+    }
 });

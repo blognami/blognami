@@ -19,7 +19,10 @@ export class Base {
     }
 
     static include(...args){
-        this.open(...args);
+        args.forEach(({ meta = () => {}, ...props }) => {
+            this.props(props);
+            this.open(meta);
+        });
         return this;
     }
 

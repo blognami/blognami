@@ -3,6 +3,7 @@
 import { Base } from '../base.js';
 import { Registrable } from '../registrable.js';
 import { overload } from '../overload.js';
+import { thatify } from '../thatify.js';
 
 export const Migration = Base.extend().open(Class => Class
     .include(Registrable)
@@ -26,14 +27,6 @@ export const Migration = Base.extend().open(Class => Class
                 return parseInt(matches[0]);
             }
             return 0;
-        },
-
-        define(name, fn){
-            return this.register(name).props({
-                migrate(){
-                    return fn(this);
-                }
-            });
         }
     })
     .props({
@@ -52,11 +45,11 @@ export const Migration = Base.extend().open(Class => Class
 );
 
 export const defineMigration = overload({
+    ['string, object'](name, include){
+        Migration.register(name).include(include);
+    },
+
     ['string, function'](name, fn){
-        Migration.register(name).props({
-            migrate(){
-                return fn(this);
-            }
-        });
+        defineMigration(name, { migrate: thatify(fn) });
     }
 });

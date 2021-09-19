@@ -16,9 +16,9 @@ defineCommand('generate-widget', async ({
 
         await generateFile(`lib/widgets/${name}.js`, () => {
             line();
-            line(`import { Widget } from 'pinstripe';`);
+            line(`import { defineWidget } from 'pinstripe';`);
             line();
-            line(`Widget.define('${name}').props({`);
+            line(`defineWidget('${name}', {`);
             indent(() => {
                 line();
             });
