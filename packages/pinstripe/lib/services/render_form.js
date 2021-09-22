@@ -152,7 +152,12 @@ const createObjectFormAdapter = object => {
     const submitTitle = object.submitTitle || title;
     const cancelTitle = object.cancelTitle || 'Cancel';
     const success = object.success || (() => {});
-    const model = Base.extend().include(Validatable).open(object.model || (() => {})).new();
+    const model = Base.extend().include({
+        meta(){
+            this.include(Validatable);
+            this.include(object.model || {});
+        }
+    }).new();
 
     return {
         title, fields, submitTitle, cancelTitle, success,

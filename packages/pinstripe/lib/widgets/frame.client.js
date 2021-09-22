@@ -3,7 +3,7 @@ import { Widget } from 'pinstripe';
 
 import { Url } from '../url.js';
 
-export const Frame = Widget.register('frame').props({
+export const Frame = Widget.register('frame').include({
     get url(){
         if(this._url === undefined){
             this._url = Url.fromString(

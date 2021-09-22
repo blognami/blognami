@@ -1,11 +1,15 @@
 
 import { Frame } from './frame.client.js';
 
-function selector(){
-    return this.type == '#document';
-}
+Frame.register('document').include({
+    meta(){
+        this.assignProps({
+            selector(){
+                return this.type == '#document';
+            }
+        });
+    },
 
-Frame.register('document').staticProps({ selector }).props({
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 

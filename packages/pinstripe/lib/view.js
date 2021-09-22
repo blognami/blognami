@@ -5,7 +5,7 @@ import { Renderable } from './renderable.js';
 import { overload } from './overload.js';
 import { thatify } from './thatify.js';
 
-export const View = Base.extend().open(Renderable);
+export const View = Base.extend().include(Renderable);
 
 export const defineView = overload({
     ['string, object'](name, include){

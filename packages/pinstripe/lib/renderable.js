@@ -1,24 +1,25 @@
 
 import { Registrable } from './registrable.js';
 
-export const Renderable = Class => (Class
-    .include(Registrable)
-    .staticProps({
-        render(...args){
-            return this.create(...args).render();
-        }
-    })
-    .props({
-        initialize(environment){
-            this.environment = environment;
-        },
+export const Renderable = {
+    meta(){
+        this.include(Registrable)
+        this.assignProps({
+            render(...args){
+                return this.create(...args).render();
+            }
+        });
+    },
 
-        render(){
-            
-        },
+    initialize(environment){
+        this.environment = environment;
+    },
 
-        __getMissing(name){
-            return this.environment[name];
-        }
-    })
-);
+    render(){
+        
+    },
+
+    __getMissing(name){
+        return this.environment[name];
+    }
+};

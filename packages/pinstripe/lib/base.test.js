@@ -2,7 +2,7 @@
 import { Base } from './base.js';
 
 test(`Base - initialize won't call magic methods`, async () => {
-    const fixture = Base.extend().props({
+    const fixture = Base.extend().include({
         initialize(){
             this.foo = 'bar';
         },
@@ -17,7 +17,7 @@ test(`Base - initialize won't call magic methods`, async () => {
 });
 
 test('Base - magic methods should callable from getters', async () => {
-    const fixture = Base.extend().props({
+    const fixture = Base.extend().include({
         get foo(){
             return this.bar;
         },
@@ -32,7 +32,7 @@ test('Base - magic methods should callable from getters', async () => {
 });
 
 test(`Base - properties starting with an underscore won't invoke a magic method`, async () => {
-    const fixture = Base.extend().props({
+    const fixture = Base.extend().include({
         get foo(){
             if(!this._foo){
                 this._foo = 'bar';
@@ -54,7 +54,7 @@ test(`Base - properties starting with an underscore won't invoke a magic method`
 });
 
 test(`Base - if the __call has been defined getting/setting still works`, async () => {
-    const fixture = Base.extend().props({
+    const fixture = Base.extend().include({
         initialize(){
             this.foo = "bar";
         },

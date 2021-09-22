@@ -1,7 +1,11 @@
 
 import { Widget } from 'pinstripe';
 
-Widget.register('progress-bar').staticProps({ selector: '#p-progress-bar' }).props({
+Widget.register('progress-bar').include({
+    meta(){
+        this.assignProps({ selector: '#p-progress-bar' });
+    },
+
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
         this.width = 0;

@@ -1,26 +1,24 @@
 
 import { Base } from './base.js';
 
-export const AsyncPathBuilder = Base.extend().open(Class => Class
-    .props({
-        initialize(startObject, path = []){
-            this._startObject = startObject;
-            this._path = path;
-        },
+export const AsyncPathBuilder = Base.extend().include({
+    initialize(startObject, path = []){
+        this._startObject = startObject;
+        this._path = path;
+    },
 
-        __getMissing(name){
-            return new this.constructor(this._startObject, [...this._path, name ]);
-        },
+    __getMissing(name){
+        return new this.constructor(this._startObject, [...this._path, name ]);
+    },
 
-        __call(...args){
-            return new this.constructor(this._startObject, [...this._path, args ]);
-        },
+    __call(...args){
+        return new this.constructor(this._startObject, [...this._path, args ]);
+    },
 
-        then(...args){
-            return unwrap(this._startObject, [...this._path]).then(...args);
-        }
-    })
-);
+    then(...args){
+        return unwrap(this._startObject, [...this._path]).then(...args);
+    }
+});
 
 const unwrap = async (startObject, path) => {
     let out = await startObject;

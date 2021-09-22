@@ -1,7 +1,11 @@
 
 import { Widget } from 'pinstripe';
 
-Widget.register('input').staticProps({ selector: 'input, textarea, .p-input' }).props({
+Widget.register('input').include({
+    meta(){
+        this.assignProps({ selector: 'input, textarea, .p-input' });
+    },
+
     get name(){
         return this.attributes.name;
     },

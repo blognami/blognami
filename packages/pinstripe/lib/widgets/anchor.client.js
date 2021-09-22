@@ -3,7 +3,12 @@ import { Widget } from 'pinstripe';
 
 import { Url } from '../url.js';
 
-Widget.register('anchor').staticProps({ selector: 'a, .p-anchor' }).props({
+Widget.register('anchor').include({
+
+    meta(){
+        this.assignProps({ selector: 'a, .p-anchor' });
+    },
+
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 

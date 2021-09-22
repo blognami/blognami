@@ -6,7 +6,7 @@ export const Validatable = {
     meta(){
         this.include(Hookable)
         this.hooks('validateWith', 'beforeValidation', 'afterValidation')
-        this.staticProps({
+        this.assignProps({
             mustNotBeBlank(name, options = {}){
                 const { message = 'Must not be blank' } = options;
                 return this.validateWith(validateable => {

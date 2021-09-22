@@ -3,7 +3,11 @@ import { Widget } from 'pinstripe';
 
 import { Url } from '../url.js';
 
-Widget.register('form').staticProps({ selector: 'form, .p-form' }).props({
+Widget.register('form').include({
+    meta(){
+        this.assignProps({ selector: 'form, .p-form' })
+    },
+
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 

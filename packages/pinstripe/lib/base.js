@@ -3,25 +3,16 @@ import { getAllProps } from './get_all_props.js';
 
 export class Base {
 
-    static open(fn){
-        fn.call(this, this);
-        return this;
-    }
-
-    static staticProps(...args){
-        assignProps(this, ...args);
-        return this;
-    }
-
-    static props(...args){
-        assignProps(this.prototype, ...args);
-        return this;
+    static assignProps(...args){
+        return assignProps(this, ...args);
     }
 
     static include(...args){
-        args.forEach(({ meta = () => {}, ...props }) => {
-            this.props(props);
-            this.open(meta);
+        args.forEach(arg => {
+            this.prototype.assignProps(arg, name => name != 'meta');
+            if(typeof arg.meta == 'function'){
+                arg.meta.call(this);
+            }
         });
         return this;
     }
@@ -48,6 +39,10 @@ export class Base {
 
     initialize(){
         
+    }
+
+    assignProps(...args){
+        return assignProps(this, ...args);
     }
 
     get __proxy(){
@@ -107,8 +102,13 @@ export class Base {
 };
 
 const assignProps = (target, ...sources) => {
+    const fn = typeof sources[sources.length - 1] == 'function' ?  sources.pop() :  () => true;
+
     sources.forEach(source => {
         Object.getOwnPropertyNames(source).forEach(name => {
+            if(!fn(name)){
+                return;
+            }
             const descriptor = { ...Object.getOwnPropertyDescriptor(source, name) };
             const { get } = descriptor;
             if(get){

@@ -4,7 +4,7 @@ import { Renderable } from './renderable.js';
 import { overload  } from './overload.js';
 import { thatify } from './thatify.js';
 
-export const Controller = Base.extend().open(Renderable);
+export const Controller = Base.extend().include(Renderable);
 
 export const defineController = overload({
     ['string, object'](name, include){

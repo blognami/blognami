@@ -1,7 +1,7 @@
 
 import { Frame } from './frame.client.js';
 
-Frame.register('modal').props({
+Frame.register('modal').include({
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
