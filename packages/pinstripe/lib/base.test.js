@@ -66,3 +66,31 @@ test(`Base - if the __call has been defined getting/setting still works`, async 
 
     expect(fixture.foo).toBe("bar");
 })
+
+test(`Base - classes can be included in other classes`, () => {
+    const Foo = Base.extend().include({
+        fruit(){
+            return 'apple';
+        }
+    });
+    const Bar = Base.extend().include(Foo);
+
+    expect(Foo.new().fruit()).toBe('apple');
+    expect(Bar.new().fruit()).toBe('apple');
+});
+
+test(`Base - abstract classes can be included in other classes`, () => {
+    const Foo = Base.extend().include({
+        abstract: true,
+
+        fruit(){
+            return 'apple';
+        }
+    });
+    const Bar = Base.extend().include(Foo);
+    const Baz = Base.extend().include(Bar);
+
+    expect(typeof Foo.new().fruit).toBe('undefined');
+    expect(Bar.new().fruit()).toBe('apple');
+    expect(Baz.new().fruit()).toBe('apple');
+});

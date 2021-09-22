@@ -7,13 +7,34 @@ export class Base {
         return assignProps(this, ...args);
     }
 
+    static get includes(){
+        if(!this.hasOwnProperty('_includes')){
+            this._includes = [];
+        }
+        return this._includes;
+    }
+
     static include(...args){
         args.forEach(arg => {
-            this.prototype.assignProps(arg, name => name != 'meta');
-            if(typeof arg.meta == 'function'){
-                arg.meta.call(this);
+            if(typeof arg.prototype == 'object' && arg.prototype instanceof Base){
+                this.include(...arg.includes);
+                return;
+            }
+
+            if(arg.abstract){
+                this.abstract = true;
+            }
+
+            this.includes.push(assignProps({}, arg, name => name != 'abstract'));
+
+            if(!this.abstract){
+                this.prototype.assignProps(arg, name => !name.match(/^abstract|meta$/));
+                if(typeof arg.meta == 'function'){
+                    arg.meta.call(this);
+                }
             }
         });
+
         return this;
     }
 

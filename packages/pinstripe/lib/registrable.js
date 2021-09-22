@@ -6,19 +6,10 @@ export const Registrable = {
         this.assignProps({
             classes: {},
 
-            get includes(){
-                if(!this.hasOwnProperty('includes')){
-                    this._includes = [];
-                }
-                return this._includes;
-            },
-
             include(...args){
                 args.forEach(arg => {
-                    if(this.abstract){
-                        this.includes.push(...args);
-                    } else if(typeof arg == 'string'){
-                        this.include(...this.for(arg).includes);
+                    if(typeof arg == 'string'){
+                        this.include(this.for(arg));
                     } else {
                         include.call(this, arg);
                     }
