@@ -8,7 +8,9 @@ export const Controller = Base.extend().include(Renderable);
 
 export const defineController = overload({
     ['string, object'](name, include){
-        Controller.register(name).include(include);
+        const abstract = include.abstract;
+        delete include.abstract;
+        Controller.register(name, abstract).include(include);
     },
 
     ['string, function'](name, fn){

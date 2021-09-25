@@ -1,7 +1,7 @@
 
 import { defineCommand } from 'pinstripe';
 
-defineCommand('reset-database', async ({ rundefineCommand }) => {
-    await rundefineCommand('drop-database');
-    await rundefineCommand('init-database');
+defineCommand('reset-database', async ({ runCommand }) => {
+    await runCommand('drop-database');
+    await runCommand('init-database');
 });

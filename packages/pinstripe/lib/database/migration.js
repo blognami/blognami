@@ -43,7 +43,9 @@ export const Migration = Base.extend().include({
 
 export const defineMigration = overload({
     ['string, object'](name, include){
-        Migration.register(name).include(include);
+        const abstract = include.abstract;
+        delete include.abstract;
+        Migration.register(name, abstract).include(include);
     },
 
     ['string, function'](name, fn){

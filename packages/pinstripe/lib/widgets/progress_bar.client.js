@@ -1,7 +1,7 @@
 
-import { Widget } from 'pinstripe';
+import { defineWidget } from 'pinstripe';
 
-Widget.register('progress-bar').include({
+defineWidget('progress-bar', {
     meta(){
         this.assignProps({ selector: '#p-progress-bar' });
     },

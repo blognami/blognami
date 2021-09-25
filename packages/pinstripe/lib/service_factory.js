@@ -48,7 +48,9 @@ export const ServiceFactory = Base.extend().include({
 
 export const defineService = overload({
     ['string, object'](name, include){
-        ServiceFactory.register(name).include(include);
+        const abstract = include.abstract;
+        delete include.abstract;
+        ServiceFactory.register(name, abstract).include(include);
     },
 
     ['string, function'](name, fn){

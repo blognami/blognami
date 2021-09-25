@@ -1,6 +1,6 @@
 
 import { Base } from './base.js';
-import { Registrable } from './registrable.js';
+import { Registrable, initializeRegistries } from './registrable.js';
 import { camelize, pascalize, dasherize } from './inflector.js';
 import { VirtualNode } from './virtual_node.js';
 import { EventWrapper } from './event_wrapper.js';
@@ -50,6 +50,7 @@ export const NodeWrapper = Base.extend().include({
 
             instanceFor(node){
                 if(!node._nodeWrapper){
+                    initializeRegistries();
                     node._nodeWrapper = new NodeWrapper(node);
                     Object.values(this.classes).reverse().some((klass) => {
                         if(node._nodeWrapper.is(klass.selector)){
@@ -402,7 +403,9 @@ function insert(virtualNode, referenceChild, returnNodeWrapper = true){
 EventWrapper.NodeWrapper = NodeWrapper;
 
 export const defineWidget = overload({
-    ['name, object'](name, include){
-        NodeWrapper.register(name).include(include);
+    ['string, object'](name, include){
+        const abstract = include.abstract;
+        delete include.abstract;
+        NodeWrapper.register(name, abstract).include(include);
     }
 });

@@ -1,7 +1,7 @@
 
-import { Widget } from 'pinstripe';
+import { defineWidget } from 'pinstripe';
 
-Widget.register('script').include({
+defineWidget('script', {
     meta(){
         this.assignProps({ selector: 'script[type="pinstripe"]' })
     },

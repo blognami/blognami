@@ -1,9 +1,9 @@
 
-import { Widget } from 'pinstripe';
+import { defineWidget } from 'pinstripe';
 
 import { Url } from '../url.js';
 
-export const Frame = Widget.register('frame').include({
+defineWidget('frame', {
     get url(){
         if(this._url === undefined){
             this._url = Url.fromString(

@@ -1,7 +1,7 @@
 
-import { Widget } from 'pinstripe';
+import { defineWidget } from 'pinstripe';
 
-Widget.register('input').include({
+defineWidget('input', {
     meta(){
         this.assignProps({ selector: 'input, textarea, .p-input' });
     },

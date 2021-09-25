@@ -26,9 +26,11 @@ export const Row = Base.extend().include({
         const { register } = this;
 
         this.assignProps({
-            register(name){
-                const out = register.call(this, name);
-                out.tableClass = Table.register(Inflector.pluralize(name));
+            register(name, ...args){
+                const out = register.call(this, name, ...args);
+                if(!this.abstract){
+                    out.tableClass = Table.register(Inflector.pluralize(name));
+                }
                 return out;
             },
 
@@ -219,6 +221,8 @@ export const Row = Base.extend().include({
 
 export const defineModel = overload({
     ['string, object'](name, include){
-        Row.register(name).include(include);
+        const abstract = include.abstract;
+        delete include.abstract;
+        Row.register(name, abstract).include(include);
     }
 });

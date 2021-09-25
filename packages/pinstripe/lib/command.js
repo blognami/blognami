@@ -38,7 +38,9 @@ export const Command = Base.extend().include({
 
 export const defineCommand = overload({
     ['string, object'](name, include){
-        Command.register(name).include(include);
+        const abstract = include.abstract;
+        delete include.abstract;
+        Command.register(name, abstract).include(include);
     },
 
     ['string, function'](name, fn){

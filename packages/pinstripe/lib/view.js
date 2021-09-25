@@ -9,7 +9,9 @@ export const View = Base.extend().include(Renderable);
 
 export const defineView = overload({
     ['string, object'](name, include){
-        View.register(name).include(include);
+        const abstract = include.abstract;
+        delete include.abstract;
+        View.register(name, abstract).include(include);
     },
 
     ['string, function'](name, fn){

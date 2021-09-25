@@ -1,7 +1,9 @@
 
-import { dasherize } from 'pinstripe';
+import { defineModel, dasherize } from 'pinstripe';
 
-export const Pageable = {
+defineModel('pageable', {
+    abstract: true,
+
     meta(){
         this.canBe('pageable');
 
@@ -28,4 +30,4 @@ export const Pageable = {
         }
         return out;
     }
-};
+});

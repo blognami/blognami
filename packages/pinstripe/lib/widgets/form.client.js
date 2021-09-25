@@ -1,9 +1,9 @@
 
-import { Widget } from 'pinstripe';
+import { defineWidget } from 'pinstripe';
 
 import { Url } from '../url.js';
 
-Widget.register('form').include({
+defineWidget('form', {
     meta(){
         this.assignProps({ selector: 'form, .p-form' })
     },

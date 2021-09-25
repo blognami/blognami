@@ -1,9 +1,9 @@
 
-import { Widget } from 'pinstripe';
+import { defineWidget } from 'pinstripe';
 
 import { Url } from '../url.js';
 
-Widget.register('anchor').include({
+defineWidget('anchor', {
 
     meta(){
         this.assignProps({ selector: 'a, .p-anchor' });

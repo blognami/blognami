@@ -6,7 +6,7 @@ defineCommand('generate-model', async ({
     fsBuilder: { inProjectRootDir, generateFile, line, indent },
     snakeify, pluralize, camelize,
     database,
-    rundefineCommand
+    runCommand
 }) => {
     const name = snakeify(extractArg(''));
     if(name == ''){
@@ -21,7 +21,7 @@ defineCommand('generate-model', async ({
         const denormalizedFields = fields.map(({ mandatory, name, type }) => {
             return `${ mandatory ? '^' : '' }${name}:${type}`
         });
-        await rundefineCommand('generate-migration', `create_${name}`, ...denormalizedFields, '--table', collectionName)
+        await runCommand('generate-migration', `create_${name}`, ...denormalizedFields, '--table', collectionName)
     }
 
     await inProjectRootDir(async () => {

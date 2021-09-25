@@ -1,9 +1,13 @@
 
-import { Frame } from './frame.client.js';
+import { defineWidget } from 'pinstripe';
 
-Frame.register('modal').include({
+defineWidget('modal', {
+    meta(){
+        this.include('frame');
+    },
+
     initialize(...args){
-        this.constructor.parent.prototype.initialize.call(this, ...args);
+        this.constructor.classes.frame.prototype.initialize.call(this, ...args);
 
         this.on('click', '.p-modal, .p-close', (event) => {
             event.stopPropagation();

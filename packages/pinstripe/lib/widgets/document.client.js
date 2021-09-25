@@ -1,8 +1,10 @@
 
-import { Frame } from './frame.client.js';
+import { defineWidget } from 'pinstripe';
 
-Frame.register('document').include({
+defineWidget('document', {
     meta(){
+        this.include('frame');
+        
         this.assignProps({
             selector(){
                 return this.type == '#document';
@@ -11,7 +13,7 @@ Frame.register('document').include({
     },
 
     initialize(...args){
-        this.constructor.parent.prototype.initialize.call(this, ...args);
+        this.constructor.classes.frame.prototype.initialize.call(this, ...args);
 
         window.onpopstate = (event) => {
             this.load({ _url: event.state || window.location }, true);
@@ -28,7 +30,7 @@ Frame.register('document').include({
 
     load(params = {}, replace = false){
         const previousUrl = this.url.toString();
-        this.constructor.parent.prototype.load.call(this, params);
+        this.constructor.classes.frame.prototype.load.call(this, params);
         if(params._method == 'GET' && previousUrl != this.url.toString()){
             if(replace){
                 history.replaceState(this.url.toString(), null, this.url.toString());
