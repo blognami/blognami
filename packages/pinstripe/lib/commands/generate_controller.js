@@ -16,16 +16,12 @@ defineCommand('generate-controller', async ({
     }
 
     await inProjectRootDir(async () => {
-        
-        await generateFile(`lib/web/_importer.js`, { skipIfExists: true }, () => {
-            line();
-            line(`export { webImporter as default } from 'pinstripe';`);
-            line();
-        });
 
-        await generateFile(`lib/web/${name}`, () => {
+        await generateFile(`lib/controllers/${name}`, () => {
             line();
-            line('export default ({ params, renderView, renderHtml }) => renderView({');
+            line(`import { defineController } from 'pinstripe';`);
+            line();
+            line('defineController(({ params, renderView, renderHtml }) => renderView({');
             indent(() => {
                 line(`title: '${name} controller',`);
                 line('body: renderHtml\`');
