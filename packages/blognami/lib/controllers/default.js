@@ -12,11 +12,12 @@ defineController('default', async ({ params: { _path: path }, pageables, session
 
         const isSignedIn = user !== undefined;
 
-        return renderView('layout', {
+        return renderView(`pageables/${pageable.constructor.name}`, {
+            layout: true,
             title: pageable.title,
+            pageable,
             isSignedIn,
-            user,
-            body: renderView(`pageables/${pageable.constructor.name}`, { pageable, isSignedIn, user })
+            user 
         });
     }
 });

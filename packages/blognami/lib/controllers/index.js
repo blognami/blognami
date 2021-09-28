@@ -19,10 +19,12 @@ defineController('index', async ({ session, renderView, database, params }) => {
     
     const posts = await database.posts.paginate(page, pageSize).all();
 
-    return renderView('layout', {
+    return renderView('index', {
+        layout: true,
         title: 'Blognami',
         isSignedIn: user !== undefined,
         user,
-        body: renderView('index', { posts, pagination })
+        posts,
+        pagination
     });
 });
