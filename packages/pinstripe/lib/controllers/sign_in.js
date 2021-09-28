@@ -7,7 +7,7 @@ if(!crypto.randomUUID){
     crypto.randomUUID = uuid.v4;
 }
 
-defineController('sign_in', async ({ renderForm, database, renderHtml }) => renderForm({
+defineController('sign_in', async ({ renderForm, database, renderScript }) => renderForm({
     title: 'Sign In',
     fields: ['email', { name: 'password', type: 'password' }],
     model: {
@@ -34,9 +34,7 @@ defineController('sign_in', async ({ renderForm, database, renderHtml }) => rend
             passString
         });
         
-        const [ status, headers, body ] = await renderHtml`
-            ${() => this.document.load()}
-        `.toResponseArray();
+        const [ status, headers, body ] = await renderScript(() => this.document.load()).toResponseArray();
 
         headers['Set-Cookie'] = `pinstripeSession=${session.id}:${passString}`;
 

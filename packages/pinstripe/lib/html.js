@@ -29,7 +29,7 @@ export const Html = Base.extend().include({
                     return this.resolveValue(value.toHtml());
                 }
                 if(typeof value == 'function'){
-                    return this.new(`<script type="pinstripe">\n(${value})();</script>`);
+                    return this.resolveValue(value());
                 }
                 return this.escapeValue(value);
             },

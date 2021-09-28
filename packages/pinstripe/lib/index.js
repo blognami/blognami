@@ -18,7 +18,5 @@ export {
     pascalize,
     camelize
 } from './inflector.js';
-
-
-
-
+export { overload } from './overload.js';
+export { thatify } from './thatify.js';

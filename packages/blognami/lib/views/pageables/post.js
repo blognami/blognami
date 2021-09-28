@@ -6,7 +6,7 @@ defineView('pageables/post', ({ renderHtml, renderMarkdown, params: { pageable, 
         <h1 class="title">${pageable.title}</h1>
         ${renderMarkdown(pageable.body)}
     </div>
-    ${(() => {
+    ${() => {
         if(isSignedIn){
             return renderHtml`
                 <div>
@@ -16,5 +16,5 @@ defineView('pageables/post', ({ renderHtml, renderMarkdown, params: { pageable, 
                 </div>
             `;
         }
-    })()}
+    }}
 `);

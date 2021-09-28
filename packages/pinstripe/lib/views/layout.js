@@ -12,7 +12,7 @@ defineView('layout', async ({ params: { title, body, isSignedIn, user }, renderH
         <body>
             <nav class="navbar" role="navigation" aria-label="main navigation">        
                 <div class="navbar-menu">
-                ${(() => {
+                ${() => {
                     if(isSignedIn){
                         return renderHtml`
                             <div class="navbar-start">
@@ -22,12 +22,12 @@ defineView('layout', async ({ params: { title, body, isSignedIn, user }, renderH
                             </div>
                         `;
                     }
-                })()}
+                }}
                     
                     <div class="navbar-end">
                         <div class="navbar-item">
                             <div class="buttons">
-                                ${(() => {
+                                ${() => {
                                     if(isSignedIn){
                                         return renderHtml`
                                             <a class="button is-primary" href="/sign_out" target="_modal">
@@ -40,7 +40,7 @@ defineView('layout', async ({ params: { title, body, isSignedIn, user }, renderH
                                             <strong>Sign in</strong>
                                         </a>
                                     `;
-                                })()}
+                                }}
                                 
                             </div>
                         </div>

@@ -5,7 +5,7 @@ import { capitalize } from '../inflector.js';
 import { Base } from '../base.js';
 import { Validatable } from '../validatable.js';
 
-defineService('renderForm', ({ params, renderHtml }) => {
+defineService('renderForm', ({ params, renderHtml, renderScript }) => {
     return async (formAdaptable, options = {}) => {
         const formAdapter = await (typeof formAdaptable.toFormAdapter == 'function' ? formAdaptable.toFormAdapter() : createObjectFormAdapter(formAdaptable));
         
@@ -17,9 +17,7 @@ defineService('renderForm', ({ params, renderHtml }) => {
         const errors = {};
         if(params._method == 'POST'){
             try {
-                return await formAdapter.submit(values) || renderHtml`
-                    ${() => this.frame.frame.load()}
-                `;
+                return await formAdapter.submit(values) || renderScript(() => this.frame.frame.load());
             } catch(e){
                 if(!(e instanceof ValidationError)){
                     throw e;
@@ -61,7 +59,7 @@ defineService('renderForm', ({ params, renderHtml }) => {
                             <button type="button" class="p-close delete" aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
-                            ${(() => {
+                            ${() => {
                                 if(otherErrors.length){
                                     return renderHtml`
                                         <div class="field">
@@ -71,7 +69,7 @@ defineService('renderForm', ({ params, renderHtml }) => {
                                         </div>
                                     `
                                 }
-                            })()}
+                            }}
                             ${fields.map(({ label, name, type, value, error }) => {
                                 if(type == 'hidden'){
                                     return renderHtml`
@@ -82,7 +80,7 @@ defineService('renderForm', ({ params, renderHtml }) => {
                                     <div class="field">
                                         <label class="label">${label}</label>
                                         <div class="control">
-                                            ${(() => {
+                                            ${() => {
                                                 if(type == 'textarea'){
                                                     return renderHtml`
                                                         <textarea class="textarea${error ? ' is-danger' : ''}" name="${name}">${value}</textarea>
@@ -91,15 +89,15 @@ defineService('renderForm', ({ params, renderHtml }) => {
                                                 return renderHtml`
                                                     <input class="input${error ? ' is-danger' : ''}" name="${name}" type="${type}" value="${value}">
                                                 ` 
-                                            })()}
+                                            }}
                                         </div>
-                                        ${(() => {
+                                        ${() => {
                                             if(error){
                                                 return renderHtml`
                                                     <p class="help is-danger">${error}</p>
                                                 `
                                             }
-                                        })()}
+                                        }}
                                     </div>
                                 `;
                             })}
