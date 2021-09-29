@@ -11,17 +11,13 @@ defineCommand('generate-controller', async ({
         process.exit();
     }
 
-    if(!name.match(/\.[^\/]+$/)){
-        name = `${name}.js`;
-    }
-
     await inProjectRootDir(async () => {
 
-        await generateFile(`lib/controllers/${name}`, () => {
+        await generateFile(`lib/controllers/${name}.js`, () => {
             line();
             line(`import { defineController } from 'pinstripe';`);
             line();
-            line('defineController(({ params, renderView, renderHtml }) => renderView({');
+            line(`defineController('${name}', ({ params, renderView, renderHtml }) => renderView('${name}', {`);
             indent(() => {
                 line(`title: '${name} controller',`);
                 line('body: renderHtml\`');
