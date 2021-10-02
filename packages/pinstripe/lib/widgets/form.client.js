@@ -4,10 +4,6 @@ import { defineWidget } from 'pinstripe';
 import { Url } from '../url.js';
 
 defineWidget('form', {
-    meta(){
-        this.assignProps({ selector: 'form, .p-form' })
-    },
-
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 

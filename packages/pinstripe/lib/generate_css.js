@@ -1,6 +1,6 @@
 
 export const generateCss = (animationDuration = 300) => `
-    #p-progress-bar {
+    .p-progress-bar {
         position: fixed;
         display: block;
         top: 0;
@@ -10,7 +10,7 @@ export const generateCss = (animationDuration = 300) => `
         z-index: 100000;
     }
 
-    #p-progress-bar > div {
+    .p-progress-bar > div {
         position: fixed;
         display: block;
         top: 0;

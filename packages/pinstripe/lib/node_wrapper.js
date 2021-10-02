@@ -41,23 +41,14 @@ export const NodeWrapper = Base.extend().include({
                 return out;
             },
 
-            get selector(){
-                if(!this.hasOwnProperty('_selector')){
-                    this._selector = `.p-${this.name}`;
-                }
-                return this._selector;
-            },
-
             instanceFor(node){
                 if(!node._nodeWrapper){
                     initializeRegistries();
-                    node._nodeWrapper = new NodeWrapper(node);
-                    Object.values(this.classes).reverse().some((klass) => {
-                        if(node._nodeWrapper.is(klass.selector)){
-                            node._nodeWrapper = new klass(node);
-                            return true;
-                        }
-                    });
+                    node._nodeWrapper = NodeWrapper.new(node);
+                    const widget = node._nodeWrapper.type == '#document' ? 'document' : node._nodeWrapper.attributes['data-widget'];
+                    if(widget){
+                        node._nodeWrapper = NodeWrapper.create(widget, node);
+                    }
                 }
                 return node._nodeWrapper;
             }
@@ -276,7 +267,7 @@ function cleanChildren(){
 }
 
 function clean(){
-    if(this.is('#p-progress-bar')){
+    if(this.is('*[data-widget="progress-bar"]')){
         return;
     }
 
@@ -310,6 +301,9 @@ function prepend(html, referenceChild){
 }
 
 function patch(attributes, virtualChildren){
+    if(this.is('*[data-widget="progress-bar"]')){
+        return;
+    }
     patchAttributes.call(this, attributes);
     patchChildren.call(this, virtualChildren);
 }

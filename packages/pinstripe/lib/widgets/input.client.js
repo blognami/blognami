@@ -2,10 +2,6 @@
 import { defineWidget } from 'pinstripe';
 
 defineWidget('input', {
-    meta(){
-        this.assignProps({ selector: 'input, textarea, .p-input' });
-    },
-
     get name(){
         return this.attributes.name;
     },

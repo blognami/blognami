@@ -4,11 +4,6 @@ import { defineWidget } from 'pinstripe';
 import { Url } from '../url.js';
 
 defineWidget('anchor', {
-
-    meta(){
-        this.assignProps({ selector: 'a, .p-anchor' });
-    },
-
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -23,7 +18,7 @@ defineWidget('anchor', {
                 if(!confirm || window.confirm(confirm)){
                     if(target == '_modal'){
                         this.document.find('html').pop().addClass('p-clip');
-                        this.document.find('body').pop().append(`<div class="p-modal" data-url="${this.url}"></div>`).forEach((modal) => {
+                        this.document.find('body').pop().append(`<div class="p-modal" data-widget="modal" data-url="${this.url}"></div>`).forEach((modal) => {
                             modal._parent = this;
                             modal.load();
                         })

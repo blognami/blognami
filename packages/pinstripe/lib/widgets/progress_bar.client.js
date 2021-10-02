@@ -2,14 +2,11 @@
 import { defineWidget } from 'pinstripe';
 
 defineWidget('progress-bar', {
-    meta(){
-        this.assignProps({ selector: '#p-progress-bar' });
-    },
-
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
         this.width = 0;
         this.startCount = 0;
+        this.addClass('p-progress-bar');
         this.patch('');
     },
 

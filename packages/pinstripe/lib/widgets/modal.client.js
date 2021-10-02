@@ -8,6 +8,7 @@ defineWidget('modal', {
 
     initialize(...args){
         this.constructor.classes.frame.prototype.initialize.call(this, ...args);
+        this.addClass('p-modal');
 
         this.on('click', '.p-modal, .p-close', (event) => {
             event.stopPropagation();

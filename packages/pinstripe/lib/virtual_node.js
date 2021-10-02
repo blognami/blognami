@@ -31,6 +31,14 @@ const CloseTag = Base.extend().include({
     }
 });
 
+const DEFAULT_WIDGETS = {
+    a: 'anchor',
+    form: 'form',
+    input: 'input',
+    textarea: 'input',
+    script: 'script'
+};
+
 export const VirtualNode = Base.extend().include({
     meta(){
         this.assignProps({
@@ -164,7 +172,7 @@ export const VirtualNode = Base.extend().include({
         }
 
         if(this.type == 'body'){
-            const progressBar = new this.constructor(this, 'div', {id: 'p-progress-bar'})
+            const progressBar = new this.constructor(this, 'div', {['data-widget']: 'progress-bar'})
             this.children = [
                 progressBar,
                 ...this.children
@@ -182,6 +190,13 @@ export const VirtualNode = Base.extend().include({
 
         if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
             this.attributes.value = this.attributes.value.replace(/^\n/, '');
+        }
+
+        if(!this.attributes['data-widget']){
+            const widget = DEFAULT_WIDGETS[this.type];
+            if(widget){
+                this.attributes['data-widget'] = widget;
+            }
         }
 
         this.children.forEach(child => child.normalize());

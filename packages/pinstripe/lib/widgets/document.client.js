@@ -4,12 +4,6 @@ import { defineWidget } from 'pinstripe';
 defineWidget('document', {
     meta(){
         this.include('frame');
-        
-        this.assignProps({
-            selector(){
-                return this.type == '#document';
-            }
-        });
     },
 
     initialize(...args){
@@ -23,7 +17,7 @@ defineWidget('document', {
 
     get progressBar(){
         if(!this._progressBar){
-            this._progressBar = this.find('#p-progress-bar').pop()
+            this._progressBar = this.find('*[data-widget="progress-bar"]').pop()
         }
         return this._progressBar;
     },
