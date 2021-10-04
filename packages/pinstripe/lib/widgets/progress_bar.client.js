@@ -6,7 +6,6 @@ defineWidget('progress-bar', {
         this.constructor.parent.prototype.initialize.call(this, ...args);
         this.width = 0;
         this.startCount = 0;
-        this.addClass('p-progress-bar');
         this.patch('');
     },
 

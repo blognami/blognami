@@ -15,7 +15,7 @@ defineView('index', ({ renderHtml, params: { posts, pagination, isSignedIn } }) 
                                 class="delete"
                                 style="margin: 7px;"
                                 href="/delete_post?id=${id}"
-                                target="_modal"
+                                target="_overlay"
                                 data-confirm="Are you really sure you want to delete this post?"
                             ></a>
                         `;

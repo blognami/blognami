@@ -16,11 +16,11 @@ defineWidget('anchor', {
                 const target = this.attributes['target'] || this.attributes['data-target'] || '_top';
 
                 if(!confirm || window.confirm(confirm)){
-                    if(target == '_modal'){
+                    if(target == '_overlay'){
                         this.document.find('html').pop().addClass('p-clip');
-                        this.document.find('body').pop().append(`<div class="p-modal" data-widget="modal" data-url="${this.url}"></div>`).forEach((modal) => {
-                            modal._parent = this;
-                            modal.load();
+                        this.document.find('body').pop().append(`<div data-widget="overlay" data-url="${this.url}"></div>`).forEach((overlay) => {
+                            overlay._parent = this;
+                            overlay.load();
                         })
                     } else {
                         this.frame.load({ _method: method, _url: this.url });

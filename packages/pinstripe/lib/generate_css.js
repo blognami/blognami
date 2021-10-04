@@ -1,6 +1,6 @@
 
 export const generateCss = (animationDuration = 300) => `
-    .p-progress-bar {
+    *[data-widget="progress-bar"] {
         position: fixed;
         display: block;
         top: 0;
@@ -10,7 +10,7 @@ export const generateCss = (animationDuration = 300) => `
         z-index: 100000;
     }
 
-    .p-progress-bar > div {
+    *[data-widget="progress-bar"] > div {
         position: fixed;
         display: block;
         top: 0;
@@ -24,11 +24,11 @@ export const generateCss = (animationDuration = 300) => `
         transform: translate3d(0, 0, 0);
     }
 
-    .p-clip {
+    *[data-clipped="true"] {
         overflow: hidden !important;
     }
 
-    .p-modal {
+    *[data-widget="overlay"] {
         position: absolute;
         top: 0;
         left: 0;

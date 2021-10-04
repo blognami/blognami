@@ -30,13 +30,13 @@ defineView('layout', async ({ params: { title, body, isSignedIn, user }, renderH
                                 ${() => {
                                     if(isSignedIn){
                                         return renderHtml`
-                                            <a class="button is-primary" href="/sign_out" target="_modal">
+                                            <a class="button is-primary" href="/sign_out" target="_overlay">
                                                 <strong>Sign out</strong>
                                             </a>
                                         `;
                                     }
                                     return renderHtml`
-                                        <a class="button is-primary" href="/sign_in" target="_modal">
+                                        <a class="button is-primary" href="/sign_in" target="_overlay">
                                             <strong>Sign in</strong>
                                         </a>
                                     `;
