@@ -14,7 +14,7 @@ defineView('index', ({ renderHtml, params: { posts, pagination, isSignedIn } }) 
                             <a
                                 class="delete"
                                 style="margin: 7px;"
-                                href="/delete_post?id=${id}"
+                                href="/admin/delete_post?id=${id}"
                                 target="_overlay"
                                 data-confirm="Are you really sure you want to delete this post?"
                             ></a>

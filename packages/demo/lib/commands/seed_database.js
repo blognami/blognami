@@ -6,7 +6,8 @@ defineCommand('seed-database', async ({ users, posts }) => {
     const user = await users.insert({
         name: 'Admin',
         email: 'admin@example.com',
-        password: 'secret'
+        password: 'secret',
+        role: 'admin'
     });
 
     for(let i = 0; i < 101; i++){

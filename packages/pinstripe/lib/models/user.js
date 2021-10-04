@@ -23,6 +23,8 @@ defineModel('user', {
                 });
             }
         });
+
+        this.mustNotBeBlank('role');
     },
 
     initialize(...args){

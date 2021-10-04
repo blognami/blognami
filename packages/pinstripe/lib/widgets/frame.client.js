@@ -43,7 +43,7 @@ defineWidget('frame', {
         progressBar.start();
 
         this._request.onload = () => {
-            if (this._request.status >= 200 && this._request.status < 400) {
+            if (this._request.status >= 200 && this._request.status < 500) {
                 this.patch(this._request.response);
                 this.abort();
             }

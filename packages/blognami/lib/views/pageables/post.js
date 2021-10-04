@@ -10,7 +10,7 @@ defineView('pageables/post', ({ renderHtml, renderMarkdown, params: { pageable, 
         if(isSignedIn){
             return renderHtml`
                 <div>
-                    <a class="button is-primary" href="/edit_post?id=${pageable.id}" target="_overlay">
+                    <a class="button is-primary" href="/admin/edit_post?id=${pageable.id}" target="_overlay">
                         <strong>Edit</strong>
                     </a>
                 </div>
