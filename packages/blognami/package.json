@@ -5,10 +5,15 @@
   "author": "Jody Salt",
   "license": "MIT",
   "scripts": {
-    "clean": "rm -rf ./node_modules"
+    "clean": "rm -rf ./node_modules",
+    "build": "yarn build:css",
+    "build:css": "sass --load-path=../../node_modules/ blognami.scss lib/static/bundle.css"
   },
   "exports": {
     ".": "./lib/index.js"
+  },
+  "devDependencies": {
+    "sass": "^1.36.0"
   },
   "dependencies": {
     "markdown-it": "^12.2.0",
