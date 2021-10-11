@@ -4,21 +4,24 @@ import { defineWidget } from 'pinstripe';
 defineWidget('overlay', {
     meta(){
         this.include('frame');
-    },
 
-    initialize(...args){
-        this.constructor.classes.frame.prototype.initialize.call(this, ...args);
+        this.parent.prototype.assignProps({
+            isOverlay: false,
 
-        this.on('click', '.p-close', (event) => {
-            event.stopPropagation();
-            this.close();
+            get overlay(){
+                return this.parents.find(({ isOverlay }) => isOverlay);
+            }
         });
     },
 
     close(){
         this.remove();
-        if(!this.document.find('body').pop().children.filter((child) => child.is('*[data-widget="overlay"]')).length){
-            this.document.find('html').pop().removeClass('p-clip');
+        if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('*[data-widget="overlay"]')).length){
+            this.document.descendants.filter(node => node.is('html')).forEach(node => {
+                const { attributes } = node;
+                delete attributes['data-clipped'];
+                node.patch(attributes);
+            })
         }
     }
 });

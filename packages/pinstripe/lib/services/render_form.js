@@ -51,12 +51,12 @@ defineService('renderForm', ({ params, renderHtml, renderScript }) => {
 
         return renderHtml`
             <div class="modal is-active">
-                <div class="p-close modal-background"></div>
+                <div class="modal-background"></div>
                 <div class="modal-card">
                     <form method="post" enctype="multipart/form-data" autocomplete="off">
                         <header class="modal-card-head">
                             <p class="modal-card-title">${title}</p>
-                            <button type="button" class="p-close delete" aria-label="close"></button>
+                            <button type="button" class="delete" aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
                             ${() => {
@@ -104,10 +104,15 @@ defineService('renderForm', ({ params, renderHtml, renderScript }) => {
                         </section>
                         <footer class="modal-card-foot">
                             <button class="button is-success" type="submit">${submitTitle}</button>
-                            <button class="p-close button">${cancelTitle}</button>
+                            <button class="button">${cancelTitle}</button>
                         </footer>
                     </form>
                 </div>
+                ${renderScript(function(){
+                    this.parent.on('click', '.modal-background, .modal-close, .delete, .modal-card-foot > button:not(.is-success)', () => {
+                        this.frame.frame.load();
+                    });
+                })}
             </div>
         `;
     }

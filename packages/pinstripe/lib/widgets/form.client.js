@@ -1,5 +1,6 @@
 
 import { defineWidget } from 'pinstripe';
+import { is } from 'ramda';
 
 import { Url } from '../url.js';
 
@@ -15,7 +16,7 @@ defineWidget('form', {
         })
 
         this.setTimeout(() => {
-            isAutosubmit = this.attributes['data-autosubmit'] == true || this.find('input[type=submit], button[type=submit]').length == 0
+            isAutosubmit = this.attributes['data-autosubmit'] == true || this.descendants.filter(node => node.is('input[type=submit], button[type=submit]')).length == 0
             if(isAutosubmit){
                 let hash = JSON.stringify(this.params);
                 this.setInterval(() => {

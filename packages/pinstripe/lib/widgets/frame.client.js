@@ -4,6 +4,19 @@ import { defineWidget } from 'pinstripe';
 import { Url } from '../url.js';
 
 defineWidget('frame', {
+
+    meta(){
+        this.parent.prototype.assignProps({
+            isFrame: false,
+
+            get frame(){
+                return this.parents.find(({ isFrame }) => isFrame);
+            }
+        });
+    },
+
+    isFrame: true,
+
     get url(){
         if(this._url === undefined){
             this._url = Url.fromString(

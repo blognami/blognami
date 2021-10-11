@@ -1,10 +1,21 @@
 
 import { defineWidget } from 'pinstripe';
 
+// should be root (and attached to top html tag)?
 defineWidget('document', {
     meta(){
         this.include('frame');
+
+        this.parent.prototype.assignProps({
+            isDocument: false,
+
+            get document(){
+                return this.parents.find(({ isDocument }) => isDocument);
+            }
+        });
     },
+
+    isDocument: true,
 
     initialize(...args){
         this.constructor.classes.frame.prototype.initialize.call(this, ...args);
@@ -17,7 +28,7 @@ defineWidget('document', {
 
     get progressBar(){
         if(!this._progressBar){
-            this._progressBar = this.find('*[data-widget="progress-bar"]').pop()
+            this._progressBar = this.descendants.find(node => node.is('*[data-widget="document/progress-bar"]'));
         }
         return this._progressBar;
     },

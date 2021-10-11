@@ -2,28 +2,7 @@
 import { Base } from './base.js';
 import { unescapeHtml } from './unescape_html.js';
 import { StringReader } from './string_reader.js';
-import { generateCss } from './generate_css.js';
-
-const SELF_CLOSING_TAGS = [
-    'area',
-    'base',
-    'br',
-    'embed',
-    'hr',
-    'iframe',
-    'img',
-    'input',
-    'link',
-    'meta',
-    'param',
-    'source',
-    'track'
-];
-
-const TEXT_ONLY_TAGS = [
-    'script',
-    'style'
-];
+import { SELF_CLOSING_TAGS, TEXT_ONLY_TAGS, DEFAULT_WIDGETS } from './constants.js';
 
 const CloseTag = Base.extend().include({
     initialize(type){
@@ -31,13 +10,6 @@ const CloseTag = Base.extend().include({
     }
 });
 
-const DEFAULT_WIDGETS = {
-    a: 'anchor',
-    form: 'form',
-    input: 'input',
-    textarea: 'input',
-    script: 'script'
-};
 
 export const VirtualNode = Base.extend().include({
     meta(){
@@ -163,8 +135,7 @@ export const VirtualNode = Base.extend().include({
         }
 
         if(this.type == 'head'){
-            const style = new this.constructor(this, 'style')
-            style.appendNode('#text', { value: generateCss() })
+            const style = new this.constructor(this, 'style', {'data-widget': 'document/style'})
             this.children = [
                 style,
                 ...this.children
@@ -172,7 +143,7 @@ export const VirtualNode = Base.extend().include({
         }
 
         if(this.type == 'body'){
-            const progressBar = new this.constructor(this, 'div', {['data-widget']: 'progress-bar'})
+            const progressBar = new this.constructor(this, 'div', {'data-widget': 'document/progress-bar'})
             this.children = [
                 progressBar,
                 ...this.children

@@ -1,7 +1,7 @@
 
 import { defineWidget } from 'pinstripe';
 
-defineWidget('progress-bar', {
+defineWidget('document/progress-bar', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
         this.width = 0;

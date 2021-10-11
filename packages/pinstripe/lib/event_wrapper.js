@@ -6,26 +6,26 @@ export const EventWrapper = Base.extend().include({
         this.assignProps({
             instanceFor(event){
                 if(!event._eventWrapper){
-                    event._eventWrapper = new this(event)
+                    event._eventWrapper = this.new(event);
                 }
-                return event._eventWrapper
+                return event._eventWrapper;
             }
         })
     },
     
     initialize(event){
-        this.event = event
+        this.event = event;
     },
 
     get target(){
-        return EventWrapper.NodeWrapper.instanceFor(this.event.target)
+        return EventWrapper.NodeWrapper.instanceFor(this.event.target);
     },
 
     stopPropagation(){
-        this.event.stopPropagation()
+        this.event.stopPropagation();
     },
 
     preventDefault(){
-        this.event.preventDefault()
+        this.event.preventDefault();
     }
 });

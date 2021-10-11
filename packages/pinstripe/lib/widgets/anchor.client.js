@@ -17,8 +17,13 @@ defineWidget('anchor', {
 
                 if(!confirm || window.confirm(confirm)){
                     if(target == '_overlay'){
-                        this.document.find('html').pop().addClass('p-clip');
-                        this.document.find('body').pop().append(`<div data-widget="overlay" data-url="${this.url}"></div>`).forEach((overlay) => {
+                        this.document.descendants.filter(node => node.is('html')).forEach(node => {
+                            node.patch({
+                                ...node.attributes,
+                                'data-clipped': 'true'
+                            });
+                        });
+                        this.document.descendants.find(node => node.is('body')).append(`<div data-widget="overlay" data-url="${this.url}"></div>`).forEach((overlay) => {
                             overlay._parent = this;
                             overlay.load();
                         })

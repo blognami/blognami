@@ -1,10 +1,11 @@
 
 import { Base } from './base.js';
 import { Registrable, initializeRegistries } from './registrable.js';
-import { camelize, pascalize, dasherize } from './inflector.js';
+import { dasherize, camelize } from './inflector.js';
 import { VirtualNode } from './virtual_node.js';
 import { EventWrapper } from './event_wrapper.js';
 import { overload } from './overload.js';
+import { TEXT_ONLY_TAGS } from './constants.js';
 
 export const NodeWrapper = Base.extend().include({
     meta(){
@@ -13,32 +14,7 @@ export const NodeWrapper = Base.extend().include({
         const { register } = this;
         this.assignProps({
             register(name){
-                const out = register.call(this, dasherize(name));
-                const identifierName = `is${pascalize(name)}`;
-
-                NodeWrapper.include({
-                    get [camelize(name)](){
-                        let current = this.parent;
-                        while(current){
-                            if(current[identifierName]){
-                                return current;
-                            }
-                            current = current.parent;
-                        }
-                    },
-
-                    get [identifierName](){
-                        return false;
-                    }
-                });
-
-                out.include({
-                    get [identifierName](){
-                        return true;
-                    }
-                });
-
-                return out;
+                return register.call(this, dasherize(name));
             },
 
             instanceFor(node){
@@ -75,6 +51,25 @@ export const NodeWrapper = Base.extend().include({
         return out;
     },
 
+    get data(){
+        const { attributes } = this;
+        const out = {};
+        Object.keys(attributes).forEach(name => {
+            const matches = name.match(/^data-(.+)$/);
+            if(!matches){
+                return;
+            }
+            const value = attributes[name];
+            const mappedName = camelize(matches[1]);
+            try {
+                out[mappedName] = JSON.parse(value);
+            } catch(e){
+                out[mappedName] = value;
+            }
+        })
+        return out;
+    },
+
     get text(){
         return this.node.textContent;
     },
@@ -84,18 +79,17 @@ export const NodeWrapper = Base.extend().include({
     },
 
     get parent(){
-        if(this._parent){
-            return this._parent;
-        }
-        return this.realParent;
+        return this._parent ? this._parent : this.realParent;
     },
 
     get parents(){
         const out = []
         let current = this
-        while(current.parent){
+        while(current){
             current = current.parent;
-            out.push(parent);
+            if(current){
+                out.push(current);
+            }
         }
         return out;
     },
@@ -151,16 +145,10 @@ export const NodeWrapper = Base.extend().include({
     },
 
     get descendants(){
-        return this.find(() => true);
-    },
-
-    find(selector, out = []){
-        this.children.forEach((child) => {
-            if(child.is(selector)){
-                out.push(child);
-            }
-            child.find(selector, out);
-        })
+        const out = this.children;
+        for(let i = 0; i < out.length; i++){
+            out.push(...out[i].children);
+        }
         return out;
     },
 
@@ -228,22 +216,23 @@ export const NodeWrapper = Base.extend().include({
         return this;
     },
 
-    addClass(name){
-        this.node.classList.add(name);
-        return this;
-    },
+    patch: overload({
+        string(html){
+            cleanChildren.call(this);
+            if(TEXT_ONLY_TAGS.includes(this.type)){
+                insert.call(this, { type: '#text', attributes: { value: html }, children: [] });
+            } else {
+                patchChildren.call(this, VirtualNode.fromString(html).children);
+            }
+            initChildren.call(this);
+            return this.children;
+        },
 
-    removeClass(name){
-        this.node.classList.remove(name);
-        return this;
-    },
-
-    patch(html){
-        cleanChildren.call(this);
-        patchChildren.call(this, VirtualNode.fromString(html).children);
-        initChildren.call(this);
-        return this.children;
-    },
+        object(attributes){
+            patchAttributes.call(this, attributes);
+            return this;
+        }
+    }),
 
     append(html){
         return prepend.call(this, html);
@@ -267,7 +256,7 @@ function cleanChildren(){
 }
 
 function clean(){
-    if(this.is('*[data-widget="progress-bar"]')){
+    if(this.is('*[data-widget="document/progress-bar"]')){
         return;
     }
 
@@ -294,14 +283,18 @@ function initChildren(){
 
 function prepend(html, referenceChild){
     const out = [];
-    VirtualNode.fromString(html).children.forEach((virtualChild) => {
-        out.push(insert.call(this, virtualChild, referenceChild));
-    })
+    if(TEXT_ONLY_TAGS.includes(this.type)){
+        out.push(insert.call(this, { type: '#text', attributes: { value: html }, children: [] }, referenceChild));
+    } else {
+        VirtualNode.fromString(html).children.forEach((virtualChild) => {
+            out.push(insert.call(this, virtualChild, referenceChild));
+        });
+    }
     return out;
 }
 
 function patch(attributes, virtualChildren){
-    if(this.is('*[data-widget="progress-bar"]')){
+    if(this.is('*[data-widget="document/progress-bar"]')){
         return;
     }
     patchAttributes.call(this, attributes);

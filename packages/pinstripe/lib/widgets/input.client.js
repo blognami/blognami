@@ -2,6 +2,14 @@
 import { defineWidget } from 'pinstripe';
 
 defineWidget('input', {
+    meta(){
+        this.parent.prototype.assignProps({
+            isInput: false
+        });
+    },
+
+    isInput: true,
+
     get name(){
         return this.attributes.name;
     },
