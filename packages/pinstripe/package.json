@@ -2,7 +2,7 @@
   "type": "module",
   "name": "pinstripe",
   "description": "Pinstripe is a fullstack JavaScript web framework for Node.js and the browser that follows the model-view-controller (MVC) design pattern.",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
