@@ -130,7 +130,16 @@ export const Database = Base.extend().include({
             }
 
             if(this._isInitialized){
-                console.log(`Query: ${query}\n`);
+                let sanitizedQuery = query;
+                if(!sanitizedQuery.match(/^select/)){
+                    if(sanitizedQuery.length > 1000){
+                        sanitizedQuery = `${sanitizedQuery.substr(0, 997)}...`
+                    }
+                    sanitizedQuery = sanitizedQuery.replace(/[^\x20-\x7E]/g, ' ');
+                    sanitizedQuery = sanitizedQuery.replace(/\s+/g, ' ');
+                }
+
+                console.log(`Query: ${sanitizedQuery}\n`);
             }
 
             this._connection.query(query, (error, rows) => {

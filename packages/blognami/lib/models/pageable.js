@@ -24,7 +24,7 @@ defineModel('pageable', {
     },
 
     generateCandidateSlug(n){
-        const out = dasherize(`${this.title || 'page'}`);
+        const out = dasherize(this.title);
         if(n > 1){
             return `${out}-${n}`;
         }

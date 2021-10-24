@@ -14,10 +14,12 @@ defineService('renderForm', ({ params, renderHtml, renderScript }) => {
             values[name] = params[name];
         });
 
+        const success = options.success || (() => {});
+
         const errors = {};
         if(params._method == 'POST'){
             try {
-                return await formAdapter.submit(values) || renderScript(() => this.frame.frame.load());
+                return await formAdapter.submit(values, success) || renderScript(() => this.frame.frame.load());
             } catch(e){
                 if(!(e instanceof ValidationError)){
                     throw e;
@@ -109,8 +111,10 @@ defineService('renderForm', ({ params, renderHtml, renderScript }) => {
                     </form>
                 </div>
                 ${renderScript(function(){
-                    this.parent.on('click', '.modal-background, .modal-close, .delete, .modal-card-foot > button:not(.is-success)', () => {
-                        this.frame.frame.load();
+                    this.parent.on('click', '.modal-background, .modal-close, .delete, .modal-card-foot > button:not(.is-success)', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.overlay.close();
                     });
                 })}
             </div>
@@ -163,12 +167,12 @@ const createObjectFormAdapter = object => {
     }).new();
 
     return {
-        title, fields, submitTitle, cancelTitle, success,
+        title, fields, submitTitle, cancelTitle,
         
-        async submit(values){
+        async submit(values, _success){
             Object.assign(model, values);
             await model.validate();
-            return this.success(model);
+            return _success(model) || success(model);
         }
     }
 };

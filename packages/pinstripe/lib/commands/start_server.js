@@ -6,6 +6,10 @@ const { parse: parseQueryString } = qs;
 
 import { defineCommand } from 'pinstripe';
 
+import { project } from '../project.js';
+import { writeFile } from 'fs';
+import { promisify } from 'util';
+
 defineCommand('start-server', async ({ fetch }) => {
     const host = process.env.HOST || '127.0.0.1';
     const port = process.env.PORT || 3000;
@@ -51,18 +55,27 @@ const parseBody = (request) => new Promise((resolve) => {
     const out = {};
     const busboy = new Busboy({ headers: request.headers });
 
-    busboy.on('file', function(fieldname, file, filename, encoding, mimetype) {
-        const buffer = [];
-        file.on('data', data => {
-            buffer.push(data);
+    busboy.on('file', function(fieldname, file, filename, encoding, mimeType) {
+        const chunks = [];
+
+        file.on('data', chunk => {
+            chunks.push(Buffer.from(chunk));
         });
+
         file.on('end', () => {
-            out[fieldname] = buffer.join('');
+            out[fieldname] = {
+                filename,
+                encoding,
+                mimeType,
+                data: Buffer.concat(chunks)
+            };
         });
     });
+
     busboy.on('field', (fieldname, value) => {
         out[fieldname] = value
     });
+
     busboy.on('finish', () => resolve(out));
 
     request.pipe(busboy);

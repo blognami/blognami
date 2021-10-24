@@ -99,7 +99,7 @@ export const Union = Base.extend().include({
         } else {
             out.push(`select * from `);
         }
-        out.push('(');
+        out.push('((');
         while(tables.length){
             const table = tables.shift();
             out.push(table._generateSelectSql({
@@ -111,7 +111,7 @@ export const Union = Base.extend().include({
                 out.push(') union all (');
             }
         }
-        out.push(') as `_union`');
+        out.push(')) as `_union`');
         if(this._limitSql.length) {
             out.push(this.sql` limit ${this._limitSql}`);
         }

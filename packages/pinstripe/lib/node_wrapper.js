@@ -216,6 +216,16 @@ export const NodeWrapper = Base.extend().include({
         return this;
     },
 
+    addClass(name){
+        this.node.classList.add(name);
+        return this;
+    },
+
+    removeClass(name){
+        this.node.classList.remove(name);
+        return this;
+    },
+
     patch: overload({
         string(html){
             cleanChildren.call(this);

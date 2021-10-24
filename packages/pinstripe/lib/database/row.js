@@ -141,13 +141,12 @@ export const Row = Base.extend().include({
 
         const submitTitle = 'Save Changes';
         const cancelTitle = 'Cancel';
-        const success = () => {};
 
         return {
-            title, fields, submitTitle, cancelTitle, success,
+            title, fields, submitTitle, cancelTitle,
             
-            submit: async (values) => {
-                await this.update(values);
+            submit: async (values, success) => {
+                return success(await this.update(values));
             }
         };
     },

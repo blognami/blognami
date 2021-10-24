@@ -17,7 +17,7 @@ defineCommand('generate-model', async ({
     const fields = extractFields();
 
     const collectionName = camelize(pluralize(name));
-    if(!await database[collectionName].exists){
+    if(!await database[collectionName].exists()){
         const denormalizedFields = fields.map(({ mandatory, name, type }) => {
             return `${ mandatory ? '^' : '' }${name}:${type}`
         });

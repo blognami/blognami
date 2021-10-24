@@ -17,7 +17,7 @@ defineController('default', async ({ params: { _path: path }, pageables, session
             title: pageable.title,
             pageable,
             isSignedIn,
-            user 
+            user
         });
     }
 });

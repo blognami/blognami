@@ -1,6 +1,5 @@
 
 import { defineWidget } from 'pinstripe';
-import { is } from 'ramda';
 
 import { Url } from '../url.js';
 

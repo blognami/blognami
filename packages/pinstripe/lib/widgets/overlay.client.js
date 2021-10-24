@@ -14,6 +14,8 @@ defineWidget('overlay', {
         });
     },
 
+    isOverlay: true,
+
     close(){
         this.remove();
         if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('*[data-widget="overlay"]')).length){

@@ -12,18 +12,17 @@ defineView('layout', async ({ params: { title, body, isSignedIn, user }, renderH
         <body>
             <nav class="navbar" role="navigation" aria-label="main navigation">        
                 <div class="navbar-menu">
-                ${() => {
-                    if(isSignedIn){
-                        return renderHtml`
-                            <div class="navbar-start">
-                                <div class="navbar-item">
-                                    Signed in as &quot;${user.name}&quot;
+                    ${() => {
+                        if(isSignedIn){
+                            return renderHtml`
+                                <div class="navbar-start">
+                                    <div class="navbar-item">
+                                        Signed in as &quot;${user.name}&quot;
+                                    </div>
                                 </div>
-                            </div>
-                        `;
-                    }
-                }}
-                    
+                            `;
+                        }
+                    }}
                     <div class="navbar-end">
                         <div class="navbar-item">
                             <div class="buttons">

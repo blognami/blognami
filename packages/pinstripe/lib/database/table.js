@@ -275,13 +275,12 @@ export const Table = Base.extend().include({
 
         const submitTitle = title;
         const cancelTitle = 'Cancel';
-        const success = () => {};
 
         return {
-            title, fields, submitTitle, cancelTitle, success,
+            title, fields, submitTitle, cancelTitle,
             
-            submit: async (values) => {
-                await this.insert(values);
+            submit: async (values, success) => {
+                return success(await this.insert(values));
             }
         };
     },

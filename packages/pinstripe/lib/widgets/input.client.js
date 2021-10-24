@@ -15,6 +15,9 @@ defineWidget('input', {
     },
     
     get value(){
+        if(this.is('input[type="file"]')){
+            return this.node.files[0];
+        }
         if(this.is('input[type="checkbox"], input[type="radio"]')){
             return this.is(':checked') ? this.node.value : undefined;
         }

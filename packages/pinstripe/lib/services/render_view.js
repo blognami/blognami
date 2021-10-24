@@ -9,7 +9,7 @@ defineService('renderView', ({ forkEnvironment }) => {
 
         const body = View.render(viewName, environment);
 
-        if(!environment.params.layout){
+        if(!environment.params.layout || Array.isArray(body)){
             return body;
         }
 
