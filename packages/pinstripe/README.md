@@ -3,7 +3,7 @@
 
 ## What is Pinstripe?
 
-Pinstripe is a fullstack JavaScript web framework for Node.js and the browser that follows the [model-view-controller (MVC)](https://en.wikipedia.org/wiki/Model-view-controller) design pattern.
+Pinstripe is a fullstack JavaScript web framework for Node.js.
 
 ## License
 

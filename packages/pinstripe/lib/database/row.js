@@ -38,7 +38,7 @@ export const Row = Base.extend().include({
                 this.tableClass.hasMany(name, ...args);
                 return this.include({
                     get [name](){
-                            return this._database[this.constructor.tableClass.name].idEq(this.id)[name];
+                        return this._database[this.constructor.tableClass.name].idEq(this.id)[name];
                     }
                 });
             },

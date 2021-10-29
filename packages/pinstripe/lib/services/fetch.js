@@ -2,29 +2,29 @@
 import { defineService } from 'pinstripe';
 
 defineService('fetch', ({ createEnvironment }) => {
-    return (_params = {}) => createEnvironment(async ({ environment, renderController }) => {
+    return (_params = {}) => createEnvironment(async ({ environment, renderView }) => {
         const params = normalizeParams(_params);
-        const controllerName = params._path.replace(/^\/|\/$/g, '');
+        const viewName = params._path.replace(/^\/|\/$/g, '');
 
         environment.params = params;
         
-        let out = await renderGuardControllers(renderController, controllerName, params);
+        let out = await renderGuardViews(renderView, viewName, params);
         if(out){
             return out;
         }
 
-        if(!controllerName.match(/(^|\/)_/)){
-            out = normalizeResponse(await renderController(controllerName != '' ? `${controllerName}/index`: 'index', params));
+        if(!viewName.match(/(^|\/)_/)){
+            out = normalizeResponse(await renderView(viewName != '' ? `${viewName}/index`: 'index', params));
             if(out){
                 return out;
             }
-            out = normalizeResponse(await renderController(controllerName, params));
+            out = normalizeResponse(await renderView(viewName, params));
             if(out){
                 return out;
             }
         }
         
-        out = await renderDefaultControllers(renderController, controllerName, params);
+        out = await renderDefaultViews(renderView, viewName, params);
         if(out){
             return out;
         }
@@ -33,25 +33,25 @@ defineService('fetch', ({ createEnvironment }) => {
     });
 });
 
-const renderGuardControllers = async (renderController, controllerName, params) => {
-    const controllerNameSegments = controllerName != '' ? controllerName.split(/\//) : [];
+const renderGuardViews = async (renderView, viewName, params) => {
+    const viewNameSegments = viewName != '' ? viewName.split(/\//) : [];
     const prefixSegments = [];
     while(true){
-        const out = normalizeResponse(await renderController(prefixSegments.length ? [...prefixSegments, 'guard'].join('/') : 'guard', params));
+        const out = normalizeResponse(await renderView(prefixSegments.length ? [...prefixSegments, 'guard'].join('/') : 'guard', params));
         if(out){
             return out;
         }
-        if(controllerNameSegments.length == 0){
+        if(viewNameSegments.length == 0){
             break;
         }
-        prefixSegments.push(controllerNameSegments.shift());
+        prefixSegments.push(viewNameSegments.shift());
     }
 }
 
-const renderDefaultControllers = async (renderController, controllerName,  params) => {
-    const prefixSegments = controllerName != '' ? controllerName.split(/\//) : [];
+const renderDefaultViews = async (renderView, viewName,  params) => {
+    const prefixSegments = viewName != '' ? viewName.split(/\//) : [];
     while(true){
-        const out = normalizeResponse(await renderController(prefixSegments.length ? [...prefixSegments, 'default'].join('/') : 'default', {
+        const out = normalizeResponse(await renderView(prefixSegments.length ? [...prefixSegments, 'default'].join('/') : 'default', {
             ...params,
             _pathOffset: params._path.substr(`/${prefixSegments.join('/')}`.length).replace(/^\//, '')
         }));

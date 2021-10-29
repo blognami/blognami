@@ -3,27 +3,18 @@ import { defineService } from 'pinstripe';
 
 import { View } from '../view.js';
 
-defineService('renderView', ({ forkEnvironment }) => {
+defineService('renderView', ({ forkEnvironment, view }) => {
     return (viewName, params = {}) => forkEnvironment(({ environment }) => {
-        environment.params = { ...params };
-
-        const body = View.render(viewName, environment);
-
-        if(!environment.params.layout || Array.isArray(body)){
-            return body;
-        }
-
-        environment.params.body = body;
-        
-        const segments = viewName.split(/\//);
+        const segments = view.constructor.name.split(/\//);
         while(segments.length){
-            segments[segments.length -  1] = 'layout';
-            const out = View.render(segments.join('/'), environment);
+            segments[segments.length -  1] = viewName;
+            environment.params = { ...params };
+            environment.view = View.create(segments.join('/'), environment);
+            const out = environment.view.render();
             if(out){
                 return out;
             }
             segments.pop();
         }
-
     });
 });

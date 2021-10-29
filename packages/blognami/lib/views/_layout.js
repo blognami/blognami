@@ -1,7 +1,7 @@
 
 import { defineView } from 'pinstripe';
 
-defineView('layout', async ({ params: { title, body, isSignedIn, user }, renderHtml }) => renderHtml`
+defineView('_layout', async ({ params: { title, body, isSignedIn, user }, renderHtml }) => renderHtml`
     <!DOCTYPE html>
     <html>
         <head>
@@ -29,6 +29,9 @@ defineView('layout', async ({ params: { title, body, isSignedIn, user }, renderH
                                 ${() => {
                                     if(isSignedIn){
                                         return renderHtml`
+                                            <a class="button is-primary" href="/admin/add_post?userId=${user.id}" target="_overlay">
+                                                <strong>Add</strong>
+                                            </a>
                                             <a class="button is-primary" href="/sign_out" target="_overlay">
                                                 <strong>Sign out</strong>
                                             </a>
@@ -40,6 +43,7 @@ defineView('layout', async ({ params: { title, body, isSignedIn, user }, renderH
                                         </a>
                                     `;
                                 }}
+                                
                             </div>
                         </div>
                     </div>

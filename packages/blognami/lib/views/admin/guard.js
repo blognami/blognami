@@ -1,7 +1,7 @@
 
-import { defineController } from 'pinstripe';
+import { defineView } from 'pinstripe';
 
-defineController('admin/guard', async ({ session, renderHtml, renderScript }) => {
+defineView('admin/guard', async ({ session, renderHtml, renderScript }) => {
     let user;
     if(await session){
         user = await session.user;

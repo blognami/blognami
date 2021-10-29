@@ -1,7 +1,7 @@
 
-import { defineController } from 'pinstripe';
+import { defineView } from 'pinstripe';
 
-defineController('sign_out', async ({ session, renderScript }) => {
+defineView('sign_out', async ({ session, renderScript }) => {
 
     if(await session){
         await session.delete();

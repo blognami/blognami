@@ -1,11 +1,32 @@
 
 
 import { Base } from './base.js';
-import { Renderable } from './renderable.js';
+import { Registrable } from './registrable.js';
 import { overload } from './overload.js';
 import { thatify } from './thatify.js';
 
-export const View = Base.extend().include(Renderable);
+export const View = Base.extend().include({
+    meta(){
+        this.include(Registrable)
+        this.assignProps({
+            render(...args){
+                return this.create(...args).render();
+            }
+        });
+    },
+
+    initialize(environment){
+        this.environment = environment;
+    },
+
+    render(){
+        
+    },
+
+    __getMissing(name){
+        return this.environment[name];
+    }
+});
 
 export const defineView = overload({
     ['string, object'](name, include){

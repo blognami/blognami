@@ -5,13 +5,13 @@ import { Volume } from 'memfs';
 import * as fs from 'fs';
 import { ufs } from 'unionfs';
 import webpack from 'webpack';
-import { defineController } from 'pinstripe';
+import { defineView } from 'pinstripe';
 
 import { imported } from '../import_all.js'; 
 
 let cache;
 
-defineController('bundle.js', async () => {
+defineView('bundle.js', async () => {
     if(!cache){
         const filePaths = Object.keys(imported);
         const files = {};

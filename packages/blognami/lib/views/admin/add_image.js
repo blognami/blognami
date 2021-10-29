@@ -1,7 +1,7 @@
 
-import { defineController } from 'pinstripe';
+import { defineView } from 'pinstripe';
 
-defineController('admin/add_image', ({ renderForm, images, renderHtml }) => renderForm(images, {
+defineView('admin/add_image', ({ renderForm, images, renderHtml }) => renderForm(images, {
     fields: [{ name: 'file', type: 'file' }],
 
     success(image){

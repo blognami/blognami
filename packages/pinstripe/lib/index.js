@@ -1,7 +1,6 @@
 
 export { importAll } from './import_all.js'; // pinstripe-if-client: export const importAll = () => {};
 export { defineCommand } from './command.js';
-export { defineController } from './controller.js';
 export { defineMigration } from './database/migration.js'; // pinstripe-if-client: export const defineMigration = undefined;
 export { defineModel } from './database/row.js';  // pinstripe-if-client: export const defineModel = undefined;
 export { defineWidget } from './node_wrapper.js';

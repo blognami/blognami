@@ -1,7 +1,7 @@
 
-import { defineController } from 'pinstripe';
+import { defineView } from 'pinstripe';
 
-defineController('admin/delete_post', async ({ params, renderScript, posts }) => {
+defineView('admin/delete_post', async ({ params, renderScript, posts }) => {
     const { id } = params;
 
     await posts.idEq(id).delete();

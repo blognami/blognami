@@ -3,7 +3,7 @@ import { readdir, stat } from 'fs';
 import { promisify } from 'util';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { defineController } from 'pinstripe';
+import { defineView } from 'pinstripe';
 
 export const imported = {};
 const importQueue = [];
@@ -65,7 +65,7 @@ const defaultImporter = async filePath => {
 
 const createStaticImporter = dirPath => async filePath => {
     const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
-    defineController(relativeFilePath, ({ renderFile }) => renderFile(filePath));
+    defineView(relativeFilePath, ({ renderFile }) => renderFile(filePath));
 };
 
 importAll(import.meta.url);
