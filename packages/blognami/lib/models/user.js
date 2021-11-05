@@ -1,8 +1,6 @@
 
-import { defineModel } from 'pinstripe';
-
-defineModel('user', {
+export default {
     meta(){
         this.hasMany('posts');
     }
-});
+};

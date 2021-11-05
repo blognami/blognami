@@ -4,6 +4,7 @@ import { Base } from '../base.js';
 import { Registrable } from '../registrable.js';
 import { overload } from '../overload.js';
 import { thatify } from '../thatify.js';
+import { addFileToClient } from '../client.js';
 
 export const Migration = Base.extend().include({
     meta(){
@@ -52,3 +53,22 @@ export const defineMigration = overload({
         defineMigration(name, { migrate: thatify(fn) });
     }
 });
+
+export const migrationImporter = dirPath => {
+    return async filePath => {
+        const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
+
+        if(filePath.match(/\.js$/)){
+            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/]+$/, '');
+            if(relativeFilePathWithoutExtension == '_importer'){
+                return;
+            }
+            addFileToClient(filePath);
+            const definition = await ( await import(filePath) ).default;
+            if(definition !== undefined){
+                defineMigration(relativeFilePathWithoutExtension, definition);
+            }
+            return;
+        }
+    };
+};

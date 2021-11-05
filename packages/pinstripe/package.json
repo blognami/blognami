@@ -14,7 +14,7 @@
   "scripts": {
     "clean": "rm -rf ./node_modules",
     "build": "yarn build:css",
-    "build:css": "sass --load-path=../../node_modules/ pinstripe.scss lib/static/bundle.css",
+    "build:css": "sass --load-path=../../node_modules/ pinstripe.scss lib/views/bundle.css",
     "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
     "test": "yarn test:unit",
     "test:unit": "jest lib"

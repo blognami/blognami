@@ -1,7 +1,7 @@
 
-import { defineModel, dasherize } from 'pinstripe';
+import { dasherize } from 'pinstripe';
 
-defineModel('pageable', {
+export default {
     abstract: true,
 
     meta(){
@@ -30,4 +30,4 @@ defineModel('pageable', {
         }
         return out;
     }
-});
+};

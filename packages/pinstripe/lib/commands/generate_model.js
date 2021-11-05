@@ -1,7 +1,5 @@
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('generate-model', async ({
+export default async ({
     cliUtils: { extractArg, extractFields },
     fsBuilder: { inProjectRootDir, generateFile, line, indent },
     snakeify, pluralize, camelize,
@@ -26,17 +24,21 @@ defineCommand('generate-model', async ({
 
     await inProjectRootDir(async () => {
 
+        await generateFile(`lib/models/_importer.js`, { skipIfExists: true }, () => {
+            line();
+            line(`export { modelImporter as default } from 'pinstripe';`);
+            line();
+        });
+
         await generateFile(`lib/models/${name}.js`, () => {
             line();
-            line(`import { defineModel } from 'pinstripe';`);
-            line();
-            line(`defineModel('${name}', {`);
+            line(`export default {`);
             indent(() => {
                 line();
             });
-            line('});');
+            line('};');
             line();
         });
 
     });
-});
+};

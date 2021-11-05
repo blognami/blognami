@@ -1,7 +1,5 @@
 
-import { defineModel } from 'pinstripe';
-
-defineModel('image', {
+export default {
     meta(){
         this.include('pageable');
     },
@@ -15,4 +13,4 @@ defineModel('image', {
             this.data = data;
         }
     }
-});
+};

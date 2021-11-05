@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('default', async ({ params: { _path: path }, pageables, session, renderView }) => {
+export default async ({ params: { _path: path }, pageables, session, renderView }) => {
     const slug = path.replace(/^\//, '');
     const pageable = await pageables.slugEq(slug).first();
     if(pageable) {
@@ -29,4 +27,4 @@ defineView('default', async ({ params: { _path: path }, pageables, session, rend
             body
         });
     }
-});
+};

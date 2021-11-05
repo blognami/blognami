@@ -1,13 +1,12 @@
 
 import * as crypto from 'crypto';
 import * as uuid from 'uuid';
-import { defineView } from 'pinstripe';
 
 if(!crypto.randomUUID){
     crypto.randomUUID = uuid.v4;
 }
 
-defineView('sign_in', async ({ renderForm, database, renderScript }) => renderForm({
+export default async ({ renderForm, database, renderScript }) => renderForm({
     title: 'Sign In',
     fields: ['email', { name: 'password', type: 'password' }],
     model: {
@@ -40,4 +39,4 @@ defineView('sign_in', async ({ renderForm, database, renderScript }) => renderFo
 
         return [ status, headers, body ];
     }
-}));
+});

@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('pageables/post', ({ renderHtml, renderMarkdown, params: { pageable, isSignedIn }}) => renderHtml`
+export default ({ renderHtml, renderMarkdown, params: { pageable, isSignedIn }}) => renderHtml`
     <div class="content">
         <h1 class="title">${pageable.title}</h1>
         ${renderMarkdown(pageable.body)}
@@ -17,4 +15,4 @@ defineView('pageables/post', ({ renderHtml, renderMarkdown, params: { pageable, 
             `;
         }
     }}
-`);
+`;

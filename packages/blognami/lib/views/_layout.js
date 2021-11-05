@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('_layout', async ({ params: { title, body, isSignedIn, user }, renderHtml }) => renderHtml`
+export default async ({ params: { title, body, isSignedIn, user }, renderHtml }) => renderHtml`
     <!DOCTYPE html>
     <html>
         <head>
@@ -54,4 +52,4 @@ defineView('_layout', async ({ params: { title, body, isSignedIn, user }, render
             </div>
         </body>
     </html>
-`);
+`;

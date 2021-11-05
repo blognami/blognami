@@ -15,6 +15,7 @@ import { Union } from './union.js';
 import { Sql } from './sql.js';
 import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP } from './constants.js';
 import { overload } from '../overload.js';
+import { addFileToClient } from '../client.js';
 
 export const Row = Base.extend().include({
     meta(){
@@ -225,3 +226,22 @@ export const defineModel = overload({
         Row.register(name, abstract).include(include);
     }
 });
+
+export const modelImporter = dirPath => {
+    return async filePath => {
+        const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
+
+        if(filePath.match(/\.js$/)){
+            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/]+$/, '');
+            if(relativeFilePathWithoutExtension == '_importer'){
+                return;
+            }
+            addFileToClient(filePath);
+            const definition = await ( await import(filePath) ).default;
+            if(definition !== undefined){
+                defineModel(relativeFilePathWithoutExtension, definition);
+            }
+            return;
+        }
+    };
+};

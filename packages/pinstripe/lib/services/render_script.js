@@ -1,7 +1,5 @@
 
-import { defineService } from 'pinstripe';
-
-defineService('renderScript', async ({ overload, renderHtml }) => {
+export default async ({ overload, renderHtml }) => {
     return overload({
         function(fn){
             return renderHtml(`<script type="pinstripe">\n(${fn}).call(this);</script>`);
@@ -11,4 +9,4 @@ defineService('renderScript', async ({ overload, renderHtml }) => {
             return renderHtml(`<script type="pinstripe">${value}</script>`);
         }
     });
-});
+};

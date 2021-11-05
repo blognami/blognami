@@ -1,7 +1,5 @@
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('reset-database', async ({ runCommand }) => {
+export default async ({ runCommand }) => {
     await runCommand('drop-database');
     await runCommand('init-database');
-});
+};

@@ -1,9 +1,7 @@
 
-import { defineWidget } from 'pinstripe';
-
 import { Url } from '../url.js';
 
-defineWidget('form', {
+export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -57,4 +55,4 @@ defineWidget('form', {
         })
         return out;
     }
-});
+};

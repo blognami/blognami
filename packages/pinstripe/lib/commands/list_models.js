@@ -1,10 +1,9 @@
 
 import chalk from 'chalk';
-import { defineCommand } from 'pinstripe';
 
 import { Row } from '../database/row.js';
 
-defineCommand('list-models', () => {
+export default () => {
     console.log('');
     console.log('The following models are available:');
     console.log('');
@@ -12,4 +11,4 @@ defineCommand('list-models', () => {
         console.log(`  * ${chalk.green(modelName)}`);
     });
     console.log('');
-});
+};

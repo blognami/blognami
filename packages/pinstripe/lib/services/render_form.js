@@ -1,11 +1,10 @@
 
-import { defineService } from 'pinstripe';
 import { ValidationError } from '../validation_error.js';
 import { capitalize } from '../inflector.js';
 import { Base } from '../base.js';
 import { Validatable } from '../validatable.js';
 
-defineService('renderForm', ({ params, renderHtml, renderScript }) => {
+export default ({ params, renderHtml, renderScript }) => {
     return async (formAdaptable, options = {}) => {
         const formAdapter = await (typeof formAdaptable.toFormAdapter == 'function' ? formAdaptable.toFormAdapter() : createObjectFormAdapter(formAdaptable));
         
@@ -120,7 +119,7 @@ defineService('renderForm', ({ params, renderHtml, renderScript }) => {
             </div>
         `;
     }
-});
+};
 
 const normalizeFields = (fields) => fields.map(field => {
     let out = field;

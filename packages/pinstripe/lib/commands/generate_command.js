@@ -1,7 +1,5 @@
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('generate-command', async ({
+export default async ({
     cliUtils: { extractArg },
     fsBuilder: { inProjectRootDir, generateFile, line, indent },
     snakeify, dasherize
@@ -14,17 +12,21 @@ defineCommand('generate-command', async ({
 
     await inProjectRootDir(async () => {
 
+        await generateFile(`lib/commands/_importer.js`, { skipIfExists: true }, () => {
+            line();
+            line(`export { commandImporter as default } from 'pinstripe';`);
+            line();
+        });
+
         await generateFile(`lib/commands/${name}.js`, () => {
             line();
-            line(`import { defineCommand } from 'pinstripe';`);
-            line();
-            line(`defineCommand('${dasherize(name)}', () => {`);
+            line(`export default () => {`);
             indent(() => {
                 line(`console.log('${dasherize(name)} command coming soon!')`);
             });
-            line('});');
+            line('};');
             line();
         });
 
     });
-});
+};

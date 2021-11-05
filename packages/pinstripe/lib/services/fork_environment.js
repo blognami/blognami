@@ -1,9 +1,7 @@
 
-import { defineService } from 'pinstripe';
-
 import { Environment } from '../environment.js';
 
-defineService('forkEnvironment', ({ environment: parentEnvironment }) => {
+export default ({ environment: parentEnvironment }) => {
     const { environment, resetEnvironment } = Environment.new(parentEnvironment);
     return async fn => {
         try {
@@ -15,4 +13,4 @@ defineService('forkEnvironment', ({ environment: parentEnvironment }) => {
             throw e;
         }
     };
-});
+};

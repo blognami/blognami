@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('sign_out', async ({ session, renderScript }) => {
+export default async ({ session, renderScript }) => {
 
     if(await session){
         await session.delete();
@@ -12,4 +10,4 @@ defineView('sign_out', async ({ session, renderScript }) => {
     headers['Set-Cookie'] = 'pinstripeSession=';
 
     return [ status, headers, body ];
-});
+};

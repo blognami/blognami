@@ -1,7 +1,5 @@
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('generate-migration', async ({
+export default async ({
     cliUtils: { extractArg, extractFields, extractOptions },
     fsBuilder: { inProjectRootDir, generateFile, line, indent },
     snakeify
@@ -22,11 +20,15 @@ defineCommand('generate-migration', async ({
 
     await inProjectRootDir(async () => {
 
+        await generateFile(`lib/migrations/_importer.js`, { skipIfExists: true }, () => {
+            line();
+            line(`export { migrationImporter as default } from 'pinstripe';`);
+            line();
+        });
+
         await generateFile(`lib/migrations/${name}.js`, () => {
             line();
-            line(`import { defineMigration } from 'pinstripe';`);
-            line();
-            line(`defineMigration('${name}', async ({ database }) => {`);
+            line(`export default async ({ database }) => {`);
             indent(() => {
                 line();
                 if(table && fields.length){
@@ -36,8 +38,8 @@ defineCommand('generate-migration', async ({
                     line();
                 }
             })
-            line('});');
+            line('};');
             line();
         });
     });
-});
+};

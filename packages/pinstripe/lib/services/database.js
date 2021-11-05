@@ -1,9 +1,7 @@
 
-import { defineService } from 'pinstripe';
-
 import { Database } from '../database.js';
 
-defineService('database', {
+export default {
     meta(){
         this.scope = 'root';
     },
@@ -11,5 +9,4 @@ defineService('database', {
     create(){
         return Database.new(this.environment);
     }
-});
-
+};

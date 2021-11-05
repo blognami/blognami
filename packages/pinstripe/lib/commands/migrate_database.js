@@ -1,4 +1,2 @@
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('migrate-database', ({ database }) => database.migrate());  
+export default ({ database }) => database.migrate();  

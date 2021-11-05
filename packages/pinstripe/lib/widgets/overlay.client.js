@@ -1,7 +1,5 @@
 
-import { defineWidget } from 'pinstripe';
-
-defineWidget('overlay', {
+export default {
     meta(){
         this.include('frame');
 
@@ -26,4 +24,4 @@ defineWidget('overlay', {
             })
         }
     }
-});
+};

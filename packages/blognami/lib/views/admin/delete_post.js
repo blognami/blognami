@@ -1,10 +1,8 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('admin/delete_post', async ({ params, renderScript, posts }) => {
+export default async ({ params, renderScript, posts }) => {
     const { id } = params;
 
     await posts.idEq(id).delete();
     
     return renderScript(() => this.frame.frame.load());
-});
+};

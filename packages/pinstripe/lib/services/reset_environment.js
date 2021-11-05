@@ -1,7 +1,5 @@
 
-import { defineService } from 'pinstripe';
-
-defineService('resetEnvironment', ({ environment, parentEnvironment }) => {
+export default ({ environment, parentEnvironment }) => {
     return async () => {
         const names = Object.keys(environment._instances);
         while(names.length){
@@ -18,4 +16,4 @@ defineService('resetEnvironment', ({ environment, parentEnvironment }) => {
         }
         environment._instances = {};
     };
-});
+};

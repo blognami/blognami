@@ -1,7 +1,6 @@
 
-import { defineService } from 'pinstripe';
 import MarkdownIt from 'markdown-it';
 
-defineService('renderMarkdown', ({ renderHtml }) => {
+export default ({ renderHtml }) => {
     return markdown => renderHtml(new MarkdownIt().render(markdown || ''));
-});
+};

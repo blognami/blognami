@@ -1,11 +1,12 @@
 
-import { readdir, stat } from 'fs'; 
+import { readdir, stat, existsSync } from 'fs'; 
 import { promisify } from 'util';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { defineView } from 'pinstripe';
 
-export const imported = {};
+import { addFileToClient } from './client.js';
+
+const imported = {};
 const importQueue = [];
 
 let processImportQueuePromise = null;
@@ -49,7 +50,14 @@ const importAllRecursive = async (dirPath, importer = defaultImporter) => {
         const current = `${dirPath}/${item}`;
         const stats = await promisify(stat)(current);
         if(stats.isDirectory()){
-            await importAllRecursive(current, item == 'static' ? createStaticImporter(current) : importer);
+            const importerFilePath = `${current}/_importer.js`;
+            if(existsSync(importerFilePath)){
+                const importerFactory = await ( await import(importerFilePath) ).default;
+                const importer = await importerFactory(current);
+                await importAllRecursive(current, importer);
+            } else {
+                await importAllRecursive(current, importer);
+            }           
         } else if(!imported[current]) {
             imported[current] = true;
             await importer(current);
@@ -60,12 +68,8 @@ const importAllRecursive = async (dirPath, importer = defaultImporter) => {
 const defaultImporter = async filePath => {
     if(filePath.match(/\/[^\.\/]+(\.client\.js|\.js)$/)){
         await (await import(filePath)).default;
+        addFileToClient(filePath);
     }
-};
-
-const createStaticImporter = dirPath => async filePath => {
-    const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
-    defineView(relativeFilePath, ({ renderFile }) => renderFile(filePath));
 };
 
 importAll(import.meta.url);

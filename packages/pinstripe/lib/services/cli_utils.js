@@ -1,9 +1,7 @@
 
-import { defineService } from 'pinstripe';
-
 const optionPattern = /^-([a-z]|-[a-z\-]+)$/;
 
-defineService('cliUtils', ({ args: _args, camelize }) => {
+export default ({ args: _args, camelize }) => {
     let args = [..._args];
 
     const extractArg = (_default) => {
@@ -70,4 +68,4 @@ defineService('cliUtils', ({ args: _args, camelize }) => {
         extractOptions,
         resetArgs
     };
-});
+};

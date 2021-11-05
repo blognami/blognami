@@ -1,5 +1,2 @@
 
-
-import { defineService } from 'pinstripe';
-
-defineService('params', () => ({}));
+export default () => ({});

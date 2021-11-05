@@ -1,7 +1,6 @@
 import { hash, compare } from 'bcrypt';
-import { defineModel } from 'pinstripe';
 
-defineModel('user', {
+export default {
     meta(){
         this.hasMany('sessions');
 
@@ -43,4 +42,4 @@ defineModel('user', {
             });
         });
     }
-});
+};

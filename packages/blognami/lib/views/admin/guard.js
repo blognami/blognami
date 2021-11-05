@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('admin/guard', async ({ session, renderHtml, renderScript }) => {
+export default async ({ session, renderHtml, renderScript }) => {
     let user;
     if(await session){
         user = await session.user;
@@ -33,4 +31,4 @@ defineView('admin/guard', async ({ session, renderHtml, renderScript }) => {
 
         return [403, headers, body];
     }
-});
+};

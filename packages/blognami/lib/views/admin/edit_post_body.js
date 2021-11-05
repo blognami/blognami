@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('admin/edit_post_body', async ({ posts, params, renderHtml, renderScript, renderMarkdown }) => {
+export default async ({ posts, params, renderHtml, renderScript, renderMarkdown }) => {
     const post = posts.idEq(params.id).first();
 
     if(params._method == 'POST'){
@@ -51,4 +49,4 @@ defineView('admin/edit_post_body', async ({ posts, params, renderHtml, renderScr
             })}
         </div>
     `;
-});
+};

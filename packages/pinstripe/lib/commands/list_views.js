@@ -1,10 +1,9 @@
 
 import chalk from 'chalk';
-import { defineCommand } from 'pinstripe';
 
 import { View } from '../view.js';
 
-defineCommand('list-views', () => {
+export default () => {
     console.log('');
     console.log('The following views are available:');
     console.log('');
@@ -12,4 +11,4 @@ defineCommand('list-views', () => {
         console.log(`  * ${chalk.green(viewName)}`);
     });
     console.log('');
-});
+};

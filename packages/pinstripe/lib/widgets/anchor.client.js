@@ -1,9 +1,7 @@
 
-import { defineWidget } from 'pinstripe';
-
 import { Url } from '../url.js';
 
-defineWidget('anchor', {
+export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -51,4 +49,4 @@ defineWidget('anchor', {
             this.url
         );
     }
-});
+};

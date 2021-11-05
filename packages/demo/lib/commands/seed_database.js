@@ -1,8 +1,7 @@
 
-import { defineCommand } from 'pinstripe';
 import faker from 'faker';
 
-defineCommand('seed-database', async ({ users, posts }) => {
+export default async ({ users, posts }) => {
     const user = await users.insert({
         name: 'Admin',
         email: 'admin@example.com',
@@ -17,4 +16,4 @@ defineCommand('seed-database', async ({ users, posts }) => {
             body: faker.lorem.paragraphs(3)
         });
     }
-});
+};

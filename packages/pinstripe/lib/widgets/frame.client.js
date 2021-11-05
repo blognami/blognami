@@ -1,9 +1,7 @@
 
-import { defineWidget } from 'pinstripe';
-
 import { Url } from '../url.js';
 
-defineWidget('frame', {
+export default {
 
     meta(){
         this.parent.prototype.assignProps({
@@ -80,5 +78,5 @@ defineWidget('frame', {
             progressBar.stop();
         }
     }
-});
+};
 

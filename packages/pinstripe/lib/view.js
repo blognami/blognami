@@ -4,6 +4,7 @@ import { Base } from './base.js';
 import { Registrable } from './registrable.js';
 import { overload } from './overload.js';
 import { thatify } from './thatify.js';
+import { addFileToClient } from './client.js'; // pinstripe-if-client: const addFileToClient = () => {};
 
 export const View = Base.extend().include({
     meta(){
@@ -39,3 +40,43 @@ export const defineView = overload({
         defineView(name, { render: thatify(fn) });
     }
 });
+
+export const viewImporter = dirPath => {
+    const files = [];
+
+    addFileToClient(`${dirPath}/_importer.client.js`, () => {
+        const filteredFiles = files.filter(({ filePath }) => filePath.match(/\.client\.js$/));
+
+        return `
+            import { defineView } from 'pinstripe';
+
+            ${filteredFiles.map(({ filePath, relativeFilePathWithoutExtension }, i) => {
+                const importName = `definition${i + 1}`;
+
+                return `
+                    import ${importName} from ${JSON.stringify(filePath)};
+                    defineView(${JSON.stringify(relativeFilePathWithoutExtension)}, ${importName});
+                `;
+            }).join('')}
+        `;
+    });
+
+    return async filePath => {
+        const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
+
+        if(filePath.match(/\.js$/)){
+            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/]+$/, '');
+            if(relativeFilePathWithoutExtension == '_importer'){
+                return;
+            }
+            addFileToClient(filePath);
+            const definition = await ( await import(filePath) ).default;
+            if(definition !== undefined){
+                files.push({ filePath, relativeFilePathWithoutExtension });
+                defineView(relativeFilePathWithoutExtension, definition);
+            }
+            return;
+        }
+        defineView(relativeFilePath, ({ renderFile }) => renderFile(filePath));
+    };
+};

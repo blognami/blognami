@@ -1,7 +1,5 @@
 
-import { defineService } from 'pinstripe';
-
-defineService('cookies', {
+export default {
     meta(){
         this.scope = 'root';
     },
@@ -19,4 +17,4 @@ defineService('cookies', {
         }
         return out;
     }
-});
+};

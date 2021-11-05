@@ -6,6 +6,7 @@ import { VirtualNode } from './virtual_node.js';
 import { EventWrapper } from './event_wrapper.js';
 import { overload } from './overload.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
+import { addFileToClient } from './client.js'; // pinstripe-if-client: const addFileToClient = () => {};
 
 export const NodeWrapper = Base.extend().include({
     meta(){
@@ -406,3 +407,43 @@ export const defineWidget = overload({
         NodeWrapper.register(name, abstract).include(include);
     }
 });
+
+
+export const widgetImporter = dirPath => {
+    const files = [];
+
+    addFileToClient(`${dirPath}/_importer.client.js`, () => {
+        const filteredFiles = files.filter(({ filePath }) => filePath.match(/\.client\.js$/));
+
+        return `
+            import { defineWidget } from 'pinstripe';
+
+            ${filteredFiles.map(({ filePath, relativeFilePathWithoutExtension }, i) => {
+                const importName = `definition${i + 1}`;
+
+                return `
+                    import ${importName} from ${JSON.stringify(filePath)};
+                    defineWidget(${JSON.stringify(relativeFilePathWithoutExtension)}, ${importName});
+                `;
+            }).join('')}
+        `;
+    });
+
+    return async filePath => {
+        const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
+
+        if(filePath.match(/\.js$/)){
+            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/]+$/, '');
+            if(relativeFilePathWithoutExtension == '_importer'){
+                return;
+            }
+            addFileToClient(filePath);
+            const definition = await ( await import(filePath) ).default;
+            if(definition !== undefined){
+                files.push({ filePath, relativeFilePathWithoutExtension });
+                defineWidget(relativeFilePathWithoutExtension, definition);
+            }
+            return;
+        }
+    };
+};

@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('index', async ({ session, renderView, renderHtml, database, params }) => {
+export default async ({ session, renderView, renderHtml, database, params }) => {
     let user;
     if(await session){
         user = await session.user;
@@ -64,4 +62,4 @@ defineView('index', async ({ session, renderView, renderHtml, database, params }
             </nav>
         `
     });
-});
+};

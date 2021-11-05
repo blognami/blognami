@@ -2,11 +2,10 @@
 import * as Repl from 'repl';
 import * as vm from 'vm';
 import * as util from 'util';
-import { defineCommand } from 'pinstripe';
 
 import { ServiceFactory } from '../service_factory.js';
 
-defineCommand('start-console', async ({ environment, resetEnvironment }) => {
+export default async ({ environment, resetEnvironment }) => {
     await new Promise(resolve => {
         const repl = Repl.start({
             prompt: 'pinstripe > ',
@@ -47,4 +46,4 @@ defineCommand('start-console', async ({ environment, resetEnvironment }) => {
         repl.on('exit', resolve);
     });
     await resetEnvironment();
-});
+};

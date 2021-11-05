@@ -1,7 +1,5 @@
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('generate-widget', async ({
+export default async ({
     cliUtils: { extractArg },
     fsBuilder: { inProjectRootDir, generateFile, line, indent },
     snakeify
@@ -14,17 +12,21 @@ defineCommand('generate-widget', async ({
 
     await inProjectRootDir(async () => {
 
-        await generateFile(`lib/widgets/${name}.js`, () => {
+        await generateFile(`lib/widgets/_importer.js`, { skipIfExists: true }, () => {
             line();
-            line(`import { defineWidget } from 'pinstripe';`);
+            line(`export { widgetImporter as default } from 'pinstripe';`);
             line();
-            line(`defineWidget('${name}', {`);
+        });
+
+        await generateFile(`lib/widgets/${name}.client.js`, () => {
+            line();
+            line(`export default {`);
             indent(() => {
                 line();
             });
-            line('});');
+            line('};');
             line();
         });
 
     });
-});
+};

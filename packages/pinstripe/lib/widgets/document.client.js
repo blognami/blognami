@@ -1,8 +1,5 @@
 
-import { defineWidget } from 'pinstripe';
-
-// should be root (and attached to top html tag)?
-defineWidget('document', {
+export default {
     meta(){
         this.include('frame');
 
@@ -45,5 +42,5 @@ defineWidget('document', {
             }
         }
     }
-});
+};
 

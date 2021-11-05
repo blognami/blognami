@@ -1,9 +1,7 @@
 
-import { defineService } from 'pinstripe';
-
 import { View } from '../view.js';
 
-defineService('renderView', ({ forkEnvironment, view }) => {
+export default ({ forkEnvironment, view }) => {
     return (viewName, params = {}) => forkEnvironment(({ environment }) => {
         const segments = view.constructor.name.split(/\//);
         while(segments.length){
@@ -17,4 +15,4 @@ defineService('renderView', ({ forkEnvironment, view }) => {
             segments.pop();
         }
     });
-});
+};

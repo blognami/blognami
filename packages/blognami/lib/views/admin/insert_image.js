@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('admin/insert_image', async ({ params, database, renderHtml, renderScript }) => {
+export default async ({ params, database, renderHtml, renderScript }) => {
     const page = parseInt(params.page || '1');
     const pageSize = 10;
     const imageCount = await database.images.count();
@@ -42,4 +40,4 @@ defineView('admin/insert_image', async ({ params, database, renderHtml, renderSc
             })}
         </div>
     `;
-});
+};

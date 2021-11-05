@@ -1,7 +1,5 @@
 
-import { defineModel } from 'pinstripe';
-
-defineModel('post', {
+export default {
     meta(){
         this.include('pageable');
         
@@ -10,4 +8,4 @@ defineModel('post', {
         this.mustNotBeBlank('userId');
         this.mustNotBeBlank('title');
     }
-});
+};

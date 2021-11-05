@@ -4,13 +4,7 @@ import Busboy from 'busboy';
 import { default as qs} from 'qs';
 const { parse: parseQueryString } = qs;
 
-import { defineCommand } from 'pinstripe';
-
-import { project } from '../project.js';
-import { writeFile } from 'fs';
-import { promisify } from 'util';
-
-defineCommand('start-server', async ({ fetch }) => {
+export default async ({ fetch }) => {
     const host = process.env.HOST || '127.0.0.1';
     const port = process.env.PORT || 3000;
 
@@ -33,7 +27,7 @@ defineCommand('start-server', async ({ fetch }) => {
     }).listen(port, host, () => {
         console.log(`Pinstripe running at http://${host}:${port}/`)
     });
-});
+};
 
 const extractParams = async (request) => {
     const { method, url, headers } = request;

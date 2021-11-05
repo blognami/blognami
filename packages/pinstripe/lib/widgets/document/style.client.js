@@ -1,7 +1,5 @@
 
-import { defineWidget } from 'pinstripe';
-
-defineWidget('document/style', {
+export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
         
@@ -46,4 +44,4 @@ defineWidget('document/style', {
             }
         `);
     }
-});
+};

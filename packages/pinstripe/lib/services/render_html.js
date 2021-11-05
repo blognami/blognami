@@ -1,8 +1,6 @@
 
-import { defineService } from 'pinstripe';
-
 import { Html } from '../html.js';
 
-defineService('renderHtml', async () => {
+export default async () => {
     return (...args) => Html.render(...args);
-});
+};

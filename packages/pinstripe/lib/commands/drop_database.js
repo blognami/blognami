@@ -1,4 +1,2 @@
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('drop-database', ({ database }) => database.drop());
+export default ({ database }) => database.drop();

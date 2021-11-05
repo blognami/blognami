@@ -1,9 +1,7 @@
 
 import { spawnSync } from 'child_process';
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('generate-project', async ({
+export default async ({
    cliUtils: { extractArg, extractOptions },
    fsBuilder: { generateDir, generateFile, line, indent, echo }
 }) => {
@@ -43,16 +41,9 @@ defineCommand('generate-project', async ({
          line();
       });
 
-      await generateFile(`lib/web/_importer.js`, () => {
-         line();
-         line(`export { webImporter as default } from 'pinstripe';`);
-         line();
-      });
-
-
       spawnSync('yarn', [ 'add', ...dependencies ], {
          stdio: 'inherit'
       });
 
    });
-});
+};

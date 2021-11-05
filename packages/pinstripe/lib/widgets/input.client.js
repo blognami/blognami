@@ -1,7 +1,5 @@
 
-import { defineWidget } from 'pinstripe';
-
-defineWidget('input', {
+export default {
     meta(){
         this.parent.prototype.assignProps({
             isInput: false
@@ -23,4 +21,4 @@ defineWidget('input', {
         }
         return this.node.value;
     }
-});
+};

@@ -4,9 +4,8 @@ import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs';
 import { promisify } from 'util';
-import { defineService } from 'pinstripe';
 
-defineService('fsBuilder', ({ project }) => {
+export default ({ project }) => {
     let outputBuffer = [];
 
     const echo = (stringable) => {
@@ -128,4 +127,4 @@ defineService('fsBuilder', ({ project }) => {
         generateFile,
         inProjectRootDir
     };
-});
+};

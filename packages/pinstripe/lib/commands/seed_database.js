@@ -1,6 +1,4 @@
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('seed-database', () => {
+export default () => {
     // do nothing
-});
+};

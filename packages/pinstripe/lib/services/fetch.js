@@ -1,7 +1,5 @@
 
-import { defineService } from 'pinstripe';
-
-defineService('fetch', ({ createEnvironment }) => {
+export default ({ createEnvironment }) => {
     return (_params = {}) => createEnvironment(async ({ environment, renderView }) => {
         const params = normalizeParams(_params);
         const viewName = params._path.replace(/^\/|\/$/g, '');
@@ -31,7 +29,7 @@ defineService('fetch', ({ createEnvironment }) => {
 
         return [404, {'Content-Type': 'text/plain'}, ['Not found']];
     });
-});
+};
 
 const renderGuardViews = async (renderView, viewName, params) => {
     const viewNameSegments = viewName != '' ? viewName.split(/\//) : [];

@@ -1,11 +1,9 @@
 
-import { defineService } from 'pinstripe';
-
-defineService('config', () => ({
+export default () => ({
     database: {
         host: 'localhost',
         user: 'root',
         password: '',
         database: 'pinstripe_development'
     }
-}));
+});

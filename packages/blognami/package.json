@@ -7,7 +7,7 @@
   "scripts": {
     "clean": "rm -rf ./node_modules",
     "build": "yarn build:css",
-    "build:css": "sass --load-path=../../node_modules/ blognami.scss lib/static/bundle.css"
+    "build:css": "sass --load-path=../../node_modules/ blognami.scss lib/views/bundle.css"
   },
   "exports": {
     ".": "./lib/index.js"

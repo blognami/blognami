@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('admin/add_image', ({ renderForm, images, renderHtml }) => renderForm(images, {
+export default ({ renderForm, images, renderHtml }) => renderForm(images, {
     fields: [{ name: 'file', type: 'file' }],
 
     success(image){
@@ -24,4 +22,4 @@ defineView('admin/add_image', ({ renderForm, images, renderHtml }) => renderForm
             </script>
         `;
     }
-}));
+});

@@ -1,10 +1,9 @@
 
 import chalk from 'chalk';
-import { defineCommand } from 'pinstripe';
 
 import { Command } from '../command.js';
 
-defineCommand('list-commands', () => {
+export default () => {
     console.log('');
     console.log('The following commands are available:');
     console.log('');
@@ -12,4 +11,4 @@ defineCommand('list-commands', () => {
         console.log(`  * ${chalk.green(commandName)}`);
     });
     console.log('');
-});
+};

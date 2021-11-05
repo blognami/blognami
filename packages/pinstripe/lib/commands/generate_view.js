@@ -1,7 +1,5 @@
 
-import { defineCommand } from 'pinstripe';
-
-defineCommand('generate-view', async ({
+export default async ({
     cliUtils: { extractArg },
     fsBuilder: { inProjectRootDir, generateFile, line, indent }
 }) => {
@@ -16,14 +14,14 @@ defineCommand('generate-view', async ({
     }
 
     await inProjectRootDir(async () => {
-        
-        await generateFile(`lib/web/_importer.js`, { skipIfExists: true }, () => {
+
+        await generateFile(`lib/views/_importer.js`, { skipIfExists: true }, () => {
             line();
-            line(`export { webImporter as default } from 'pinstripe';`);
+            line(`export { viewImporter as default } from 'pinstripe';`);
             line();
         });
 
-        await generateFile(`lib/web/${name}`, () => {
+        await generateFile(`lib/views/${name}`, () => {
             line();
             line('export default ({ renderHtml, params }) => renderHtml(`');
             indent(() => {
@@ -33,4 +31,4 @@ defineCommand('generate-view', async ({
             line();
         });
     });
-});
+};
