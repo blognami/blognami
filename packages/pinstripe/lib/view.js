@@ -1,10 +1,12 @@
 
+import yaml from 'js-yaml'; // pinstripe-if-client: const yaml = undefined;
 
 import { Base } from './base.js';
 import { Registrable } from './registrable.js';
 import { overload } from './overload.js';
 import { thatify } from './thatify.js';
 import { addFileToClient } from './client.js'; // pinstripe-if-client: const addFileToClient = () => {};
+import { VirtualNode } from './virtual_node.js'
 
 export const View = Base.extend().include({
     meta(){
@@ -63,9 +65,9 @@ export const viewImporter = dirPath => {
 
     return async filePath => {
         const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
+        const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/]+$/, '');
 
         if(filePath.match(/\.js$/)){
-            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/]+$/, '');
             if(relativeFilePathWithoutExtension == '_importer'){
                 return;
             }
@@ -77,6 +79,47 @@ export const viewImporter = dirPath => {
             }
             return;
         }
+
+        if(filePath.match(/\.md$/)){
+
+            const params = {};
+
+            defineView(relativeFilePathWithoutExtension, async ({ renderView, readFile, renderMarkdown, renderHtml }) => {
+                if(!params.body){
+                    let markdown = (await readFile(filePath)).toString();
+
+                    const matches = markdown.match(/^---+([\s\S]+?)---+([\s\S]*)$/);
+                    if(matches){
+                        Object.assign(params, yaml.load(matches[1]));
+                        markdown = matches[2];
+                    }
+
+                    params.body = await renderHtml`
+                        <div class="content">
+                            ${renderMarkdown(markdown)}
+                        </div>
+                    `;
+                    
+                    if(!params.title){
+                        params.title = extractTitle(params.body.toString());
+                    }
+                }
+                return renderView('_layout', params);
+            });
+            return;
+        }
+
         defineView(relativeFilePath, ({ renderFile }) => renderFile(filePath));
     };
 };
+
+const extractTitle = html => {
+    let out;
+    VirtualNode.fromString(html).traverse(node => {
+        console.log('node.type', node.type)
+        if(node.type == 'h1'){
+            out = node.text;
+        }
+    });
+    return out;
+}
