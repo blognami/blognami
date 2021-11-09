@@ -7,7 +7,7 @@
     "clean": "lerna run clean && rm -rf ./node_modules",
     "build": "lerna run build",
     "start": "lerna run start --scope demo --stream",
-    "watch": "nodemon -e js,scss --exec 'yarn build && yarn start'",
+    "watch": "nodemon -e js,scss --exec 'yarn start'",
     "test": "yarn test:unit",
     "test:unit": "lerna run test:unit --stream",
     "publish-all": "lerna publish"

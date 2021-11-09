@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "plush",
+  "version": "0.10.0",
+  "main": "plush.scss",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf ./node_modules",
+    "build": "yarn build:css",
+    "build:css": "sass --load-path=../../node_modules/ plush.scss build/bundle.css"
+  },
+  "dependencies": {
+    "bulma": "^0.9.3",
+    "sass": "^1.43.4"
+  }
+}
