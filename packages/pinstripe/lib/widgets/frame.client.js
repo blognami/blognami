@@ -1,5 +1,6 @@
 
 import { Url } from '../url.js';
+import { DEFAULT_WIDGETS } from '../constants.js';
 
 export default {
 
@@ -10,6 +11,14 @@ export default {
             get frame(){
                 return this.parents.find(({ isFrame }) => isFrame);
             }
+        });
+    },
+
+    initialize(...args){
+        this.constructor.parent.prototype.initialize.call(this, ...args);
+
+        this.addVirtualNodeFilter(function(){
+            this.traverse(normalizeVirtualNode)
         });
     },
 
@@ -80,3 +89,47 @@ export default {
     }
 };
 
+function normalizeVirtualNode(){
+    if(!this.parent && this.children.some(child => child.type == 'html')){
+        this.children = [
+            new this.constructor(this, '#doctype'),
+            ...this.children.filter(child => child.type == 'html')
+        ];
+    }
+
+    if(this.type == 'head'){
+        const style = new this.constructor(this, 'style', {'data-widget': 'document/style'})
+        this.children = [
+            style,
+            ...this.children
+        ];
+    }
+
+    if(this.type == 'body'){
+        const progressBar = new this.constructor(this, 'div', {'data-widget': 'document/progress-bar'})
+        this.children = [
+            progressBar,
+            ...this.children
+        ];
+        progressBar.appendNode('div');
+    }
+
+    if(this.type == '#text'){
+        this.attributes.value = this.attributes.value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    }
+
+    if(this.type == 'form' && this.attributes.autocomplete === undefined){
+        this.attributes.autocomplete = 'off';
+    }
+
+    if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
+        this.attributes.value = this.attributes.value.replace(/^\n/, '');
+    }
+
+    if(!this.attributes['data-widget']){
+        const widget = DEFAULT_WIDGETS[this.type];
+        if(widget){
+            this.attributes['data-widget'] = widget;
+        }
+    }
+}

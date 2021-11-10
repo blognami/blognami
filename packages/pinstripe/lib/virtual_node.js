@@ -2,8 +2,7 @@
 import { Base } from './base.js';
 import { unescapeHtml } from './unescape_html.js';
 import { StringReader } from './string_reader.js';
-import { SELF_CLOSING_TAGS, TEXT_ONLY_TAGS, DEFAULT_WIDGETS } from './constants.js';
-import { traverse } from 'ramda';
+import { SELF_CLOSING_TAGS, TEXT_ONLY_TAGS } from './constants.js';
 
 const CloseTag = Base.extend().include({
     initialize(type){
@@ -18,7 +17,6 @@ export const VirtualNode = Base.extend().include({
             fromString(html){
                 const out = new this();
                 out.appendHtml(html);
-                out.traverse(normalize);
                 return out;
             },
         
@@ -146,48 +144,3 @@ export const VirtualNode = Base.extend().include({
         return JSON.stringify(this, ['type', 'attributes', 'children']);
     }
 });
-
-function normalize(){
-    if(!this.parent && this.children.some(child => child.type == 'html')){
-        this.children = [
-            new this.constructor(this, '#doctype'),
-            ...this.children.filter(child => child.type == 'html')
-        ];
-    }
-
-    if(this.type == 'head'){
-        const style = new this.constructor(this, 'style', {'data-widget': 'document/style'})
-        this.children = [
-            style,
-            ...this.children
-        ];
-    }
-
-    if(this.type == 'body'){
-        const progressBar = new this.constructor(this, 'div', {'data-widget': 'document/progress-bar'})
-        this.children = [
-            progressBar,
-            ...this.children
-        ];
-        progressBar.appendNode('div');
-    }
-
-    if(this.type == '#text'){
-        this.attributes.value = this.attributes.value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    }
-
-    if(this.type == 'form' && this.attributes.autocomplete === undefined){
-        this.attributes.autocomplete = 'off';
-    }
-
-    if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
-        this.attributes.value = this.attributes.value.replace(/^\n/, '');
-    }
-
-    if(!this.attributes['data-widget']){
-        const widget = DEFAULT_WIDGETS[this.type];
-        if(widget){
-            this.attributes['data-widget'] = widget;
-        }
-    }
-}

@@ -36,6 +36,7 @@ export const NodeWrapper = Base.extend().include({
         this.node = node;
         this._registeredEventListeners = [];
         this._registeredTimers = [];
+        this._virtualNodeFilters = [];
     },
 
     get type(){
@@ -233,7 +234,7 @@ export const NodeWrapper = Base.extend().include({
             if(TEXT_ONLY_TAGS.includes(this.type)){
                 insert.call(this, { type: '#text', attributes: { value: html }, children: [] });
             } else {
-                patchChildren.call(this, VirtualNode.fromString(html).children);
+                patchChildren.call(this, createVirtualNode.call(this, html).children);
             }
             initChildren.call(this);
             return this.children;
@@ -259,6 +260,11 @@ export const NodeWrapper = Base.extend().include({
 
     insertAfter(html){
         return prepend.call(this.realParent, html, this.nextSibling);
+    },
+
+    addVirtualNodeFilter(fn){
+        this._virtualNodeFilters.push(fn);
+        return this;
     }
 });
 
@@ -297,10 +303,16 @@ function prepend(html, referenceChild){
     if(TEXT_ONLY_TAGS.includes(this.type)){
         out.push(insert.call(this, { type: '#text', attributes: { value: html }, children: [] }, referenceChild));
     } else {
-        VirtualNode.fromString(html).children.forEach((virtualChild) => {
+        createVirtualNode.call(this, html).children.forEach((virtualChild) => {
             out.push(insert.call(this, virtualChild, referenceChild));
         });
     }
+    return out;
+}
+
+function createVirtualNode(html){
+    const out = VirtualNode.fromString(html);
+    this._virtualNodeFilters.forEach(filter => filter.call(out, out));
     return out;
 }
 
