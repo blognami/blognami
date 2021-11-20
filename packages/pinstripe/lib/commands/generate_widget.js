@@ -22,7 +22,11 @@ export default async ({
             line();
             line(`export default {`);
             indent(() => {
-                line();
+                line(`initialize(...args){`);
+                    indent(() => {
+                        line(`this.constructor.parent.prototype.initialize.call(this, ...args);`);
+                    });
+                line(`}`);
             });
             line('};');
             line();

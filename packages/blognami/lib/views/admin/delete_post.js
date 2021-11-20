@@ -1,8 +1,10 @@
 
-export default async ({ params, renderScript, posts }) => {
+export default async ({ params, posts, renderHtml }) => {
     const { id } = params;
 
     await posts.idEq(id).delete();
     
-    return renderScript(() => this.frame.frame.load());
+    return renderHtml`
+        <span data-action="load" data-target="_parent"></span>
+    `;
 };

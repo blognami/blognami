@@ -4,7 +4,7 @@ import { capitalize } from '../inflector.js';
 import { Base } from '../base.js';
 import { Validatable } from '../validatable.js';
 
-export default ({ params, renderHtml, renderScript }) => {
+export default ({ params, renderHtml }) => {
     return async (formAdaptable, options = {}) => {
         const formAdapter = await (typeof formAdaptable.toFormAdapter == 'function' ? formAdaptable.toFormAdapter() : createObjectFormAdapter(formAdaptable));
         
@@ -18,7 +18,9 @@ export default ({ params, renderHtml, renderScript }) => {
         const errors = {};
         if(params._method == 'POST'){
             try {
-                return await formAdapter.submit(values, success) || renderScript(() => this.frame.frame.load());
+                return await formAdapter.submit(values, success) || renderHtml`
+                    <span data-action="load" data-target="_parent"></span>
+                `;
             } catch(e){
                 if(!(e instanceof ValidationError)){
                     throw e;
@@ -52,12 +54,12 @@ export default ({ params, renderHtml, renderScript }) => {
 
         return renderHtml`
             <div class="modal is-active">
-                <div class="modal-background"></div>
+                <div class="modal-background" data-widget="button" data-action="remove"></div>
                 <div class="modal-card">
                     <form method="post" enctype="multipart/form-data" autocomplete="off">
                         <header class="modal-card-head">
                             <p class="modal-card-title">${title}</p>
-                            <button type="button" class="delete" aria-label="close"></button>
+                            <button type="button" class="delete" aria-label="close" data-widget="button" data-action="remove"></button>
                         </header>
                         <section class="modal-card-body">
                             ${() => {
@@ -87,6 +89,11 @@ export default ({ params, renderHtml, renderScript }) => {
                                                         <textarea class="textarea${error ? ' is-danger' : ''}" name="${name}">${value}</textarea>
                                                     `
                                                 }
+                                                if(type == 'markdown'){
+                                                    return renderHtml`
+                                                        <textarea class="textarea${error ? ' is-danger' : ''}" name="${name}" data-widget="button" data-action="load" data-url="/edit_markdown">${value}</textarea>
+                                                    `
+                                                }
                                                 return renderHtml`
                                                     <input class="input${error ? ' is-danger' : ''}" name="${name}" type="${type}" value="${value}">
                                                 ` 
@@ -105,17 +112,10 @@ export default ({ params, renderHtml, renderScript }) => {
                         </section>
                         <footer class="modal-card-foot">
                             <button class="button is-success" type="submit">${submitTitle}</button>
-                            <button class="button">${cancelTitle}</button>
+                            <button class="button" data-action="remove">${cancelTitle}</button>
                         </footer>
                     </form>
                 </div>
-                ${renderScript(function(){
-                    this.parent.on('click', '.modal-background, .modal-close, .delete, .modal-card-foot > button:not(.is-success)', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.overlay.close();
-                    });
-                })}
             </div>
         `;
     }

@@ -1,6 +1,5 @@
 
 import { Url } from '../url.js';
-import { DEFAULT_WIDGETS } from '../constants.js';
 
 export default {
 
@@ -14,15 +13,15 @@ export default {
         });
     },
 
+    isFrame: true,
+
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
         this.addVirtualNodeFilter(function(){
-            this.traverse(normalizeVirtualNode)
+            this.traverse(normalizeVirtualNode);
         });
     },
-
-    isFrame: true,
 
     get url(){
         if(this._url === undefined){
@@ -42,7 +41,7 @@ export default {
     },
 
     load(arg1 = {}){
-        const progressBar = (this.document || this).progressBar;
+        const { progressBar } = this.document;
         
         let { _method = 'GET', _url = this.url.toString(), _headers = {}, ...params } = arg1;
 
@@ -90,46 +89,27 @@ export default {
 };
 
 function normalizeVirtualNode(){
-    if(!this.parent && this.children.some(child => child.type == 'html')){
-        this.children = [
-            new this.constructor(this, '#doctype'),
-            ...this.children.filter(child => child.type == 'html')
-        ];
+    if(this.attributes['data-widget']) return;
+
+    if(this.type == 'form'){
+        this.attributes['data-widget'] = 'form';
+        const { method, action } = this.attributes;
+        if(method) this.attributes['data-method'] = this.attributes.method;
+        if(action) this.attributes['data-url'] = this.attributes.action;
+        return;
     }
 
-    if(this.type == 'head'){
-        const style = new this.constructor(this, 'style', {'data-widget': 'document/style'})
-        this.children = [
-            style,
-            ...this.children
-        ];
+    const isClickable = this.type == 'a' || (this.type == 'button' && this.attributes.type != 'submit') || (this.type == 'input' && this.attributes.type == 'button');
+    if(isClickable){
+        this.attributes['data-widget'] = 'button';
+        if(!this.attributes['data-action']) this.attributes['data-action'] = 'load';
+        const { target, href } = this.attributes;
+        if(target) this.attributes['data-target'] = this.attributes.target;
+        if(href) this.attributes['data-url'] = this.attributes.href;
+        return;
     }
 
-    if(this.type == 'body'){
-        const progressBar = new this.constructor(this, 'div', {'data-widget': 'document/progress-bar'})
-        this.children = [
-            progressBar,
-            ...this.children
-        ];
-        progressBar.appendNode('div');
-    }
-
-    if(this.type == '#text'){
-        this.attributes.value = this.attributes.value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    }
-
-    if(this.type == 'form' && this.attributes.autocomplete === undefined){
-        this.attributes.autocomplete = 'off';
-    }
-
-    if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
-        this.attributes.value = this.attributes.value.replace(/^\n/, '');
-    }
-
-    if(!this.attributes['data-widget']){
-        const widget = DEFAULT_WIDGETS[this.type];
-        if(widget){
-            this.attributes['data-widget'] = widget;
-        }
+    if(this.attributes['data-action']){
+        this.attributes['data-widget'] = 'trigger';
     }
 }

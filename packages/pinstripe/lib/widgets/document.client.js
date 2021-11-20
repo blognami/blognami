@@ -7,12 +7,14 @@ export default {
             isDocument: false,
 
             get document(){
-                return this.parents.find(({ isDocument }) => isDocument);
+                return this.parents.find(({ isDocument }) => isDocument) || this;
             }
         });
     },
 
     isDocument: true,
+
+    hasOverlayCssClass: 'p-is-clipped',
 
     initialize(...args){
         this.constructor.classes.frame.prototype.initialize.call(this, ...args);
@@ -25,7 +27,7 @@ export default {
 
     get progressBar(){
         if(!this._progressBar){
-            this._progressBar = this.descendants.find(node => node.is('*[data-widget="document/progress-bar"]'));
+            this._progressBar = this.descendants.find(node => node.is('*[data-widget="progress-bar"]'));
         }
         return this._progressBar;
     },

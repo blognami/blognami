@@ -14,13 +14,18 @@ export default {
 
     isOverlay: true,
 
-    close(){
-        this.remove();
+    cssClass: 'p-overlay',
+
+    initialize(...args){
+        this.constructor.classes.frame.prototype.initialize.call(this, ...args);
+        this.addClass(this.cssClass);
+    },
+
+    remove(...args){
+        this.constructor.parent.prototype.remove.call(this, ...args);
         if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('*[data-widget="overlay"]')).length){
             this.document.descendants.filter(node => node.is('html')).forEach(node => {
-                const { attributes } = node;
-                delete attributes['data-clipped'];
-                node.patch(attributes);
+                node.removeClass(this.document.hasOverlayCssClass);
             })
         }
     }

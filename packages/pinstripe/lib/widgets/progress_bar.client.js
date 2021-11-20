@@ -1,10 +1,13 @@
 
 export default {
+    cssClass: 'p-progress-bar',
+
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
         this.width = 0;
         this.startCount = 0;
         this.patch('');
+        this.addClass(this.cssClass);
     },
 
     start(){

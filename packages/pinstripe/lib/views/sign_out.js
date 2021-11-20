@@ -1,11 +1,13 @@
 
-export default async ({ session, renderScript }) => {
+export default async ({ session, renderHtml }) => {
 
     if(await session){
         await session.delete();
     }
 
-    const [ status, headers, body ] = await renderScript(() => this.document.load()).toResponseArray();
+    const [ status, headers, body ] = await renderHtml`
+        <span data-action="load" data-target="_top"></span>
+    `.toResponseArray();
 
     headers['Set-Cookie'] = 'pinstripeSession=';
 

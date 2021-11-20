@@ -19,12 +19,3 @@ export const TEXT_ONLY_TAGS = [
     'script',
     'style'
 ];
-
-export const DEFAULT_WIDGETS = {
-    a: 'anchor',
-    form: 'form',
-    input: 'input',
-    textarea: 'input',
-    script: 'script'
-};
-

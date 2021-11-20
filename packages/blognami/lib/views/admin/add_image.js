@@ -16,8 +16,8 @@ export default ({ renderForm, images, renderHtml }) => renderForm(images, {
                     const leftText = node.value.substring(0, startPos);
                     const rightText = node.value.substring(endPos, node.value.length)
                     node.value = leftText + '![' + title + '](/' + slug + ')' + rightText;
-                    this.frame.frame.close();
-                    this.frame.close();
+                    this.frame.frame.remove();
+                    this.frame.remove();
                 `)}
             </script>
         `;

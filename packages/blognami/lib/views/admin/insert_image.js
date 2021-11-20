@@ -1,5 +1,5 @@
 
-export default async ({ params, database, renderHtml, renderScript }) => {
+export default async ({ params, database, renderHtml }) => {
     const page = parseInt(params.page || '1');
     const pageSize = 10;
     const imageCount = await database.images.count();
@@ -14,9 +14,9 @@ export default async ({ params, database, renderHtml, renderScript }) => {
 
     return renderHtml`
         <div class="modal is-active">
-            <div class="modal-background"></div>
+            <div class="modal-background" data-widget="button" data-action="remove"></div>
             <div class="modal-content">
-                <button class="button is-small" data-widget="anchor" data-url="/admin/add_image" data-target="_overlay">Add</button>
+                <button class="button is-small" data-widget="button" data-action="load" data-url="/admin/add_image" data-target="_overlay">Add</button>
                 ${images.map(({ title, slug }) => renderHtml`
                     <div class="section">
                         <div class="card">
@@ -32,12 +32,7 @@ export default async ({ params, database, renderHtml, renderScript }) => {
                     </div>
                 `)}
             </div>
-            <button class="modal-close is-large" aria-label="close"></button>
-            ${renderScript(function(){
-                this.parent.on('click', '.modal-background, .modal-close', (e) => {
-                    this.frame.close();
-                });
-            })}
+            <button class="modal-close is-large" aria-label="close" data-widget="button" data-action="remove">></button>
         </div>
     `;
 };

@@ -21,22 +21,47 @@ export const NodeWrapper = Base.extend().include({
             instanceFor(node){
                 if(!node._nodeWrapper){
                     initializeRegistries();
-                    node._nodeWrapper = NodeWrapper.new(node);
-                    const widget = node._nodeWrapper.type == '#document' ? 'document' : node._nodeWrapper.attributes['data-widget'];
+                    node._nodeWrapper = NodeWrapper.new(node, true);
+                    const widget = node._nodeWrapper.type == '#document' ? 'document' : node._nodeWrapper.data.widget;
                     if(widget){
                         node._nodeWrapper = NodeWrapper.create(widget, node);
+                    } else {
+                        node._nodeWrapper = NodeWrapper.new(node);
                     }
+                    node._nodeWrapper.trigger('init', { bubbles: false });
                 }
                 return node._nodeWrapper;
-            }
+            },
+
+            actions: {}
         });
     },
 
-    initialize(node){
+    initialize(node, skipInit = false){
         this.node = node;
         this._registeredEventListeners = [];
         this._registeredTimers = [];
         this._virtualNodeFilters = [];
+
+        if(skipInit){
+            return;
+        }
+
+        this.addVirtualNodeFilter(function(){
+            this.traverse(normalizeVirtualNode);
+        });
+
+        const { autosubmit } = this.data;
+        if(autosubmit){
+            let hash = JSON.stringify(this.values);
+            this.setInterval(() => {
+                const newHash = JSON.stringify(this.values);
+                if(hash != newHash){
+                    hash = newHash;
+                    this.trigger('submit');
+                }
+            }, 100);
+        }
     },
 
     get type(){
@@ -154,6 +179,39 @@ export const NodeWrapper = Base.extend().include({
         return out;
     },
 
+    get isInput(){
+        return this.is('input, textarea');
+    },
+
+    get name(){
+        return this.attributes.name;
+    },
+    
+    get value(){
+        if(this.is('input[type="file"]')){
+            return this.node.files[0];
+        }
+        if(this.is('input[type="checkbox"], input[type="radio"]')){
+            return this.is(':checked') ? this.node.value : undefined;
+        }
+        return this.node.value;
+    },
+
+    get inputs(){
+        return this.descendants.filter((descendant) => descendant.isInput);
+    },
+
+    get values(){
+        const out = {}
+        this.inputs.forEach(input => {
+            const value = input.value
+            if(value !== undefined){
+                out[input.name] = value
+            }
+        })
+        return out;
+    },
+
     is(selector){
         if(typeof selector == 'function'){
             return selector.call(this, this)
@@ -183,14 +241,16 @@ export const NodeWrapper = Base.extend().include({
         return this;
     },
     
-    trigger(name, data){
+    trigger(name, options = {}){
         let event;
 
+        const { data, bubbles = true, cancelable = true } = options;
+
         if (window.CustomEvent && typeof window.CustomEvent === 'function') {
-            event = new CustomEvent(name, { bubbles: true, cancelable: true, detail: data } );
+            event = new CustomEvent(name, { bubbles, cancelable, detail: data } );
         } else {
             event = document.createEvent('CustomEvent');
-            event.initCustomEvent(name, true, true, data);
+            event.initCustomEvent(name, bubbles, cancelable, data);
         }
         
         this.node.dispatchEvent(event);
@@ -273,7 +333,7 @@ function cleanChildren(){
 }
 
 function clean(){
-    if(this.is('*[data-widget="document/progress-bar"]')){
+    if(this.is('*[data-widget="progress-bar"]')){
         return;
     }
 
@@ -317,7 +377,7 @@ function createVirtualNode(html){
 }
 
 function patch(attributes, virtualChildren){
-    if(this.is('*[data-widget="document/progress-bar"]')){
+    if(this.is('*[data-widget="progress-bar"]')){
         return;
     }
     patchAttributes.call(this, attributes);
@@ -349,7 +409,7 @@ function patchAttributes(attributes){
 
 function patchChildren(virtualChildren){
     const children = [...this.node.childNodes].map(
-        node => new NodeWrapper(node)
+        node => NodeWrapper.new(node, true)
     );
 
     for(let i = 0; i < virtualChildren.length; i++){
@@ -397,7 +457,7 @@ function insert(virtualNode, referenceChild, returnNodeWrapper = true){
     }
 
     children.forEach(child => {
-        insert.call(new NodeWrapper(node), child, null, false);
+        insert.call(NodeWrapper.new(node, true), child, null, false);
     })
     
     this.node.insertBefore(
@@ -407,6 +467,36 @@ function insert(virtualNode, referenceChild, returnNodeWrapper = true){
     
     if(returnNodeWrapper){
         return NodeWrapper.instanceFor(node);
+    }
+}
+
+function normalizeVirtualNode(){
+    if(!this.parent && this.children.some(child => child.type == 'html')){
+        this.children = [
+            new this.constructor(this, '#doctype'),
+            ...this.children.filter(child => child.type == 'html')
+        ];
+    }
+
+    if(this.type == 'body'){
+        const progressBar = new this.constructor(this, 'div', {'data-widget': 'progress-bar'})
+        this.children = [
+            progressBar,
+            ...this.children
+        ];
+        progressBar.appendNode('div');
+    }
+
+    if(this.type == '#text'){
+        this.attributes.value = this.attributes.value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    }
+
+    if(this.type == 'form' && this.attributes.autocomplete === undefined){
+        this.attributes.autocomplete = 'off';
+    }
+
+    if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
+        this.attributes.value = this.attributes.value.replace(/^\n/, '');
     }
 }
 
@@ -459,3 +549,4 @@ export const widgetImporter = dirPath => {
         }
     };
 };
+
