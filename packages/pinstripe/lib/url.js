@@ -26,21 +26,29 @@ export const Url = Base.extend().include({
                     out.port = referenceUrl.port
                 }
         
-                if(matches = url.match(/^\/[^\?\#]*/)){
+                if(matches = url.match(/^\/[^?#&]*/)){
                     out.path = normalizePath(matches[0])
-                } else if(matches = url.match(/^[^\?\#]+/)){
+                } else if(matches = url.match(/^[^?#&]+/)){
                     out.path = normalizePath(`${referenceUrl.path.replace(/[^\/]*$/, '')}${matches[0]}`)
                 } else {
                     out.path = referenceUrl.path
                 }
         
-                if(matches = url.match(/^\?([^\#]*)/)){
+                if(matches = url.match(/^\?([^#]*)/)){
                     matches[1].split(/&/).forEach((pair) => {
                         const [key, value] = pair.split(/=/)
                         out.params[decodeURIComponent(key)] = decodeURIComponent(value)
                     })
                 }
-        
+                
+                if(matches = url.match(/^&([^#]*)/)){
+                    out.params = { ...referenceUrl.params };
+                    matches[1].split(/&/).forEach((pair) => {
+                        const [key, value] = pair.split(/=/)
+                        out.params[decodeURIComponent(key)] = decodeURIComponent(value)
+                    })
+                }
+
                 return out
             }
         });

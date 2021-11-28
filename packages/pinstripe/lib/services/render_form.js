@@ -4,8 +4,25 @@ import { capitalize } from '../inflector.js';
 import { Base } from '../base.js';
 import { Validatable } from '../validatable.js';
 
-export default ({ params, renderHtml }) => {
-    return async (formAdaptable, options = {}) => {
+export default {
+    create(){
+        return (...args) => this.render(...args);
+    },
+
+    render(...args){
+        const { _part } = this.params;
+        if(_part == 'markdown-editor'){
+            return this.renderMarkdownEditor();
+        }
+        if(_part == 'markdown-editor-preview'){
+            return this.renderMarkdownEditorPreview();
+        }
+        return this.renderForm(...args);
+    },
+
+    async renderForm(formAdaptable, options = {}){
+        const { params, renderHtml } = this;
+
         const formAdapter = await (typeof formAdaptable.toFormAdapter == 'function' ? formAdaptable.toFormAdapter() : createObjectFormAdapter(formAdaptable));
         
         const values = {};
@@ -54,12 +71,12 @@ export default ({ params, renderHtml }) => {
 
         return renderHtml`
             <div class="modal is-active">
-                <div class="modal-background" data-widget="button" data-action="remove"></div>
+                <div class="modal-background" data-widget="trigger" data-event="click" data-action="remove"></div>
                 <div class="modal-card">
                     <form method="post" enctype="multipart/form-data" autocomplete="off">
                         <header class="modal-card-head">
                             <p class="modal-card-title">${title}</p>
-                            <button type="button" class="delete" aria-label="close" data-widget="button" data-action="remove"></button>
+                            <button type="button" class="delete" aria-label="close" data-widget="trigger" data-event="click" data-action="remove"></button>
                         </header>
                         <section class="modal-card-body">
                             ${() => {
@@ -91,7 +108,7 @@ export default ({ params, renderHtml }) => {
                                                 }
                                                 if(type == 'markdown'){
                                                     return renderHtml`
-                                                        <textarea class="textarea${error ? ' is-danger' : ''}" name="${name}" data-widget="button" data-action="load" data-url="/edit_markdown">${value}</textarea>
+                                                        <textarea class="textarea${error ? ' is-danger' : ''}" name="${name}" data-widget="trigger" data-event="click" data-action="load" data-target="_overlay" data-url="&_part=markdown-editor">${value}</textarea>
                                                     `
                                                 }
                                                 return renderHtml`
@@ -118,8 +135,32 @@ export default ({ params, renderHtml }) => {
                 </div>
             </div>
         `;
+    },
+
+    async renderMarkdownEditor(){
+        const { renderHtml, params } = this;
+        const { value = '' } = params;
+
+        return renderHtml`
+            <div class="modal is-active">
+                <div class="modal-background" data-widget="trigger" data-event="click" data-action="remove"></div>
+
+                <div class="markdown-editor" data-widget="internal/markdown-editor" data-autosubmit="true">
+                    <div class="markdown-editor-text-pane">
+                        <textarea name="value">${value}</textarea>
+                    </div>
+                    <div class="markdown-editor-preview-pane content" data-widget="frame" data-url="&_part=markdown-editor-preview"></div>
+                </div>
+                <button class="modal-close is-large" aria-label="close" data-widget="trigger" data-event="click" data-action="remove"></button>
+            </div>
+        `;
+    },
+
+    renderMarkdownEditorPreview(){
+        const { renderMarkdown, params: { value = '' } } = this;
+        return renderMarkdown(value);
     }
-};
+}
 
 const normalizeFields = (fields) => fields.map(field => {
     let out = field;

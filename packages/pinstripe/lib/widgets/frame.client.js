@@ -92,20 +92,22 @@ function normalizeVirtualNode(){
     if(this.attributes['data-widget']) return;
 
     if(this.type == 'form'){
-        this.attributes['data-widget'] = 'form';
+        this.attributes['data-widget'] = 'trigger';
+        if(!this.attributes['data-event']) this.attributes['data-event'] = 'submit';
         const { method, action } = this.attributes;
-        if(method) this.attributes['data-method'] = this.attributes.method;
-        if(action) this.attributes['data-url'] = this.attributes.action;
+        if(!this.attributes['data-method'] && method) this.attributes['data-method'] = this.attributes.method;
+        if(!this.attributes['data-url'] && action) this.attributes['data-url'] = this.attributes.action;
         return;
     }
 
     const isClickable = this.type == 'a' || (this.type == 'button' && this.attributes.type != 'submit') || (this.type == 'input' && this.attributes.type == 'button');
     if(isClickable){
-        this.attributes['data-widget'] = 'button';
+        this.attributes['data-widget'] = 'trigger';
+        if(!this.attributes['data-event']) this.attributes['data-event'] = 'click';
         if(!this.attributes['data-action']) this.attributes['data-action'] = 'load';
         const { target, href } = this.attributes;
-        if(target) this.attributes['data-target'] = this.attributes.target;
-        if(href) this.attributes['data-url'] = this.attributes.href;
+        if(!this.attributes['data-target'] && target) this.attributes['data-target'] = this.attributes.target;
+        if(!this.attributes['data-url'] && href) this.attributes['data-url'] = this.attributes.href;
         return;
     }
 

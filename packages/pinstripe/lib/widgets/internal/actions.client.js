@@ -1,5 +1,5 @@
 
-import { Url } from '../url.js';
+import { Url } from '../../url.js';
 
 export function load(){
     const { confirm, method = 'GET', target = '_self'} = this.data;
@@ -14,14 +14,14 @@ export function load(){
         this.document.descendants.filter(node => node.is('html')).forEach(node => {
             node.addClass(this.document.hasOverlayCssClass);
         });
-        frame = this.document.descendants.find(node => node.is('body')).append(`<div data-widget="overlay"></div>`).pop();
+        frame = this.document.descendants.find(node => node.is('body')).append(`<div data-widget="internal/overlay"></div>`).pop();
         frame._parent = this;
     } else {
         frame = getFrame.call(this, target);
         if(!frame) return;
     }
 
-    const url = Url.fromString(this.data.url || frame.url, frame.url);
+    const url = Url.fromString(this.data.url || frame.url, this.frame.url);
     if(url.host != frame.url.host || url.port != frame.url.port){
         return;
     }

@@ -1,6 +1,8 @@
 
 export default {
     meta(){
+        this.isPrivate = true;
+
         this.include('frame');
 
         this.parent.prototype.assignProps({
@@ -27,7 +29,7 @@ export default {
 
     get progressBar(){
         if(!this._progressBar){
-            this._progressBar = this.descendants.find(node => node.is('*[data-widget="progress-bar"]'));
+            this._progressBar = this.descendants.find(node => node.is('*[data-widget="internal/progress-bar"]'));
         }
         return this._progressBar;
     },

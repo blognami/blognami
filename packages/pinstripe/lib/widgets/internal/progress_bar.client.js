@@ -1,5 +1,9 @@
 
 export default {
+    meta(){
+        this.isPrivate = true;
+    },
+
     cssClass: 'p-progress-bar',
 
     initialize(...args){

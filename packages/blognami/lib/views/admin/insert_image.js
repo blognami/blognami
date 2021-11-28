@@ -14,9 +14,9 @@ export default async ({ params, database, renderHtml }) => {
 
     return renderHtml`
         <div class="modal is-active">
-            <div class="modal-background" data-widget="button" data-action="remove"></div>
+            <div class="modal-background" data-widget="trigger" data-event="click" data-action="remove"></div>
             <div class="modal-content">
-                <button class="button is-small" data-widget="button" data-action="load" data-url="/admin/add_image" data-target="_overlay">Add</button>
+                <button class="button is-small" data-widget="trigger" data-event="click" data-action="load" data-url="/admin/add_image" data-target="_overlay">Add</button>
                 ${images.map(({ title, slug }) => renderHtml`
                     <div class="section">
                         <div class="card">
@@ -32,7 +32,7 @@ export default async ({ params, database, renderHtml }) => {
                     </div>
                 `)}
             </div>
-            <button class="modal-close is-large" aria-label="close" data-widget="button" data-action="remove">></button>
+            <button class="modal-close is-large" aria-label="close" data-widget="trigger" data-event="click" data-action="remove">></button>
         </div>
     `;
 };
