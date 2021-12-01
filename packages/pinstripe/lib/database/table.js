@@ -189,7 +189,7 @@ export const Table = Base.extend().include({
 
     async insert(...args){
         const { Row } = await import('./row.js');
-        return Row.create(Inflector.singularize(this.constructor.name), this._database).update(...args);
+        return ( await Row.create(Inflector.singularize(this.constructor.name), this._database)).update(...args);
     },
 
     async update(...args){

@@ -26,8 +26,8 @@ export default {
         this.mustNotBeBlank('role');
     },
 
-    initialize(...args){
-        this.constructor.parent.prototype.initialize.call(this, ...args);
+    async initialize(...args){
+        await this.constructor.parent.prototype.initialize.call(this, ...args);
         this.password = null;
     },
 

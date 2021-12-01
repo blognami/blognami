@@ -82,9 +82,21 @@ export const Row = Base.extend().include({
         });
     },
 
-    initialize(database, fields = {}){
+    async initialize(database, fields = {}){
         this._database = database._environment.database;
-        this._fields = fields;
+        this._fieldTypes = await (async () => {
+            const out = {};
+            const tableName = Inflector.pluralize(this.constructor.name);
+            const columns = await this._database[tableName].columns();
+            const fieldNames = Object.keys(columns);
+            while(fieldNames.length){
+                const fieldName = fieldNames.shift();
+                const column = columns[fieldName];
+                out[fieldName] = await column.type();
+            }
+            return out;
+        })();
+        this._fields = this._normalizeFields(fields);
         this._alteredFields = {};
         this._updateLevel = 0;
     },
@@ -156,8 +168,9 @@ export const Row = Base.extend().include({
         if(name == 'id'){
             throw "Id fields can't be set directly on a row";
         }
-        if(this._fields[name] != value){
-            this._alteredFields[name] = value;
+        const normalizedValue = this._normalizeField(name, value)
+        if(this._fields[name] != normalizedValue){
+            this._alteredFields[name] = normalizedValue;
         }
     },
 
@@ -205,6 +218,24 @@ export const Row = Base.extend().include({
             })}
             where id = uuid_to_bin(${this._fields.id})
         `;
+    },
+
+    _normalizeFields(fields = {}){
+        const out = {};
+        const names = Object.keys(fields);
+        names.forEach(name => {
+            out[name] = this._normalizeField(name, fields[name]);
+        });
+        return out;
+    },
+
+    _normalizeField(name, value){
+        const type = this._fieldTypes[name];
+        if(type == 'boolean'){
+            if(typeof value == 'string') return value == 'true';
+            return !!value;
+        }
+        return value;
     },
 
     async __beforeInspect(){

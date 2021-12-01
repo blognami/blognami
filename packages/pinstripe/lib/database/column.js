@@ -1,7 +1,7 @@
 
 import { Base } from "../base.js";
 import { Sql } from './sql.js';
-import { TYPE_TO_MYSQL_COLUMN_TYPE_MAP } from './constants.js';
+import { TYPE_TO_MYSQL_COLUMN_TYPE_MAP, TYPE_TO_DEFAULT_VALUE_MAP } from './constants.js';
 
 export const Column = Base.extend().include({
     initialize(table, name, type){
@@ -32,6 +32,7 @@ export const Column = Base.extend().include({
     async create(type = 'string', options = {}){
         options = {
             index: type == 'foreign_key',
+            default: TYPE_TO_DEFAULT_VALUE_MAP[type],
             ...options
         };
         const table = this._table;
@@ -43,6 +44,7 @@ export const Column = Base.extend().include({
             await database.run`
                 alter table ${table.constructor}
                 add column ${Sql.escapeIdentifier(this._name)} ${[TYPE_TO_MYSQL_COLUMN_TYPE_MAP[type]]}
+                ${options.default !== undefined ? this.sql`default ${options.default}` : undefined}
             `;
         }
 

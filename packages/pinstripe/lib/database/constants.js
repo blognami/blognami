@@ -16,6 +16,14 @@ export const TYPE_TO_MYSQL_COLUMN_TYPE_MAP = {
     timestamp: "datetime"
 };
 
+export const TYPE_TO_DEFAULT_VALUE_MAP = {
+    boolean: false,
+    decimal: 0,
+    float: 0,
+    integer: 0,
+    string: ''
+};
+
 export const MYSQL_COLUMN_TYPE_TO_TYPE_MAP = (() => {
     const out = {};
     Object.keys(TYPE_TO_MYSQL_COLUMN_TYPE_MAP).forEach(

@@ -111,6 +111,11 @@ export default {
                                                         <textarea class="textarea${error ? ' is-danger' : ''}" name="${name}" data-widget="trigger" data-event="click" data-action="load" data-target="_overlay" data-url="&_part=markdown-editor">${value}</textarea>
                                                     `
                                                 }
+                                                if(type == 'checkbox'){
+                                                    return renderHtml`
+                                                        <input class="checkbox${error ? ' is-danger' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
+                                                    `
+                                                }
                                                 return renderHtml`
                                                     <input class="input${error ? ' is-danger' : ''}" name="${name}" type="${type}" value="${value}">
                                                 ` 

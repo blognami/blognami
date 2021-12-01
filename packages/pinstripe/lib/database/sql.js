@@ -11,7 +11,7 @@ export const Sql = Base.extend().include({
             },
 
             escapeValue(value){
-                return this.fromString(mysql.escape(value));
+                return this.fromString(mysql.escape(typeof value == 'boolean' ? `${value}` : value));
             },
 
             escapeIdentifier(identifier){

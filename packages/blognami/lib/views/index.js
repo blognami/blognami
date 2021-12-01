@@ -5,26 +5,26 @@ export default async ({ session, renderView, renderHtml, database, params }) => 
         user = await session.user;
     }
 
+    const isSignedIn = user !== undefined;
     const page = parseInt(params.page || '1');
     const pageSize = 10;
-    const postCount = await database.posts.count();
+    const unpublishedPosts = database.posts.publishedEq(false);
+    const publishedPosts = database.posts.publishedEq(true).orderBy('publishedAt', 'desc');
+    const posts = isSignedIn ? unpublishedPosts.concat(publishedPosts) : publishedPosts;
+    const postCount = await posts.count();
     const pageCount = Math.ceil(postCount / pageSize);
     const pagination = new Array(pageCount).fill().map((_,i) => {
         const number = i + 1;
         const current = number == page;
         return { number, current };
     });
-    
-    const posts = await database.posts.paginate(page, pageSize).all();
-
-    const isSignedIn = user !== undefined;
 
     return renderView('_layout', {
         title: 'Blognami',
         isSignedIn,
         user,
         body: renderHtml`
-            ${posts.map(({ slug, title, id, body }) => renderHtml`
+            ${posts.paginate(page, pageSize).all().map(({ slug, title, id, body }) => renderHtml`
                 <div class="card mb-4">
                     <header class="card-header">
                         <a class="card-header-title" href="/${slug}">
@@ -51,15 +51,19 @@ export default async ({ session, renderView, renderHtml, database, params }) => 
                     </div>
                 </div>
             `)}
-            <nav class="pagination">
-                <ul class="pagination-list mb-4">
-                    ${pagination.map(({ number, current }) => renderHtml`
-                        <li>
-                            <a class="pagination-link${current ? ' is-current' : ''}" href="?page=${number}">${number}</a>
-                        </li>
-                    `)}
-                </ul>
-            </nav>
+            ${() => {
+                if(pageCount > 1) return renderHtml` 
+                    <nav class="pagination">
+                        <ul class="pagination-list mb-4">
+                            ${pagination.map(({ number, current }) => renderHtml`
+                                <li>
+                                    <a class="pagination-link${current ? ' is-current' : ''}" href="?page=${number}">${number}</a>
+                                </li>
+                            `)}
+                        </ul>
+                    </nav>
+                `;
+            }}
         `
     });
 };

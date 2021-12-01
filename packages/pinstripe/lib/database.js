@@ -108,8 +108,8 @@ export const Database = Base.extend().include({
         return Table.create(name, this);
     },
 
-    _fetchRows(query){
-        return new Promise((resolve, reject) => {
+    async _fetchRows(query){
+        return this._mapRows(await new Promise((resolve, reject) => {
             query = query.toString();
             if(query.match(/^\s*(create|drop|alter)/im)){
                 schemaCache = {};
@@ -125,7 +125,7 @@ export const Database = Base.extend().include({
             }
             
             if(cache && cache[query]){
-                resolve(this._mapRows(cache[query]));
+                resolve(cache[query]);
                 return;
             }
 
@@ -154,10 +154,10 @@ export const Database = Base.extend().include({
                         cache[query] = rows;
                     }
 
-                    resolve(this._mapRows(rows));
+                    resolve(rows);
                 }
             });
-        });
+        }));
     },
 
     get _connection(){
@@ -169,14 +169,18 @@ export const Database = Base.extend().include({
         return this.__connection;
     },
 
-    _mapRows(rows){
-        return rows.map(row => {
-            const { _type, ...fields } = row;
+    async _mapRows(rows){
+        const out = [];
+        rows = [ ...rows ];
+        while(rows.length){
+            const { _type, ...fields } = rows.shift();
             if(_type !== undefined){
-                return Row.create(_type, this, fields);
+                out.push(await Row.create(_type, this, fields));
+            } else {
+                out.push(fields);
             }
-            return fields;
-        });
+        }
+        return out;
     },
 
     async __beforeInspect(){

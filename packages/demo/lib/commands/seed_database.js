@@ -13,7 +13,8 @@ export default async ({ users, posts }) => {
         await posts.insert({
             userId: user.id,
             title: faker.address.streetName(),
-            body: faker.lorem.paragraphs(3)
+            body: faker.lorem.paragraphs(3),
+            published: true
         });
     }
 };

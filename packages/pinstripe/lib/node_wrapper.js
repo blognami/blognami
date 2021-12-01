@@ -191,8 +191,11 @@ export const NodeWrapper = Base.extend().include({
         if(this.is('input[type="file"]')){
             return this.node.files[0];
         }
-        if(this.is('input[type="checkbox"], input[type="radio"]')){
+        if(this.is('input[type="radio"]')){
             return this.is(':checked') ? this.node.value : undefined;
+        }
+        if(this.is('input[type="checkbox"]')){
+            return this.is(':checked') ? true : false;
         }
         return this.node.value;
     },
