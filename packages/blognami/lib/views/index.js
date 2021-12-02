@@ -8,9 +8,13 @@ export default async ({ session, renderView, renderHtml, database, params }) => 
     const isSignedIn = user !== undefined;
     const page = parseInt(params.page || '1');
     const pageSize = 10;
-    const unpublishedPosts = database.posts.publishedEq(false);
-    const publishedPosts = database.posts.publishedEq(true).orderBy('publishedAt', 'desc');
-    const posts = isSignedIn ? unpublishedPosts.concat(publishedPosts) : publishedPosts;
+    let posts = database.posts;
+    if(isSignedIn){
+        posts = posts.orderBy('published', 'asc')
+    } else {
+        posts = posts.publishedEq(true);
+    }
+    posts = posts.orderBy('publishedAt', 'desc');
     const postCount = await posts.count();
     const pageCount = Math.ceil(postCount / pageSize);
     const pagination = new Array(pageCount).fill().map((_,i) => {
@@ -24,7 +28,7 @@ export default async ({ session, renderView, renderHtml, database, params }) => 
         isSignedIn,
         user,
         body: renderHtml`
-            ${posts.paginate(page, pageSize).all().map(({ slug, title, id, body }) => renderHtml`
+            ${posts.orderBy('publishedAt', 'desc').paginate(page, pageSize).all().map(({ slug, title, id, body }) => renderHtml`
                 <div class="card mb-4">
                     <header class="card-header">
                         <a class="card-header-title" href="/${slug}">

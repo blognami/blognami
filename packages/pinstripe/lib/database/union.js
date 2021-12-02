@@ -26,7 +26,7 @@ export const Union = Base.extend().include({
         });
     },
     
-    initialize(database, collections, limitSql = []){
+    initialize(database, collections, orderBySql = [], limitSql = []){
         this._database = database
         this._collections = (collections || this.constructor.tableClasses.map(tableClass => new tableClass(database))).map(collection => {
             if(collection._collections || collection._startObject){
@@ -34,6 +34,7 @@ export const Union = Base.extend().include({
             }
             return AsyncPathBuilder.new(collection);
         });
+        this._orderBySql = [ ...orderBySql ];
         this._limitSql = [ ...limitSql ];
     },
 
@@ -43,6 +44,21 @@ export const Union = Base.extend().include({
 
     get sql(){
         return Sql.fromTemplate(undefined);
+    },
+
+    orderBy(column, direction = 'asc'){
+        const orderBySql = this._orderBySql;
+        if(orderBySql.length){
+            orderBySql.push(this.sql`, ${Sql.escapeIdentifier(column)} ${[direction == 'desc' ? 'desc' : 'asc']}`);
+        } else {
+            orderBySql.push(this.sql`${Sql.escapeIdentifier(column)} ${[direction == 'desc' ? 'desc' : 'asc']}`);
+        }
+        return this;
+    },
+
+    clearOrderBy(){
+        this._orderBySql = [];
+        return this;
     },
 
     paginate(page = 1, pageSize = 10){
@@ -84,11 +100,11 @@ export const Union = Base.extend().include({
     destroy(){},
 
     __getMissing(name){
-        return new Union(this._database, this._collections.map(collection => collection[name]), this._limitSql);
+        return new Union(this._database, this._collections.map(collection => collection[name]), this._orderBySql, this._limitSql);
     },
 
     __call(...args){
-        return new Union(this._database, this._collections.map(collection => collection(...args)), this._limitSql);
+        return new Union(this._database, this._collections.map(collection => collection(...args)), this._orderBySql, this._limitSql);
     },
 
     async _generateSelectSql(options = {}){
@@ -112,6 +128,10 @@ export const Union = Base.extend().include({
             }
         }
         out.push(')) as `_union`');
+        if(this._orderBySql.length){
+            out.push(this.sql` order by ${this._orderBySql}`);
+        }
+
         if(this._limitSql.length) {
             out.push(this.sql` limit ${this._limitSql}`);
         }
