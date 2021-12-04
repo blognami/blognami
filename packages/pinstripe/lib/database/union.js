@@ -26,7 +26,7 @@ export const Union = Base.extend().include({
         });
     },
     
-    initialize(database, collections, orderBySql = [], limitSql = []){
+    initialize(database, collections, orderBySql = [], limit){
         this._database = database
         this._collections = (collections || this.constructor.tableClasses.map(tableClass => new tableClass(database))).map(collection => {
             if(collection._collections || collection._startObject){
@@ -35,7 +35,7 @@ export const Union = Base.extend().include({
             return AsyncPathBuilder.new(collection);
         });
         this._orderBySql = [ ...orderBySql ];
-        this._limitSql = [ ...limitSql ];
+        this._limit = limit;
     },
 
     concat(collection){
@@ -62,12 +62,12 @@ export const Union = Base.extend().include({
     },
 
     paginate(page = 1, pageSize = 10){
-        this._limitSql = [this.sql`${(page - 1) * pageSize}, ${pageSize}`];
+        this._limit = { page, pageSize };
         return this;
     },
 
     clearPagination(){
-        this._limitSql = [];
+        this._limit = undefined;
         return this;
     },
 
@@ -100,11 +100,11 @@ export const Union = Base.extend().include({
     destroy(){},
 
     __getMissing(name){
-        return new Union(this._database, this._collections.map(collection => collection[name]), this._orderBySql, this._limitSql);
+        return new Union(this._database, this._collections.map(collection => collection[name]), this._orderBySql, this._limit);
     },
 
     __call(...args){
-        return new Union(this._database, this._collections.map(collection => collection(...args)), this._orderBySql, this._limitSql);
+        return new Union(this._database, this._collections.map(collection => collection(...args)), this._orderBySql, this._limit);
     },
 
     async _generateSelectSql(options = {}){
@@ -132,8 +132,9 @@ export const Union = Base.extend().include({
             out.push(this.sql` order by ${this._orderBySql}`);
         }
 
-        if(this._limitSql.length) {
-            out.push(this.sql` limit ${this._limitSql}`);
+        if(this._limit) {
+            const { page, pageSize } = this._limit;
+            out.push(this.sql` limit ${(page - 1) * pageSize}, ${pageSize}`);
         }
         return this._database.sql`${out}`;
     },

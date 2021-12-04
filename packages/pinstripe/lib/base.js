@@ -86,6 +86,13 @@ export class Base {
             traps.ownKeys = () => {
                 return this.__keys();
             };
+
+            traps.getOwnPropertyDescriptor = (target, prop) => {
+                return {
+                    enumerable: true,
+                    configurable: true,
+                };
+            }
         }
 
         if(Object.keys(traps).length){

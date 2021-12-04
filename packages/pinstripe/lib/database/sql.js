@@ -48,8 +48,9 @@ export const Sql = Base.extend().include({
                 }
                 if(Array.isArray(value)){
                     const out = [];
-                    while(value.length){
-                        out.push(await value.shift());
+                    const _value = [ ...value ];
+                    while(_value.length){
+                        out.push(await _value.shift());
                     }
                     return this.fromString(out.join(''));
                 }

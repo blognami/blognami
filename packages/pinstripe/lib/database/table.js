@@ -100,7 +100,7 @@ export const Table = Base.extend().include({
             this._fromSql = [this.sql`${this.constructor} as ${this}`];
             this._whereSql = [];
             this._orderBySql = [];
-            this._limitSql = [];
+            this._limit = undefined;
         }
     },
 
@@ -152,12 +152,12 @@ export const Table = Base.extend().include({
     },
 
     paginate(page = 1, pageSize = 10){
-        this._joinRoot._limitSql = [this.sql`${(page - 1) * pageSize}, ${pageSize}`];
+        this._joinRoot._limit = { page, pageSize };
         return this;
     },
 
     clearPagination(){
-        this._joinRoot._limitSql = [];
+        this._joinRoot._limit = undefined;
         return this;
     },
 
@@ -175,12 +175,11 @@ export const Table = Base.extend().include({
     },
 
     async first(options = {}){
-        this.paginate(1, 1);
-        return (await this.all(options)).pop();
+        return (await this.all({ ...options, limit: '0, 1' })).pop();
     },
 
     async count(options = {}){
-        return Object.values(await this.first({select: 'count(*)', ...options})).pop();
+        return Object.values(await this.first({ select: 'count(*)', ...options })).pop();
     },
 
     async explain(options = {}){
@@ -285,6 +284,36 @@ export const Table = Base.extend().include({
         };
     },
 
+    async toTableAdapter(){
+        return {
+             fetch: async () => {
+                const limit = this._joinRoot._limit;
+                const name = this.constructor.name;
+                let pageCount = 1;
+                let rowCount;
+                let page = 1;
+                let pageSize;
+                let pagination = [];
+                const rows = await this.all();
+                if(limit){
+                    page = limit.page;
+                    pageSize = limit.pageSize;
+                    rowCount = await this.count({ limit: null });
+                    pageCount = Math.ceil(rowCount / pageSize);
+                    pagination = new Array(pageCount).fill().map((_,i) => {
+                        const number = i + 1;
+                        const current = number == page;
+                        return { number, current };
+                    });
+                } else {
+                    pageSize = rows.length;
+                }
+
+                return { name, pageCount, rowCount, page, pageSize, pagination, rows };
+            }
+        };
+    },
+
     async __getMissing(name){
         const columns = await this.columns();
         let matches = name.match(COMPARISON_OPERATOR_METHOD_PATTERN);
@@ -349,7 +378,7 @@ export const Table = Base.extend().include({
 
         const out = ['select '];
 
-        if(options.select){
+        if(options.hasOwnProperty('select')){
             out.push(options.select);
         } else {
             for(let i in options.columnNames){
@@ -370,7 +399,7 @@ export const Table = Base.extend().include({
 
         const joinRoot = this._joinRoot;
         
-        if(options.from !== undefined){
+        if(options.hasOwnProperty('from')){
             if(options.from){
                 out.push(this.sql` from ${[options.from]}`);
             }
@@ -378,7 +407,7 @@ export const Table = Base.extend().include({
             out.push(this.sql` from ${joinRoot._fromSql}`);
         }
 
-        if (options.where !== undefined){
+        if (options.hasOwnProperty('where')){
             if(options.where){
                 out.push(this.sql` where ${[options.where]}`);
             }
@@ -386,7 +415,7 @@ export const Table = Base.extend().include({
             out.push(this.sql` where ${joinRoot._whereSql}`);
         }
 
-        if(options.orderBy !== undefined){
+        if(options.hasOwnProperty('orderBy')){
             if(options.orderBy){
                 out.push(this.sql` order by ${[options.orderBy]}`);
             }
@@ -394,12 +423,13 @@ export const Table = Base.extend().include({
             out.push(this.sql` order by ${joinRoot._orderBySql}`);
         }
 
-        if(options.limit !== undefined){
+        if(options.hasOwnProperty('limit')){
             if(options.limit){
                 out.push(this.sql` limit ${[options.limit]}`);
             }
-        } else if(joinRoot._limitSql.length) {
-            out.push(this.sql` limit ${joinRoot._limitSql}`);
+        } else if(joinRoot._limit) {
+            const { page, pageSize } = joinRoot._limit;
+            out.push(this.sql` limit ${(page - 1) * pageSize}, ${pageSize}`);
         }
 
         return this.sql`${out}`;
