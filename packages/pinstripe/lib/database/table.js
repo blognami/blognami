@@ -12,7 +12,8 @@ import {
     KEY_COMPARISON_OPERATORS,
     COMPARISON_OPERATOR_METHOD_PATTERN,
     KEY_COMPARISON_OPERATOR_METHOD_PATTERN,
-    COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP
+    COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP,
+    ALLOWED_TABLE_ADAPTER_COLUMN_TYPES
 } from './constants.js';
 
 export const Table = Base.extend().include({
@@ -285,33 +286,36 @@ export const Table = Base.extend().include({
     },
 
     async toTableAdapter(){
-        return {
-             fetch: async () => {
-                const limit = this._joinRoot._limit;
-                const name = this.constructor.name;
-                let pageCount = 1;
-                let rowCount;
-                let page = 1;
-                let pageSize;
-                let pagination = [];
-                const rows = await this.all();
-                if(limit){
-                    page = limit.page;
-                    pageSize = limit.pageSize;
-                    rowCount = await this.count({ limit: null });
-                    pageCount = Math.ceil(rowCount / pageSize);
-                    pagination = new Array(pageCount).fill().map((_,i) => {
-                        const number = i + 1;
-                        const current = number == page;
-                        return { number, current };
-                    });
-                } else {
-                    pageSize = rows.length;
-                }
+        const limit = this._joinRoot._limit;
+        const name = this.constructor.name;
+        let pageCount = 1;
+        let rowCount;
+        let page = 1;
+        let pageSize;
+        let pagination = [];
+        const rows = await this.all();
+        if(limit){
+            page = limit.page;
+            pageSize = limit.pageSize;
+            rowCount = await this.count({ limit: null });
+            pageCount = Math.ceil(rowCount / pageSize);
+        } else {
+            rowCount = rows.length
+            pageSize = rowCount;
+        }
 
-                return { name, pageCount, rowCount, page, pageSize, pagination, rows };
-            }
-        };
+        const columns = [];
+        const _columns = Object.values(await this.columns());
+        while(_columns.length){
+            const column = _columns.shift();
+            const type = await column.type();
+            if(ALLOWED_TABLE_ADAPTER_COLUMN_TYPES.includes(type)) columns.push({
+                name: column._name,
+                label: Inflector.dasherize(column._name).split(/-/).map(word => Inflector.capitalize(word))
+            });
+        }
+
+        return { name, pageCount, rowCount, page, pageSize, pagination, rows, columns };
     },
 
     async __getMissing(name){

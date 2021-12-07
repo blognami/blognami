@@ -45,6 +45,9 @@ export default {
         
         let { _method = 'GET', _url = this.url.toString(), _headers = {}, ...params } = arg1;
 
+        _headers = { ..._headers };
+        _headers['x-pinstripe-frame-type'] = _headers['x-pinstripe-frame-type'] || 'basic';
+
         this.abort();
 
         _method = _method.toUpperCase();
@@ -58,6 +61,10 @@ export default {
         this._request = new XMLHttpRequest();
 
         this._request.open(_method, this.url.toString(), true);
+
+        Object.keys(_headers).forEach(name => {
+            this._request.setRequestHeader(name, _headers[name]);
+        });
 
         progressBar.start();
 

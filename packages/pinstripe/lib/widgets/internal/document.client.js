@@ -34,8 +34,14 @@ export default {
         return this._progressBar;
     },
 
-    load(params = {}, replace = false){
+    load(_params = {}, replace = false){
         const previousUrl = this.url.toString();
+        
+        let { _headers = {}, ...params } = _params;
+        _headers = { ..._headers };
+        _headers['x-pinstripe-frame-type'] = _headers['x-pinstripe-frame-type'] || 'document';
+        params._headers = _headers;
+
         this.constructor.classes.frame.prototype.load.call(this, params);
         if(params._method == 'GET' && previousUrl != this.url.toString()){
             if(replace){

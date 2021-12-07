@@ -40,11 +40,9 @@ export default ({ overload, renderHtml }) => {
                 }
             } = options;
 
-            const data = await tableAdapter.fetch();
-
             return renderHtml`
-                ${ data.rowCount > 0 ? renderRows(data) : renderNoRows(data) }
-                ${ renderPagination(data) }
+                ${ tableAdapter.rowCount > 0 ? renderRows(tableAdapter) : renderNoRows(tableAdapter) }
+                ${ renderPagination(tableAdapter) }
             `;
         },
 

@@ -16,6 +16,18 @@ export const TYPE_TO_MYSQL_COLUMN_TYPE_MAP = {
     timestamp: "datetime"
 };
 
+export const ALLOWED_TABLE_ADAPTER_COLUMN_TYPES = [
+    'boolean',
+    'date',
+    'datetime',
+    'decimal',
+    'float',
+    'integer',
+    'string',
+    'time',
+    'timestamp'
+];
+
 export const TYPE_TO_DEFAULT_VALUE_MAP = {
     boolean: false,
     decimal: 0,

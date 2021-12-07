@@ -37,6 +37,9 @@ export default async ({ params: { title, body, isSignedIn, user, editUrl }, rend
                                                     </a>
                                                 `;
                                             }}
+                                            <a class="button is-primary" href="/admin/users" target="_overlay">
+                                                <strong>Users</strong>
+                                            </a>
                                             <a class="button is-primary" href="/sign_out" target="_overlay">
                                                 <strong>Sign out</strong>
                                             </a>

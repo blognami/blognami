@@ -60,7 +60,7 @@ const expandSignature = (signature, path = [], out = []) => {
 };
 
 const extractTypes = (args) => args.map(arg => {
-    arg = arg.__this || arg;
+    arg = (arg || {}).__this || arg;
     if(Array.isArray(arg)){
         return 'array';
     }
