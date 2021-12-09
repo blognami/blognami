@@ -1,4 +1,6 @@
 
-export default ({ params: { pageable: { type, data } }}) => [
-    200, { 'Content-Type': `image/${type}`}, [ data ]
-];
+export default ({ params: { pageable }}) => {
+    if(!pageable) return;
+    const { type, data } = pageable;
+    return [ 200, { 'content-type': `image/${type}`}, [ data ]];
+}

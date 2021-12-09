@@ -1,5 +1,7 @@
 
 export default ({ renderHtml, renderMarkdown, params: { pageable: post, isSignedIn }}) => {
+    if(!post) return;
+    
     if(!isSignedIn && !post.published) return renderHtml`
         <div class="content">
             <p>This post is not published yet.</p>

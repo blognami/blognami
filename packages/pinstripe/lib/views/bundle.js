@@ -33,5 +33,5 @@ defineView('bundle.js', async () => {
             })
         });   
     }
-    return [ 200, {'Content-Type': 'text/javascript'}, [ cache ]];
+    return [ 200, {'content-type': 'text/javascript'}, [ cache ]];
 });

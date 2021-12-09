@@ -66,7 +66,7 @@ export const Html = Base.extend().include({
     },
 
     toResponseArray(status = 200, headers = {}){
-        return [status, {'Content-Type': 'text/html', ...headers}, [this.value.trim()]];
+        return [status, {'content-type': 'text/html', ...headers}, [this.value.trim()]];
     }
 
 });

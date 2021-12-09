@@ -22,8 +22,6 @@ export default async ({ params: { _path: path }, pageables, session, renderView 
 
         const editUrl = `admin/edit_${pageable.constructor.name}?id=${pageable.id}`;
 
-        console.log(`editUrl`, editUrl)
-
         return renderView('_layout', {
             isSignedIn,
             editUrl,

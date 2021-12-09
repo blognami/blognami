@@ -20,7 +20,7 @@ export default async ({ fetch }) => {
             response.end();
         } catch (e){
             response.statusCode = 500;
-            response.setHeader('Content-Type', 'text/plain');
+            response.setHeader('content-type', 'text/plain');
             response.end((e.stack || e).toString());
         }
         console.log(`${request.method}: ${request.url} (${response.statusCode})`);

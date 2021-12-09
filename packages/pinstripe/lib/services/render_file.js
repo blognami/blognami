@@ -3,7 +3,7 @@ import { default as mimeTypes } from 'mime-types'; // pinstripe-if-client: const
 export default ({ readFile }) => {
     return async (filePath) => [
         200,
-        { 'Content-Type': mimeTypes.lookup(filePath) || 'application/octet-stream' },
+        { 'content-type': mimeTypes.lookup(filePath) || 'application/octet-stream' },
         [ await readFile(filePath) ]
     ];
 };

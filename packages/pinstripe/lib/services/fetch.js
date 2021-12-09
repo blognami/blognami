@@ -27,7 +27,7 @@ export default ({ createEnvironment }) => {
             return out;
         }
 
-        return [404, {'Content-Type': 'text/plain'}, ['Not found']];
+        return [404, {'content-type': 'text/plain'}, ['Not found']];
     });
 };
 
@@ -78,10 +78,22 @@ const normalizeParams = (params) => {
 };
 
 const normalizeResponse = (response) => {
+    if(!response) return;
+
+    let responseArray;
     if(response && typeof response.toResponseArray == 'function'){
-        return response.toResponseArray();
+        responseArray = response.toResponseArray();
     } else if(response && !Array.isArray(response)){
-        return [200, {'Content-Type': 'text/plain'}, [`${response}`]];
+        responseArray = [200, {'content-type': 'text/plain'}, [`${response}`]];
+    } else {
+        responseArray = response;
     }
-    return response;
+
+    const [ status, headers, body ] = responseArray;
+    const normalizedHeaders = {};
+    Object.keys(headers).forEach(name => {
+        normalizedHeaders[name.toLowerCase()] = headers[name];
+    })
+
+    return [ status, normalizedHeaders, body ];
 };
