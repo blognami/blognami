@@ -2,7 +2,7 @@
   "type": "module",
   "name": "pinstripe",
   "description": "Pinstripe is a fullstack JavaScript web framework for Node.js.",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -23,8 +23,8 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.0",
     "babel-jest": "^25.1.0",
-    "plush": "^0.10.0",
     "jest": "^26.6",
+    "plush": "^0.11.0",
     "ramda": "^0.27.0",
     "sass": "^1.36.0"
   },
