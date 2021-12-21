@@ -7,6 +7,7 @@ import { EventWrapper } from './event_wrapper.js';
 import { overload } from './overload.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
 import { addFileToClient } from './client.js'; // pinstripe-if-client: const addFileToClient = () => {};
+import { Css } from './css.js';
 
 export const NodeWrapper = Base.extend().include({
     meta(){
@@ -33,7 +34,13 @@ export const NodeWrapper = Base.extend().include({
                 return node._nodeWrapper;
             },
 
-            actions: {}
+            css: Css.new(),
+
+            style(rules){
+                this.css.appendRules({
+                    [`[data-widget="${this.name}"]`]: rules
+                });
+            }
         });
     },
 
@@ -506,6 +513,11 @@ function normalizeVirtualNode(){
         ];
     }
 
+    if(this.type == 'head'){
+        const style = this.appendNode('style');
+        style.appendNode('#text', { value: NodeWrapper.css.toString()});
+    }
+
     if(this.type == 'body'){
         const progressBar = new this.constructor(this, 'div', {'data-widget': 'internal/progress-bar'})
         this.children = [
@@ -526,6 +538,7 @@ function normalizeVirtualNode(){
     if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
         this.attributes.value = this.attributes.value.replace(/^\n/, '');
     }
+    
 }
 
 EventWrapper.NodeWrapper = NodeWrapper;
