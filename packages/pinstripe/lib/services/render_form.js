@@ -150,7 +150,7 @@ export default {
             <div class="modal is-active">
                 <div class="modal-background" data-widget="trigger" data-event="click" data-action="remove"></div>
 
-                <div class="markdown-editor" data-widget="internal/markdown-editor" data-autosubmit="true">
+                <div class="markdown-editor" data-widget="markdown-editor" data-autosubmit="true">
                     <div class="markdown-editor-text-pane">
                         <textarea name="value">${value}</textarea>
                     </div>

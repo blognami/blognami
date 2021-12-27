@@ -1,9 +1,5 @@
 
 export default {
-    meta(){
-        this.isPrivate = true;
-    },
-
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 

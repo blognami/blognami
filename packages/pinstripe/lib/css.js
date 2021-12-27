@@ -2,16 +2,25 @@
 import { Base } from './base.js';
 
 export const Css = Base.extend().include({
-    initialize(){
-        this.rules = {};
+    
+    meta(){
+        this.assignProps({
+            render(...rules){
+                return this.new(compileRules(deepMerge({}, ...rules)));
+            }
+        });
     },
 
-    appendRules(...rules){
-        deepMerge(this.rules, ...rules);
+    initialize(value){
+        this.value = value;
     },
 
     toString(){
-        return compileRules(this.rules);
+        return this.value;
+    },
+
+    toResponseArray(status = 200, headers = {}){
+        return [status, {'content-type': 'text/css', ...headers}, [this.value.trim()]];
     }
 });
 
@@ -88,3 +97,4 @@ const deepMerge = (destination = {}, ...sources) => {
     });
     return destination;
 };
+

@@ -1,8 +1,6 @@
 
 export default {
     meta(){
-        this.isPrivate = true;
-
         this.include('frame');
 
         this.parent.prototype.assignProps({
@@ -34,7 +32,7 @@ export default {
 
     remove(...args){
         this.constructor.parent.prototype.remove.call(this, ...args);
-        if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('*[data-widget="internal/overlay"]')).length){
+        if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('*[data-widget="overlay"]')).length){
             this.document.descendants.filter(node => node.is('html')).forEach(node => {
                 node.removeClass(this.document.hasOverlayCssClass);
             })

@@ -7,7 +7,6 @@ import { EventWrapper } from './event_wrapper.js';
 import { overload } from './overload.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
 import { addFileToClient } from './client.js'; // pinstripe-if-client: const addFileToClient = () => {};
-import { Css } from './css.js';
 
 export const NodeWrapper = Base.extend().include({
     meta(){
@@ -23,7 +22,7 @@ export const NodeWrapper = Base.extend().include({
                 if(!node._nodeWrapper){
                     initializeRegistries();
                     node._nodeWrapper = NodeWrapper.new(node, true);
-                    const widget = node._nodeWrapper.type == '#document' ? 'internal/document' : node._nodeWrapper.data.widget;
+                    const widget = node._nodeWrapper.type == '#document' ? 'document' : node._nodeWrapper.data.widget;
                     if(widget){
                         node._nodeWrapper = NodeWrapper.create(widget, node);
                     } else {
@@ -33,14 +32,6 @@ export const NodeWrapper = Base.extend().include({
                 }
                 return node._nodeWrapper;
             },
-
-            css: Css.new(),
-
-            style(rules){
-                this.css.appendRules({
-                    [`[data-widget="${this.name}"]`]: rules
-                });
-            }
         });
     },
 
@@ -368,7 +359,7 @@ function cleanChildren(){
 }
 
 function clean(){
-    if(this.is('*[data-widget="internal/progress-bar"]')){
+    if(this.is('*[data-widget="progress-bar"]')){
         return;
     }
 
@@ -412,7 +403,7 @@ function createVirtualNode(html){
 }
 
 function patch(attributes, virtualChildren){
-    if(this.is('*[data-widget="internal/progress-bar"]')){
+    if(this.is('*[data-widget="progress-bar"]')){
         return;
     }
     patchAttributes.call(this, attributes);
@@ -513,13 +504,8 @@ function normalizeVirtualNode(){
         ];
     }
 
-    if(this.type == 'head'){
-        const style = this.appendNode('style');
-        style.appendNode('#text', { value: NodeWrapper.css.toString()});
-    }
-
     if(this.type == 'body'){
-        const progressBar = new this.constructor(this, 'div', {'data-widget': 'internal/progress-bar'})
+        const progressBar = new this.constructor(this, 'div', {'data-widget': 'progress-bar'})
         this.children = [
             progressBar,
             ...this.children

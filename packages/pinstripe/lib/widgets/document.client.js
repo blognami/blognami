@@ -1,8 +1,6 @@
 
 export default {
     meta(){
-        this.isPrivate = true;
-
         this.include('frame');
 
         this.parent.prototype.assignProps({
@@ -12,11 +10,15 @@ export default {
                 return this.parents.find(({ isDocument }) => isDocument) || this;
             }
         });
+        
+        this.assignProps({
+            cssNamespace: undefined
+        });
     },
 
     isDocument: true,
 
-    hasOverlayCssClass: 'p-is-clipped',
+    hasOverlayCssClass: 'has-overlay',
 
     initialize(...args){
         this.constructor.classes.frame.prototype.initialize.call(this, ...args);
@@ -29,7 +31,7 @@ export default {
 
     get progressBar(){
         if(!this._progressBar){
-            this._progressBar = this.descendants.find(node => node.is('*[data-widget="internal/progress-bar"]'));
+            this._progressBar = this.descendants.find(node => node.is('*[data-widget="progress-bar"]'));
         }
         return this._progressBar;
     },
