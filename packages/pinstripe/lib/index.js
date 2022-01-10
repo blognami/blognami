@@ -6,6 +6,7 @@ export { defineModel, modelImporter } from './database/row.js';  // pinstripe-if
 export { defineWidget, widgetImporter} from './node_wrapper.js';
 export { defineService, serviceImporter } from './service_factory.js';
 export { defineView, viewImporter } from './view.js';
+export { defineStyleSheet, styleSheetImporter } from './style_sheet.js';
 export { createEnvironment } from './environment.js';
 export {
     pluralize,

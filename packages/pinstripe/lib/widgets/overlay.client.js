@@ -14,7 +14,7 @@ export default {
 
     isOverlay: true,
 
-    cssClass: 'p-overlay',
+    cssClass: 'overlay',
 
     initialize(...args){
         this.constructor.classes.frame.prototype.initialize.call(this, ...args);

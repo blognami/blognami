@@ -70,74 +70,69 @@ export default {
         });
 
         return renderHtml`
-            <div class="modal is-active">
-                <div class="modal-background" data-widget="trigger" data-event="click" data-action="remove"></div>
-                <div class="modal-card">
-                    <form method="post" enctype="multipart/form-data" autocomplete="off">
-                        <header class="modal-card-head">
-                            <p class="modal-card-title">${title}</p>
-                            <button type="button" class="delete" aria-label="close" data-widget="trigger" data-event="click" data-action="remove"></button>
-                        </header>
-                        <section class="modal-card-body">
-                            ${() => {
-                                if(otherErrors.length){
-                                    return renderHtml`
-                                        <div class="field">
-                                            ${otherErrors.map(error => renderHtml`
-                                                <p class="help is-danger">${error}</p>
-                                            `)}
-                                        </div>
-                                    `
-                                }
-                            }}
-                            ${fields.map(({ label, name, type, value, error }) => {
-                                if(type == 'hidden'){
-                                    return renderHtml`
-                                        <input type="hidden" name="${name}" value="${value}">
-                                    `;
-                                }
+            <div class="modal" data-widget="trigger" data-event="click" data-action="remove" data-ignore-events-from-children="true">
+                <button class="modal-close-button" type="button" aria-label="close" data-widget="trigger" data-event="click" data-action="remove"></button>
+                <form method="post" enctype="multipart/form-data" autocomplete="off">
+                    <header>
+                        <p>${title}</p>
+                    </header>
+                    <section>
+                        ${() => {
+                            if(otherErrors.length){
                                 return renderHtml`
                                     <div class="field">
-                                        <label class="label">${label}</label>
-                                        <div class="control">
-                                            ${() => {
-                                                if(type == 'textarea'){
-                                                    return renderHtml`
-                                                        <textarea class="textarea${error ? ' is-danger' : ''}" name="${name}">${value}</textarea>
-                                                    `
-                                                }
-                                                if(type == 'markdown'){
-                                                    return renderHtml`
-                                                        <textarea class="textarea${error ? ' is-danger' : ''}" name="${name}" data-widget="trigger" data-event="click" data-action="load" data-target="_overlay" data-url="&_part=markdown-editor">${value}</textarea>
-                                                    `
-                                                }
-                                                if(type == 'checkbox'){
-                                                    return renderHtml`
-                                                        <input class="checkbox${error ? ' is-danger' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
-                                                    `
-                                                }
-                                                return renderHtml`
-                                                    <input class="input${error ? ' is-danger' : ''}" name="${name}" type="${type}" value="${value}">
-                                                ` 
-                                            }}
-                                        </div>
-                                        ${() => {
-                                            if(error){
-                                                return renderHtml`
-                                                    <p class="help is-danger">${error}</p>
-                                                `
-                                            }
-                                        }}
+                                        ${otherErrors.map(error => renderHtml`
+                                            <p class="is-error">${error}</p>
+                                        `)}
                                     </div>
+                                `
+                            }
+                        }}
+                        ${fields.map(({ label, name, type, value, error }) => {
+                            if(type == 'hidden'){
+                                return renderHtml`
+                                    <input type="hidden" name="${name}" value="${value}">
                                 `;
-                            })}
-                        </section>
-                        <footer class="modal-card-foot">
-                            <button class="button is-success" type="submit">${submitTitle}</button>
-                            <button class="button" data-action="remove">${cancelTitle}</button>
-                        </footer>
-                    </form>
-                </div>
+                            }
+                            return renderHtml`
+                                <div>
+                                    <label>${label}</label>
+                                    ${() => {
+                                        if(type == 'textarea'){
+                                            return renderHtml`
+                                                <textarea class="textarea${error ? ' is-error' : ''}" name="${name}">${value}</textarea>
+                                            `
+                                        }
+                                        if(type == 'markdown'){
+                                            return renderHtml`
+                                                <textarea class="textarea${error ? ' is-error' : ''}" name="${name}" data-widget="trigger" data-event="click" data-action="load" data-target="_overlay" data-url="&_part=markdown-editor">${value}</textarea>
+                                            `
+                                        }
+                                        if(type == 'checkbox'){
+                                            return renderHtml`
+                                                <input class="checkbox${error ? ' is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
+                                            `
+                                        }
+                                        return renderHtml`
+                                            <input class="input${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}">
+                                        ` 
+                                    }}
+                                    ${() => {
+                                        if(error){
+                                            return renderHtml`
+                                                <p class="help is-error">${error}</p>
+                                            `
+                                        }
+                                    }}
+                                </div>
+                            `;
+                        })}
+                    </section>
+                    <footer>
+                        <button type="submit">${submitTitle}</button>
+                        <button data-action="remove">${cancelTitle}</button>
+                    </footer>
+                </form>
             </div>
         `;
     },
@@ -154,9 +149,8 @@ export default {
                     <div class="markdown-editor-text-pane">
                         <textarea name="value">${value}</textarea>
                     </div>
-                    <div class="markdown-editor-preview-pane content" data-widget="frame" data-url="&_part=markdown-editor-preview"></div>
+                    <div class="markdown-editor-preview-pane" data-widget="frame" data-url="&_part=markdown-editor-preview"></div>
                 </div>
-                <button class="modal-close is-large" aria-label="close" data-widget="trigger" data-event="click" data-action="remove"></button>
             </div>
         `;
     },

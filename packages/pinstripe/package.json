@@ -13,8 +13,6 @@
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
-    "build": "yarn build:css",
-    "build:css": "sass --load-path=../../node_modules/ pinstripe.scss lib/views/bundle.css",
     "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
     "test": "yarn test:unit",
     "test:unit": "jest lib"
@@ -24,9 +22,7 @@
     "@babel/preset-env": "^7.9.0",
     "babel-jest": "^25.1.0",
     "jest": "^26.6",
-    "plush": "^0.11.0",
-    "ramda": "^0.27.0",
-    "sass": "^1.36.0"
+    "ramda": "^0.27.0"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

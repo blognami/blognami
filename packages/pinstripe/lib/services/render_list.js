@@ -27,7 +27,7 @@ export default ({ overload, renderHtml }) => {
                         return { number, current };
                     });
                     if(pagination.length > 1) return renderHtml` 
-                        <nav class="pagination">
+                        <nav class="p-pagination pagination">
                             <ul class="pagination-list mb-4">
                                 ${pagination.map(({ number, current }) => renderHtml`
                                     <li>

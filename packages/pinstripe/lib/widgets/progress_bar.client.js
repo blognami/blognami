@@ -1,6 +1,6 @@
 
 export default {
-    cssClass: 'p-progress-bar',
+    cssClass: 'progress-bar',
 
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);

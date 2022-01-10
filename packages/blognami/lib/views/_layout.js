@@ -3,12 +3,13 @@ export default async ({ params: { title, body, isSignedIn, user, editUrl }, rend
     <!DOCTYPE html>
     <html>
         <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>${title}</title>
             <link rel="stylesheet" href="/bundle.css">
             <script src="/bundle.js"></script>
         </head>
         <body>
-            <nav class="navbar" role="navigation" aria-label="main navigation">        
+            <nav class="navbar p-navbar" role="navigation" aria-label="main navigation">        
                 <div class="navbar-menu">
                     ${() => {
                         if(isSignedIn){

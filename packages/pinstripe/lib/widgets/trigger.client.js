@@ -4,9 +4,10 @@ import { Url } from '../url.js';
 export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
-        const { action = 'load', event = 'init' } = this.data;
+        const { action = 'load', event = 'init', ignoreEventsFromChildren = false } = this.data;
         if(!action) return;
         this.on(event, (event, ...args) => {
+            if(ignoreEventsFromChildren && event.target != this) return;
             event.preventDefault();
             event.stopPropagation();
             const fn = actions[action];
