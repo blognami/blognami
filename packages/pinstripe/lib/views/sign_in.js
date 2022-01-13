@@ -34,7 +34,7 @@ export default async ({ renderForm, database, renderHtml }) => renderForm({
         });
         
         const [ status, headers, body ] = await renderHtml`
-            <span data-action="load" data-target="_top"></span>
+            <span data-acts-as="a" data-target="_top" data-trigger="click"></span>
         `.toResponseArray();
 
         headers['Set-Cookie'] = `pinstripeSession=${session.id}:${passString}`;

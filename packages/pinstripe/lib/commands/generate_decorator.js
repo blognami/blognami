@@ -6,25 +6,25 @@ export default async ({
 }) => {
     const name = snakeify(extractArg(''));
     if(name == ''){
-        console.error('A widget name must be given.');
+        console.error('A decorator name must be given.');
         process.exit();
     }
 
     await inProjectRootDir(async () => {
 
-        await generateFile(`lib/widgets/_importer.js`, { skipIfExists: true }, () => {
+        await generateFile(`lib/decorators/_importer.js`, { skipIfExists: true }, () => {
             line();
-            line(`export { widgetImporter as default } from 'pinstripe';`);
+            line(`export { decoratorImporter as default } from 'pinstripe';`);
             line();
         });
 
-        await generateFile(`lib/widgets/${name}.client.js`, () => {
+        await generateFile(`lib/decorators/${name}.client.js`, () => {
             line();
             line(`export default {`);
             indent(() => {
-                line(`initialize(...args){`);
+                line(`decorate(){`);
                     indent(() => {
-                        line(`this.constructor.parent.prototype.initialize.call(this, ...args);`);
+                        line();
                     });
                 line(`}`);
             });

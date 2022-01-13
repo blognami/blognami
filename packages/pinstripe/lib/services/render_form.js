@@ -36,7 +36,7 @@ export default {
         if(params._method == 'POST'){
             try {
                 return await formAdapter.submit(values, success) || renderHtml`
-                    <span data-action="load" data-target="_parent"></span>
+                    <span data-acts-as="a" data-target="_parent" data-trigger="click"></span>
                 `;
             } catch(e){
                 if(!(e instanceof ValidationError)){
@@ -70,8 +70,8 @@ export default {
         });
 
         return renderHtml`
-            <div class="modal" data-widget="trigger" data-event="click" data-action="remove" data-ignore-events-from-children="true">
-                <button class="modal-close-button" type="button" aria-label="close" data-widget="trigger" data-event="click" data-action="remove"></button>
+            <div class="modal" data-acts-as="a" data-action="remove" data-ignore-events-from-children="true">
+                <button data-acts-as="a" data-action="remove"></button>
                 <form method="post" enctype="multipart/form-data" autocomplete="off">
                     <header>
                         <p>${title}</p>
@@ -100,21 +100,21 @@ export default {
                                     ${() => {
                                         if(type == 'textarea'){
                                             return renderHtml`
-                                                <textarea class="textarea${error ? ' is-error' : ''}" name="${name}">${value}</textarea>
+                                                <textarea class="${error ? ' is-error' : ''}" name="${name}">${value}</textarea>
                                             `
                                         }
                                         if(type == 'markdown'){
                                             return renderHtml`
-                                                <textarea class="textarea${error ? ' is-error' : ''}" name="${name}" data-widget="trigger" data-event="click" data-action="load" data-target="_overlay" data-url="&_part=markdown-editor">${value}</textarea>
+                                                <textarea class="${error ? ' is-error' : ''}" name="${name}" data-acts-as="a" data-target="_overlay" data-href="&_part=markdown-editor">${value}</textarea>
                                             `
                                         }
                                         if(type == 'checkbox'){
                                             return renderHtml`
-                                                <input class="checkbox${error ? ' is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
+                                                <input class="${error ? ' is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
                                             `
                                         }
                                         return renderHtml`
-                                            <input class="input${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}">
+                                            <input class="${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}">
                                         ` 
                                     }}
                                     ${() => {
@@ -142,14 +142,13 @@ export default {
         const { value = '' } = params;
 
         return renderHtml`
-            <div class="modal is-active">
-                <div class="modal-background" data-widget="trigger" data-event="click" data-action="remove"></div>
-
-                <div class="markdown-editor" data-widget="markdown-editor" data-autosubmit="true">
+            <div class="modal" data-acts-as="a" data-action="remove" data-ignore-events-from-children="true">
+                <button data-acts-as="a" data-action="remove"></button>
+                <div class="markdown-editor" data-autosubmit="true">
                     <div class="markdown-editor-text-pane">
                         <textarea name="value">${value}</textarea>
                     </div>
-                    <div class="markdown-editor-preview-pane" data-widget="frame" data-url="&_part=markdown-editor-preview"></div>
+                    <div class="frame markdown-editor-preview-pane" data-url="&_part=markdown-editor-preview"></div>
                 </div>
             </div>
         `;

@@ -5,6 +5,6 @@ export default async ({ params, posts, renderHtml }) => {
     await posts.idEq(id).delete();
     
     return renderHtml`
-        <span data-action="load" data-target="_parent"></span>
+        <span data-acts-as="a" data-target="_parent" data-trigger="click"></span>
     `;
 };

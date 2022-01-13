@@ -1,65 +1,55 @@
 
 import { Base } from './base.js';
-import { Registrable, initializeRegistries } from './registrable.js';
-import { dasherize, camelize } from './inflector.js';
+import { initializeRegistries } from './registrable.js';
+import { camelize } from './inflector.js';
 import { VirtualNode } from './virtual_node.js';
 import { EventWrapper } from './event_wrapper.js';
 import { overload } from './overload.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
-import { addFileToClient } from './client.js'; // pinstripe-if-client: const addFileToClient = () => {};
+import { Decorator } from './decorator.js'
 
 export const NodeWrapper = Base.extend().include({
     meta(){
-        this.include(Registrable);
-
-        const { register } = this;
         this.assignProps({
-            register(name){
-                return register.call(this, dasherize(name));
-            },
-
             instanceFor(node){
                 if(!node._nodeWrapper){
                     initializeRegistries();
-                    node._nodeWrapper = NodeWrapper.new(node, true);
-                    const widget = node._nodeWrapper.type == '#document' ? 'document' : node._nodeWrapper.data.widget;
-                    if(widget){
-                        node._nodeWrapper = NodeWrapper.create(widget, node);
+
+                    const nodeWrapper = NodeWrapper.new(node);
+
+                    node._nodeWrapper = nodeWrapper;
+
+                    nodeWrapper.addVirtualNodeFilter(function(){
+                        this.traverse(normalizeVirtualNode);
+                    });
+            
+                    const { decorator } = nodeWrapper.data;
+            
+                    if(nodeWrapper.parent) {
+                        nodeWrapper._decorators.push(...nodeWrapper.parent._decorators);
                     } else {
-                        node._nodeWrapper = NodeWrapper.new(node);
+                        nodeWrapper._decorators.push(Decorator.create('root', nodeWrapper));
                     }
-                    node._nodeWrapper.trigger('init', { bubbles: false });
+            
+                    if(typeof decorator == 'string') {
+                        nodeWrapper._decorators.push(...decorator.trim().split(/\s+/).map(name => Decorator.create('root', nodeWrapper)));
+                    }
+                    
+                    nodeWrapper._decorators.forEach(decorator => decorator.decorate(nodeWrapper));
+
+                    nodeWrapper.trigger('init', { bubbles: false });
                 }
                 return node._nodeWrapper;
             },
         });
     },
 
-    initialize(node, skipInit = false){
+    initialize(node){
         this.node = node;
         this._registeredEventListeners = [];
         this._registeredTimers = [];
         this._virtualNodeFilters = [];
-
-        if(skipInit){
-            return;
-        }
-
-        this.addVirtualNodeFilter(function(){
-            this.traverse(normalizeVirtualNode);
-        });
-
-        const { autosubmit } = this.data;
-        if(autosubmit){
-            let hash = JSON.stringify(this.values);
-            this.setInterval(() => {
-                const newHash = JSON.stringify(this.values);
-                if(hash != newHash){
-                    hash = newHash;
-                    this.trigger('submit');
-                }
-            }, 100);
-        }
+        this._decorators = [];
     },
 
     get type(){
@@ -233,6 +223,18 @@ export const NodeWrapper = Base.extend().include({
         return out;
     },
 
+    get frame(){
+        return this.parents.find(({ isFrame }) => isFrame);
+    },
+
+    get document(){
+        return this.parents.find(({ isDocument }) => isDocument) || this;
+    },
+
+    get overlay(){
+        return this.parents.find(({ isOverlay }) => isOverlay);
+    },
+
     focus(){
         this.node.focus();
         return this;
@@ -359,7 +361,7 @@ function cleanChildren(){
 }
 
 function clean(){
-    if(this.is('*[data-widget="progress-bar"]')){
+    if(this.is('.progress-bar')){
         return;
     }
 
@@ -403,7 +405,7 @@ function createVirtualNode(html){
 }
 
 function patch(attributes, virtualChildren){
-    if(this.is('*[data-widget="progress-bar"]')){
+    if(this.is('.progress-bar')){
         return;
     }
     patchAttributes.call(this, attributes);
@@ -435,7 +437,7 @@ function patchAttributes(attributes){
 
 function patchChildren(virtualChildren){
     const children = [...this.node.childNodes].map(
-        node => NodeWrapper.new(node, true)
+        node => NodeWrapper.new(node)
     );
 
     for(let i = 0; i < virtualChildren.length; i++){
@@ -483,7 +485,7 @@ function insert(virtualNode, referenceChild, returnNodeWrapper = true){
     }
 
     children.forEach(child => {
-        insert.call(NodeWrapper.new(node, true), child, null, false);
+        insert.call(NodeWrapper.new(node), child, null, false);
     })
     
     this.node.insertBefore(
@@ -505,7 +507,7 @@ function normalizeVirtualNode(){
     }
 
     if(this.type == 'body'){
-        const progressBar = new this.constructor(this, 'div', {'data-widget': 'progress-bar'})
+        const progressBar = new this.constructor(this, 'div', {class: 'progress-bar'})
         this.children = [
             progressBar,
             ...this.children
@@ -528,52 +530,3 @@ function normalizeVirtualNode(){
 }
 
 EventWrapper.NodeWrapper = NodeWrapper;
-
-export const defineWidget = overload({
-    ['string, object'](name, include){
-        const abstract = include.abstract;
-        delete include.abstract;
-        NodeWrapper.register(name, abstract).include(include);
-    }
-});
-
-
-export const widgetImporter = dirPath => {
-    const files = [];
-
-    addFileToClient(`${dirPath}/_importer.client.js`, () => {
-        const filteredFiles = files.filter(({ filePath }) => filePath.match(/\.client\.js$/));
-
-        return `
-            import { defineWidget } from 'pinstripe';
-
-            ${filteredFiles.map(({ filePath, relativeFilePathWithoutExtension }, i) => {
-                const importName = `definition${i + 1}`;
-
-                return `
-                    import ${importName} from ${JSON.stringify(filePath)};
-                    defineWidget(${JSON.stringify(relativeFilePathWithoutExtension)}, ${importName});
-                `;
-            }).join('')}
-        `;
-    });
-
-    return async filePath => {
-        const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
-
-        if(filePath.match(/\.js$/)){
-            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/]+$/, '');
-            if(relativeFilePathWithoutExtension == '_importer'){
-                return;
-            }
-            addFileToClient(filePath);
-            const definition = await ( await import(filePath) ).default;
-            if(definition !== undefined){
-                files.push({ filePath, relativeFilePathWithoutExtension });
-                defineWidget(relativeFilePathWithoutExtension, definition);
-            }
-            return;
-        }
-    };
-};
-
