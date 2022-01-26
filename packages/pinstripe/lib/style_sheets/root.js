@@ -326,6 +326,17 @@ export default {
         },
     },
 
+    textarea: {
+        border: '1px solid #dbdbdb',
+        width: '100%',
+        minHeight: '7em',
+        borderRadius: '4px',
+        paddingBottom: 'calc(0.5em - 1px)',
+        paddingLeft: 'calc(0.75em - 1px)',
+        paddingRight: 'calc(0.75em - 1px)',
+        paddingTop: 'calc(0.5em - 1px)',
+    },
+
     label: {
         color: '#363636',
         display: 'block',

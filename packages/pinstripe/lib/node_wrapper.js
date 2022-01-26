@@ -32,7 +32,7 @@ export const NodeWrapper = Base.extend().include({
                     }
             
                     if(typeof decorator == 'string') {
-                        nodeWrapper._decorators.push(...decorator.trim().split(/\s+/).map(name => Decorator.create('root', nodeWrapper)));
+                        nodeWrapper._decorators.push(...decorator.trim().split(/\s+/).map(name => Decorator.create(decorator, nodeWrapper)));
                     }
                     
                     nodeWrapper._decorators.forEach(decorator => decorator.decorate(nodeWrapper));
@@ -299,9 +299,9 @@ export const NodeWrapper = Base.extend().include({
     },
 
     remove(){
-        if(this.type != '#doctype'){
+        if(this.realParent){
             clearTimers.call(this);
-            this.realParent.node.removeChild(this.node);
+            if(this.realParent) this.realParent.node.removeChild(this.node);
         }
         return this;
     },
@@ -361,9 +361,7 @@ function cleanChildren(){
 }
 
 function clean(){
-    if(this.is('.progress-bar')){
-        return;
-    }
+    if(this.is('.progress-bar')) return;
 
     [...this.node.childNodes].forEach(node => node._nodeWrapper && clean.call(node._nodeWrapper));
 
@@ -373,7 +371,9 @@ function clean(){
 
     clearTimers.call(this);
 
-    this.node._nodeWrapper = undefined;
+    if(this._overlayChild) this._overlayChild.remove();
+
+    delete this.node._nodeWrapper;
 }
 
 function clearTimers(){
@@ -405,10 +405,13 @@ function createVirtualNode(html){
 }
 
 function patch(attributes, virtualChildren){
-    if(this.is('.progress-bar')){
-        return;
+    if(this.is('.progress-bar')) return;
+    const isEmptyFrame = this.is('.frame') && virtualChildren.length == 0;
+    if(isEmptyFrame && attributes['data-load-on-init'] === undefined){
+        attributes['data-load-on-init'] = 'true';
     }
     patchAttributes.call(this, attributes);
+    if(isEmptyFrame) return;
     patchChildren.call(this, virtualChildren);
 }
 

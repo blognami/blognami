@@ -7,13 +7,18 @@ export default {
         if(nodeWrapper.type == '#document') this.decorateDocument(nodeWrapper);
         if(nodeWrapper.is('.overlay')) this.decorateOverlay(nodeWrapper);
         if(nodeWrapper.is('.progress-bar')) this.decorateProgressBar(nodeWrapper);
-        if(nodeWrapper.is('.markdown-editor')) this.decorateMarkdownEditor(nodeWrapper);
         if(nodeWrapper.is('a, [data-acts-as="a"]')) this.decorateAnchor(nodeWrapper);
         if(nodeWrapper.is('form, [data-acts-as="form"]')) this.decorateForm(nodeWrapper);
         this.decorateNode(nodeWrapper);
     },
 
     decorateFrame(nodeWrapper){
+        const { loadOnInit = nodeWrapper.children.length == 0 } = nodeWrapper.data;
+
+        if(loadOnInit){
+            nodeWrapper.on('init', () => nodeWrapper.load());
+        }
+
         nodeWrapper.assignProps({
             isFrame: true,
 
@@ -194,24 +199,6 @@ export default {
         });
     },
 
-    decorateMarkdownEditor(nodeWrapper){
-        const anchorTextarea = nodeWrapper.frame.parent;
-        const editorTextarea = nodeWrapper.descendants.find(n => n.is('textarea'));
-
-        editorTextarea.value = anchorTextarea.value;
-        editorTextarea.focus();
-        editorTextarea.selectionStart = anchorTextarea.selectionStart;
-        editorTextarea.selectionEnd = anchorTextarea.selectionEnd;
-        
-        const previewFrame = nodeWrapper.frame.descendants.find(n => n.is('.markdown-editor-preview-pane'));
-
-        nodeWrapper.on('submit', () => {
-            const { value } = nodeWrapper.values;
-            previewFrame.load({ _method: 'post', value });
-            anchorTextarea.value = value
-        });
-    },
-
     decorateAnchor(nodeWrapper){
         const { ignoreEventsFromChildren = false } = nodeWrapper.data;
         nodeWrapper.on('click', (event) => {
@@ -268,6 +255,7 @@ function loadFrame(confirm, target, method, url){
         });
         frame = this.document.descendants.find(node => node.is('body')).append(`<div class="overlay"></div>`).pop();
         frame._parent = this;
+        this._overlayChild = frame;
     } else {
         frame = getFrame.call(this, target);
         if(!frame) return;

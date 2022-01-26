@@ -11,9 +11,9 @@ if(typeof window != 'undefined'){
     const observer = new MutationObserver(mutations => {
         if(ready){
             mutations.forEach(
-                mutation => mutation.addedNodes.forEach(
-                    node => initializeTree(node)
-                )
+                mutation => {
+                    mutation.addedNodes.forEach(node => initializeTree(node));
+                }
             )
         }
     })

@@ -130,7 +130,7 @@ export default {
                     </section>
                     <footer>
                         <button type="submit">${submitTitle}</button>
-                        <button data-action="remove">${cancelTitle}</button>
+                        <button data-acts-as="a" data-action="remove">${cancelTitle}</button>
                     </footer>
                 </form>
             </div>
@@ -142,7 +142,7 @@ export default {
         const { value = '' } = params;
 
         return renderHtml`
-            <div class="modal" data-acts-as="a" data-action="remove" data-ignore-events-from-children="true">
+            <div class="modal" data-acts-as="a" data-action="remove" data-ignore-events-from-children="true" data-decorator="markdown-editor">
                 <button data-acts-as="a" data-action="remove"></button>
                 <div class="markdown-editor" data-autosubmit="true">
                     <div class="markdown-editor-text-pane">

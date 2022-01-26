@@ -11,26 +11,29 @@ export default {
     '&-text-pane, &-preview-pane': {
         flex: '1 1 0',
         height: '100%',
-        padding: '1em',
     },
 
     '&-text-pane': {
         position: 'relative',
+        borderStyle: 'solid',
+        borderWidth: '0 1px 0 0',
+        borderColor: 'rgb(99, 99, 99)',
+        padding: 0,
 
         '> textarea': {
+            border: 'none',
             height: '100%',
             width: '100%',
             resize: 'none',
             outline: 'none',
-            borderStyle: 'solid',
-            borderWidth: '0 1px 0 0',
-            borderColor: 'rgb(99, 99, 99)',
             fontSize: '16px',
             fontFamily: 'monospace',
+            padding: '1em'
         }
     },
 
     '&-preview-pane': {
-        overflowY: 'scroll',
+        overflowY: 'auto',
+        padding: '1em'
     }
 };

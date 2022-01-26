@@ -142,5 +142,34 @@ export const VirtualNode = Base.extend().include({
 
     serialize(){
         return JSON.stringify(this, ['type', 'attributes', 'children']);
+    },
+
+    toString(){
+        if(this.type == '#doctype') return '<!DOCTYPE html>';
+        if(this.type == '#text'){
+            if(this.parent && TEXT_ONLY_TAGS.includes(this.parent.type)) return this.attributes.value;
+            return escapeHtml(this.attributes.value);
+        }
+        if(this.type == '#comment') return `<!--${escapeHtml(this.attributes.value)}-->`;
+        const out = [];
+        if(this.type != '#fragment'){
+            out.push(`<${this.type}`);
+            Object.keys(this.attributes).forEach(name => {
+                const value = this.attributes[name];
+                if(value){
+                    out.push(` ${name}="${escapeHtml(value)}"`);
+                } else {
+                    out.push(` ${name}`);
+                }
+            })
+            out.push('>');
+        }
+        this.children.forEach(child => {
+            out.push(child.toString());
+        });
+        if(this.type != '#fragment' && !SELF_CLOSING_TAGS.includes(this.type)) out.push(`</${this.type}>`);
+        return out.join('');
     }
 });
+
+const escapeHtml = html => html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
