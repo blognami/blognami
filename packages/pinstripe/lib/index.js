@@ -5,7 +5,6 @@ export { defineMigration, migrationImporter } from './database/migration.js'; //
 export { defineModel, modelImporter } from './database/row.js';  // pinstripe-if-client: export const defineModel = undefined;  export const modelImporter = undefined;
 export { defineService, serviceImporter } from './service_factory.js';
 export { defineView, viewImporter } from './view.js';
-export { defineStyleSheet, styleSheetImporter } from './style_sheet.js';
 export { defineDecorator, decoratorImporter } from './decorator.js';
 export { createEnvironment } from './environment.js';
 export {

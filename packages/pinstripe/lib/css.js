@@ -53,8 +53,8 @@ const compileRule = (path, props) => {
         if(segment.match(/^@/)){
             atRules.push(segment);
         } else {
-            segment = segment.match(/&/) ? segment : `${i ? '& ' : '&'}${segment}`;
-            selector = segment.replace(/&/g, selector);
+            segment = segment.match(/&/) ? segment : `${i ? '& ' : '&'}${segment}`.replace(/,\s*/g, ', & ');
+            selector = selector.split(/,\s*/).map(selector => segment.replace(/&/g, selector)).join(', ');
         }
     });
 
@@ -69,7 +69,8 @@ const compileRule = (path, props) => {
     out.push(`${indent.join('')}${selector} {`);
     indent.push('    ');
     Object.keys(props).forEach(name => {
-        out.push(`${indent.join('')}${normaliseName(name)}: ${props[name]};`);
+        const value = props[name];
+        out.push(`${indent.join('')}${normaliseName(name)}: ${name == 'content' ? `'${value}'` : value};`);
     })
     indent.pop();
     out.push(`${indent.join('')}}`);

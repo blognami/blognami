@@ -4,8 +4,6 @@ import webpack from 'webpack';
 import { defineView } from 'pinstripe';
 
 import { client } from '../client.js';
-import { StyleSheet } from '../style_sheet.js';
-
 
 let cache;
 
@@ -36,13 +34,4 @@ defineView('bundle.js', async () => {
         });   
     }
     return [ 200, {'content-type': 'text/javascript'}, [ cache ]];
-});
-
-let cssCache;
-
-defineView('bundle.css', async environment => {
-    if(!cssCache){
-        cssCache = await StyleSheet.compile(environment);
-    }
-    return [ 200, {'content-type': 'text/css'}, [ cssCache ]];
 });

@@ -5,7 +5,7 @@ export default async ({ params: { title, body, isSignedIn, user, editUrl }, rend
         <head>
             <meta name="viewport" content="width=device-width, initial-scale=1">
             <title>${title}</title>
-            <link rel="stylesheet" href="/bundle.css">
+            <link rel="stylesheet" href="/base.css">
             <script src="/bundle.js"></script>
         </head>
         <body>

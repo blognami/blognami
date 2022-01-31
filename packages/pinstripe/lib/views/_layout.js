@@ -4,7 +4,7 @@ export default async ({ params: { title, body, isSignedIn, user }, renderHtml })
     <html>
         <head>
             <title>${title}</title>
-            <link rel="stylesheet" href="/bundle.css">
+            <link rel="stylesheet" href="/base.css">
             <script src="/bundle.js"></script>
         </head>
         <body>
