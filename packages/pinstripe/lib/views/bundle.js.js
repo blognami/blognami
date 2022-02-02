@@ -1,13 +1,12 @@
 
 import { Volume as MemFs } from 'memfs';
 import webpack from 'webpack';
-import { defineView } from 'pinstripe';
 
 import { client } from '../client.js';
 
 let cache;
 
-defineView('bundle.js', async () => {
+export default async () => {
     if(!cache){
         const inputVolume = await client.createFs('/pinstripeInput.js');
         const outputVolume = new MemFs();
@@ -34,4 +33,4 @@ defineView('bundle.js', async () => {
         });   
     }
     return [ 200, {'content-type': 'text/javascript'}, [ cache ]];
-});
+};

@@ -65,9 +65,10 @@ export const viewImporter = dirPath => {
 
     return async filePath => {
         const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
-        const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/]+$/, '');
 
-        if(filePath.match(/\.js$/)){
+        let matches = relativeFilePath.match(/^(.*)(\.client\.js|\.js)$/);
+        if(matches){
+            const relativeFilePathWithoutExtension = matches[1];
             if(relativeFilePathWithoutExtension == '_importer'){
                 return;
             }
@@ -80,8 +81,9 @@ export const viewImporter = dirPath => {
             return;
         }
 
+        matches = relativeFilePath.match(/^(.*)(\.md)$/);
         if(filePath.match(/\.md$/)){
-
+            const relativeFilePathWithoutExtension = matches[1];
             const params = {};
 
             defineView(relativeFilePathWithoutExtension, async ({ renderView, readFile, renderMarkdown, renderHtml }) => {

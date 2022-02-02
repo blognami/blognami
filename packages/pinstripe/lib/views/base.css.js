@@ -1,7 +1,5 @@
 
-import { defineView } from 'pinstripe';
-
-defineView('base.css', async ({ renderCss, themeConfig }) => renderCss({
+export default async ({ renderCss, themeConfig }) => renderCss({
     get '*'() {
         return {
             margin: 0,
@@ -656,5 +654,4 @@ defineView('base.css', async ({ renderCss, themeConfig }) => renderCss({
             }
         }
     }
-}));
-
+});
