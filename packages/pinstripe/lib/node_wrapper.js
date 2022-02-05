@@ -1,55 +1,77 @@
 
 import { Base } from './base.js';
 import { initializeRegistries } from './registrable.js';
-import { camelize } from './inflector.js';
+import { camelize, dasherize } from './inflector.js';
 import { VirtualNode } from './virtual_node.js';
 import { EventWrapper } from './event_wrapper.js';
 import { overload } from './overload.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
-import { Decorator } from './decorator.js'
+import { Registrable } from './registrable.js';
+import { addFileToClient } from './client.js'; // pinstripe-if-client: const addFileToClient = () => {};
 
 export const NodeWrapper = Base.extend().include({
     meta(){
+
+        this.include(Registrable);
+
+        const { register } = this;
+
         this.assignProps({
+            register(name, ...args){
+                return register.call(this, dasherize(name),  ...args);
+            },
+
             instanceFor(node){
                 if(!node._nodeWrapper){
                     initializeRegistries();
 
-                    const nodeWrapper = NodeWrapper.new(node);
+                    node._nodeWrapper = NodeWrapper.new(node, true);
 
-                    node._nodeWrapper = nodeWrapper;
+                    const { nodeWrapper = node._nodeWrapper.type == '#document' ? 'document' : undefined } = node._nodeWrapper.data;
 
-                    nodeWrapper.addVirtualNodeFilter(function(){
-                        this.traverse(normalizeVirtualNode);
-                    });
-            
-                    const { decorator } = nodeWrapper.data;
-            
-                    if(nodeWrapper.parent) {
-                        nodeWrapper._decorators.push(...nodeWrapper.parent._decorators);
+                    if(nodeWrapper) {
+                        node._nodeWrapper = this.create(nodeWrapper, node);
                     } else {
-                        nodeWrapper._decorators.push(Decorator.create('root', nodeWrapper));
+                        node._nodeWrapper = NodeWrapper.new(node);
                     }
-            
-                    if(typeof decorator == 'string') {
-                        nodeWrapper._decorators.push(...decorator.trim().split(/\s+/).map(name => Decorator.create(decorator, nodeWrapper)));
-                    }
-                    
-                    nodeWrapper._decorators.forEach(decorator => decorator.decorate(nodeWrapper));
 
-                    nodeWrapper.trigger('init', { bubbles: false });
+                    node._nodeWrapper.trigger('init', { bubbles: false });
                 }
                 return node._nodeWrapper;
             },
         });
     },
 
-    initialize(node){
+    initialize(node, skipInit = false){
         this.node = node;
         this._registeredEventListeners = [];
         this._registeredTimers = [];
         this._virtualNodeFilters = [];
-        this._decorators = [];
+
+        if(skipInit) return;
+
+        this.addVirtualNodeFilter(function(){
+            this.traverse(normalizeVirtualNode);
+        });
+
+        const { autosubmit, trigger } = this.data;
+
+        if(autosubmit){
+            let hash = JSON.stringify(this.values);
+            this.setInterval(() => {
+                const newHash = JSON.stringify(this.values);
+                if(hash != newHash){
+                    hash = newHash;
+                    this.trigger('submit');
+                }
+            }, 100);
+        }
+
+        if(trigger){
+            this.setTimeout(() => {
+                this.trigger(trigger);
+            }, 0);
+        }
     },
 
     get type(){
@@ -440,7 +462,7 @@ function patchAttributes(attributes){
 
 function patchChildren(virtualChildren){
     const children = [...this.node.childNodes].map(
-        node => NodeWrapper.new(node)
+        node => NodeWrapper.new(node, true)
     );
 
     for(let i = 0; i < virtualChildren.length; i++){
@@ -488,7 +510,7 @@ function insert(virtualNode, referenceChild, returnNodeWrapper = true){
     }
 
     children.forEach(child => {
-        insert.call(NodeWrapper.new(node), child, null, false);
+        insert.call(NodeWrapper.new(node, true), child, null, false);
     })
     
     this.node.insertBefore(
@@ -510,7 +532,7 @@ function normalizeVirtualNode(){
     }
 
     if(this.type == 'body'){
-        const progressBar = new this.constructor(this, 'div', {class: 'progress-bar'})
+        const progressBar = new this.constructor(this, 'div', {class: 'progress-bar', 'data-node-wrapper': 'progress-bar'})
         this.children = [
             progressBar,
             ...this.children
@@ -533,3 +555,60 @@ function normalizeVirtualNode(){
 }
 
 EventWrapper.NodeWrapper = NodeWrapper;
+
+export const defineNodeWrapper = overload({
+    ['string, object'](name, include){
+        const abstract = include.abstract;
+        delete include.abstract;
+        NodeWrapper.register(name, abstract).include(include);
+    },
+
+    ['string, function'](name, initialize ){
+        defineNodeWrapper(name, { 
+            initialize(...args) {
+                this.constructor.parent.prototype.initialize.call(this, ...args);
+
+                initialize.call(this, this);
+            }
+        });
+    }
+});
+
+export const nodeWrapperImporter = dirPath => {
+    const files = [];
+
+    addFileToClient(`${dirPath}/_importer.client.js`, () => {
+        const filteredFiles = files.filter(({ filePath }) => filePath.match(/\.client\.js$/));
+
+        return `
+            import { defineNodeWrapper } from 'pinstripe';
+
+            ${filteredFiles.map(({ filePath, relativeFilePathWithoutExtension }, i) => {
+                const importName = `definition${i + 1}`;
+
+                return `
+                    import ${importName} from ${JSON.stringify(filePath)};
+                    defineNodeWrapper(${JSON.stringify(relativeFilePathWithoutExtension)}, ${importName});
+                `;
+            }).join('')}
+        `;
+    });
+
+    return async filePath => {
+        const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
+
+        if(filePath.match(/\.js$/)){
+            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/]+$/, '');
+            if(relativeFilePathWithoutExtension == '_importer'){
+                return;
+            }
+            addFileToClient(filePath);
+            const definition = await ( await import(filePath) ).default;
+            if(definition !== undefined){
+                files.push({ filePath, relativeFilePathWithoutExtension });
+                defineNodeWrapper(relativeFilePathWithoutExtension, definition);
+            }
+            return;
+        }
+    };
+};

@@ -6,25 +6,25 @@ export default async ({
 }) => {
     const name = snakeify(extractArg(''));
     if(name == ''){
-        console.error('A decorator name must be given.');
+        console.error('A node wrapper name must be given.');
         process.exit();
     }
 
     await inProjectRootDir(async () => {
 
-        await generateFile(`lib/decorators/_importer.js`, { skipIfExists: true }, () => {
+        await generateFile(`lib/node_wrappers/_importer.js`, { skipIfExists: true }, () => {
             line();
-            line(`export { decoratorImporter as default } from 'pinstripe';`);
+            line(`export { nodeWrapperImporter as default } from 'pinstripe';`);
             line();
         });
 
-        await generateFile(`lib/decorators/${name}.client.js`, () => {
+        await generateFile(`lib/node_wrappers/${name}.client.js`, () => {
             line();
             line(`export default {`);
             indent(() => {
-                line(`decorate(){`);
+                line(`initialize(){`);
                     indent(() => {
-                        line();
+                        line(`this.constructor.parent.prototype.initialize.call(this, ...args);`);
                     });
                 line(`}`);
             });

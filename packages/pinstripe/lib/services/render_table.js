@@ -24,8 +24,8 @@ export default ({ overload, renderList, renderHtml, params: { _headers = {} } })
                     if(_headers['x-pinstripe-frame-type'] != 'overlay') return out;
 
                     return renderHtml`
-                    <div class="modal" data-acts-as="a" data-action="remove" data-ignore-events-from-children="true">
-                            <button data-acts-as="a" data-action="remove"></button>
+                    <div class="modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
+                            <button data-node-wrapper="anchor" data-action="remove"></button>
                             <div>
                                 <header class="modal-card-head">
                                     <p>${name}</p>

@@ -24,6 +24,7 @@ export default ({ renderHtml }) => {
             paragraph.attributes = {
                 ...paragraph.attributes,
                 class: 'frame',
+                'data-node-wrapper': 'frame',
                 'data-url': `/blocks/${name}?args=${encodeURIComponent(args)}`
             };
             paragraph.children = [];

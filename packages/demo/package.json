@@ -12,8 +12,8 @@
     "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server"
   },
   "dependencies": {
+    "@faker-js/faker": "^6.0.0-alpha.5",
     "blognami": "^0.11.0",
-    "faker": "^5.5.3",
     "pinstripe": "^0.11.0"
   }
 }

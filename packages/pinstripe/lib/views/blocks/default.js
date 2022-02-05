@@ -17,7 +17,7 @@ export default ({ renderHtml, params: { _path } }) => {
             <p>Insert block:</p>
             <ul>
                 ${names.map(name => renderHtml`
-                    <li data-line-content="/${name}">${name}</li>
+                    <li data-node-wrapper="markdown-editor/line-inserter" data-line-content="/${name}">${name}</li>
                 `)}
             </ul>
         </div>

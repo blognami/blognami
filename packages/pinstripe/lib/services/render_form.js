@@ -36,7 +36,7 @@ export default {
         if(params._method == 'POST'){
             try {
                 return await formAdapter.submit(values, success) || renderHtml`
-                    <span data-acts-as="a" data-target="_parent" data-trigger="click"></span>
+                    <span data-node-wrapper="anchor" data-target="_parent" data-trigger="click"></span>
                 `;
             } catch(e){
                 if(!(e instanceof ValidationError)){
@@ -70,8 +70,8 @@ export default {
         });
 
         return renderHtml`
-            <div class="modal" data-acts-as="a" data-action="remove" data-ignore-events-from-children="true">
-                <button data-acts-as="a" data-action="remove"></button>
+            <div class="modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
+                <button data-node-wrapper="anchor" data-action="remove"></button>
                 <form method="post" enctype="multipart/form-data" autocomplete="off">
                     <header>
                         <p>${title}</p>
@@ -105,7 +105,7 @@ export default {
                                         }
                                         if(type == 'markdown'){
                                             return renderHtml`
-                                                <textarea class="${error ? ' is-error' : ''}" name="${name}" data-acts-as="a" data-target="_overlay" data-href="&_part=markdown-editor">${value}</textarea>
+                                                <textarea class="${error ? ' is-error' : ''}" name="${name}" data-node-wrapper="anchor" data-target="_overlay" data-href="&_part=markdown-editor">${value}</textarea>
                                             `
                                         }
                                         if(type == 'checkbox'){
@@ -130,7 +130,7 @@ export default {
                     </section>
                     <footer>
                         <button type="submit">${submitTitle}</button>
-                        <button data-acts-as="a" data-action="remove">${cancelTitle}</button>
+                        <button data-node-wrapper="anchor" data-action="remove">${cancelTitle}</button>
                     </footer>
                 </form>
             </div>
@@ -142,13 +142,13 @@ export default {
         const { value = '' } = params;
 
         return renderHtml`
-            <div class="modal" data-acts-as="a" data-action="remove" data-ignore-events-from-children="true" data-decorator="markdown-editor">
-                <button data-acts-as="a" data-action="remove"></button>
-                <div class="markdown-editor" data-autosubmit="true">
+            <div class="modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
+                <button data-node-wrapper="anchor" data-action="remove"></button>
+                <div class="markdown-editor" data-autosubmit="true" data-node-wrapper="markdown-editor">
                     <div class="markdown-editor-text-pane">
                         <textarea name="value">${value}</textarea>
                     </div>
-                    <div class="frame markdown-editor-preview-pane" data-url="&_part=markdown-editor-preview"></div>
+                    <div class="markdown-editor-preview-pane" data-url="&_part=markdown-editor-preview" data-node-wrapper="frame"></div>
                 </div>
             </div>
         `;

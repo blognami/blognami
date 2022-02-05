@@ -4,9 +4,7 @@ export default ({ renderForm, images, renderHtml }) => renderForm(images, {
 
     success(image){
         return renderHtml`
-            <div data-decorator="markdown-editor">
-                <span data-line-content="![${image.title}](/${image.slug})" data-trigger="click"></span>
-            </div>
+            <span data-node-wrapper="markdown-editor/line-inserter" data-line-content="![${image.title}](/${image.slug})" data-trigger="click"></span>
         `;
     }
 });

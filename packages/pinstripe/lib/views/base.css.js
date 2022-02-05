@@ -270,7 +270,7 @@ export default async ({ renderCss, themeConfig }) => renderCss({
         }
     },
 
-    input: {
+    "input:not([type='checkbox'])": {
         '-moz-appearance': 'none',
         '-webkit-appearance': 'none',
         alignItems: 'center',

@@ -7,8 +7,8 @@ export default async ({ session, renderHtml }) => {
 
     if(!user || user.role != 'admin'){
         const [ status, headers, body ] = await renderHtml`
-            <div class="modal" data-acts-as="a" data-target="_top" data-ignore-events-from-children="true">
-                <button data-acts-as="a" data-target="_top"></button>
+            <div class="modal" data-node-wrapper="anchor" data-target="_top" data-ignore-events-from-children="true">
+                <button data-node-wrapper="anchor" data-target="_top"></button>
                 <div>
                     <header>
                         <p class="modal-card-title">Access denied</p>
@@ -17,7 +17,7 @@ export default async ({ session, renderHtml }) => {
                         <p>You need to be an &quot;admin&quot; user to do this.</p>
                     </section>
                     <footer>
-                        <button data-acts-as=data-acts-as="a" data-target="_top">OK</button>
+                        <button data-node-wrapper="anchor" data-target="_top">OK</button>
                     </footer>
                 </div>
             </div>

@@ -1,5 +1,5 @@
 
-import faker from 'faker';
+import { faker } from '@faker-js/faker';
 
 export default async ({ users, posts }) => {
     const user = await users.insert({
