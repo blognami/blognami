@@ -16,6 +16,7 @@ import { Sql } from './sql.js';
 import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP } from './constants.js';
 import { overload } from '../overload.js';
 import { addFileToClient } from '../client.js';
+import { defineService } from '../service_factory.js';
 
 export const Row = Base.extend().include({
     meta(){
@@ -78,6 +79,16 @@ export const Row = Base.extend().include({
                     }
                 })
                 return this;
+            },
+
+            singleton(){
+                this.isSingleton = true;
+                defineService(this.name, ({ database }) => database[this.name]);
+                this.validateWith(async function(){
+                    if(!this.isValidationError('general') && !this.id && await this._database[this.constructor.tableClass.name].count() > 0){
+                        this.setValidationError('general', `A singleton table can't contain more than one row`);
+                    }
+                });
             }
         });
     },
@@ -111,14 +122,14 @@ export const Row = Base.extend().include({
             await fn.call(this, this);
             this._updateLevel--;
 
-            if(this._updateLevel == 0 && Object.keys(this._alteredFields).length){
-                await this.validate();
-                
+            if(this._updateLevel == 0){
                 if(this._fields.id === undefined){
+                    await this.validate();
                     await this._runBeforeInsertCallbacks();
                     await this._database.run`${this._generateInsertSql()}`;
                     await this._runAfterInsertCallbacks();
-                } else {
+                } else if(Object.keys(this._alteredFields).length) {
+                    await this.validate();
                     await this._runBeforeUpdateCallbacks();
                     await this._database.run`${this._generateUpdateSql()}`;
                     await this._runAfterUpdateCallbacks();

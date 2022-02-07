@@ -16,6 +16,7 @@ export const Database = Base.extend().include({
         this._config = await config.database;
         this._sessionCache = {};
         this._transactionLevel = 0;
+        this._lockLevel = 0;
         if(await this.exists()){
             await this.run`use ${this}`;
         }
@@ -84,16 +85,33 @@ export const Database = Base.extend().include({
             await this.run`start transaction`;
         }
         this._transactionLevel++;
-        await fn();
+        const out = await fn();
         this._transactionLevel--;
         if(this._transactionLevel == 0){
             await this.run`commit`;
         }
+        return out;
+    },
+
+    async lock(fn){
+        if(this._lockLevel == 0){
+            await this.run`select get_lock('pinstripe_lock', -1)`;
+        }
+        this._lockLevel++;
+        const out = await fn();
+        this._lockLevel--;
+        if(this._lockLevel == 0){
+            await this.run`select release_lock('pinstripe_lock')`;
+        }
+        return out;
     },
 
     async destroy() {
         if(this._transactionLevel > 0){
             await this.run`rollback`;
+        }
+        if(this._lockLevel > 0){
+            await this.run`select release_lock('pinstripe_lock')`;
         }
         this._transactionLevel = 0;
         await new Promise((resolve, reject) => {
@@ -101,9 +119,18 @@ export const Database = Base.extend().include({
         });
     },
 
-    __getMissing(name){
+    async __getMissing(name){
         if(Union.classes[name]){
             return Union.create(name, this);
+        }
+        if(Row.classes[name]?.isSingleton){
+            const table = Row.classes[name].tableClass.new(this);
+            return await table.first() || await this.lock(async () => {
+                const out = await table.first();
+                if(out) return out;
+                await table.insert();
+                return await table.first();
+            });
         }
         return Table.create(name, this);
     },
