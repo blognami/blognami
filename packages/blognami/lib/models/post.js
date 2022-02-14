@@ -2,6 +2,7 @@
 export default {
     meta(){
         this.include('pageable');
+        this.include('tagable');
         
         this.belongsTo('user');
 

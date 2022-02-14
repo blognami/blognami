@@ -15,6 +15,10 @@ export const AsyncPathBuilder = Base.extend().include({
         return new this.constructor(this._startObject, [...this._path, args ]);
     },
 
+    get toString(){
+        return this.__getMissing('toString');
+    },
+
     then(...args){
         return unwrap(this._startObject, [...this._path]).then(...args);
     }

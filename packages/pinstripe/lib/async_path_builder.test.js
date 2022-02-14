@@ -25,3 +25,14 @@ test('AsyncPathBuilder (2)', async () => {
     expect(await foo.bar().baz()).toBe("boo");
     expect(await foo.bar().baz().length).toBe(3);
 });
+
+test('AsyncPathBuilder (3)', async () => {
+    const foo = AsyncPathBuilder.new({
+        toString(){
+            return "hello world";
+        }
+    });
+    
+    expect(await foo.toString()).toBe("hello world");
+});
+

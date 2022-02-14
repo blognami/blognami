@@ -41,10 +41,6 @@ export const Validatable = {
         return this._validationErrors;
     },
 
-    set validationErrors(value){
-        this._validationErrors = value;
-    },
-
     setValidationError(name, message){
         this.validationErrors[name] = message;
         return this;
@@ -59,7 +55,7 @@ export const Validatable = {
 
     async validate(){
         await this._runBeforeValidationCallbacks();
-        this.validationErrors = {};
+        this._validationErrors = {};
         await this._runValidateWithCallbacks();
         if(this.isValidationError()){
             throw new ValidationError(this.validationErrors);

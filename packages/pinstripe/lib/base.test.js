@@ -78,3 +78,21 @@ test(`Base - can produce dynamic keys`, () => {
 
     expect(Object.keys(fixture)).toEqual(['foo', 'bar']);
 });
+
+test(`Base - getters and setters with same name can be defined independently`, () => {
+    const fixture = Base.extend().include({
+        meta(){
+            this.prototype.assignProps({
+                get foo(){
+                    return 'bar';
+                }
+            });
+        },
+
+        set foo(value){
+            
+        }
+    }).new();
+
+    expect(fixture.foo).toEqual('bar');
+})

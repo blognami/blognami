@@ -117,17 +117,21 @@ const assignProps = (target, ...sources) => {
                 return;
             }
             const descriptor = { ...Object.getOwnPropertyDescriptor(source, name) };
-            const { get } = descriptor;
+            const { get, set } = descriptor;
+            const { get: targetGet, set: targetSet } = (Object.getOwnPropertyDescriptor(target, name) || {});
             if(get){
                 descriptor.get = function(...args){
                     return get.call(this.__proxy || this, ...args);
                 };
+            } else if(targetGet) {
+                descriptor.get = targetGet;
             }
-            const { set } = descriptor;
             if(set){
                 descriptor.set = function(...args){
                     set.call(this.__proxy || this, ...args);
                 };
+            } else if(targetSet){
+                descriptor.set = targetSet;
             }
             Object.defineProperty(target, name, descriptor);
         });

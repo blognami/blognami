@@ -24,7 +24,7 @@ export default {
     },
 
     generateCandidateSlug(n){
-        const out = dasherize(this.title);
+        const out = dasherize(this.title || this.name);
         if(n > 1){
             return `${out}-${n}`;
         }

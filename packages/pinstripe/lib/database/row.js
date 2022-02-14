@@ -17,6 +17,8 @@ import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP } from './constants.js';
 import { overload } from '../overload.js';
 import { addFileToClient } from '../client.js';
 import { defineService } from '../service_factory.js';
+import { getAllProps } from '../get_all_props.js';
+import { AsyncPathBuilder } from '../async_path_builder.js';
 
 export const Row = Base.extend().include({
     meta(){
@@ -29,9 +31,10 @@ export const Row = Base.extend().include({
 
         this.assignProps({
             register(name, ...args){
-                const out = register.call(this, name, ...args);
+                const normalizedName = Inflector.camelize(name);
+                const out = register.call(this, normalizedName, ...args);
                 if(!this.abstract){
-                    out.tableClass = Table.register(Inflector.pluralize(name));
+                    out.tableClass = Table.register(Inflector.pluralize(normalizedName));
                 }
                 return out;
             },
@@ -69,6 +72,12 @@ export const Row = Base.extend().include({
                 return this;
             },
 
+            afterInsertOrUpdate(fn){
+                this.afterInsert(fn);
+                this.afterUpdate(fn);
+                return this;
+            },
+
             canBe(name){
                 const that = this;
                 Union.register(Inflector.pluralize(name)).include({
@@ -87,6 +96,16 @@ export const Row = Base.extend().include({
                 this.validateWith(async function(){
                     if(!this.isValidationError('general') && !this.id && await this._database[this.constructor.tableClass.name].count() > 0){
                         this.setValidationError('general', `A singleton table can't contain more than one row`);
+                    }
+                });
+            },
+
+            scope(name, fn){
+                this.tableClass.include({
+                    async [name](...args){
+                        const that = AsyncPathBuilder.new(this);
+                        await fn.call(that, that, ...args);
+                        return this;
                     }
                 });
             }
@@ -128,10 +147,10 @@ export const Row = Base.extend().include({
                     await this._runBeforeInsertCallbacks();
                     await this._database.run`${this._generateInsertSql()}`;
                     await this._runAfterInsertCallbacks();
-                } else if(Object.keys(this._alteredFields).length) {
+                } else {
                     await this.validate();
                     await this._runBeforeUpdateCallbacks();
-                    await this._database.run`${this._generateUpdateSql()}`;
+                    if(Object.keys(this._alteredFields).length) await this._database.run`${this._generateUpdateSql()}`;
                     await this._runAfterUpdateCallbacks();
                 }
             }
@@ -153,13 +172,20 @@ export const Row = Base.extend().include({
         const title = `Edit ${this.constructor.name}`;
 
         const fields = [];
-        const columns = Object.values(await this._database[this.constructor.tableClass.name].columns());
-        while(columns.length){
-            const column = columns.shift();
+        const columns = await this._database[this.constructor.tableClass.name].columns();
+        const names = [...new Set([ ...Object.keys(columns), ...extractSettableProps(this) ])];
+        while(names.length){
+            const name = names.shift();
+            const column = columns[name];
+            let value = await this[name];
+            if(typeof value?.toFieldValue == 'function'){
+                value = await value.toFieldValue();
+            }
+            const type = column ? await column.type() : typeof value;
             fields.push({
-                name: column._name,
-                type: COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP[await column.type()],
-                value: this[column._name]
+                name,
+                type: COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP[type],
+                value
             })
         }
 
@@ -260,6 +286,25 @@ export const Row = Base.extend().include({
         return `${this.constructor.name} (Row) ${JSON.stringify(this._inspectInfo, null, 2)}`;
     }
 });
+
+const extractSettableProps = (o) => {
+    const out = [];
+    getAllProps(o).forEach((name) => {
+        if(name.startsWith('_')) return;
+        let isSetter = false;
+        let current = o;
+        while(current){
+            const { set } = (Object.getOwnPropertyDescriptor(current, name) || {});
+            if(typeof set == 'function') {
+                isSetter = true;
+                break;
+            }
+            current = current.__proto__;
+        }
+        if(isSetter) out.push(name);
+    });
+    return out;
+};
 
 export const defineModel = overload({
     ['string, object'](name, include){

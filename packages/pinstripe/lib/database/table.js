@@ -48,8 +48,20 @@ export const Table = Base.extend().include({
                     cascadeDelete: true,
                     ...options
                 };
+                
+                const { through } = this.relationships[name];
+                
                 this.include({
                     get [name](){
+                        if(through){
+                            const path = [ ...through ];
+                            let out = this;
+                            while(path.length){
+                                const name = path.shift();
+                                out = out[name];
+                            }
+                            return out;
+                        }
                         return this._join(name);
                     }
                 });
@@ -352,12 +364,6 @@ export const Table = Base.extend().include({
             const whereSql = joinRoot._whereSql;
             fromSql.push(out.sql`, ${out.constructor} as ${out}`);
             whereSql.push(out.sql`${[whereSql.length ? ' and ' : '']}${this[relationship.fromKey]} = ${this[relationship.toKey]}`);
-            let matches;
-            if(matches = relationship.fromKey.match(/^(.+)_id$/)){
-                whereSql.push(out.sql`and ${this[`${matches[1]}Type`]} = ${Inflector.singularize(out.constructor.name)}`);
-            } else if(matches = relationship.to_key.match(/\A(.+)_id\z/)){
-                whereSql.push(out.sql`and ${this[`${matches[1]}Type`]} = ${Inflector.singularize(out.constructor.name)}`);
-            }
             return out;
         });
         return new unionClass(this._database, tables);
