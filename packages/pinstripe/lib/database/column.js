@@ -1,22 +1,20 @@
 
 import { Base } from "../base.js";
-import { Sql } from './sql.js';
-import { TYPE_TO_MYSQL_COLUMN_TYPE_MAP, TYPE_TO_DEFAULT_VALUE_MAP } from './constants.js';
+import { createAdapterDeligator } from './adapter.js';
+
+const deligateToAdapter = createAdapterDeligator('column');
 
 export const Column = Base.extend().include({
     initialize(table, name, type){
+        this._adapter = table._database._adapter;
         this._table = table;
         this._name = name;
         this._type = type;
     },
 
-    get sql(){
-        return Sql.fromTemplate(this);
-    },
+    renderSql: deligateToAdapter('renderSql'),
 
-    toSql(){
-        return this.sql`${this._table}.${Sql.escapeIdentifier(this._name)}`;
-    },
+    toSql: deligateToAdapter('toSql'),
 
     async type(){
         if(!this._type){
@@ -29,49 +27,9 @@ export const Column = Base.extend().include({
         return (await this.type()) !== undefined;
     },
 
-    async create(type = 'string', options = {}){
-        options = {
-            index: type == 'foreign_key',
-            default: TYPE_TO_DEFAULT_VALUE_MAP[type],
-            ...options
-        };
-        const table = this._table;
-        const database = table._database;
+    create: deligateToAdapter('create'),
 
-        await table.create();
-
-        if(!await this.exists()){
-            await database.run`
-                alter table ${table.constructor}
-                add column ${Sql.escapeIdentifier(this._name)} ${[TYPE_TO_MYSQL_COLUMN_TYPE_MAP[type]]}
-                ${options.default !== undefined ? this.sql`default ${options.default}` : undefined}
-            `;
-        }
-
-        if(options.index){
-            await database.run`
-                alter table ${table.constructor}
-                add index(${Sql.escapeIdentifier(this._name)})
-            `;
-        }
-
-        return this;
-    },
-
-    async drop(){
-        const table = this._table;
-        const database = table._database;
-
-        if(await this.exists()){
-            await database.run`
-                alter table ${table.constructor}
-                drop ${Sql.escapeIdentifier(this._name)}
-            `;
-            this._type = undefined;
-        }
-
-        return this;
-    },
+    drop: deligateToAdapter('drop'),
 
     async __beforeInspect(){
         const exists = await this.exists();

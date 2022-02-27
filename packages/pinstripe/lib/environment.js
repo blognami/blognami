@@ -2,6 +2,7 @@
 import { Base } from './base.js';
 import { ServiceFactory } from './service_factory.js';
 import { overload  } from './overload.js';
+import { initializeImports } from './import_all.js'; // pinstripe-if-client: export const initializeImports = () => {};
 
 export const Environment = Base.extend().include({
     initialize(parentEnvironment){
@@ -24,13 +25,14 @@ export const Environment = Base.extend().include({
 
 export const createEnvironment = overload({
     async function(fn){
-        const { environment, resetEnvironment } = Environment.new();
+        const { environment, resetEnvironment } = await createEnvironment();
         const out = await fn(environment);
         await resetEnvironment();
         return out;
     },
 
-    ''(){
+    async ''(){
+        await initializeImports();
         return Environment.new();
     }
 })

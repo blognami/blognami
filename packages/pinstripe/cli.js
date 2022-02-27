@@ -2,10 +2,9 @@
 
 import { spawn } from 'child_process';
 
-import { importAll } from './lib/import_all.js';
 import { project } from './lib/project.js';
 import { Command } from './lib/command.js';
-import { Environment } from './lib/environment.js';
+import { createEnvironment } from './lib/environment.js';
 
 (async () => {
     const { entryPath, localPinstripePath, exists } = await project;
@@ -18,11 +17,11 @@ import { Environment } from './lib/environment.js';
             stdio: 'inherit'
         });
     } else {
-        await importAll();
         if(entryPath){
-            await import(entryPath);
-            await importAll();
+            import(entryPath);
         }
+
+        const { runCommand, resetEnvironment } = await createEnvironment();
 
         if(exists){
             Command.unregister('generate-project');
@@ -34,8 +33,7 @@ import { Environment } from './lib/environment.js';
                 }
             });
         }
-
-        const { runCommand, resetEnvironment } = Environment.new();
+        
         try {
             await runCommand(...args);
         } catch(e) {

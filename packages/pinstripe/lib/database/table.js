@@ -2,19 +2,15 @@
 import { Base } from '../base.js';
 import { Registrable } from '../registrable.js';
 import { Inflector } from '../inflector.js';
-import { Sql } from './sql.js';
-import { Column } from './column.js';
 import { Union } from './union.js';
 import { defineService } from '../service_factory.js';
 import { 
-    MYSQL_COLUMN_TYPE_TO_TYPE_MAP,
-    COMPARISON_OPERATORS,
-    KEY_COMPARISON_OPERATORS,
-    COMPARISON_OPERATOR_METHOD_PATTERN,
-    KEY_COMPARISON_OPERATOR_METHOD_PATTERN,
     COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP,
     ALLOWED_TABLE_ADAPTER_COLUMN_TYPES
 } from './constants.js';
+import { createAdapterDeligator } from './adapter.js';
+
+const deligateToAdapter = createAdapterDeligator('table');
 
 export const Table = Base.extend().include({
     meta(){
@@ -35,17 +31,13 @@ export const Table = Base.extend().include({
                 return this._relationships;
             },
 
-            toSql(){
-                return Sql.escapeIdentifier(this.name);
-            },
-
             hasMany(name, options = {}){
                 this.relationships[name] = {
                     name,
                     collectionName: name,
                     fromKey: 'id',
                     toKey: `${Inflector.singularize(this.name)}Id`,
-                    cascadeDelete: true,
+                    cascadeDelete: !options.through,
                     ...options
                 };
                 
@@ -73,9 +65,10 @@ export const Table = Base.extend().include({
                     collectionName: Inflector.pluralize(name),
                     fromKey: 'id',
                     toKey: `${name}Id`,
-                    cascadeDelete: true,
+                    cascadeDelete: !options.through,
                     ...options
                 };
+
                 this.include({
                     get [name](){
                         return this._join(name);
@@ -92,6 +85,7 @@ export const Table = Base.extend().include({
                     cascadeDelete: false,
                     ...options
                 };
+
                 this.include({
                     get [name](){
                         return this._join(name);
@@ -102,6 +96,7 @@ export const Table = Base.extend().include({
     },
 
     initialize(database, joinParent){
+        this._adapter = database._adapter;
         this._database = database;
         this._joinParent = joinParent;
         if(!this._joinParent){
@@ -110,24 +105,20 @@ export const Table = Base.extend().include({
         this._alias = this._generateAlias(this.constructor.name);
 
         if(!this._joinParent){
-            this._fromSql = [this.sql`${this.constructor} as ${this}`];
+            this._fromSql = [this._generateFromSql()];
             this._whereSql = [];
             this._orderBySql = [];
             this._limit = undefined;
         }
     },
 
+    renderSql: deligateToAdapter('renderSql'),
+
     concat(collection){
         return new Union(this._database, [this, collection]);
     },
 
-    get sql(){
-        return Sql.fromTemplate(this);
-    },
-
-    toSql(){
-        return Sql.escapeIdentifier(this._alias);
-    },
+    toSql: deligateToAdapter('toSql'),
 
     back(count = 1){
         let out = this;
@@ -137,27 +128,9 @@ export const Table = Base.extend().include({
         return out;
     },
 
-    where(...args){
-        const whereSql = this._joinRoot._whereSql;
-        if(whereSql.length){
-            whereSql.push(' and ');
-        }
-        whereSql.push(this.sql(...args));
-        return this;
-    },
+    where: deligateToAdapter('where'),
 
-    orderBy(column, direction = 'asc'){
-        if(!(column instanceof Column)){
-            column = this.__getMissing(column);
-        }
-        const orderBySql = this._joinRoot._orderBySql;
-        if(orderBySql.length){
-            orderBySql.push(this.sql`, ${column} ${[direction == 'desc' ? 'desc' : 'asc']}`);
-        } else {
-            orderBySql.push(this.sql`${column} ${[direction == 'desc' ? 'desc' : 'asc']}`);
-        }
-        return this;
-    },
+    orderBy: deligateToAdapter('orderBy'),
 
     clearOrderBy(){
         this._joinRoot._orderBySql = [];
@@ -187,17 +160,11 @@ export const Table = Base.extend().include({
         return this;
     },
 
-    async first(options = {}){
-        return (await this.all({ ...options, limit: '0, 1' })).pop();
-    },
+    first: deligateToAdapter('first'),
 
-    async count(options = {}){
-        return Object.values(await this.first({ select: 'count(*)', ...options })).pop();
-    },
+    count: deligateToAdapter('count'),
 
-    async explain(options = {}){
-        return (await this._generateSelectSql(options)).toString();
-    },
+    explain: deligateToAdapter('explain'),
 
     async insert(...args){
         const { Row } = await import('./row.js');
@@ -218,50 +185,16 @@ export const Table = Base.extend().include({
         return this;
     },
 
-    async columns(){
-        const out = {};
-        if(await this.exists()){
-            const rows = await this._database.run`describe ${this.constructor}`;
-            rows.forEach(row => {
-                const name = row['Field'];
-                let type;
-                if(name == '_id'){
-                    type = 'primary_key';
-                } else if(name == 'id'){
-                    type = 'alternate_key';
-                } else {
-                    type = MYSQL_COLUMN_TYPE_TO_TYPE_MAP[row['Type']] || 'string';
-                }
-                out[name] = new Column(this, name, type);
-            });
-        }
-        return out;
-    },
+    columns: deligateToAdapter('columns'),
 
     async exists(){
         return Object.keys(await this._database.tables()).includes(this.constructor.name);
     },
 
-    async create(){
-        await this._database.create();
-        if(!await this.exists()){
-            await this._database.run`
-                create table ${this.constructor}(
-                    _id int(11) unsigned auto_increment primary key,
-                    id binary(16) not null,
-                    index(id)
-                )
-            `;
-        }
-    },
+    create: deligateToAdapter('create'),
 
-    async drop(){
-        if(await this.exists()){
-            await this._database.run`drop table ${this.constructor}`;
-        }
-    },
+    drop: deligateToAdapter('drop'),
 
-        
     async addColumn(name, ...args){
         return (await this[name]).create(...args);
     },
@@ -330,22 +263,7 @@ export const Table = Base.extend().include({
         return { name, pageCount, rowCount, page, pageSize, pagination, rows, columns };
     },
 
-    async __getMissing(name){
-        const columns = await this.columns();
-        let matches = name.match(COMPARISON_OPERATOR_METHOD_PATTERN);
-        if(matches){
-            const column = columns[matches[1]];
-            if(column){
-                if(name.match(KEY_COMPARISON_OPERATOR_METHOD_PATTERN)){
-                    return (value) => this.where`${KEY_COMPARISON_OPERATORS[matches[2]](column, value)}`;
-                }
-                return (value) => this.where`${COMPARISON_OPERATORS[matches[2]](column, value)}`;
-            } else {
-                return () => this.where`1 = 2`;
-            }
-        }
-        return columns[name] || new Column(this, name);
-    },
+    __getMissing: deligateToAdapter('__getMissing'),
 
     _join(relationshipName){
         const relationship = this.constructor.relationships[relationshipName]
@@ -355,95 +273,13 @@ export const Table = Base.extend().include({
         return this._joinToTable(relationship);
     },
 
-    _joinToUnion(relationship){
-        const unionClass = Union.classes[relationship.collectionName]
-        const tables = unionClass.tableClasses.map(tableClass => {
-            const out = new tableClass(this._database, this);
-            const joinRoot = out._joinRoot;
-            const fromSql = joinRoot._fromSql;
-            const whereSql = joinRoot._whereSql;
-            fromSql.push(out.sql`, ${out.constructor} as ${out}`);
-            whereSql.push(out.sql`${[whereSql.length ? ' and ' : '']}${this[relationship.fromKey]} = ${this[relationship.toKey]}`);
-            return out;
-        });
-        return new unionClass(this._database, tables);
-    },
+    _joinToUnion: deligateToAdapter('_joinToUnion'),
 
-    _joinToTable(relationship){
-        const out = Table.create(relationship.collectionName, this._database, this);
-        const joinRoot = out._joinRoot;
-        const fromSql = joinRoot._fromSql;
-        const whereSql = joinRoot._whereSql;
-        fromSql.push(out.sql`, ${out.constructor} as ${out}`);
-        whereSql.push(out.sql`${[whereSql.length ? ' and ' : '']}${this[relationship.fromKey]} = ${out[relationship.toKey]}`);
-        return out;
-    },
+    _joinToTable: deligateToAdapter('_joinToTable'),
 
-    async _generateSelectSql(options = {}){
-        const columns = await this.columns();
-        options = {
-            columnNames: Object.keys(columns),
-            ...options
-        };
+    _generateFromSql: deligateToAdapter('_generateFromSql'),
 
-        const out = ['select '];
-
-        if(options.hasOwnProperty('select')){
-            out.push(options.select);
-        } else {
-            for(let i in options.columnNames){
-                const columnName = options.columnNames[i];
-                const column = await this.__getMissing(columnName);
-                if(await column.exists()){
-                    if(columnName.match(/^(id|.+Id)$/)){
-                        out.push(this.sql`bin_to_uuid(${column}) as ${Sql.escapeIdentifier(columnName)}, `);
-                    } else {
-                        out.push(this.sql`${column} as ${Sql.escapeIdentifier(columnName)}, `);
-                    }
-                } else {
-                    out.push(this.sql`null as ${Sql.escapeIdentifier(columnName)}, `);
-                }
-            }
-            out.push(this.sql`${Inflector.singularize(this.constructor.name)} as \`_type\``);
-        }
-
-        const joinRoot = this._joinRoot;
-        
-        if(options.hasOwnProperty('from')){
-            if(options.from){
-                out.push(this.sql` from ${[options.from]}`);
-            }
-        } else {
-            out.push(this.sql` from ${joinRoot._fromSql}`);
-        }
-
-        if (options.hasOwnProperty('where')){
-            if(options.where){
-                out.push(this.sql` where ${[options.where]}`);
-            }
-        } else if(joinRoot._whereSql.length) {
-            out.push(this.sql` where ${joinRoot._whereSql}`);
-        }
-
-        if(options.hasOwnProperty('orderBy')){
-            if(options.orderBy){
-                out.push(this.sql` order by ${[options.orderBy]}`);
-            }
-        } else if(joinRoot._orderBySql.length){
-            out.push(this.sql` order by ${joinRoot._orderBySql}`);
-        }
-
-        if(options.hasOwnProperty('limit')){
-            if(options.limit){
-                out.push(this.sql` limit ${[options.limit]}`);
-            }
-        } else if(joinRoot._limit) {
-            const { page, pageSize } = joinRoot._limit;
-            out.push(this.sql` limit ${(page - 1) * pageSize}, ${pageSize}`);
-        }
-
-        return this.sql`${out}`;
-    },
+    _generateSelectSql: deligateToAdapter('_generateSelectSql'),
 
     _generateAlias(name){
         const aliasCounters = this._joinRoot._aliasCounters;

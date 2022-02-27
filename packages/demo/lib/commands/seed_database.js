@@ -2,6 +2,8 @@
 import { faker } from '@faker-js/faker';
 
 export default async ({ users, posts }) => {
+    if(process.env.NODE_ENV == 'test') return;
+
     const user = await users.insert({
         name: 'Admin',
         email: 'admin@example.com',

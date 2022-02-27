@@ -8,8 +8,9 @@
     "build": "lerna run build",
     "start": "lerna run start --scope demo --stream",
     "watch": "nodemon -e js,scss --exec 'yarn start'",
-    "test": "yarn test:unit",
+    "test": "yarn test:unit && yarn test:models",
     "test:unit": "lerna run test:unit --stream",
+    "test:models": "lerna run test:models --stream",
     "publish-all": "lerna publish"
   },
   "dependencies": {

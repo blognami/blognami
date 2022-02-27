@@ -1,24 +1,18 @@
-
-import * as crypto from 'crypto';
-import * as uuid from 'uuid';
-
-if(!crypto.randomUUID){
-    crypto.randomUUID = uuid.v4;
-}
-
 import { Base } from '../base.js';
 import { Registrable } from '../registrable.js';
 import { Validatable } from '../validatable.js';
 import { Table } from './table.js';
 import { Inflector } from '../inflector.js';
 import { Union } from './union.js';
-import { Sql } from './sql.js';
-import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP } from './constants.js';
+import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP, RESERVED_WORDS } from './constants.js';
 import { overload } from '../overload.js';
 import { addFileToClient } from '../client.js';
 import { defineService } from '../service_factory.js';
 import { getAllProps } from '../get_all_props.js';
 import { AsyncPathBuilder } from '../async_path_builder.js';
+import { createAdapterDeligator } from './adapter.js';
+
+const deligateToAdapter = createAdapterDeligator('row');
 
 export const Row = Base.extend().include({
     meta(){
@@ -32,6 +26,7 @@ export const Row = Base.extend().include({
         this.assignProps({
             register(name, ...args){
                 const normalizedName = Inflector.camelize(name);
+                if(RESERVED_WORDS.includes(normalizedName)) throw new Error(`'${name}' is a reserved word.`);
                 const out = register.call(this, normalizedName, ...args);
                 if(!this.abstract){
                     out.tableClass = Table.register(Inflector.pluralize(normalizedName));
@@ -41,6 +36,13 @@ export const Row = Base.extend().include({
 
             hasMany(name, ...args){
                 this.tableClass.hasMany(name, ...args);
+
+                if(this.tableClass.relationships[name].cascadeDelete) {
+                    this.beforeDelete(async function(){
+                        await this[name].delete();
+                    });
+                }
+
                 return this.include({
                     get [name](){
                         return this._database[this.constructor.tableClass.name].idEq(this.id)[name];
@@ -50,6 +52,13 @@ export const Row = Base.extend().include({
 
             hasOne(name, ...args){
                 this.tableClass.hasOne(name, ...args);
+
+                if(this.tableClass.relationships[name].cascadeDelete) {
+                    this.beforeDelete(async function(){
+                        await this[name].delete();
+                    });
+                }
+
                 return this.include({
                     get [name](){
                         return this._database[this.constructor.tableClass.name].idEq(this.id)[name].first();
@@ -59,6 +68,13 @@ export const Row = Base.extend().include({
 
             belongsTo(name, ...args){
                 this.tableClass.belongsTo(name, ...args);
+
+                if(this.tableClass.relationships[name].cascadeDelete) {
+                    this.beforeDelete(async function(){
+                        await this[name].delete();
+                    });
+                }
+
                 return this.include({
                     get [name](){
                         return this._database[this.constructor.tableClass.name].idEq(this.id)[name].first();
@@ -113,6 +129,7 @@ export const Row = Base.extend().include({
     },
 
     async initialize(database, fields = {}){
+        this._adapter = database._adapter;
         this._database = database._environment.database;
         this._fieldTypes = await (async () => {
             const out = {};
@@ -131,42 +148,9 @@ export const Row = Base.extend().include({
         this._updateLevel = 0;
     },
 
-    async update(arg1){
-        const fields = typeof arg1 == 'object' ? arg1 : {};
-        const fn = typeof arg1 == 'function' ? arg1 : () => {};
+    update: deligateToAdapter('update'),
 
-        await this._database.transaction(async () => {
-            this._updateLevel++;
-            Object.assign(this, fields);
-            await fn.call(this, this);
-            this._updateLevel--;
-
-            if(this._updateLevel == 0){
-                if(this._fields.id === undefined){
-                    await this.validate();
-                    await this._runBeforeInsertCallbacks();
-                    await this._database.run`${this._generateInsertSql()}`;
-                    await this._runAfterInsertCallbacks();
-                } else {
-                    await this.validate();
-                    await this._runBeforeUpdateCallbacks();
-                    if(Object.keys(this._alteredFields).length) await this._database.run`${this._generateUpdateSql()}`;
-                    await this._runAfterUpdateCallbacks();
-                }
-            }
-        });
-
-        return this;
-    },
-
-    async delete(){
-        await this._database.transaction(async () => {
-            await this._runBeforeDeleteCallbacks();
-            await this._database.run`delete from ${Sql.escapeIdentifier(Inflector.pluralize(this.constructor.name))} where id = uuid_to_bin(${this.id})`;
-            await this._runAfterDeleteCallbacks();
-        });
-        return this;
-    },
+    delete: deligateToAdapter('delete'),
 
     async toFormAdapter(){
         const title = `Edit ${this.constructor.name}`;
@@ -219,43 +203,9 @@ export const Row = Base.extend().include({
         return Object.keys({...this._fields, ...this._alteredFields});
     },
 
-    _generateInsertSql(){
-        this._fields['id'] = crypto.randomUUID();
-        this._alteredFields['id'] = this._fields['id'];
+    _generateInsertSql: deligateToAdapter('_generateInsertSql'),
 
-        return this._database.sql`
-            insert into ${Sql.escapeIdentifier(Inflector.pluralize(this.constructor.name))}(
-                ${Object.keys(this._alteredFields).map((key, i) =>
-                    this._database.sql`${[i > 0 ? ', ' : '']}${Sql.escapeIdentifier(key)}`
-                )}
-            )
-            values(
-                ${Object.keys(this._alteredFields).map((key, i) => {
-                    const value = this._alteredFields[key];
-                    const separator = [i > 0 ? ', ' : ''];
-                    if(key.match(/^(id|.+Id)$/)){
-                        return this._database.sql`${separator}uuid_to_bin(${value})`;
-                    }
-                    return this._database.sql`${separator}${value}`;
-                })}
-            )
-        `;
-    },
-
-    _generateUpdateSql(){
-        return this._database.sql`
-            update ${this._database.sql(Inflector.pluralize(this.constructor.name))}
-            set ${Object.keys(this._alteredFields).map((key, i) => {
-                const value = this._alteredFields[key];
-                const separator = [i > 0 ? ', ' : ''];
-                if(key.match(/^(id|.+Id)$/)){
-                    return this._database.sql`${separator}${Sql.escapeIdentifier(key)} = uuid_to_bin(${value})`;
-                }
-                return this._database.sql`${separator}${Sql.escapeIdentifier(key)} = ${value}`;
-            })}
-            where id = uuid_to_bin(${this._fields.id})
-        `;
-    },
+    _generateUpdateSql: deligateToAdapter('_generateUpdateSql'),
 
     _normalizeFields(fields = {}){
         const out = {};

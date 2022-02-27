@@ -9,11 +9,16 @@
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
-    "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server"
+    "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
+    "test:models": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models"
   },
   "dependencies": {
     "@faker-js/faker": "^6.0.0-alpha.5",
     "blognami": "^0.11.0",
     "pinstripe": "^0.11.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "jest": "^27.5.1"
   }
 }

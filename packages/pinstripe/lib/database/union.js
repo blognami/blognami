@@ -3,7 +3,9 @@ import { Base } from '../base.js';
 import { Registrable } from '../registrable.js';
 import { AsyncPathBuilder } from '../async_path_builder.js';
 import { defineService } from '../service_factory.js';
-import { Sql } from './sql.js';
+import { createAdapterDeligator } from './adapter.js';
+
+const deligateToAdapter = createAdapterDeligator('union');
 
 export const Union = Base.extend().include({
     meta(){
@@ -27,6 +29,7 @@ export const Union = Base.extend().include({
     },
     
     initialize(database, collections, orderBySql = [], limit){
+        this._adapter = database._adapter;
         this._database = database
         this._collections = (collections || this.constructor.tableClasses.map(tableClass => new tableClass(database))).map(collection => {
             if(collection._collections || collection._startObject){
@@ -42,19 +45,9 @@ export const Union = Base.extend().include({
         return new Union(this._database, [...this._collections, collection]);
     },
 
-    get sql(){
-        return Sql.fromTemplate(undefined);
-    },
+    renderSql: deligateToAdapter('renderSql'),
 
-    orderBy(column, direction = 'asc'){
-        const orderBySql = this._orderBySql;
-        if(orderBySql.length){
-            orderBySql.push(this.sql`, ${Sql.escapeIdentifier(column)} ${[direction == 'desc' ? 'desc' : 'asc']}`);
-        } else {
-            orderBySql.push(this.sql`${Sql.escapeIdentifier(column)} ${[direction == 'desc' ? 'desc' : 'asc']}`);
-        }
-        return this;
-    },
+    orderBy: deligateToAdapter('orderBy'),
 
     clearOrderBy(){
         this._orderBySql = [];
@@ -89,9 +82,7 @@ export const Union = Base.extend().include({
         return (await this.all(options)).pop();
     },
 
-    async count(options = {}){
-        return Object.values(await this.first({select: 'count(*)', ...options})).pop();
-    },
+    count: deligateToAdapter('count'),
 
     async explain(options = {}){
         return (await this._generateSelectSql(options)).toString();
@@ -107,37 +98,7 @@ export const Union = Base.extend().include({
         return new Union(this._database, this._collections.map(collection => collection(...args)), this._orderBySql, this._limit);
     },
 
-    async _generateSelectSql(options = {}){
-        const out = [];
-        const tables = await extractTables(this._collections);
-        if(options.select){
-            out.push(`select ${options.select} from `);
-        } else {
-            out.push(`select * from `);
-        }
-        out.push('((');
-        while(tables.length){
-            const table = tables.shift();
-            out.push(table._generateSelectSql({
-                columnNames: await this._columnNames(),
-                orderBy: null,
-                limit: null
-            }));
-            if(tables.length){
-                out.push(') union all (');
-            }
-        }
-        out.push(')) as `_union`');
-        if(this._orderBySql.length){
-            out.push(this.sql` order by ${this._orderBySql}`);
-        }
-
-        if(this._limit) {
-            const { page, pageSize } = this._limit;
-            out.push(this.sql` limit ${(page - 1) * pageSize}, ${pageSize}`);
-        }
-        return this._database.sql`${out}`;
-    },
+    _generateSelectSql: deligateToAdapter('_generateSelectSql'),
 
     async _columnNames(){
         const out = [];
@@ -165,7 +126,7 @@ export const Union = Base.extend().include({
     }
 });
 
-const extractTables = async (_collections) => {
+export const extractTables = async (_collections) => {
     const out = [];
     const collections = [ ..._collections ];
     while(collections.length){

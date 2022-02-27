@@ -14,14 +14,17 @@ export const Migrator = Base.extend().include({
     },
 
     async migrate(){
-            for(let i in this.migrations){
+        
+        const isDevelopmentEnvironment = (process.env.NODE_ENV || 'development') == 'development';
+
+        for(let i in this.migrations){
             const migration = this.migrations[i];
             if(!await this.isMigrationApplied(migration)){
-                console.log(`Applying migration: ${migration.name}`);
+                if(isDevelopmentEnvironment) console.log(`Applying migration: ${migration.name}`);
                 await new migration(this._environment).migrate();
                 await this._database.pinstripeAppliedMigrations.insert({schemaVersion: migration.schemaVersion});
             }
-            }
+        }
     },
 
     get migrations(){

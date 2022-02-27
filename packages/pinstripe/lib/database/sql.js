@@ -1,75 +1,77 @@
 
-import mysql from 'mysql'; // pinstripe-if-client:
-
 import { Base } from '../base.js';
 
 export const Sql = Base.extend().include({
     meta(){
         this.assignProps({
             fromString(value){
-                return new this(value);
+                return this.new([ value ]);
             },
 
             escapeValue(value){
-                return this.fromString(mysql.escape(typeof value == 'boolean' ? `${value}` : value));
+                return this.new(['', ''], [ value ])
             },
 
-            escapeIdentifier(identifier){
-                return this.fromString(`\`${('' + identifier).replace(/`/g, '')}\``);
-            },
-
-            fromTemplate(...args){
-                if(Array.isArray(args[0])){
-                    return this.fromTemplate(this, ...args);
-                }
-                if(args.length == 1){
-                    const environment = args[0];
-                    return (...args) => this.fromTemplate(environment, ...args);
-                }
-                return (async (environment, _strings, ...interpolatedValues) => {
-                    const out = [];
-                    const strings = [..._strings];
-                    while(strings.length || interpolatedValues.length){
-                        if(strings.length){
-                            out.push(strings.shift());
-                        }
-                        if(interpolatedValues.length){
-                            out.push(await this.resolveValue(interpolatedValues.shift(), environment));
-                        }
-                    }
-                    return this.fromString(out.join(''));
-                })(...args);
-            },
-
-            async resolveValue(value, environment){
+            async resolveValue(value, context){
                 value = await value;
-                if(value instanceof this) {
+                if(value instanceof Sql) {
                     return value;
                 }
                 if(Array.isArray(value)){
-                    const out = [];
+                    const strings = [''];
+                    const interpolatedValues = [];
                     const _value = [ ...value ];
                     while(_value.length){
-                        out.push(await _value.shift());
+                        interpolatedValues.push(await this.resolveValue(_value.shift(), context));
+                        strings.push('');
                     }
-                    return this.fromString(out.join(''));
+                    return this.new(strings, interpolatedValues);
                 }
                 if(value && typeof value.toSql == 'function'){
-                    return this.resolveValue(value.toSql(), environment);
+                    return this.resolveValue(value.toSql(), context);
                 }
                 if(typeof value == 'function'){
-                    return this.resolveValue(value(environment), environment);
+                    return this.resolveValue(value(...context), context);
                 }
                 return this.escapeValue(value);
+            },
+        
+            createRenderer(context){
+                return async (strings, ...interpolatedValues) => {
+                    const resolvedInterpolatedValues = [];
+                    while(interpolatedValues.length){
+                        resolvedInterpolatedValues.push(await this.resolveValue(interpolatedValues.shift(), context));
+                    }
+                    return this.new(strings, resolvedInterpolatedValues);
+                };
             }
         })
     },
 
-    initialize(value){
-        this.value = value;
+    initialize(strings = [], interpolatedValues = []){
+        this.strings = strings;
+        this.interpolatedValues = interpolatedValues;
     },
 
-    toString(){
-        return this.value;
+    flatten(){
+        const out = this.constructor.new();
+        const strings = [ ...this.strings ];
+        const interpolatedValues = [ ...this.interpolatedValues ];
+        while(strings.length || interpolatedValues.length){
+            if(strings.length) out.strings.push(strings.shift());
+            if(interpolatedValues.length){
+                let interpolatedValue = interpolatedValues.shift();
+                if(interpolatedValue instanceof this.constructor){
+                    interpolatedValue = interpolatedValue.flatten();
+                    out.strings.push(`${out.strings.pop()}${interpolatedValue.strings.shift()}`);
+                    out.strings.push(...interpolatedValue.strings);
+                    strings.unshift(`${out.strings.pop()}${strings.shift()}`);
+                    out.interpolatedValues.push(...interpolatedValue.interpolatedValues);
+                } else {
+                    out.interpolatedValues.push(interpolatedValue);
+                }
+            }
+        }
+        return out;
     }
 });

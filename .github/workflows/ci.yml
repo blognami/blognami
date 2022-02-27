@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:8
         env:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:
@@ -16,7 +16,8 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       matrix:
-        node: [14.x]
+        node: [16.x]
+        database-adapter: [mysql, sqlite]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node }}
@@ -24,7 +25,7 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - run: yarn install
-    - run: yarn test
+    - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} yarn test
       env:
         CI: true
 

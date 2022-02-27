@@ -6,6 +6,8 @@ import { fileURLToPath } from 'url';
 
 import { addFileToClient } from './client.js';
 
+let initialized = false;
+
 const imported = {};
 const importQueue = [];
 
@@ -16,6 +18,8 @@ export const importAll = (...dirPaths) => {
         importQueue.push(...dirPaths);
     }
 
+    if(!initialized) return Promise.resolve();
+
     if(!processImportQueuePromise){
         processImportQueuePromise = processImportQueue().then(() => {
             processImportQueuePromise = null;
@@ -23,6 +27,11 @@ export const importAll = (...dirPaths) => {
     }
 
     return processImportQueuePromise;
+};
+
+export const initializeImports = async () => {
+    initialized = true;
+    await importAll();
 };
 
 const processImportQueue = async () => {
