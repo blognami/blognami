@@ -1,0 +1,96 @@
+
+.bn-portal-triggerbtn-wrapper {
+    user-select: none;
+    line-height: 1;
+    position: fixed;
+    bottom: 1em; 
+    right: 2em;
+    transition: transform 0.16s linear 0s;
+    opacity: 0.08s linear 0s;
+}
+
+.bn-portal-triggerbtn-wrapper span {
+    margin-bottom: 1px;
+}
+
+.bn-portal-triggerbtn-container {
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--brandcolor);
+    height: 60px;
+    min-width: 60px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 8px 16px -2px;
+    border-radius: 999px;
+    transition: opacity 0.3s ease;
+}
+
+.bn-portal-triggerbtn-container:before {
+    position: absolute;
+    content: "";
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0);
+    transition: background 0.3s ease;
+}
+
+.bn-portal-triggerbtn-container:hover:before {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.bn-portal-triggerbtn-container.halo:before {
+    top: -4px;
+    right: -4px;
+    bottom: -4px;
+    left: -4px;
+    border: 4px solid rgba(255, 255, 255, 0.15);
+}
+
+.bn-portal-triggerbtn-container.with-label {
+    padding: 0 12px 0 16px;
+}
+
+.bn-portal-triggerbtn-label {
+    padding: 8px;
+    color: rgb(255, 255, 255);
+    display: block;
+    white-space: nowrap;
+    max-width: 380px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bn-portal-avatar {
+    margin-bottom: 0px !important;
+    width: 60px;
+    height: 60px;
+}
+
+.bn-portal-avatar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 0 0 8px 0;
+    border-radius: 999px;
+}
+
+.bn-portal-avatar img {
+    position: absolute;
+    display: block;
+    top: -2px;
+    right: -2px;
+    bottom: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    opacity: 1;
+    max-width: unset;
+}
+

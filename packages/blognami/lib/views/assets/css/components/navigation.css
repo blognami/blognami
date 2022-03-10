@@ -1,0 +1,39 @@
+.bn-navigation {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    column-gap: 2.4rem;
+    align-items: center;
+}
+
+.bn-navigation > div {
+    display: flex;
+    align-items: center;
+}
+
+.bn-navigation-next {
+    justify-content: flex-end;
+}
+
+.bn-navigation-link {
+    display: inline-flex;
+    align-items: center;
+}
+
+.bn-navigation-link svg {
+    width: 16px;
+    height: 16px;
+}
+
+.bn-navigation-previous svg {
+    margin-right: 0.4rem;
+}
+
+.bn-navigation-next svg {
+    margin-left: 0.4rem;
+}
+
+@media (max-width: 767px) {
+    .bn-navigation-hide {
+        display: none;
+    }
+}

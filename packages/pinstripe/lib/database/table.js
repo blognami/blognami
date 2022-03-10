@@ -108,7 +108,8 @@ export const Table = Base.extend().include({
             this._fromSql = [this._generateFromSql()];
             this._whereSql = [];
             this._orderBySql = [];
-            this._limit = undefined;
+            this._pagination = undefined;
+            this._skipCount = 0;
         }
     },
 
@@ -138,12 +139,17 @@ export const Table = Base.extend().include({
     },
 
     paginate(page = 1, pageSize = 10){
-        this._joinRoot._limit = { page, pageSize };
+        this._joinRoot._pagination = { page, pageSize };
         return this;
     },
 
     clearPagination(){
-        this._joinRoot._limit = undefined;
+        this._joinRoot._pagination = undefined;
+        return this;
+    },
+
+    skip(skipCount){
+        this._joinRoot._skipCount = skipCount;
         return this;
     },
 
@@ -151,6 +157,7 @@ export const Table = Base.extend().include({
         return this._database.run`${this._generateSelectSql(options)}`;
     },
 
+    // can we get rid of this?
     async forEach(fn){
         const rows = await this.all();
         for(let i = 0; i < rows.length; i++){
@@ -231,7 +238,7 @@ export const Table = Base.extend().include({
     },
 
     async toTableAdapter(){
-        const limit = this._joinRoot._limit;
+        const limit = this._joinRoot._pagination;
         const name = this.constructor.name;
         let pageCount = 1;
         let rowCount;

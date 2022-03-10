@@ -1,226 +1,15 @@
 
-export default async ({ renderCss, themeConfig }) => renderCss({
-    get '*'() {
-        return {
-            margin: 0,
-            padding: 0,
-            color: themeConfig.colors.text,
-            fontSize: themeConfig.fontSizes.text,
-            fontWeight: 400,
-            lineHeight: 1.5,
-            boxSizing: 'border-box',
-            fontFamily: themeConfig.fonts.main,
-            textRendering: 'optimizeLegibility',
-            textSizeAdjust: '100%',
-            '-moz-osx-font-smoothing': 'grayscale',
-            '-webkit-font-smoothing': 'antialiased',
-        };
+export default async ({ renderCss }) => renderCss({
+
+    html: {
+        fontSize: '62.5%'
     },
 
-    'article, aside, figure, footer, header, hgroup, section': { display: 'block' },
-
-    get 'code, pre'(){
-        return {
-            '-moz-osx-font-smoothing': 'auto',
-            '-webkit-font-smoothing': 'auto',
-            'font-family': themeConfig.fonts.code,
-        };
+    body: {
+        fontSize: '1.6rem'
     },
 
-    get a() {
-        return {
-            color: themeConfig.colors.link,
-            cursor: 'pointer',
-            textDecoration: 'none',
-            strong: { color: 'currentColor' },
-            '&:hover': { color: themeConfig.colors.linkHover }
-        };
-    },
-
-    get code() {
-        return {
-            backgroundColor: themeConfig.colors.codeBackground,
-            color: themeConfig.colors.code,
-            fontSize: themeConfig.fontSizes.code,
-            fontWeight: themeConfig.fontWeights.code,
-            padding: themeConfig.space.codePadding
-        };
-    },
-
-    get hr() {
-        return {
-            backgroundColor: themeConfig.colors.hrBackground,
-            border: 'none',
-            display: 'block',
-            height: themeConfig.sizes.hrHeight,
-            margin: themeConfig.space.hrMargin
-        };
-    },
-
-    img: {
-        height: 'auto',
-        maxWidth: '100%'
-    },
-
-    'input[type="checkbox"], input[type="radio"]': { verticalAlign: 'baseline' },
-
-    get small() {
-        return {
-            fontSize: themeConfig.fontSizes.small
-        }
-    },
-
-    span: {
-        fontStyle: 'inherit',
-        fontWeight: 'inherit'
-    },
-
-    get strong() {
-        return {
-            color: themeConfig.colors.strong,
-            fontWeight: themeConfig.fontWeights.strong
-        }
-    },
-
-    fieldset: { border: 'none' },
-
-
-    get pre() {
-        return {
-            '-webkit-overflow-scrolling': 'touch',
-            backgroundColor: themeConfig.colors.preBackground,
-            color: themeConfig.colors.pre,
-            fontSize: themeConfig.fontSizes.pre,
-            overflowX: 'auto',
-            padding: themeConfig.space.prePadding,
-            whiteSpace: 'pre',
-            wordWrap: 'normal',
-            code: {
-                backgroundColor: 'transparent',
-                color: 'currentColor',
-                fontSize: themeConfig.fontSizes.preCode,
-                padding: 0
-            }
-        }
-    },
-
-    'li + li': { marginTop: '0.25em' },
-
-    'p, dl, ol, ul, blockquote, pre, table': { '&:not(:last-child)': { marginBottom: '1em' } },
-
-    get 'h1, h2, h3, h4, h5, h6'() {
-        return {
-            color: themeConfig.colors.heading,
-            fontWeight: themeConfig.fontWeights.heading,
-            lineHeight: themeConfig.lineHeights.heading
-        };
-    },
-
-    h1: {
-        fontSize: '2em',
-        marginBottom: '0.5em',
-        '&:not(:first-child)': { marginTop: '1em' }
-    },
-
-    h2: {
-        fontSize: '1.75em',
-        marginBottom: '0.5714em',
-        '&:not(:first-child)': { marginTop: '1.1428em' }
-    },
-
-    h3: {
-        fontSize: '1.5em',
-        marginBottom: '0.6666em',
-        '&:not(:first-child)': { marginTop: '1.3333em' }
-    },
-
-    h4: {
-        fontSize: '1.25em',
-        marginBottom: '0.8em'
-    },
-
-    h5: {
-        fontSize: '1.125em',
-        marginBottom: '0.8888em'
-    },
-
-    h6: {
-        fontSize: '1em',
-        marginBottom: '1em'
-    },
-
-    get blockquote() {
-        return {
-            backgroundColor: themeConfig.colors.blockquoteBackground,
-            padding: themeConfig.space.blockquotePadding
-        };
-    },
-
-    ol: {
-        listStylePosition: 'outside',
-        marginTop: '1em',
-        '&:not([type])': { listStyleType: 'decimal' }
-    },
-
-    ul: {
-        listStyle: 'disc outside',
-        marginTop: '1em',
-        marginLeft: '2em',
-        marginBottom: '1em',
-        ul: {
-            listStyleType: 'circle',
-            marginTop: '0.5em',
-            ul: {
-                listStyleType: 'square',
-            }
-        }
-    },
-
-    figure: {
-        marginLeft: '2em',
-        marginRight: '2em',
-        textAlign: 'center',
-        '&:not(:first-child)': { marginTop: '2em' },
-        '&:not(:last-child)': { marginBottom: '2em' },
-        img: { display: 'inlineBlock' },
-        figcaption: { fontStyle: 'italic' }
-    },
-
-    'sup, sub': { fontSize: '75%' },
-
-    get table() {
-        return {
-            width: '100%',
-
-            'td, th': {
-                border: themeConfig.borders.tableCell,
-                borderWidth: themeConfig.borderWidths.tableCell,
-                padding: themeConfig.space.tableCellPadding,
-                verticalAlign: 'top',
-                '&:not([align])': { textAlign: 'inherit' }
-            },
-
-            th: { color: themeConfig.colors.tableCellHeading },
-
-            thead: {
-                'td, th': {
-                    borderWidth: themeConfig.borderWidths.tableHeadCell,
-                    color: themeConfig.colors.tableHeadCell,
-                }
-            },
-
-            tfoot: {
-                'td, th': {
-                    borderWidth: themeConfig.borderWidths.tableFootCell,
-                    color: themeConfig.colors.tableFootCell,
-                }
-            },
-
-            'tbody tr:last-child': { 'td, th': { borderBottomWidth: 0 } }
-        }
-    },
-
-    'button, *.button': {
+    '.ps-button': {
         '-moz-appearance': 'none',
         '-webkit-appearance': 'none',
         display: 'inline-flex',
@@ -228,24 +17,24 @@ export default async ({ renderCss, themeConfig }) => renderCss({
         verticalAlign: 'top',
         justifyContent: 'center',
     
-        border: '1px solid transparent',
-        borderRadius: '4px',
+        border: '0.1rem solid transparent',
+        borderRadius: '0.4rem',
         boxShadow: 'none',
-        fontSize: '1rem',
+        fontSize: '1.6rem',
         height: '2.5em',
         lineHeight: '1.5',
         position: 'relative',
         
         backgroundColor: 'white',
         borderColor: '#dbdbdb',
-        borderWidth: '1px',
+        borderWidth: '0.1rem',
         color: '#363636',
         cursor: 'pointer',
         
-        paddingBottom: 'calc(0.5em - 1px)',
+        paddingBottom: 'calc(0.5em - 0.1rem)',
         paddingLeft: '1em',
         paddingRight: '1em',
-        paddingTop: 'calc(0.5em - 1px)',
+        paddingTop: 'calc(0.5em - 0.1rem)',
         textAlign: 'center',
         whiteSpace: 'nowrap',
     
@@ -270,28 +59,28 @@ export default async ({ renderCss, themeConfig }) => renderCss({
         }
     },
 
-    "input:not([type='checkbox'])": {
+    ".ps-input:not([type='checkbox'])": {
         '-moz-appearance': 'none',
         '-webkit-appearance': 'none',
         alignItems: 'center',
-        border: '1px solid transparent',
-        borderRadius: '4px',
+        border: '0.1rem solid transparent',
+        borderRadius: '0.4rem',
         boxShadow: 'none',
         display: 'inline-flex',
-        fontSize: '1rem',
+        fontSize: '1.6rem',
         height: '2.5em',
         justifyContent: 'flex-start',
         lineHeight: '1.5',
-        paddingBottom: 'calc(0.5em - 1px)',
-        paddingLeft: 'calc(0.75em - 1px)',
-        paddingRight: 'calc(0.75em - 1px)',
-        paddingTop: 'calc(0.5em - 1px)',
+        paddingBottom: 'calc(0.5em - 0.1rem)',
+        paddingLeft: 'calc(0.75em - 0.1rem)',
+        paddingRight: 'calc(0.75em - 0.1rem)',
+        paddingTop: 'calc(0.5em - 0.1rem)',
         position: 'relative',
         verticalAlign: 'top',
 
         backgroundColor: 'white',
         borderColor: '#dbdbdb',
-        borderRadius: '4px',
+        borderRadius: '0.4rem',
         color: '#363636',
 
         boxShadow: 'inset 0 0.0625em 0.125em rgb(10 10 10 / 5%)',
@@ -318,89 +107,49 @@ export default async ({ renderCss, themeConfig }) => renderCss({
         },
     },
 
-    textarea: {
-        border: '1px solid #dbdbdb',
+    '.ps-textarea': {
+        border: '0.1rem solid #dbdbdb',
         width: '100%',
         minHeight: '7em',
-        borderRadius: '4px',
-        paddingBottom: 'calc(0.5em - 1px)',
-        paddingLeft: 'calc(0.75em - 1px)',
-        paddingRight: 'calc(0.75em - 1px)',
-        paddingTop: 'calc(0.5em - 1px)',
+        borderRadius: '0.4rem',
+        paddingBottom: 'calc(0.5em - 0.1rem)',
+        paddingLeft: 'calc(0.75em - 0.1rem)',
+        paddingRight: 'calc(0.75em - 0.1rem)',
+        paddingTop: 'calc(0.5em - 0.1rem)',
     },
 
-    label: {
+    '.ps-label': {
         color: '#363636',
         display: 'block',
-        fontSize: '1rem',
+        fontSize: '1.6rem',
         fontWeight: '700',
         '&:not(:last-child)': { marginBottom: '0.5em' }
     },
 
-    '*.is-error:not(input):not(textarea)': {
+    '*.ps-is-error:not(input):not(textarea)': {
         color: '#f14668',
         display: 'block',
     },
 
-    '&.has-overlay': { overflow: 'hidden !important' },
+    '&.ps-has-overlay': { overflow: 'hidden !important' },
 
-    '.card': {
-        backgroundVolor: 'white',
-        borderRadius: '0.25rem',
-        boxShadow: '0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0px 0 1px rgb(10 10 10 / 2%)',
-        color: '#4a4a4a',
-        maxWidth: '100%',
-        position: 'relative',
-        marginBottom: '2em', 
-    
-        '> *': {
-            backgroundColor: 'transparent',
-            padding: '1.5rem'
-        },
-    
-        '> header': {
-            backgroundColor: 'transparent',
-            alignItems: 'stretch',
-            boxShadow: '0 0.125em 0.25em rgb(10 10 10 / 10%)',
-            display: 'flex',
-            alignItems: 'center',
-            flexGrow: '1',
-            padding: '0.75rem 1rem',
-            '> *': {
-                color: '#363636',
-                fontWeight: '700'
-            }
-        },
-    
-        '> footer': {
-            backgroundColor: 'transparent',
-            borderTop: '1px solid #ededed',
-            alignItems: 'stretch'
-        }
-    },
-
-    '.container': {
-        maxWidth: '1020px',
-        margin: '0 auto 0 auto'
-    },
-
-    '.default-block': {
-        borderWidth: '1px',
+    '.ps-default-block': {
+        borderWidth: '0.1rem',
         borderStyle: 'dashed',
         padding: '1em',
         '> ul > li': { cursor: 'pointer' }
     },
 
-    '.frame': {
+    '.ps-frame': {
         '&:not(:last-child)': { marginBottom: '1em' }
     },
 
-    '.markdown-editor': {
+    '.ps-markdown-editor': {
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
         height: '100%',
-        maxWidth: '1200px',
+        maxWidth: '120.0rem',
         background: '#fff',
         zIndex: '1',
     
@@ -412,7 +161,7 @@ export default async ({ renderCss, themeConfig }) => renderCss({
         '&-text-pane': {
             position: 'relative',
             borderStyle: 'solid',
-            borderWidth: '0 1px 0 0',
+            borderWidth: '0 0.1rem 0 0',
             borderColor: 'rgb(99, 99, 99)',
             padding: 0,
     
@@ -422,7 +171,7 @@ export default async ({ renderCss, themeConfig }) => renderCss({
                 width: '100%',
                 resize: 'none',
                 outline: 'none',
-                fontSize: '16px',
+                fontSize: '1.6rem',
                 fontFamily: 'monospace',
                 padding: '1em'
             }
@@ -434,7 +183,7 @@ export default async ({ renderCss, themeConfig }) => renderCss({
         }
     },
 
-    '.modal': {
+    '.ps-modal': {
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',
@@ -451,16 +200,16 @@ export default async ({ renderCss, themeConfig }) => renderCss({
         '> button': {
             background: 'none',
             position: 'fixed',
-            right: '20px',
-            top: '20px',
+            right: '2.0rem',
+            top: '2.0rem',
         
-            height: '32px',
-            width: '32px',
+            height: '3.2rem',
+            width: '3.2rem',
         
             userSelect: 'none',
             '-webkit-appearance': 'none',
             border: 'none',
-            borderRadius: '9999px',
+            borderRadius: '999.9rem',
             cursor: 'pointer',
             pointerEvents: 'auto',
             display: 'inline-block',
@@ -483,24 +232,24 @@ export default async ({ renderCss, themeConfig }) => renderCss({
             },
         
             '&:before': {
-                height: '2px',
+                height: '0.2rem',
                 width: '50%',   
             },
         
             '&:after': {
                 height: '50%',
-                width: '2px',
+                width: '0.2rem',
             }
         },
     
         '> *:not(button)': {
-            maxHeight: 'calc(100vh - 40px)',
-            maxWidth: 'calc(100vw - 160px)',
+            maxHeight: 'calc(100vh - 4.0rem)',
+            maxWidth: 'calc(100vw - 16.0rem)',
             margin: '0 auto'
         },
     
         '> form': {
-            minWidth: '640px',
+            minWidth: '64.0rem',
         
             '> *': {
                 display: 'block',
@@ -508,7 +257,7 @@ export default async ({ renderCss, themeConfig }) => renderCss({
                 flexGrow: '1',
                 flexShrink: '1',
                 overflow: 'auto',
-                padding: '20px',
+                padding: '2.0rem',
             },
         
             '> header, > footer': {
@@ -517,37 +266,37 @@ export default async ({ renderCss, themeConfig }) => renderCss({
                 display: 'flex',
                 flexShrink: '0',
                 justifyContent: 'flex-start',
-                padding: '20px',
+                padding: '2.0rem',
                 position: 'relative'
             },
         
             '> header': {
-                borderBottom: '1px solid #dbdbdb',
-                borderTopLeftRadius: '6px',
-                borderTopRightRadius: '6px',
+                borderBottom: '0.1rem solid #dbdbdb',
+                borderTopLeftRadius: '0.6rem',
+                borderTopRightRadius: '0.6rem',
         
                 '> *': {
                     color: '#363636',
                     flexGrow: '1',
                     flexShrink: '0',
-                    fontSize: '1.5rem',
+                    fontSize: '2.4rem',
                     lineHeight: '1'
                 }
             },
         
             '> footer': {
-                borderBottomLeftRadius: '6px',
-                borderBottomRightRadius: '6px',
-                borderTop: '1px solid #dbdbdb'
+                borderBottomLeftRadius: '0.6rem',
+                borderBottomRightRadius: '0.6rem',
+                borderTop: '0.1rem solid #dbdbdb'
             }
         }
     },
 
-    '.navbar': {
+    '.ps-navbar': {
         textAlign: 'right'
     },
 
-    '.overlay': {
+    '.ps-overlay': {
         position: 'absolute',
         top: '0',
         left: '0',
@@ -556,7 +305,7 @@ export default async ({ renderCss, themeConfig }) => renderCss({
         zIndex: '1000000'
     },
 
-    '.pagination': {
+    '.ps-pagination': {
         get '> ul'() {
             return {
                 listStyle: 'none',
@@ -582,24 +331,24 @@ export default async ({ renderCss, themeConfig }) => renderCss({
                         verticalAlign: 'top',
                         justifyContent: 'center',
                     
-                        border: '1px solid transparent',
-                        borderRadius: '4px',
+                        border: '0.1rem solid transparent',
+                        borderRadius: '0.4rem',
                         boxShadow: 'none',
-                        fontSize: '1rem',
+                        fontSize: '1.6rem',
                         height: '2.5em',
                         lineHeight: '1.5',
                         position: 'relative',
                         
                         backgroundColor: 'white',
                         borderColor: '#dbdbdb',
-                        borderWidth: '1px',
+                        borderWidth: '0.1rem',
                         color: '#363636',
                         cursor: 'pointer',
                         
-                        paddingBottom: 'calc(0.5em - 1px)',
+                        paddingBottom: 'calc(0.5em - 0.1rem)',
                         paddingLeft: '1em',
                         paddingRight: '1em',
-                        paddingTop: 'calc(0.5em - 1px)',
+                        paddingTop: 'calc(0.5em - 0.1rem)',
                         textAlign: 'center',
                         whiteSpace: 'nowrap',
                         marginBottom: '2em',
@@ -629,12 +378,12 @@ export default async ({ renderCss, themeConfig }) => renderCss({
         }
     },
 
-    '.progress-bar': {
+    '.ps-progress-bar': {
         position: 'fixed',
         display: 'block',
         top: '0',
         left: '0',
-        height: '3px',
+        height: '0.3rem',
         width: '100%',
         zIndex: '100000',
     
@@ -646,7 +395,7 @@ export default async ({ renderCss, themeConfig }) => renderCss({
                 display: 'block',
                 top: '0',
                 left: '0',
-                height: '3px',
+                height: '0.3rem',
                 width: '0',
                 background: '#0076ff',
                 transition: `width ${animationDuration}ms ease-out, opacity ${animationDuration / 2}ms ${animationDuration / 2}ms ease-in`,

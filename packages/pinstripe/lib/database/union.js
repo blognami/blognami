@@ -28,7 +28,7 @@ export const Union = Base.extend().include({
         });
     },
     
-    initialize(database, collections, orderBySql = [], limit){
+    initialize(database, collections, orderBySql = [], pagination, skip = 0){
         this._adapter = database._adapter;
         this._database = database
         this._collections = (collections || this.constructor.tableClasses.map(tableClass => new tableClass(database))).map(collection => {
@@ -38,7 +38,8 @@ export const Union = Base.extend().include({
             return AsyncPathBuilder.new(collection);
         });
         this._orderBySql = [ ...orderBySql ];
-        this._limit = limit;
+        this._pagination = pagination;
+        this._skipCount = skip
     },
 
     concat(collection){
@@ -55,12 +56,17 @@ export const Union = Base.extend().include({
     },
 
     paginate(page = 1, pageSize = 10){
-        this._limit = { page, pageSize };
+        this._pagination = { page, pageSize };
         return this;
     },
 
     clearPagination(){
-        this._limit = undefined;
+        this._pagination = undefined;
+        return this;
+    },
+
+    skip(skipCount){
+        this._joinRoot._skipCount = skipCount;
         return this;
     },
 
@@ -68,6 +74,7 @@ export const Union = Base.extend().include({
         return this._database.run`${this._generateSelectSql(options)}`;
     },
 
+    // can we get rid of this?
     async forEach(fn){
         const rows = await this.all();
         for(let i = 0; i < rows.length; i++){
@@ -91,11 +98,11 @@ export const Union = Base.extend().include({
     destroy(){},
 
     __getMissing(name){
-        return new Union(this._database, this._collections.map(collection => collection[name]), this._orderBySql, this._limit);
+        return new Union(this._database, this._collections.map(collection => collection[name]), this._orderBySql, this._pagination, this._skipCount);
     },
 
     __call(...args){
-        return new Union(this._database, this._collections.map(collection => collection(...args)), this._orderBySql, this._limit);
+        return new Union(this._database, this._collections.map(collection => collection(...args)), this._orderBySql, this._pagination, this._skipCount);
     },
 
     _generateSelectSql: deligateToAdapter('_generateSelectSql'),

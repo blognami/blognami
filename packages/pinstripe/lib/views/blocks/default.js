@@ -13,7 +13,7 @@ export default ({ renderHtml, params: { _path } }) => {
         .sort()
 
     return renderHtml`
-        <div class="default-block">
+        <div class="ps-default-block">
             <p>Insert block:</p>
             <ul>
                 ${names.map(name => renderHtml`

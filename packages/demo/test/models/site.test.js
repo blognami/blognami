@@ -13,10 +13,9 @@ beforeEach(async () => {
 test(`site`, async () => {
     const { site, sites } = environment;
 
-    const { title, sidebar } = await site;
+    const { title } = await site;
 
     expect(title).toBe('');
-    expect(sidebar).toBe(null);
 
     expect(await sites.count()).toBe(1);
 });

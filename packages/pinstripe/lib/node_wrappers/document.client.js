@@ -16,7 +16,7 @@ export default {
 
     get progressBar(){
         if(!this._progressBar){
-            this._progressBar = this.descendants.find(node => node.is('.progress-bar'));
+            this._progressBar = this.descendants.find(node => node.is('.ps-progress-bar'));
         }
         return this._progressBar;
     },

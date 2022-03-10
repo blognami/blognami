@@ -23,7 +23,7 @@ export default ({ renderHtml }) => {
             paragraph.type = 'div';
             paragraph.attributes = {
                 ...paragraph.attributes,
-                class: 'frame',
+                class: 'ps-frame',
                 'data-node-wrapper': 'frame',
                 'data-url': `/blocks/${name}?args=${encodeURIComponent(args)}`
             };

@@ -1,5 +1,5 @@
 
-export default async ({ params: { _path: path }, pageables, session, renderView }) => {
+export default async ({ params: { _path: path, ...otherParams }, pageables, session, renderView }) => {
     const slug = path.replace(/^\//, '');
     const pageable = await pageables.slugEq(slug).first();
     if(pageable) {
@@ -11,6 +11,7 @@ export default async ({ params: { _path: path }, pageables, session, renderView 
         const isSignedIn = user !== undefined;
 
         const body = await renderView(`pageables/${pageable.constructor.name}`, {
+            ...otherParams,
             isSignedIn,
             user,
             pageable,

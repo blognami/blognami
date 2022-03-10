@@ -1,3 +1,4 @@
+import { View } from '../view.js';
 
 export default ({ createEnvironment }) => {
     return (_params = {}) => createEnvironment(async ({ environment, renderView }) => {
@@ -31,8 +32,18 @@ export default ({ createEnvironment }) => {
     });
 };
 
+const isView = name => !!View.classes[name];
+
 const renderGuardViews = async (renderView, viewName, params) => {
     const viewNameSegments = viewName != '' ? viewName.split(/\//) : [];
+
+    const candidateIndexView = [...viewNameSegments, 'index'].join('/');
+    const candidateDefaultView = [...viewNameSegments, 'default'].join('/');
+
+    if(!isView(candidateIndexView) && !isView(candidateDefaultView)){
+        viewNameSegments.pop();
+    }
+
     const prefixSegments = [];
     while(true){
         const out = normalizeResponse(await renderView(prefixSegments.length ? [...prefixSegments, 'guard'].join('/') : 'guard', params));

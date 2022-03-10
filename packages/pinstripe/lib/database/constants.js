@@ -7,8 +7,6 @@ export const ALLOWED_TABLE_ADAPTER_COLUMN_TYPES = [
     'float',
     'integer',
     'string',
-    'time',
-    'timestamp'
 ];
 
 export const TYPE_TO_DEFAULT_VALUE_MAP = {
@@ -32,8 +30,6 @@ export const COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP = {
     integer: "number",
     string: "text",
     text: "textarea",
-    time: "datetime-local",
-    timestamp: "datetime-local"
 };
 
 export const RESERVED_WORDS = [

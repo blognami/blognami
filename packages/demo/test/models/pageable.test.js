@@ -23,16 +23,18 @@ test(`pageable`, async () => {
         role: 'admin'
     });
 
+    expect(await pageables.count()).toBe(1);
+
     const post = await posts.insert({
         userId: user.id,
         title: 'Foo'
     });
 
-    expect(await pageables.count()).toBe(1);
+    expect(await pageables.count()).toBe(2);
 
     await post.update({ tags: 'Foo\nBar'});
 
-    expect(await pageables.count()).toBe(3);
+    expect(await pageables.count()).toBe(4);
 
 });
 

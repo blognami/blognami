@@ -352,7 +352,7 @@ Adapter.register('mysql').include({
             },
 
             async first(options = {}){
-                return (await this.all({ ...options, limit: Sql.fromString('0, 1') })).pop();
+                return (await this.all({ ...options, limit: Sql.fromString('1'), offset: Sql.fromString('0') })).pop();
             },
         
             async count(options = {}){
@@ -506,9 +506,18 @@ Adapter.register('mysql').include({
                     if(options.limit){
                         out.push(this.renderSql` limit ${options.limit}`);
                     }
-                } else if(joinRoot._limit) {
-                    const { page, pageSize } = joinRoot._limit;
-                    out.push(this.renderSql` limit ${(page - 1) * pageSize}, ${pageSize}`);
+                } else if(joinRoot._pagination) {
+                    const { pageSize } = joinRoot._pagination;
+                    out.push(this.renderSql` limit ${pageSize}`);
+                }
+
+                if(options.hasOwnProperty('offset')){
+                    if(options.offset){
+                        out.push(this.renderSql` offset ${options.offset}`);
+                    }
+                } else if(joinRoot._pagination || joinRoot._skipCount) {
+                    const { page = 1, pageSize = 10 } = joinRoot._pagination || {};
+                    out.push(this.renderSql` offset ${((page - 1) * pageSize) + joinRoot._skipCount}`);
                 }
         
                 return this.renderSql`${out}`;
@@ -559,10 +568,16 @@ Adapter.register('mysql').include({
                     out.push(this.renderSql` order by ${this._orderBySql}`);
                 }
         
-                if(this._limit) {
-                    const { page, pageSize } = this._limit;
-                    out.push(this.renderSql` limit ${(page - 1) * pageSize}, ${pageSize}`);
+                if(this._pagination) {
+                    const { pageSize } = this._pagination;
+                    out.push(this.renderSql` limit ${pageSize}`);
                 }
+
+                if(this._pagination || this._skipCount) {
+                    const { page = 1, pageSize = 10 } = this._pagination || {};
+                    out.push(this.renderSql` offset ${((page - 1) * pageSize) + this._skipCount}`);
+                }
+
                 return this._database.renderSql`${out}`;
             }
         }
@@ -582,8 +597,6 @@ const TYPE_TO_COLUMN_TYPE_MAP = {
     integer: "int(11)",
     string: "varchar(255)",
     text: "longtext",
-    time: "time",
-    timestamp: "datetime"
 };
 
 const COLUMN_TYPE_TO_TYPE_MAP = (() => {

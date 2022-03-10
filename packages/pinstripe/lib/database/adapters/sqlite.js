@@ -1,7 +1,7 @@
 
 import sqlite from 'sqlite3';
 import * as crypto from 'crypto';
-import { unlink } from 'fs';
+import { existsSync, unlink } from 'fs';
 import { promisify } from 'util';
 
 import { Adapter } from '../adapter.js';
@@ -14,14 +14,15 @@ import { Table } from '../table.js';
 import { Row } from '../row.js';
 
 let schemaCache = {};
+let connection;
 
 Adapter.register('sqlite').include({
     get connection(){
-        if(!this._connection){
+        if(!connection){
             const { filename } = this.config;
-            this._connection = new sqlite.Database(filename);
+            connection = new sqlite.Database(filename);
         }
-        return this._connection;
+        return connection;
     },
 
     escapeValue(value){
@@ -51,13 +52,15 @@ Adapter.register('sqlite').include({
             },
         
             async drop() {
-                await new Promise((resolve, reject) => {
-                    this._adapter.connection.close(error => error ? reject(error) : resolve());
-                });
-                delete this._adapter._connection;
+                if(connection){
+                    await new Promise((resolve, reject) => {
+                        connection.close(error => error ? reject(error) : resolve());
+                    });
+                    connection = undefined;
+                }
                 schemaCache = {};
                 this._sessionCache = {};
-                await promisify(unlink)(this._adapter.config.filename);
+                if(existsSync(this._adapter.config.filename)) await promisify(unlink)(this._adapter.config.filename);
             },
         
             async tables(){
@@ -80,9 +83,7 @@ Adapter.register('sqlite').include({
             },
         
             async destroy() {
-                await new Promise((resolve, reject) => {
-                    this._adapter.connection.close(error => error ? reject(error) : resolve());
-                });
+                // do nothing
             },
 
             async _fetchRows(sql){
@@ -138,7 +139,19 @@ Adapter.register('sqlite').include({
                 while(rows.length){
                     const { _type, ...fields } = rows.shift();
                     if(_type !== undefined){
-                        out.push(await Row.create(_type, this, fields));
+                        const table = await this[Inflector.pluralize(_type)];
+                        const mappedFields = {};
+                        const names = Object.keys(fields);
+                        while(names.length){
+                            const name = names.shift();
+                            const column = await table[name];
+                            if(column && ['date', 'datetime'].includes(await column.type())){
+                                mappedFields[name] = new Date(fields[name]);
+                            } else {
+                                mappedFields[name] = fields[name];
+                            }
+                        }
+                        out.push(await Row.create(_type, this, mappedFields));
                     } else {
                         out.push(fields);
                     }
@@ -323,7 +336,7 @@ Adapter.register('sqlite').include({
             },
 
             async first(options = {}){
-                return (await this.all({ ...options, limit: Sql.fromString('0, 1') })).pop();
+                return (await this.all({ ...options, limit: Sql.fromString('1'), offset: Sql.fromString('0')  })).pop();
             },
         
             async count(options = {}){
@@ -345,6 +358,8 @@ Adapter.register('sqlite').include({
                             type = 'primary_key';
                         } else if(name == 'id'){
                             type = 'alternate_key';
+                        } else if(name.match(/.+Id$/)){
+                            type = 'foreign_key';
                         } else {
                             type = COLUMN_TYPE_TO_TYPE_MAP[row.type] || 'string';
                         }
@@ -475,9 +490,18 @@ Adapter.register('sqlite').include({
                     if(options.limit){
                         out.push(this.renderSql` limit ${options.limit}`);
                     }
-                } else if(joinRoot._limit) {
-                    const { page, pageSize } = joinRoot._limit;
-                    out.push(this.renderSql` limit ${(page - 1) * pageSize}, ${pageSize}`);
+                } else if(joinRoot._pagination) {
+                    const { pageSize } = joinRoot._pagination;
+                    out.push(this.renderSql` limit ${pageSize}`);
+                }
+
+                if(options.hasOwnProperty('offset')){
+                    if(options.offset){
+                        out.push(this.renderSql` offset ${options.offset}`);
+                    }
+                } else if(joinRoot._pagination || joinRoot._skipCount) {
+                    const { page = 1, pageSize = 10 } = joinRoot._pagination || {};
+                    out.push(this.renderSql` offset ${((page - 1) * pageSize) + joinRoot._skipCount}`);
                 }
         
                 return this.renderSql`${out}`;
@@ -527,11 +551,17 @@ Adapter.register('sqlite').include({
                 if(this._orderBySql.length){
                     out.push(this.renderSql` order by ${this._orderBySql}`);
                 }
-        
-                if(this._limit) {
-                    const { page, pageSize } = this._limit;
-                    out.push(this.renderSql` limit ${(page - 1) * pageSize}, ${pageSize}`);
+
+                if(this._pagination) {
+                    const { pageSize } = this._pagination;
+                    out.push(this.renderSql` limit ${pageSize}`);
                 }
+
+                if(this._pagination || this._skipCount) {
+                    const { page = 1, pageSize = 10 } = this._pagination || {};
+                    out.push(this.renderSql` offset ${((page - 1) * pageSize) + this._skipCount}`);
+                }
+
                 return this._database.renderSql`${out}`;
             }
         }
@@ -551,8 +581,6 @@ const TYPE_TO_COLUMN_TYPE_MAP = {
     integer: "integer",
     string: "varchar",
     text: "text",
-    time: "time",
-    timestamp: "datetime"
 };
 
 const COLUMN_TYPE_TO_TYPE_MAP = (() => {

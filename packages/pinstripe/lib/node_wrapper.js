@@ -383,7 +383,7 @@ function cleanChildren(){
 }
 
 function clean(){
-    if(this.is('.progress-bar')) return;
+    if(this.is('.ps-progress-bar')) return;
 
     [...this.node.childNodes].forEach(node => node._nodeWrapper && clean.call(node._nodeWrapper));
 
@@ -503,7 +503,7 @@ function insert(virtualNode, referenceChild, returnNodeWrapper = true){
     } else if(type == '#comment'){
         node = document.createComment(attributes.value);
     } else {
-        node = document.createElement(type);
+        node = (type == 'svg' || this.node instanceof SVGElement) ? document.createElementNS('http://www.w3.org/2000/svg', type) : document.createElement(type);
         Object.keys(attributes).forEach((key) => {
             node.setAttribute(key, attributes[key]);
         });
@@ -532,7 +532,7 @@ function normalizeVirtualNode(){
     }
 
     if(this.type == 'body'){
-        const progressBar = new this.constructor(this, 'div', {class: 'progress-bar', 'data-node-wrapper': 'progress-bar'})
+        const progressBar = new this.constructor(this, 'div', {class: 'ps-progress-bar', 'data-node-wrapper': 'progress-bar'})
         this.children = [
             progressBar,
             ...this.children

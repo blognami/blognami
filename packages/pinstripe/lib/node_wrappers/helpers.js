@@ -10,9 +10,9 @@ export function loadFrame(confirm, target, method, url){
     
     if(target == '_overlay'){
         this.document.descendants.filter(node => node.is('html')).forEach(node => {
-            node.addClass('has-overlay');
+            node.addClass('ps-has-overlay');
         });
-        frame = this.document.descendants.find(node => node.is('body')).append(`<div class="overlay" data-node-wrapper="overlay" data-load-on-init="false"></div>`).pop();
+        frame = this.document.descendants.find(node => node.is('body')).append(`<div class="ps-overlay" data-node-wrapper="overlay" data-load-on-init="false"></div>`).pop();
         frame._parent = this;
         this._overlayChild = frame;
     } else {

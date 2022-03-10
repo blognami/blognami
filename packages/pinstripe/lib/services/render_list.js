@@ -27,11 +27,11 @@ export default ({ overload, renderHtml }) => {
                         return { number, current };
                     });
                     if(pagination.length > 1) return renderHtml` 
-                        <nav class="p-pagination pagination">
-                            <ul class="pagination-list mb-4">
+                        <nav class="ps-pagination">
+                            <ul>
                                 ${pagination.map(({ number, current }) => renderHtml`
                                     <li>
-                                        <a class="pagination-link${current ? ' is-current' : ''}" href="?page=${number}">${number}</a>
+                                        <a class="${current ? ' ps-is-current' : ''}" href="?page=${number}">${number}</a>
                                     </li>
                                 `)}
                             </ul>

@@ -1,0 +1,11 @@
+.bn-cover {
+    position: relative;
+    min-height: var(--cover-height, 50vh);
+}
+
+.bn-cover-image {
+    position: absolute;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}

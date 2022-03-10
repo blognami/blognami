@@ -1,0 +1,38 @@
+.bn-article-tag {
+    color: var(--ghost-accent-color);
+}
+
+.has-serif-title .bn-article-title {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+}
+
+.bn-article-excerpt {
+    margin-top: 2rem;
+    font-size: 2.1rem;
+    line-height: 1.5;
+    color: var(--color-secondary-text);
+}
+
+.has-serif-body .bn-article-excerpt {
+    font-family: var(--font-serif);
+}
+
+.bn-article-image {
+    grid-column: wide-start/wide-end;
+    margin-top: 4rem;
+}
+
+.bn-article-image img {
+    width: 100%;
+}
+
+@media (max-width: 767px) {
+    .bn-article-excerpt {
+        font-size: 1.9rem;
+    }
+
+    .bn-article-image {
+        margin-top: 2.4rem;
+    }
+}

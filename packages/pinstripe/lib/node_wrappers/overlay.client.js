@@ -17,9 +17,9 @@ export default {
 
     remove(...args){
         this.constructor.parent.prototype.remove.call(this, ...args);
-        if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('.overlay')).length){
+        if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('.ps-overlay')).length){
             this.document.descendants.filter(node => node.is('html')).forEach(node => {
-                node.removeClass('has-overlay');
+                node.removeClass('ps-has-overlay');
             })
         }
     }

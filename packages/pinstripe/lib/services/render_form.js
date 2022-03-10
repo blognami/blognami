@@ -70,7 +70,7 @@ export default {
         });
 
         return renderHtml`
-            <div class="modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
+            <div class="ps-modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
                 <button data-node-wrapper="anchor" data-action="remove"></button>
                 <form method="post" enctype="multipart/form-data" autocomplete="off">
                     <header>
@@ -80,9 +80,9 @@ export default {
                         ${() => {
                             if(otherErrors.length){
                                 return renderHtml`
-                                    <div class="field">
+                                    <div class="ps-field">
                                         ${otherErrors.map(error => renderHtml`
-                                            <p class="is-error">${error}</p>
+                                            <p class="ps-is-error">${error}</p>
                                         `)}
                                     </div>
                                 `
@@ -96,31 +96,31 @@ export default {
                             }
                             return renderHtml`
                                 <div>
-                                    <label>${label}</label>
+                                    <label class="ps-label">${label}</label>
                                     ${() => {
                                         if(type == 'textarea'){
                                             return renderHtml`
-                                                <textarea class="${error ? ' is-error' : ''}" name="${name}">${value}</textarea>
+                                                <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}">${value}</textarea>
                                             `
                                         }
                                         if(type == 'markdown'){
                                             return renderHtml`
-                                                <textarea class="${error ? ' is-error' : ''}" name="${name}" data-node-wrapper="anchor" data-target="_overlay" data-href="&_part=markdown-editor">${value}</textarea>
+                                                <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}" data-node-wrapper="anchor" data-target="_overlay" data-href="&_part=markdown-editor">${value}</textarea>
                                             `
                                         }
                                         if(type == 'checkbox'){
                                             return renderHtml`
-                                                <input class="${error ? ' is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
+                                                <input class="ps-input${error ? ' ps-is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
                                             `
                                         }
                                         return renderHtml`
-                                            <input class="${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}">
+                                            <input class="ps-input${error ? ' ps-is-error' : ''}" name="${name}" type="${type}" value="${value}">
                                         ` 
                                     }}
                                     ${() => {
                                         if(error){
                                             return renderHtml`
-                                                <p class="help is-error">${error}</p>
+                                                <p class="ps-is-error">${error}</p>
                                             `
                                         }
                                     }}
@@ -129,8 +129,8 @@ export default {
                         })}
                     </section>
                     <footer>
-                        <button type="submit">${submitTitle}</button>
-                        <button data-node-wrapper="anchor" data-action="remove">${cancelTitle}</button>
+                        <button class="ps-button" type="submit">${submitTitle}</button>
+                        <button class="ps-button" data-node-wrapper="anchor" data-action="remove">${cancelTitle}</button>
                     </footer>
                 </form>
             </div>
@@ -142,13 +142,13 @@ export default {
         const { value = '' } = params;
 
         return renderHtml`
-            <div class="modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
+            <div class="ps-modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
                 <button data-node-wrapper="anchor" data-action="remove"></button>
-                <div class="markdown-editor" data-autosubmit="true" data-node-wrapper="markdown-editor">
-                    <div class="markdown-editor-text-pane">
+                <div class="ps-markdown-editor" data-autosubmit="true" data-node-wrapper="markdown-editor">
+                    <div class="ps-markdown-editor-text-pane">
                         <textarea name="value">${value}</textarea>
                     </div>
-                    <div class="markdown-editor-preview-pane" data-url="&_part=markdown-editor-preview" data-node-wrapper="frame"></div>
+                    <div class="ps-markdown-editor-preview-pane" data-url="&_part=markdown-editor-preview" data-node-wrapper="frame"></div>
                 </div>
             </div>
         `;
