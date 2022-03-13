@@ -82,13 +82,6 @@ export default async ({ site, session, params, renderHtml, renderMarkdown, rende
                                             <a class="bn-head-btn" href="/admin/add_post?userId=${user.id}" target="_overlay">
                                                 Add
                                             </a>
-                                            ${() => {
-                                                if(params.editUrl) return renderHtml`
-                                                    <a class="bn-head-btn" href="${params.editUrl}" target="_overlay">
-                                                        Edit
-                                                    </a>
-                                                `;
-                                            }}
                                             <a class="bn-head-btn" href="/admin/users" target="_overlay">
                                                 Users
                                             </a>

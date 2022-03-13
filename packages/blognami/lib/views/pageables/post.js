@@ -1,20 +1,28 @@
 
-export default async ({ params, renderHtml, renderMarkdown, formatDate, renderView, posts }) => {
+export default async ({ params, renderHtml, renderMarkdown, formatDate, renderView, posts, session }) => {
     if(!params.pageable) return;
 
     const post = params.pageable;
 
-    const user = await post.user;
+    const postUser = await post.user;
 
     const previousPost = await posts.idNe(post.id).publishedAtLt(post.publishedAt).orderBy('publishedAt', 'desc').first();
     const nextPost = await posts.idNe(post.id).publishedAtGt(post.publishedAt).orderBy('publishedAt', 'asc').first();
+
+    let user;
+    if(await session){
+        user = await session.user;
+    }
+
+    const isSignedIn = user !== undefined;
+    const isAdmin = isSignedIn && user.role == 'admin';
 
     return renderHtml`
         <main id="bn-main" class="bn-main">
             <article class="bn-article {{post_class}}">
                 <header class="bn-article-header bn-canvas">
                     <span class="bn-article-meta">
-                        By <a href="/${user.slug}">${user.name}</a>
+                        By <a href="/${postUser.slug}">${postUser.name}</a>
                         
                         ${async () => {
                             if(await post.tags.count() > 0) return renderHtml`
@@ -56,7 +64,20 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                 </header>
         
                 <div class="bn-content bn-canvas">
-                    ${renderMarkdown(post.body)}
+                    ${() => {
+                        if(isAdmin) return renderHtml`
+                            <div class="bn-editable-area">
+                                <div class="bn-editable-area-header">
+                                    <a class="bn-editable-area-button" href="/admin/edit_post?id=${post.id}" target="_overlay">Edit</a>
+                                </div>
+                                <div class="bn-editable-area-body">
+                                    ${renderMarkdown(post.body)}
+                                </div>
+                            </div>
+                        `;
+                        return renderMarkdown(post.body);
+                    }}
+                    
                 </div>
         
                 <footer class="bn-article-footer bn-canvas">
