@@ -427,8 +427,8 @@ function createVirtualNode(html){
 }
 
 function patch(attributes, virtualChildren){
-    if(this.is('.progress-bar')) return;
-    const isEmptyFrame = this.is('.frame') && virtualChildren.length == 0;
+    if(this.is('.ps-progress-bar')) return;
+    const isEmptyFrame = this.is('.ps-frame') && virtualChildren.length == 0;
     if(isEmptyFrame && attributes['data-load-on-init'] === undefined){
         attributes['data-load-on-init'] = 'true';
     }

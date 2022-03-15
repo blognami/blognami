@@ -20,27 +20,6 @@
     padding-top: 8vmin;
 }
 
-.bn-head-menu,
-.bn-head-actions {
-    font-size: 1.2rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.01em;
-}
-
-.bn-head-btn {
-    font-weight: 600;
-}
-
-.bn-head-btn + .bn-head-btn {
-    margin-left: 1em;
-}
-
-.bn-head-btn svg {
-    width: 16px;
-    height: 16px;
-    margin-right: 0.6rem;
-}
 
 .bn-latest {
     margin-top: 4rem;
@@ -561,38 +540,6 @@
         grid-column: main-start / main-end;
         max-width: 480px;
         padding-top: 0;
-    }
-}
-
-@media (min-width: 992px) {
-    .bn-head-inner {
-        row-gap: 0 !important;
-        padding: 0;
-    }
-
-    .bn-head-brand {
-        display: flex;
-        align-items: center;
-        height: 80px;
-    }
-
-    .bn-head-menu {
-        height: 56px;
-    }
-
-    .bn-head-menu::before,
-    .bn-head-menu::after {
-        position: absolute;
-        top: 80px;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        content: "";
-        background-color: var(--color-light-gray);
-    }
-
-    .bn-head-menu::after {
-        top: 136px;
     }
 }
 

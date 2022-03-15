@@ -32,13 +32,13 @@ export default async ({ site, session, params, renderHtml, renderMarkdown, rende
                 </style>
             </head>
             
-            <body class="is-head-b--a_n">
+            <body>
                 <div></div>
                 <div class="bn-site">
-                    <header id="bn-head" class="bn-head bn-outer">
-                        <div class="bn-head-inner bn-inner">
-                            <div class="bn-head-brand">
-                                <a class="bn-head-logo" href="/">
+                    <header id="bn-header" class="bn-header bn-outer" data-node-wrapper="bn-header">
+                        <div class="bn-header-inner bn-inner">
+                            <div class="bn-header-brand">
+                                <a class="bn-header-logo" href="/">
                                     ${async () => {
                                         if(await site.logo){
                                             return renderHtml`<img src="${site.logo}" alt="${site.title}">`
@@ -57,19 +57,19 @@ export default async ({ site, session, params, renderHtml, renderMarkdown, rende
                                 <button class="bn-burger"></button>
                             </div>
             
-                            <nav class="bn-head-menu">
+                            <nav class="bn-header-menu">
                                 ${renderMarkdown(await site.primaryNavigation)}
                             </nav>
             
-                            <div class="bn-head-actions">
+                            <div class="bn-header-actions">
                                 ${() => {
                                     if(isMember){
                                         return renderHtml`
-                                            <a class="bn-head-btn" href="/your_account">Account</a>
+                                            <a class="bn-header-btn" href="/your_account">Account</a>
                                         `;
                                     }
                                     return renderHtml`
-                                        <a class="bn-head-btn" href="/sign_up">
+                                        <a class="bn-header-btn" href="/sign_up">
                                             ${renderView('partials/icons/_email')}
                                             Subscribe
                                         </a>
@@ -79,19 +79,19 @@ export default async ({ site, session, params, renderHtml, renderMarkdown, rende
                                 ${() => {
                                     if(isSignedIn){
                                         return renderHtml`
-                                            <a class="bn-head-btn" href="/admin/add_post?userId=${user.id}" target="_overlay">
+                                            <a class="bn-header-btn" href="/admin/add_post?userId=${user.id}" target="_overlay">
                                                 Add
                                             </a>
-                                            <a class="bn-head-btn" href="/admin/users" target="_overlay">
+                                            <a class="bn-header-btn" href="/admin/users" target="_overlay">
                                                 Users
                                             </a>
-                                            <a class="bn-head-btn" href="/sign_out" target="_overlay">
+                                            <a class="bn-header-btn" href="/sign_out" target="_overlay">
                                                 Sign out
                                             </a>
                                         `;
                                     }
                                     return renderHtml`
-                                        <a class="bn-head-btn" href="/sign_in" target="_overlay">
+                                        <a class="bn-header-btn" href="/sign_in" target="_overlay">
                                             ${renderView('partials/icons/_avatar')}
                                             Sign in
                                         </a>

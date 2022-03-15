@@ -10,6 +10,14 @@
     font-size: 1.3rem;
 }
 
+.bn-foot ul {
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
 .bn-foot-menu ul li {
     display: flex;
     align-items: center;
