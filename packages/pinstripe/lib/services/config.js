@@ -1,6 +1,5 @@
 
 export default async ({ project }) => {
-
     if(process.env.DATABASE_ADAPTER == 'mysql'){
         return {
             database: {
