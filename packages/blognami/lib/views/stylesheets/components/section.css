@@ -1,0 +1,22 @@
+
+.bn-section {
+    max-width: 720px;
+}
+
+.bn-section-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2.4rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+}
+
+.bn-section-title::after {
+    flex-grow: 1;
+    height: 1px;
+    margin-left: 1.6rem;
+    content: "";
+    background-color: var(--color-light-gray);
+}

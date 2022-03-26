@@ -15,10 +15,6 @@ export default {
             if(this.published && !this.publishedAt){
                 this.publishedAt = new Date();
             }
-
-            if(!this.visibility){
-                this.visibility = 'public';
-            }
         })
     },
 

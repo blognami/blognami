@@ -1,10 +1,12 @@
 
-export default async ({ params: { title, body, isSignedIn, user }, renderHtml }) => renderHtml`
+export default async ({ params: { title, body, isSignedIn, user }, renderHtml, stylesheetViewNames }) => renderHtml`
     <!DOCTYPE html>
     <html>
         <head>
             <title>${title}</title>
-            <link rel="stylesheet" href="/base.css">
+            ${stylesheetViewNames.map(viewName => renderHtml`
+                <link rel="stylesheet" href="/${viewName}">
+            `)}
             <script src="/bundle.js"></script>
         </head>
         <body>

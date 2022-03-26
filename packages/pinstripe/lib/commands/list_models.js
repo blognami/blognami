@@ -1,13 +1,11 @@
 
 import chalk from 'chalk';
 
-import { Row } from '../database/row.js';
-
-export default () => {
+export default ({ modelNames }) => {
     console.log('');
     console.log('The following models are available:');
     console.log('');
-    Object.keys(Row.classes).sort().forEach(modelName => {
+    modelNames.forEach(modelName => {
         console.log(`  * ${chalk.green(modelName)}`);
     });
     console.log('');

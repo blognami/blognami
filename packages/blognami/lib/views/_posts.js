@@ -1,23 +1,19 @@
 
-export default async ({ params: { posts }, renderHtml, renderView, formatDate }) => renderHtml`
-    ${posts.all().map(({ slug, title, excerpt, excerptFromBody, readingMinutes, publishedAt, visibility } ) => renderHtml`
-        <article class="bn-card">
-            <a class="bn-card-link" href="/${slug}">
-                <header class="bn-card-header">
-                    <h2 class="bn-card-title">${title}</h2>
+export default async ({ params: { posts }, renderHtml, formatDate }) => renderHtml`
+    ${posts.all().map(({ slug, title, excerptFromBody, readingMinutes, publishedAt } ) => renderHtml`
+        <article class="bn-feed-item">
+            <a class="bn-feed-item-link" href="/${slug}">
+                <header class="bn-feed-item-header">
+                    <h2 class="bn-feed-item-title">${title}</h2>
                 </header>
 
-                <div class="bn-card-excerpt">${excerpt || excerptFromBody}</div>
+                <div class="bn-feed-item-excerpt">${excerptFromBody}</div>
 
-                <footer class="bn-card-meta">
-                    <time class="bn-card-date" datetime="${formatDate(publishedAt, 'yyyy-MM-dd')}">${formatDate(publishedAt)}</time>
+                <footer class="bn-feed-item-meta">
+                    <time class="bn-feed-item-date" datetime="${formatDate(publishedAt, 'yyyy-MM-dd')}">${formatDate(publishedAt)}</time>
                     —
-                    <span class="bn-card-meta-wrapper">
-                        <span class="bn-card-duration">${readingMinutes} min read</span>
-
-                        ${() => {
-                            if(visibility == 'public') return renderView('partials/icons/_star');
-                        }}
+                    <span class="bn-feed-item-meta-wrapper">
+                        <span class="bn-feed-item-duration">${readingMinutes} min read</span>
                     </span>
                 </footer>
             </a>

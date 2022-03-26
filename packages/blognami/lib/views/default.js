@@ -1,34 +1,12 @@
 
-export default async ({ params: { _path: path, ...otherParams }, pageables, session, renderView }) => {
+export default async ({ params: { _path: path, ...otherParams }, pageables, renderView }) => {
     const slug = path.replace(/^\//, '');
     const pageable = await pageables.slugEq(slug).first();
     if(pageable) {
-        let user;
-        if(await session){
-            user = await session.user;
-        }
-
-        const isSignedIn = user !== undefined;
-
-        const body = await renderView(`pageables/${pageable.constructor.name}`, {
+        const pageableName = pageable.constructor.name;
+        return renderView(`pageables/_${pageable.constructor.name}`, {
             ...otherParams,
-            isSignedIn,
-            user,
-            pageable,
-        });
-
-        if(Array.isArray(body)){
-            return body;
-        }
-
-        const editUrl = `admin/edit_${pageable.constructor.name}?id=${pageable.id}`;
-
-        return renderView('_layout', {
-            isSignedIn,
-            editUrl,
-            title: pageable.title,
-            user,
-            body
+            [pageableName]: pageable,
         });
     }
 };

@@ -1,13 +1,11 @@
 
 import chalk from 'chalk';
 
-import { NodeWrapper } from '../node_wrapper.js';
-
-export default () => {
+export default ({ nodeWrapperNames }) => {
     console.log('');
     console.log('The following node wrappers are available:');
     console.log('');
-    Object.keys(NodeWrapper.classes).sort().forEach(nodeWrapperName => {
+    nodeWrapperNames.forEach(nodeWrapperName => {
         console.log(`  * ${chalk.green(nodeWrapperName)}`);
     });
     console.log('');

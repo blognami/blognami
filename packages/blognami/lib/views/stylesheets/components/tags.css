@@ -1,0 +1,32 @@
+
+/* link list? */
+
+.bn-tags-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bn-tags-item + .bn-tags-item {
+    margin-top: 1.6rem;
+}
+
+.bn-tags-name {
+    font-size: 1.7rem;
+    font-weight: 600;
+    letter-spacing: 0;
+}
+
+.bn-tags-count {
+    padding: 0.4rem 0.8rem;
+    font-size: 1.3rem;
+    line-height: 1;
+    border: 1px solid var(--color-light-gray);
+    border-radius: 32px;
+}
+
+@supports (-moz-appearance: none) {
+    .bn-tags-count {
+        padding-bottom: 0.5rem;
+    }
+}
