@@ -1,5 +1,5 @@
 
-export default async ({ site, database, session, params, renderHtml, renderView, stylesheetViewNames }) => {
+export default async ({ site, database, session, params, renderHtml, renderView, stylesheetViewNames, renderMarkdown }) => {
     const { title, body } = params;
 
     let user;
@@ -43,6 +43,24 @@ export default async ({ site, database, session, params, renderHtml, renderView,
             
             <body>
                 <div></div>
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="navbar-brand">
+                            <a class="navbar-item" href="/">${site.title}</a>
+                        </div>
+                        <div class="navbar-menu">
+                            ${() => {
+                                if(isSignedIn) return renderHtml`
+                                    <a class="navbar-item" href="/admin/add_post?userId=${user.id}" target="_overlay">Add</a>
+                                    <a class="navbar-item" href="/sign_out" target="_overlay">Sign out</a>
+                                `;
+                                return renderHtml`
+                                    <a class="navbar-item" href="/sign_in" target="_overlay">Sign in</a>
+                                `;
+                            }}
+                        </div>
+                    </div>
+                </div>
                 <div class="bn-site">
                     <main id="bn-main" class="bn-main bn-outer">
                         <div class="bn-inner">
@@ -53,18 +71,19 @@ export default async ({ site, database, session, params, renderHtml, renderView,
                                 <aside class="bn-sidebar">
                                     <section class="bn-section">
                                         <h2 class="bn-section-title">About</h2>
-                    
-                                        <div class="bn-about">
-                                            <section class="bn-about-wrapper">
-                                                <h3 class="bn-about-title"><a href="/">${site.title}</a></h3>
-
-                                                ${async () => {
-                                                    if(await site.description) return renderHtml`
-                                                        <p class="bn-about-description">${site.description}</p>
-                                                    `;
-                                                }}
-                                            </section>
-                                        </div>
+                                            ${async () => {
+                                                if(isSignedIn) return renderHtml`
+                                                    <div class="bn-editable-area">
+                                                        <div class="bn-editable-area-header">
+                                                            <a class="bn-editable-area-button" href="/admin/edit_site_description" target="_overlay">Edit</a>
+                                                        </div>
+                                                        <div class="bn-editable-area-body">
+                                                            ${renderMarkdown(await site.description)}
+                                                        </div>
+                                                    </div>
+                                                `;
+                                                return renderMarkdown(await site.description)
+                                            }}
                                     </section>
                     
                                     ${async () => {
@@ -105,18 +124,6 @@ export default async ({ site, database, session, params, renderHtml, renderView,
                                             </section>
                                         `;
                                     }}
-
-                                    <section class="bn-section">
-                                        <h3 class="bn-section-title">Your Account</h3>
-                                        ${() => {
-                                            if(isSignedIn) return renderHtml`
-                                                <p>You are currently signed in as &quot;${user.name}&quot;.</p>
-                                                <p><a href="/sign_out" target="_overlay">Sign out</a></p>
-                                            `;
-                                            return renderHtml`
-                                                <p><a href="/sign_in" target="_overlay">Sign in</a></p>
-                                            `;
-                                        }}
                                 </aside>
                             </div>
                         </div>
