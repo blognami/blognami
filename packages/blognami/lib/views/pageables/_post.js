@@ -33,8 +33,22 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                             —
                             <time datetime="${formatDate(post.publishedAt, 'yyyy-MM-dd')}">${formatDate(post.publishedAt)}</time>
                         </span>
-
-                        <h1 class="bn-article-title">${post.title}</h1>
+                        
+                        ${() => {
+                            if(isAdmin) return renderHtml`
+                                <div class="bn-editable-area">
+                                    <div class="bn-editable-area-header">
+                                        <a class="bn-editable-area-button" href="/admin/edit_post_title?id=${post.id}" target="_overlay">Edit</a>
+                                    </div>
+                                    <div class="bn-editable-area-body">
+                                        <h1 class="bn-article-title">${post.title}</h1>
+                                    </div>
+                                </div>
+                            `;
+                            return renderHtml`
+                                <h1 class="bn-article-title">${post.title}</h1>
+                            `;
+                        }}
 
                     </header>
 
@@ -43,7 +57,7 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                             if(isAdmin) return renderHtml`
                                 <div class="bn-editable-area">
                                     <div class="bn-editable-area-header">
-                                        <a class="bn-editable-area-button" href="/admin/edit_post?id=${post.id}" target="_overlay">Edit</a>
+                                        <a class="bn-editable-area-button" href="/admin/edit_post_body?id=${post.id}" target="_overlay">Edit</a>
                                     </div>
                                     <div class="bn-editable-area-body">
                                         ${renderMarkdown(post.body)}
@@ -51,6 +65,28 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                                 </div>
                             `;
                             return renderMarkdown(post.body);
+                        }}
+
+                        ${() => {
+                            if(isAdmin) return renderHtml`
+                                <div class="bn-editable-area">
+                                    <div class="bn-editable-area-header">
+                                        <a class="bn-editable-area-button" href="/admin/edit_post_meta?id=${post.id}" target="_overlay">Edit</a>
+                                    </div>
+                                    <div class="bn-editable-area-body">
+                                        <section class="bn-section">
+                                            <h3 class="bn-section-title">Meta</h3>
+                                            <p><b>Slug:</b> ${post.slug}</p>
+                                            <p><b>Tags:</b> ${async () => {
+                                                const tags = await post.tags.all().map(({ name }) => `"${name}"`).join(', ');
+                                                if(tags) return tags;
+                                                return 'none';
+                                            }}</p>
+                                            <p><b>Published:</b> ${post.published ? 'true' : 'false'}</p>
+                                        </section>
+                                    </div>
+                                </div>
+                            `;
                         }}
                         
                     </div>

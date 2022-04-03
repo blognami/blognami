@@ -66,48 +66,10 @@ export default {
                     maxWidth: 'calc(100vw - 16.0rem)',
                     margin: '0 auto'
                 },
-            
-                '> form': {
-                    minWidth: '64.0rem',
-                
-                    '> *': {
-                        display: 'block',
-                        backgroundColor: 'white',
-                        flexGrow: '1',
-                        flexShrink: '1',
-                        overflow: 'auto',
-                        padding: '2.0rem',
-                    },
-                
-                    '> header, > footer': {
-                        alignItems: 'center',
-                        backgroundColor: 'whitesmoke',
-                        display: 'flex',
-                        flexShrink: '0',
-                        justifyContent: 'flex-start',
-                        padding: '2.0rem',
-                        position: 'relative'
-                    },
-                
-                    '> header': {
-                        borderBottom: '0.1rem solid #dbdbdb',
-                        borderTopLeftRadius: '0.6rem',
-                        borderTopRightRadius: '0.6rem',
-                
-                        '> *': {
-                            color: '#363636',
-                            flexGrow: '1',
-                            flexShrink: '0',
-                            fontSize: '2.4rem',
-                            lineHeight: '1'
-                        }
-                    },
-                
-                    '> footer': {
-                        borderBottomLeftRadius: '0.6rem',
-                        borderBottomRightRadius: '0.6rem',
-                        borderTop: '0.1rem solid #dbdbdb'
-                    }
+
+                '.ps-card': {
+                    width: '64.0rem',
+                    maxWidth: '100%',
                 }
             }
         });

@@ -21,6 +21,12 @@ export default {
                 }
             }
         });
+
+        this.validateWith(async pageable => {
+            if(!pageable.isValidationError('slug') && await pageable._database.pageables.idNe(pageable.id).slugEq(pageable.slug).count()){
+                pageable.setValidationError('slug', 'Must be unique');
+            }
+        });
     },
 
     generateCandidateSlug(n){

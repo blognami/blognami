@@ -26,15 +26,16 @@ export default ({ overload, renderList, renderHtml, params: { _headers = {} } })
                     return renderHtml`
                         <div class="ps-modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
                             <button data-node-wrapper="anchor" data-action="remove"></button>
-                                <header>
+                             <div class="ps-card-body">
+                                <div class="ps-card-title">
                                     <p>${name}</p>
-                                </header>
-                                <div>
+                                </div>
+                                <div class="ps-card-body">
                                     ${out}
                                 </div>
-                                <footer>
+                                <div class="ps-card-footer">
                                     <button class="button" data-action="remove">Close</button>
-                                </footer>
+                                </div>
                             </div>
                         </div>
                     `;

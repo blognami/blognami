@@ -72,67 +72,67 @@ export default {
         return renderHtml`
             <div class="ps-modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
                 <button data-node-wrapper="anchor" data-action="remove"></button>
-                <form method="post" enctype="multipart/form-data" autocomplete="off">
-                    <header>
-                        <p>${title}</p>
-                    </header>
-                    <section>
-                        ${() => {
-                            if(otherErrors.length){
-                                return renderHtml`
-                                    <div class="ps-field">
-                                        ${otherErrors.map(error => renderHtml`
-                                            <p class="ps-is-error">${error}</p>
-                                        `)}
-                                    </div>
-                                `
-                            }
-                        }}
-                        ${fields.map(({ label, name, type, value, error }) => {
-                            if(type == 'hidden'){
-                                return renderHtml`
-                                    <input type="hidden" name="${name}" value="${value}">
-                                `;
-                            }
-                            return renderHtml`
-                                <div>
-                                    <label class="ps-label">${label}</label>
-                                    ${() => {
-                                        if(type == 'textarea'){
-                                            return renderHtml`
-                                                <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}">${value}</textarea>
-                                            `
-                                        }
-                                        if(type == 'markdown'){
-                                            return renderHtml`
-                                                <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}" data-node-wrapper="anchor" data-target="_overlay" data-href="&_part=markdown-editor">${value}</textarea>
-                                            `
-                                        }
-                                        if(type == 'checkbox'){
-                                            return renderHtml`
-                                                <input class="ps-input${error ? ' ps-is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
-                                            `
-                                        }
-                                        return renderHtml`
-                                            <input class="ps-input${error ? ' ps-is-error' : ''}" name="${name}" type="${type}" value="${value}">
-                                        ` 
-                                    }}
-                                    ${() => {
-                                        if(error){
-                                            return renderHtml`
+                <form class="ps-card" method="post" enctype="multipart/form-data" autocomplete="off">
+                        <div class="ps-card-header">
+                            <p class="ps-card-header-title">${title}</p>
+                        </div>
+                        <div class="ps-card-body">
+                            ${() => {
+                                if(otherErrors.length){
+                                    return renderHtml`
+                                        <div class="ps-field">
+                                            ${otherErrors.map(error => renderHtml`
                                                 <p class="ps-is-error">${error}</p>
-                                            `
-                                        }
-                                    }}
-                                </div>
-                            `;
-                        })}
-                    </section>
-                    <footer>
-                        <button class="ps-button" type="submit">${submitTitle}</button>
-                        <button class="ps-button" data-node-wrapper="anchor" data-action="remove">${cancelTitle}</button>
-                    </footer>
-                </form>
+                                            `)}
+                                        </div>
+                                    `
+                                }
+                            }}
+                            ${fields.map(({ label, name, type, value, error }) => {
+                                if(type == 'hidden'){
+                                    return renderHtml`
+                                        <input type="hidden" name="${name}" value="${value}">
+                                    `;
+                                }
+                                return renderHtml`
+                                    <div>
+                                        <label class="ps-label">${label}</label>
+                                        ${() => {
+                                            if(type == 'textarea'){
+                                                return renderHtml`
+                                                    <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}">${value}</textarea>
+                                                `
+                                            }
+                                            if(type == 'markdown'){
+                                                return renderHtml`
+                                                    <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}" data-node-wrapper="anchor" data-target="_overlay" data-href="&_part=markdown-editor">${value}</textarea>
+                                                `
+                                            }
+                                            if(type == 'checkbox'){
+                                                return renderHtml`
+                                                    <input class="ps-input${error ? ' ps-is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
+                                                `
+                                            }
+                                            return renderHtml`
+                                                <input class="ps-input${error ? ' ps-is-error' : ''}" name="${name}" type="${type}" value="${value}">
+                                            ` 
+                                        }}
+                                        ${() => {
+                                            if(error){
+                                                return renderHtml`
+                                                    <p class="ps-is-error">${error}</p>
+                                                `
+                                            }
+                                        }}
+                                    </div>
+                                `;
+                            })}
+                        </div>
+                        <div class="ps-card-footer">
+                            <button class="ps-button" type="submit">${submitTitle}</button>
+                            <button class="ps-button" data-node-wrapper="anchor" data-action="remove">${cancelTitle}</button>
+                        </div>
+                    </div>
             </div>
         `;
     },
