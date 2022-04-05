@@ -51,7 +51,13 @@ export default async ({ site, database, session, params, renderHtml, renderView,
                         <div class="navbar-menu">
                             ${() => {
                                 if(isSignedIn) return renderHtml`
-                                    <a class="navbar-item" href="/admin/add_post?userId=${user.id}" target="_overlay">Add</a>
+                                    <div class="navbar-item has-dropdown">
+                                        Add
+                                        <div class="navbar-dropdown">
+                                            <a class="navbar-item" href="/admin/add_page?userId=${user.id}" target="_overlay">Page</a>
+                                            <a class="navbar-item" href="/admin/add_post?userId=${user.id}" target="_overlay">Post</a>
+                                        </div>
+                                    </div>
                                     <a class="navbar-item" href="/sign_out" target="_overlay">Sign out</a>
                                 `;
                                 return renderHtml`
