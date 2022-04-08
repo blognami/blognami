@@ -14,5 +14,7 @@ export default {
             if(action == 'load') loadFrame.call(this, confirm, target, method, href);
             if(action == 'remove') removeFrame.call(this, confirm, target);
         });
+
+        if(this.is('input, textarea')) this.on('keyup', (event) => this.trigger('click'));
     }
 };

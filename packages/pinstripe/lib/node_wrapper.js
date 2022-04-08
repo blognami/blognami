@@ -54,6 +54,12 @@ export const NodeWrapper = Base.extend().include({
             this.traverse(normalizeVirtualNode);
         });
 
+        const { autofocus } = this.attributes;
+
+        if(autofocus){
+            this.setTimeout(() => this.node.focus());
+        }
+
         const { autosubmit, trigger } = this.data;
 
         if(autosubmit){

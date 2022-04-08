@@ -69,6 +69,14 @@ export default {
             }
         });
 
+        let isAutofocusSet = false;
+
+        const autofocus = () =>  {
+            if(isAutofocusSet) return;
+            isAutofocusSet = true;
+            return renderHtml('autofocus');
+        };
+
         return renderHtml`
             <div class="ps-modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
                 <button data-node-wrapper="anchor" data-action="remove"></button>
@@ -100,21 +108,21 @@ export default {
                                         ${() => {
                                             if(type == 'textarea'){
                                                 return renderHtml`
-                                                    <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}">${value}</textarea>
+                                                    <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}" ${(params._method != 'POST' || error) ? autofocus : ''}>${value}</textarea>
                                                 `
                                             }
                                             if(type == 'markdown'){
                                                 return renderHtml`
-                                                    <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}" data-node-wrapper="anchor" data-target="_overlay" data-href="&_part=markdown-editor">${value}</textarea>
+                                                    <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}" data-node-wrapper="anchor" data-target="_overlay" data-href="&_part=markdown-editor" ${(params._method != 'POST' || error) ? autofocus : ''}>${value}</textarea>
                                                 `
                                             }
                                             if(type == 'checkbox'){
                                                 return renderHtml`
-                                                    <input class="ps-input${error ? ' ps-is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
+                                                    <input class="ps-input${error ? ' ps-is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} ${(params._method != 'POST' || error) ? autofocus : ''} />
                                                 `
                                             }
                                             return renderHtml`
-                                                <input class="ps-input${error ? ' ps-is-error' : ''}" name="${name}" type="${type}" value="${value}">
+                                                <input class="ps-input${error ? ' ps-is-error' : ''}" name="${name}" type="${type}" value="${value}" ${(params._method != 'POST' || error) ? autofocus : ''}>
                                             ` 
                                         }}
                                         ${() => {
