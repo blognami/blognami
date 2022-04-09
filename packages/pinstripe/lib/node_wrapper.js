@@ -45,6 +45,7 @@ export const NodeWrapper = Base.extend().include({
     initialize(node, skipInit = false){
         this.node = node;
         this._registeredEventListeners = [];
+        this._registeredObservers = [];
         this._registeredTimers = [];
         this._virtualNodeFilters = [];
 
@@ -381,7 +382,45 @@ export const NodeWrapper = Base.extend().include({
     addVirtualNodeFilter(fn){
         this._virtualNodeFilters.push(fn);
         return this;
-    }
+    },
+
+    observe: overload({
+        ['object, function'](options, fn){
+            const { add = false, remove = false, alter = false } = options;
+
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(
+                    mutation => {
+                        if(mutation.type == 'childList'){
+                            if(add) mutation.addedNodes.forEach(node => fn(NodeWrapper.instanceFor(node), 'add'));
+                            if(remove) mutation.removedNodes.forEach(node => fn(NodeWrapper.instanceFor(node), 'remove'));
+                        }
+                        if(mutation.type == 'attributes' && alter){
+                            fn(NodeWrapper.instanceFor(mutation.target), 'alter', mutation.attributeName);
+                        }
+                        if(mutation.type == 'characterData' && alter){
+                            fn(NodeWrapper.instanceFor(mutation.target), 'alter', 'value');
+                        }
+                    }
+                )
+            });
+        
+            observer.observe(this.node, {
+                attributes: alter,
+                characterData: 'alter',
+                childList: add || remove,
+                subtree: true
+            });
+    
+            this._registeredObservers.push(observer);
+
+            return this;
+        },
+
+        function(fn){
+            return this.observe({ add: true, remove: true, alter: true }, fn);
+        }
+    })
 });
 
 function cleanChildren(){
@@ -395,6 +434,10 @@ function clean(){
 
     while(this._registeredEventListeners.length){
         this.node.removeEventListener(...this._registeredEventListeners.pop());
+    }
+
+    while(this._registeredObservers.length){
+        this._registeredObservers.pop().disconnect();
     }
 
     clearTimers.call(this);

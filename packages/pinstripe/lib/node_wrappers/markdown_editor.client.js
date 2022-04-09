@@ -13,6 +13,13 @@ export default {
         
         const previewFrame = this.frame.descendants.find(n => n.is('.ps-markdown-editor-preview-pane'));
 
+        previewFrame.observe((current) => {
+            while(current.parent && current.parent != previewFrame) {
+                current = current.parent;
+            }
+            if(current.node.scrollIntoView) current.node.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        })
+
         this.on('submit', () => {
             const { value } = this.values;
             previewFrame.load({ _method: 'post', value });
