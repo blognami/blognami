@@ -5,6 +5,6 @@ export default async ({ params, pages, renderHtml }) => {
     await pages.idEq(id).delete();
     
     return renderHtml`
-        <span data-node-wrapper="anchor" data-target="_parent" data-trigger="click"></span>
+        <span data-node-wrapper="anchor" data-target="_top" data-trigger="click"></span>
     `;
 };

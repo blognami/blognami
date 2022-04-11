@@ -86,6 +86,20 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                                         </section>
                                     </div>
                                 </div>
+
+                                <section class="bn-section">
+                                    <h3 class="bn-section-title">Danger area</h3>
+                                    <p>
+                                        <button
+                                            class="ps-button is-primary"
+                                            data-node-wrapper="anchor"
+                                            data-method="post"
+                                            data-href="/admin/delete_post?id=${post.id}"
+                                            data-target="_overlay"
+                                            data-confirm="Are you really sure you want to delete this post?"
+                                        >Delete this Post</button>
+                                    </p>
+                                </section>
                             `;
                         }}
                         

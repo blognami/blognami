@@ -9,4 +9,5 @@ export default async ({ params: { _path: path, ...otherParams }, pageables, rend
             [pageableName]: pageable,
         });
     }
+    return renderView('_404');
 };
