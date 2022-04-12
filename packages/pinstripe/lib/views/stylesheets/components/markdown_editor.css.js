@@ -37,7 +37,8 @@ export default {
             
                 '&-preview-pane': {
                     overflowY: 'auto',
-                    padding: '1em'
+                    padding: '1em',
+                    '> * + *': { marginTop: '2rem' }
                 }
             },
 

@@ -49,7 +49,7 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                                     <div class="bn-editable-area-header">
                                         <a class="bn-editable-area-button" href="/admin/edit_page_body?id=${page.id}" target="_overlay">Edit</a>
                                     </div>
-                                    <div class="bn-editable-area-body">
+                                    <div class="bn-editable-area-body bn-content bn-canvas">
                                         ${renderMarkdown(page.body)}
                                     </div>
                                 </div>

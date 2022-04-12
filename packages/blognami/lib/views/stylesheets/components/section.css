@@ -20,3 +20,7 @@
     content: "";
     background-color: var(--color-light-gray);
 }
+
+.bn-section > * + * {
+    margin-top: 2rem;
+}

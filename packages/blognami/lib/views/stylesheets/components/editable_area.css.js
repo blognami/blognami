@@ -7,7 +7,10 @@ export default {
                 borderStyle: 'dashed',
                 borderColor: 'var(--color-dark-gray)',
                 '&-header': { textAlign: 'right' },
-                '&-body, &-header': { padding: '0.7rem' }
+                '&-body, &-header': {padding: '0.7rem' },
+                '&-body': {
+                    '> * + *': { marginTop: '2rem' }
+                }
             }
         });
     }

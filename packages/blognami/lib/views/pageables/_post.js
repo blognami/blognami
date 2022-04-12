@@ -59,7 +59,7 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                                     <div class="bn-editable-area-header">
                                         <a class="bn-editable-area-button" href="/admin/edit_post_body?id=${post.id}" target="_overlay">Edit</a>
                                     </div>
-                                    <div class="bn-editable-area-body">
+                                    <div class="bn-editable-area-body bn-content bn-canvas">
                                         ${renderMarkdown(post.body)}
                                     </div>
                                 </div>
@@ -82,6 +82,7 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                                                 if(tags) return tags;
                                                 return 'none';
                                             }}</p>
+                                            <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
                                             <p><b>Published:</b> ${post.published ? 'true' : 'false'}</p>
                                         </section>
                                     </div>

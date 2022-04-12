@@ -42,7 +42,6 @@ export default async ({ site, database, session, params, renderHtml, renderView,
             </head>
             
             <body>
-                <div></div>
                 <div class="navbar">
                     <div class="navbar-inner">
                         <div class="navbar-brand">
