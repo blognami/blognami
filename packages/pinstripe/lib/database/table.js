@@ -227,9 +227,10 @@ export const Table = Base.extend().include({
 
         const submitTitle = title;
         const cancelTitle = 'Cancel';
+        const unsavedChangesConfirm = 'There are unsaved changes are you sure you want to close?';
 
         return {
-            title, fields, submitTitle, cancelTitle,
+            title, fields, submitTitle, cancelTitle, unsavedChangesConfirm,
             
             submit: async (values, success) => {
                 return success(await this.insert(values));

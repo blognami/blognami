@@ -16,7 +16,20 @@ export default {
     },
 
     remove(...args){
+        if(window.getSelection().type == 'Range') return;
+
+        let canRemove = true;
+        this.descendants.filter(n => n.isForm).forEach(({ hasUnsavedChanges, data: { unsavedChangesConfirm } }) => {
+            if(hasUnsavedChanges && unsavedChangesConfirm && !confirm(unsavedChangesConfirm)){
+                canRemove = false;
+            }
+        })
+        if(!canRemove) return;
+
         this.constructor.parent.prototype.remove.call(this, ...args);
+
+        delete this.parent._overlayChild;
+        
         if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('.ps-overlay')).length){
             this.document.descendants.filter(node => node.is('html')).forEach(node => {
                 node.removeClass('ps-has-overlay');

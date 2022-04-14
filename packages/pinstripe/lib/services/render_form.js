@@ -50,6 +50,7 @@ export default {
         const fields = extractFields(formAdapter, options);
         const submitTitle = options.submitTitle || formAdapter.submitTitle;
         const cancelTitle = options.cancelTitle || formAdapter.cancelTitle;
+        const unsavedChangesConfirm = options.unsavedChangesConfirm || formAdapter.unsavedChangesConfirm;
 
         const indexedFields = indexFieldsByName(fields);
         const otherErrors = [];
@@ -72,7 +73,14 @@ export default {
         return renderHtml`
             <div class="ps-modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
                 <button data-node-wrapper="anchor" data-action="remove"></button>
-                <form class="ps-card" method="post" enctype="multipart/form-data" autocomplete="off">
+                <form
+                    class="ps-card"
+                    method="post"
+                    enctype="multipart/form-data"
+                    autocomplete="off"
+                    ${unsavedChangesConfirm ? renderHtml`data-unsaved-changes-confirm="${unsavedChangesConfirm}"` : undefined}
+                    ${unsavedChangesConfirm && params._method == 'POST' ? renderHtml`data-has-unsaved-changes="true"` : undefined}
+                >
                         <div class="ps-card-header">
                             <p class="ps-card-header-title">${title}</p>
                         </div>
