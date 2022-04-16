@@ -36,8 +36,26 @@ export default async ({
       await generateFile(`lib/index.js`, () => {
          line();
          line(`import { importAll } from 'pinstripe';`);
+         dependencies.forEach((dependency) => {
+            if(dependency != 'pinstripe') line(`import '${dependency}';`);
+         });
          line();
          line(`importAll(import.meta.url);`);
+         line();
+      });
+
+      await generateFile(`README.md`, () => {
+         line();
+         line(`# ${name}`);
+         line();
+         line('## Getting started');
+         line();
+         line('```bash');
+         indent(() => {
+            line('pinstripe init-database');
+            line('pinstripe start-server');
+         });
+         line('```');
          line();
       });
 

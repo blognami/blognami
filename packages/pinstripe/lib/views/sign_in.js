@@ -1,10 +1,5 @@
 
 import * as crypto from 'crypto';
-import * as uuid from 'uuid';
-
-if(!crypto.randomUUID){
-    crypto.randomUUID = uuid.v4;
-}
 
 export default async ({ renderForm, database, renderHtml }) => renderForm({
     title: 'Sign In',
