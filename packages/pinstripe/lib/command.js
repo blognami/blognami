@@ -19,6 +19,18 @@ export const Command = Base.extend().include({
 
             run(name = 'list-commands', ...args){
                 return this.create(name, ...args).run();
+            },
+
+            get schedules(){
+                if(!this.hasOwnProperty('_schedules')){
+                    this._schedules = [];
+                }
+                return this._schedules;
+            },
+
+            schedule(...args){
+                this.schedules.push(args);
+                return this;
             }
         });
     },

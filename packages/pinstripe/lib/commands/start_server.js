@@ -4,7 +4,7 @@ import Busboy from 'busboy';
 import { default as qs} from 'qs';
 const { parse: parseQueryString } = qs;
 
-export default async ({ fetch }) => {
+export default async ({ fetch, bot }) => {
     const host = process.env.HOST || '127.0.0.1';
     const port = process.env.PORT || 3000;
 
@@ -27,6 +27,10 @@ export default async ({ fetch }) => {
     }).listen(port, host, () => {
         console.log(`Pinstripe running at http://${host}:${port}/`)
     });
+
+    bot.start();
+
+    return new Promise(() => {});
 };
 
 const extractParams = async (request) => {

@@ -25,7 +25,8 @@ export default async ({ renderForm, database, renderHtml }) => renderForm({
         const passString = crypto.randomUUID();
         const session = await database.sessions.insert({
             userId: id,
-            passString
+            passString,
+            lastAccessedAt: Date.now()
         });
         
         const [ status, headers, body ] = await renderHtml`
