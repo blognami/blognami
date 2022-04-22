@@ -1,12 +1,9 @@
 
-import { View } from '../../view.js';
-
-export default ({ renderHtml, params: { _path } }) => {
+export default ({ renderHtml, viewNames, params: { _path } }) => {
     const name = _path.replace(/\/blocks\//, '');
     const prefix = _path.replace(/^\/blocks\//, '');
 
-    const names = Object
-        .keys(View.classes)
+    const names = viewNames
         .filter(name => name.match(/^blocks\/.+/) && name != 'blocks/default')
         .map(name => name.replace(/^blocks\//, ''))
         .filter(name => name.startsWith(prefix))

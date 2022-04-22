@@ -1,5 +1,5 @@
 
-export default async ({ site, database, session, params, renderHtml, renderView, stylesheetViewNames, renderMarkdown }) => {
+export default async ({ site, database, session, params, renderHtml, renderView, stylesheets, renderMarkdown }) => {
     const { title, body } = params;
 
     let user;
@@ -35,7 +35,7 @@ export default async ({ site, database, session, params, renderHtml, renderView,
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
-                ${stylesheetViewNames.map(viewName => renderHtml`
+                ${stylesheets.map(viewName => renderHtml`
                     <link rel="stylesheet" href="/${viewName}">
                 `)}
                 <script src="/bundle.js"></script>

@@ -3,9 +3,8 @@ import { View } from '../view.js';
 export default ({ createEnvironment }) => {
     return (_params = {}) => createEnvironment(async ({ environment, renderView }) => {
         const params = normalizeParams(_params);
-        const viewName = params._path.replace(/^\/|\/$/g, '');
-
         environment.params = params;
+        const viewName = `${await environment.app}${params._path}`.replace(/^\/|\/$/g, '');
         
         let out = await renderGuardViews(renderView, viewName, params);
         if(out){

@@ -2,7 +2,7 @@
 import { Volume as MemFs } from 'memfs';
 import webpack from 'webpack';
 
-import { client } from '../client.js';
+import { client } from '../../client.js';
 
 let cache;
 

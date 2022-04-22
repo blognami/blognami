@@ -1,7 +1,8 @@
 
 export default async ({
     cliUtils: { extractArg },
-    fsBuilder: { inProjectRootDir, generateFile, line, indent }
+    fsBuilder: { inProjectRootDir, generateFile, line, indent },
+    app
 }) => {
     let name = extractArg('').replace(/^\//, '');
     if(name == ''){
@@ -10,7 +11,7 @@ export default async ({
     }
 
     if(!name.match(/\.[^\/]+$/)){
-        name = `${name}.tpl.js`;
+        name = `${name}.js`;
     }
 
     await inProjectRootDir(async () => {
@@ -21,7 +22,7 @@ export default async ({
             line();
         });
 
-        await generateFile(`lib/views/${name}`, () => {
+        await generateFile(`lib/views/${await app}/${name}`, () => {
             line();
             line('export default ({ renderHtml, params }) => renderHtml(`');
             indent(() => {
