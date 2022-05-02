@@ -1,8 +1,7 @@
 
 import http from 'http';
 import Busboy from 'busboy';
-import { default as qs} from 'qs';
-const { parse: parseQueryString } = qs;
+import { Url } from '../url.js';
 
 export default async ({ fetch, bot }) => {
     const host = process.env.HOST || '127.0.0.1';
@@ -35,16 +34,15 @@ export default async ({ fetch, bot }) => {
 
 const extractParams = async (request) => {
     const { method, url, headers } = request;
-    const matches = url.match(/^([^\?]+)\?(.*)$/);
-    const path = matches ? matches[1] : url;
-    const queryString = parseQueryString(matches ? matches[2] : "");
+    const _url = Url.fromString(url);
+    if(headers['x-host']) _url.host = headers['x-host'];
     const body = method.match(/^POST|PUT|PATCH$/) ? await parseBody(request) : {};
     
     return {
-        ...queryString,
+        ..._url.params,
         ...body,
         _method: method,
-        _path: path,
+        _url,
         _headers: headers
     };
 };

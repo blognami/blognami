@@ -9,7 +9,8 @@ import { Adapter, createAdapterDeligator } from './database/adapter.js';
 const deligateToAdapter = createAdapterDeligator('database');
 
 export const Database = Base.extend().include({
-    async initialize({ environment, config }){
+    async initialize({ environment, config }, skipInit = false){
+        if(skipInit) return
         this._environment = environment;
         const { adapter = 'mysql', ...adapterConfig } = await config.database;
         this._adapter = Adapter.create(adapter, adapterConfig);
@@ -19,6 +20,16 @@ export const Database = Base.extend().include({
         this._lockLevel = 0;
         await this._useIfExists();
         this._isInitialized = true;
+    },
+
+    isMultiTenant: false,
+
+    get withoutMultiTenancy(){
+        return (async () => {
+            const out = await Database.new({}, true);
+            out.assignProps(this, { isMultiTenant: false });
+            return out;
+        })();
     },
 
     renderSql: deligateToAdapter('renderSql'),

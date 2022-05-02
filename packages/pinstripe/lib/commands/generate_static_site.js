@@ -8,12 +8,12 @@ export default {
 
     async run(){
         this.pages = {};
-        const paths = Object.keys(View.classes).filter(path => !path.match(/(^|\/)_/)).map(path => {
-            return `/${path.replace(/(^|\/)index$/, '')}`.replace(/^\/+/, '/');
+        const urls = Object.keys(View.classes).filter(path => !path.match(/(^|\/)_/)).map(path => {
+            return Url.fromString(`/${path.replace(/(^|\/)index$/, '')}`.replace(/^\/+/, '/'));
         });
 
-        while(paths.length){
-            await this.crawlPage({ _path: paths.shift() });
+        while(urls.length){
+            await this.crawlPage({ _url: urls.shift() });
         }
 
         const pages = Object.values(this.pages).filter(page => page.status == 200 && Object.keys(page.params).length == 1);
@@ -25,7 +25,7 @@ export default {
                     const { params, headers } = pages.shift();
                     const contentType = headers['content-type'];
 
-                    const path = params._path;
+                    const path = params._url.path;
                     let filePath = path.replace(/^\//, '');
                     if(filePath.match(/(^|\/)$/)){
                         filePath = `${filePath}index`;
@@ -34,7 +34,7 @@ export default {
                         filePath = `${filePath}.${mimeTypes.extension(contentType)}`
                     }
                     
-                    const data = (await this.fetch({ _path: path }))[2];
+                    const data = (await this.fetch({ _url: Url.fromString(path) }))[2];
 
                     await generateFile(filePath, () => {
                         echo(data.join(''));
@@ -58,7 +58,7 @@ export default {
         const urls = this.extractUrls(virtualDom);
         while(urls.length){
             const url = urls.shift();
-            await this.crawlPage({ ...url.params, _path: url.path });
+            await this.crawlPage({ ...url.params, _url: url });
         }
     },
 
@@ -68,7 +68,7 @@ export default {
             ['src', 'href'].forEach(name => {
                 const value = attributes[name];
                 if(!value) return;
-                const url = Url.fromString(value, 'http://localhost/');
+                const url = Url.fromString(value);
                 if(url.host != 'localhost') return;
                 out.push(url);
             });

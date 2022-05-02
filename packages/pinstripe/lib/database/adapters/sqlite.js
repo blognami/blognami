@@ -182,7 +182,7 @@ Adapter.register('sqlite').include({
                 const table = this._table;
                 const database = table._database;
         
-                await table.create();
+                if(!await table.exists()) await table.create();
         
                 if(!await this.exists()){
                     let defaultSql = options.default;
@@ -265,10 +265,21 @@ Adapter.register('sqlite').include({
                 return this;
             },
 
-            _generateInsertSql(){
+            async _generateInsertSql(){
                 this._fields['id'] = crypto.randomUUID();
                 this._alteredFields['id'] = this._fields['id'];
-        
+
+                const database = await this._database;
+                const { isMultiTenant } = database;
+                const isScopedToTenant = isMultiTenant && !this.constructor.name.match(/^(pinstripe[A-Z]|tenant$)/);
+                const tenant = isScopedToTenant && database._environment ? await database._environment.tenant : undefined;
+                if(tenant){
+                    this._fields['tenantId'] = tenant.id;
+                    this._alteredFields['tenantId'] = tenant.id;
+                } else if(isScopedToTenant) {
+                    return this._database.renderSql`select NULL`;
+                }
+
                 return this._database.renderSql`
                     insert into ${this._adapter.escapeIdentifier(Inflector.pluralize(this.constructor.name))}(
                         ${Object.keys(this._alteredFields).map((key, i) =>
@@ -459,23 +470,43 @@ Adapter.register('sqlite').include({
                     }
                     out.push(this.renderSql`${Inflector.singularize(this.constructor.name)} as \`_type\``);
                 }
-        
-                const joinRoot = this._joinRoot;
                 
+                const joinRoot = this._joinRoot;
                 if(options.hasOwnProperty('from')){
                     if(options.from){
                         out.push(this.renderSql` from ${options.from}`);
                     }
                 } else {
                     out.push(this.renderSql` from ${joinRoot._fromSql}`);
+                    
                 }
+
+                const { isMultiTenant } = this._database;
+                const isScopedToTenant = isMultiTenant && !this.constructor.name.match(/^(pinstripe[A-Z]|tenants$)/);
+                const tenant = isScopedToTenant ? await this._database._environment.tenant : undefined;
         
                 if (options.hasOwnProperty('where')){
                     if(options.where){
                         out.push(this.renderSql` where ${options.where}`);
+                        if(tenant){
+                            out.push(this.renderSql` and ${this.tenantId} = ${tenant.id}`);
+                        } else if(isScopedToTenant){
+                            out.push(this.renderSql` where 1 = 2`);
+                        }
+                    } else if(isScopedToTenant){
+                        out.push(this.renderSql` where 1 = 2`);
                     }
                 } else if(joinRoot._whereSql.length) {
                     out.push(this.renderSql` where ${joinRoot._whereSql}`);
+                    if(tenant){
+                        out.push(this.renderSql` and ${this.tenantId} = ${tenant.id}`);
+                    } else if(isScopedToTenant){
+                        out.push(this.renderSql` and 1 = 2`);
+                    }
+                } else if(tenant){
+                    out.push(this.renderSql` where ${this.tenantId} = ${tenant.id}`);
+                } else if(isScopedToTenant){
+                    out.push(this.renderSql` where 1 = 2`);
                 }
         
                 if(options.hasOwnProperty('orderBy')){

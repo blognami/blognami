@@ -62,6 +62,7 @@ const importAllRecursive = async (dirPath, importer = defaultImporter) => {
             const importerFilePath = `${current}/_importer.js`;
             if(existsSync(importerFilePath)){
                 const importerFactory = await ( await import(importerFilePath) ).default;
+                if(!importerFactory) continue;
                 const importer = await importerFactory(current);
                 await importAllRecursive(current, importer);
             } else {

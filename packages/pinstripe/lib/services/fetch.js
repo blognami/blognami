@@ -4,7 +4,7 @@ export default ({ createEnvironment }) => {
     return (_params = {}) => createEnvironment(async ({ environment, renderView }) => {
         const params = normalizeParams(_params);
         environment.params = params;
-        const viewName = `${await environment.app}${params._path}`.replace(/^\/|\/$/g, '');
+        const viewName = `${await environment.app}${params._url.path}`.replace(/^\/|\/$/g, '');
         
         let out = await renderGuardViews(renderView, viewName, params);
         if(out){
@@ -61,7 +61,7 @@ const renderDefaultViews = async (renderView, viewName,  params) => {
     while(true){
         const out = normalizeResponse(await renderView(prefixSegments.length ? [...prefixSegments, 'default'].join('/') : 'default', {
             ...params,
-            _pathOffset: params._path.substr(`/${prefixSegments.join('/')}`.length).replace(/^\//, '')
+            _pathOffset: params._url.path.substr(`/${prefixSegments.join('/')}`.length).replace(/^\//, '')
         }));
         if(out){
             return out;
@@ -78,8 +78,8 @@ const normalizeParams = (params) => {
     if(!out._method){
         out._method = 'get';
     }
-    if(!params._path){
-        out._path = '/';
+    if(!params._url){
+        out._url = Url.new();
     }
     if(!params._headers){
         out._headers = {};

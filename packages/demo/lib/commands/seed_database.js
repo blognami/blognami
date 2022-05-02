@@ -1,14 +1,22 @@
 
 import { faker } from '@faker-js/faker';
 
-export default async ({ site, users, posts }) => {
+export default async ({ tenants, site, users, posts }) => {
+
+    if(process.env.TENANCY == 'multi'){
+        await tenants.insert({
+            name: 'test',
+            host: 'localhost'
+        });
+    }
+
     if(process.env.NODE_ENV == 'test') return;
 
     await site.update({
         title: 'Hello World!',
         description: 'Thoughts, stories and ideas.',
         language: 'en'
-    })
+    });
 
     const user = await users.insert({
         name: 'Admin',

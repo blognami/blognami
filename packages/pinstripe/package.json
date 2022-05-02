@@ -6,7 +6,8 @@
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
-    ".": "./lib/index.js"
+    ".": "./lib/index.js",
+    "./multi-tenant": "./lib/extensions/multi-tenant/index.js"
   },
   "bin": {
     "pinstripe": "./cli.js"
@@ -18,7 +19,7 @@
     "test:unit": "NODE_OPTIONS=--experimental-vm-modules jest lib"
   },
   "devDependencies": {
-    "jest": "^27.5.1",
+    "jest": "^28.0.1",
     "ramda": "^0.27.0"
   },
   "dependencies": {
@@ -34,7 +35,6 @@
     "mime-types": "^2.1.28",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.2",
-    "qs": "^6.9.4",
     "sqlite3": "^5.0.2",
     "unionfs": "^4.4.0",
     "webpack": "^5.39.1"

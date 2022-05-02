@@ -187,9 +187,10 @@ export const Row = Base.extend().include({
     },
 
     __setMissing(name, value){
-        if(name == 'id'){
-            throw "Id fields can't be set directly on a row";
+        if(name == 'id' || name == 'tenantId'){
+            throw `'${name}' fields can't be set directly on a row`;
         }
+        
         const normalizedValue = this._normalizeField(name, value)
         if(this._fields[name] != normalizedValue){
             this._alteredFields[name] = normalizedValue;

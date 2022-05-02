@@ -1,7 +1,8 @@
 
-export default ({ renderHtml, viewNames, params: { _path } }) => {
-    const name = _path.replace(/\/blocks\//, '');
-    const prefix = _path.replace(/^\/blocks\//, '');
+export default ({ renderHtml, viewNames, params }) => {
+    const path = params._url.path
+    const name = path.replace(/\/blocks\//, '');
+    const prefix = path.replace(/^\/blocks\//, '');
 
     const names = viewNames
         .filter(name => name.match(/^blocks\/.+/) && name != 'blocks/default')

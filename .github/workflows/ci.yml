@@ -18,6 +18,7 @@ jobs:
       matrix:
         node: [16.x]
         database-adapter: [mysql, sqlite]
+        tenancy: [single, multi]
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js ${{ matrix.node }}
@@ -25,7 +26,7 @@ jobs:
       with:
         node-version: ${{ matrix.node }}
     - run: yarn install
-    - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} yarn test
+    - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} yarn test
       env:
         CI: true
 

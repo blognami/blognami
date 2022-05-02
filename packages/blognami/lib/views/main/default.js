@@ -1,6 +1,6 @@
 
-export default async ({ params: { _path: path, ...otherParams }, pageables, renderView }) => {
-    const slug = path.replace(/^\//, '');
+export default async ({ params: { _url: url, ...otherParams }, pageables, renderView }) => {
+    const slug = url.path.replace(/^\//, '');
     const pageable = await pageables.slugEq(slug).first();
     if(pageable) {
         const pageableName = pageable.constructor.name;

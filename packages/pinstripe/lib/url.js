@@ -5,11 +5,11 @@ import { StringReader } from './string_reader.js';
 export const Url = Base.extend().include({
     meta(){
         this.assignProps({
-            fromString(url, referenceUrl){
+            fromString(url, referenceUrl = 'http://localhost'){
                 const out = new Url()
                 url = new StringReader(url)
                 if(!(referenceUrl instanceof Url)){
-                    referenceUrl = Url.fromString(referenceUrl || window.location, new Url())
+                    referenceUrl = Url.fromString(referenceUrl, new Url())
                 }
                 
                 let matches;
