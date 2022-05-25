@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "blognami",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "author": "Jody Salt",
   "license": "MIT",
   "scripts": {
@@ -14,6 +14,6 @@
     "sass": "^1.36.0"
   },
   "dependencies": {
-    "pinstripe": "^0.14.0"
+    "pinstripe": "^0.15.0"
   }
 }
