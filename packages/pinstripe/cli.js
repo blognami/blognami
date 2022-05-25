@@ -1,4 +1,4 @@
-#!/usr/bin/env node --unhandled-rejections=strict
+#!/usr/bin/env node
 
 import { spawn } from 'child_process';
 
