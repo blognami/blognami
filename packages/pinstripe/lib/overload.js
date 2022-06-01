@@ -16,6 +16,7 @@ export const overload = (variations = {}) => {
         if(!fn){
             if(this){
                 getAllProps(this).forEach(name => {
+                    if(['caller', 'callee', 'arguments'].includes(name)) return;
                     if(this[name] === out){
                         throw new Error(`Could not satisfy overloaded method ${name}(${extractTypes(args).join(', ')}).`);
                     }
