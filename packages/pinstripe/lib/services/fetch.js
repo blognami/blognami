@@ -4,7 +4,7 @@ export default ({ createEnvironment }) => {
     return (_params = {}) => createEnvironment(async ({ environment, renderView }) => {
         const params = normalizeParams(_params);
         environment.params = params;
-        const viewName = `${await environment.app}${params._url.path}`.replace(/^\/|\/$/g, '');
+        const viewName = params._url.path.replace(/^\/|\/$/g, '');
         
         let out = await renderGuardViews(renderView, viewName, params);
         if(out){
