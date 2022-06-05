@@ -1,9 +1,9 @@
 
-.bn-section {
+.section {
     max-width: 720px;
 }
 
-.bn-section-title {
+.section-title {
     display: flex;
     align-items: center;
     margin-bottom: 2.4rem;
@@ -13,7 +13,7 @@
     letter-spacing: 0.01em;
 }
 
-.bn-section-title::after {
+.section-title::after {
     flex-grow: 1;
     height: 1px;
     margin-left: 1.6rem;
@@ -21,6 +21,6 @@
     background-color: var(--color-light-gray);
 }
 
-.bn-section > * + * {
+.section > * + * {
     margin-top: 2rem;
 }

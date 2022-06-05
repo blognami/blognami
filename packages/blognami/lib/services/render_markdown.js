@@ -1,12 +1,10 @@
 
 import MarkdownIt from 'markdown-it';
 
-import { VirtualNode } from '../virtual_node.js';
-
-export default ({ renderHtml }) => {
+export default ({ renderHtml, parseHtml }) => {
     return markdown => {
         const html = new MarkdownIt().use(injectLineNumbers).render(markdown || '');
-        const virtualNode = VirtualNode.fromString(html);
+        const virtualNode = parseHtml(html);
         virtualNode.children.forEach(paragraph => {
             if(paragraph.type != 'p') return;
             const text = paragraph.children[0];
@@ -23,7 +21,7 @@ export default ({ renderHtml }) => {
             paragraph.type = 'div';
             paragraph.attributes = {
                 ...paragraph.attributes,
-                class: 'ps-frame',
+                class: 'frame',
                 'data-node-wrapper': 'frame',
                 'data-url': `/blocks/${name}?args=${encodeURIComponent(args)}`
             };

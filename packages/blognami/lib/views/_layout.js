@@ -1,5 +1,5 @@
 
-export default async ({ site, database, session, params, renderHtml, renderView, stylesheets, renderMarkdown }) => {
+export default async ({ site, database, session, params, renderHtml, renderView, renderMarkdown }) => {
     const { title, body } = params;
 
     let user;
@@ -35,9 +35,7 @@ export default async ({ site, database, session, params, renderHtml, renderView,
                 <link rel="preconnect" href="https://fonts.googleapis.com">
                 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
-                ${stylesheets.map(viewName => renderHtml`
-                    <link rel="stylesheet" href="/${viewName}">
-                `)}
+                <link rel="stylesheet" href="/stylesheets/all.css">
                 <script src="/bundle.js"></script>
             </head>
             
@@ -66,23 +64,23 @@ export default async ({ site, database, session, params, renderHtml, renderView,
                         </div>
                     </div>
                 </div>
-                <div class="bn-site">
-                    <main id="bn-main" class="bn-main bn-outer">
-                        <div class="bn-inner">
-                            <div class="bn-wrapper">
+                <div class="site">
+                    <main id="main" class="main outer">
+                        <div class="inner">
+                            <div class="wrapper">
 
                                 ${body}
 
-                                <aside class="bn-sidebar">
-                                    <section class="bn-section">
-                                        <h2 class="bn-section-title">About</h2>
+                                <aside class="sidebar">
+                                    <section class="section">
+                                        <h2 class="section-title">About</h2>
                                             ${async () => {
                                                 if(isSignedIn) return renderHtml`
-                                                    <div class="bn-editable-area">
-                                                        <div class="bn-editable-area-header">
-                                                            <a class="bn-editable-area-button" href="/admin/edit_site_description" target="_overlay">Edit</a>
+                                                    <div class="editable-area">
+                                                        <div class="editable-area-header">
+                                                            <a class="editable-area-button" href="/admin/edit_site_description" target="_overlay">Edit</a>
                                                         </div>
-                                                        <div class="bn-editable-area-body">
+                                                        <div class="editable-area-body">
                                                             ${renderMarkdown(await site.description)}
                                                         </div>
                                                     </div>
@@ -93,9 +91,9 @@ export default async ({ site, database, session, params, renderHtml, renderView,
                     
                                     ${async () => {
                                         if(await featuredPosts.count() > 0) return renderHtml`
-                                            <section class="bn-section">
-                                                <h3 class="bn-section-title">Featured</h3>
-                                                <div class="bn-featured bn-feed">
+                                            <section class="section">
+                                                <h3 class="section-title">Featured</h3>
+                                                <div class="featured feed">
                                                     ${renderView('_posts', { posts: featuredPosts })}
                                                 </div>
                                             </section>
@@ -104,14 +102,14 @@ export default async ({ site, database, session, params, renderHtml, renderView,
 
                                     ${async () => {
                                         if(await tags.count() > 0) return renderHtml`
-                                            <section class="bn-section">
-                                                <h3 class="bn-section-title">Tags</h3>
+                                            <section class="section">
+                                                <h3 class="section-title">Tags</h3>
                         
-                                                <div class="bn-tags">
+                                                <div class="tags">
                                                     ${tags.all().map(({ name, slug }) => renderHtml`
-                                                        <a class="bn-tags-item" href="/${slug}">
-                                                            <h3 class="bn-tags-name">${name}</h3>
-                                                            <span class="bn-tags-count">
+                                                        <a class="tags-item" href="/${slug}">
+                                                            <h3 class="tags-name">${name}</h3>
+                                                            <span class="tags-count">
                                                                 ${async () => {
                                                                     const count = await database.posts.taggedWith(name).count();
                                                                     if(count == 1) return renderHtml`
@@ -133,12 +131,12 @@ export default async ({ site, database, session, params, renderHtml, renderView,
                             </div>
                         </div>
                     </main>
-                    <footer class="bn-foot bn-outer">
-                        <div class="bn-foot-inner bn-inner">
-                            <div class="bn-copyright">
+                    <footer class="foot outer">
+                        <div class="foot-inner inner">
+                            <div class="copyright">
                                 ${site.title} © ${new Date().getFullYear()}
                             </div>    
-                            <div class="bn-powered-by">
+                            <div class="powered-by">
                                 <a href="https://blognami.org/" target="_blank" rel="noopener">Powered by Blognami</a>
                             </div>
                         </div>

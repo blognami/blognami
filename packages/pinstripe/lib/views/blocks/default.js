@@ -11,7 +11,7 @@ export default ({ renderHtml, viewNames, params }) => {
         .sort()
 
     return renderHtml`
-        <div class="ps-default-block">
+        <div class="default-block">
             <p>Insert block:</p>
             <ul>
                 ${names.map(name => renderHtml`

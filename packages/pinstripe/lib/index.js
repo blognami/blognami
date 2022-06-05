@@ -19,3 +19,5 @@ export {
 } from './inflector.js';
 export { overload } from './overload.js';
 export { thatify } from './thatify.js';
+export { parseUrl } from './url.js';
+export { parseHtml } from './virtual_node.js';

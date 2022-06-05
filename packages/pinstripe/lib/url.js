@@ -95,3 +95,5 @@ function normalizePath(path){
     })
     return out.join('/');
 }
+
+export const parseUrl = (...args) => Url.fromString(...args);

@@ -428,7 +428,7 @@ function cleanChildren(){
 }
 
 function clean(){
-    if(this.is('.ps-progress-bar')) return;
+    if(this.is('.progress-bar')) return;
 
     [...this.node.childNodes].forEach(node => node._nodeWrapper && clean.call(node._nodeWrapper));
 
@@ -476,8 +476,8 @@ function createVirtualNode(html){
 }
 
 function patch(attributes, virtualChildren){
-    if(this.is('.ps-progress-bar')) return;
-    const isEmptyFrame = this.is('.ps-frame') && virtualChildren.length == 0;
+    if(this.is('.progress-bar')) return;
+    const isEmptyFrame = this.is('.frame') && virtualChildren.length == 0;
     if(isEmptyFrame && attributes['data-load-on-init'] === undefined){
         attributes['data-load-on-init'] = 'true';
     }
@@ -581,7 +581,7 @@ function normalizeVirtualNode(){
     }
 
     if(this.type == 'body'){
-        const progressBar = new this.constructor(this, 'div', {class: 'ps-progress-bar', 'data-node-wrapper': 'progress-bar'})
+        const progressBar = new this.constructor(this, 'div', {class: 'progress-bar', 'data-node-wrapper': 'progress-bar'})
         this.children = [
             progressBar,
             ...this.children

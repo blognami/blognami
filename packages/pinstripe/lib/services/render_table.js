@@ -24,16 +24,16 @@ export default ({ overload, renderList, renderHtml, params: { _headers = {} } })
                     if(_headers['x-pinstripe-frame-type'] != 'overlay') return out;
 
                     return renderHtml`
-                        <div class="ps-modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
+                        <div class="modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
                             <button data-node-wrapper="anchor" data-action="remove"></button>
-                             <div class="ps-card-body">
-                                <div class="ps-card-title">
+                             <div class="card-body">
+                                <div class="card-title">
                                     <p>${name}</p>
                                 </div>
-                                <div class="ps-card-body">
+                                <div class="card-body">
                                     ${out}
                                 </div>
-                                <div class="ps-card-footer">
+                                <div class="card-footer">
                                     <button class="button" data-action="remove">Close</button>
                                 </div>
                             </div>

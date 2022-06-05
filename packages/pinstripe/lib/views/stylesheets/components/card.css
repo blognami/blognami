@@ -1,0 +1,29 @@
+.card {
+    width: 100%;
+}
+.card-header, .card-body, .card-footer {
+    display: block;
+    padding: 2.0rem;
+}
+.card-header {
+    background-color: whitesmoke;
+    border-bottom: 0.1rem solid #dbdbdb;
+    border-top-left-radius: 0.6rem;
+    border-top-right-radius: 0.6rem;
+}
+.card-header-title {
+    color: #363636;
+    flex-grow: 1;
+    flex-shrink: 0;
+    font-size: 2.4rem;
+    line-height: 1;
+}
+.card-body {
+    background-color: white;
+}
+.card-footer {
+    background-color: whitesmoke;
+    border-bottom-left-radius: 0.6rem;
+    border-bottom-right-radius: 0.6rem;
+    border-top: 0.1rem solid #dbdbdb;
+}

@@ -23,10 +23,10 @@ export default async ({ params, session, renderHtml, renderView }) => {
     return renderView('_layout', {
         title: user.name,
         body: renderHtml`
-            <section class="bn-section">
-                <h2 class="bn-section-title">Latest posts by "${user.name}"</h2>
+            <section class="section">
+                <h2 class="section-title">Latest posts by "${user.name}"</h2>
 
-                <div class="bn-feed">
+                <div class="feed">
                     ${renderView('_posts', { posts })}
                 </div>
 
@@ -38,7 +38,7 @@ export default async ({ params, session, renderHtml, renderView }) => {
 
                 ${async () => {
                     if(await posts.all().length < await posts.count()) return renderHtml`
-                        <button class="bn-feed-loadmore bn-btn" data-node-wrapper="anchor" data-method="post" data-href="?pageSize=${pageSize + 10}">Load more posts</button>
+                        <button class="feed-loadmore btn" data-node-wrapper="anchor" data-method="post" data-href="?pageSize=${pageSize + 10}">Load more posts</button>
                     `;
                 }}
             </section>

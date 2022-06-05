@@ -1,0 +1,9 @@
+.label {
+    color: #363636;
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+.label:not(:last-child) {
+    margin-bottom: 0.5em;
+}

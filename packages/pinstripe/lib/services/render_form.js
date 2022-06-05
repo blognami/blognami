@@ -9,18 +9,7 @@ export default {
         return (...args) => this.render(...args);
     },
 
-    render(...args){
-        const { _part } = this.params;
-        if(_part == 'markdown-editor'){
-            return this.renderMarkdownEditor();
-        }
-        if(_part == 'markdown-editor-preview'){
-            return this.renderMarkdownEditorPreview();
-        }
-        return this.renderForm(...args);
-    },
-
-    async renderForm(formAdaptable, options = {}){
+    async render(formAdaptable, options = {}){
         const { params, renderHtml } = this;
 
         const formAdapter = await (typeof formAdaptable.toFormAdapter == 'function' ? formAdaptable.toFormAdapter() : createObjectFormAdapter(formAdaptable));
@@ -71,32 +60,32 @@ export default {
         });
 
         return renderHtml`
-            <div class="ps-modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
+            <div class="modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
                 <button data-node-wrapper="anchor" data-action="remove"></button>
                 <form
-                    class="ps-card"
+                    class="card"
                     method="post"
                     enctype="multipart/form-data"
                     autocomplete="off"
                     ${unsavedChangesConfirm ? renderHtml`data-unsaved-changes-confirm="${unsavedChangesConfirm}"` : undefined}
                     ${unsavedChangesConfirm && params._method == 'POST' ? renderHtml`data-has-unsaved-changes="true"` : undefined}
                 >
-                        <div class="ps-card-header">
-                            <p class="ps-card-header-title">${title}</p>
+                        <div class="card-header">
+                            <p class="card-header-title">${title}</p>
                         </div>
-                        <div class="ps-card-body">
+                        <div class="card-body">
                             ${() => {
                                 if(otherErrors.length){
                                     return renderHtml`
-                                        <div class="ps-field">
+                                        <div class="field">
                                             ${otherErrors.map(error => renderHtml`
-                                                <p class="ps-is-error">${error}</p>
+                                                <p class="is-error">${error}</p>
                                             `)}
                                         </div>
                                     `
                                 }
                             }}
-                            ${fields.map(({ label, name, type, value, error }) => {
+                            ${fields.map(({ label, name, type, value, nodeWrapper, error }) => {
                                 if(type == 'hidden'){
                                     return renderHtml`
                                         <input type="hidden" name="${name}" value="${value}">
@@ -104,67 +93,40 @@ export default {
                                 }
                                 return renderHtml`
                                     <div>
-                                        <label class="ps-label">${label}</label>
+                                        <label class="label">${label}</label>
                                         ${() => {
                                             if(type == 'textarea'){
                                                 return renderHtml`
-                                                    <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}">${value}</textarea>
-                                                `
-                                            }
-                                            if(type == 'markdown'){
-                                                return renderHtml`
-                                                    <textarea class="ps-textarea${error ? ' ps-is-error' : ''}" name="${name}" data-node-wrapper="anchor" data-target="_overlay" data-href="&_part=markdown-editor">${value}</textarea>
-                                                `
+                                                    <textarea class="textarea${error ? ' is-error' : ''}" name="${name}"${nodeWrapper ? renderHtml` data-node-wrapper="${nodeWrapper}"` : undefined}>${value}</textarea>
+                                                `;
                                             }
                                             if(type == 'checkbox'){
                                                 return renderHtml`
-                                                    <input class="ps-input${error ? ' ps-is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''} />
-                                                `
+                                                    <input class="input${error ? ' is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${nodeWrapper ? renderHtml` data-node-wrapper="${nodeWrapper}"` : undefined}>
+                                                `;
                                             }
                                             return renderHtml`
-                                                <input class="ps-input${error ? ' ps-is-error' : ''}" name="${name}" type="${type}" value="${value}">
-                                            ` 
+                                                <input class="input${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}"${nodeWrapper ? renderHtml` data-node-wrapper="${nodeWrapper}"` : undefined}>
+                                            `;
                                         }}
                                         ${() => {
                                             if(error){
                                                 return renderHtml`
-                                                    <p class="ps-is-error">${error}</p>
-                                                `
+                                                    <p class="is-error">${error}</p>
+                                                `;
                                             }
                                         }}
                                     </div>
                                 `;
                             })}
                         </div>
-                        <div class="ps-card-footer">
-                            <button class="ps-button" type="submit">${submitTitle}</button>
-                            <button class="ps-button" data-node-wrapper="anchor" data-action="remove">${cancelTitle}</button>
+                        <div class="card-footer">
+                            <button class="button" type="submit">${submitTitle}</button>
+                            <button class="button" data-node-wrapper="anchor" data-action="remove">${cancelTitle}</button>
                         </div>
                     </div>
             </div>
         `;
-    },
-
-    async renderMarkdownEditor(){
-        const { renderHtml, params } = this;
-        const { value = '' } = params;
-
-        return renderHtml`
-            <div class="ps-modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
-                <button data-node-wrapper="anchor" data-action="remove"></button>
-                <div class="ps-markdown-editor" data-autosubmit="true" data-node-wrapper="markdown-editor">
-                    <div class="ps-markdown-editor-text-pane">
-                        <textarea name="value">${value}</textarea>
-                    </div>
-                    <div class="ps-markdown-editor-preview-pane" data-url="&_part=markdown-editor-preview" data-node-wrapper="frame"></div>
-                </div>
-            </div>
-        `;
-    },
-
-    renderMarkdownEditorPreview(){
-        const { renderMarkdown, params: { value = '' } } = this;
-        return renderMarkdown(value);
     }
 }
 
@@ -194,6 +156,7 @@ const extractFields = (formAdapter, options) => {
         out.name = optionsField.name;
         out.label = optionsField.label || formAdapterField.label || capitalize(out.name);
         out.type = optionsField.type || formAdapterField.type || 'text';
+        out.nodeWrapper = optionsField.nodeWrapper || formAdapterField.nodeWrapper;
         out.value = formAdapterField.value;
         return out;
     });

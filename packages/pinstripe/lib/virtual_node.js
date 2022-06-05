@@ -173,3 +173,5 @@ export const VirtualNode = Base.extend().include({
 });
 
 const escapeHtml = html => html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
+
+export const parseHtml = html => VirtualNode.fromString(html);

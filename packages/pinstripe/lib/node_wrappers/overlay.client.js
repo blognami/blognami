@@ -30,9 +30,9 @@ export default {
 
         delete this.parent._overlayChild;
         
-        if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('.ps-overlay')).length){
+        if(!this.document.descendants.find(node => node.is('body')).children.filter((child) => child.is('.overlay')).length){
             this.document.descendants.filter(node => node.is('html')).forEach(node => {
-                node.removeClass('ps-has-overlay');
+                node.removeClass('has-overlay');
             })
         }
     }

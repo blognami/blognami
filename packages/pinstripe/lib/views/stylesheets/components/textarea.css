@@ -1,0 +1,10 @@
+.textarea {
+    border: 0.1rem solid #dbdbdb;
+    width: 100%;
+    min-height: 7em;
+    border-radius: 0.4rem;
+    padding-bottom: calc(0.5em - 0.1rem);
+    padding-left: calc(0.75em - 0.1rem);
+    padding-right: calc(0.75em - 0.1rem);
+    padding-top: calc(0.5em - 0.1rem);
+}

@@ -18,16 +18,16 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
     return renderView('_layout', {
         title: post.title,
         body: renderHtml`
-            <section class="bn-section">
-                <article class="bn-article">
-                    <header class="bn-article-header bn-canvas">
-                        <span class="bn-article-meta">
+            <section class="section">
+                <article class="article">
+                    <header class="article-header canvas">
+                        <span class="article-meta">
                             By <a href="/${postUser.slug}">${postUser.name}</a>
                             
                             ${async () => {
                                 if(await post.tags.count() > 0) return renderHtml`
                                     in
-                                    ${post.tags.all().map(({ slug, name }, i) => renderHtml`${i > 0 ? ', ' : ''}<a class="bn-article-tag" href="/${slug}">${name}</a>`)}
+                                    ${post.tags.all().map(({ slug, name }, i) => renderHtml`${i > 0 ? ', ' : ''}<a class="article-tag" href="/${slug}">${name}</a>`)}
                                 `;
                             }}
                             —
@@ -36,30 +36,30 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                         
                         ${() => {
                             if(isAdmin) return renderHtml`
-                                <div class="bn-editable-area">
-                                    <div class="bn-editable-area-header">
-                                        <a class="bn-editable-area-button" href="/admin/edit_post_title?id=${post.id}" target="_overlay">Edit</a>
+                                <div class="editable-area">
+                                    <div class="editable-area-header">
+                                        <a class="editable-area-button" href="/admin/edit_post_title?id=${post.id}" target="_overlay">Edit</a>
                                     </div>
-                                    <div class="bn-editable-area-body">
-                                        <h1 class="bn-article-title">${post.title}</h1>
+                                    <div class="editable-area-body">
+                                        <h1 class="article-title">${post.title}</h1>
                                     </div>
                                 </div>
                             `;
                             return renderHtml`
-                                <h1 class="bn-article-title">${post.title}</h1>
+                                <h1 class="article-title">${post.title}</h1>
                             `;
                         }}
 
                     </header>
 
-                    <div class="bn-content bn-canvas">
+                    <div class="content canvas">
                         ${() => {
                             if(isAdmin) return renderHtml`
-                                <div class="bn-editable-area">
-                                    <div class="bn-editable-area-header">
-                                        <a class="bn-editable-area-button" href="/admin/edit_post_body?id=${post.id}" target="_overlay">Edit</a>
+                                <div class="editable-area">
+                                    <div class="editable-area-header">
+                                        <a class="editable-area-button" href="/admin/edit_post_body?id=${post.id}" target="_overlay">Edit</a>
                                     </div>
-                                    <div class="bn-editable-area-body bn-content bn-canvas">
+                                    <div class="editable-area-body content canvas">
                                         ${renderMarkdown(post.body)}
                                     </div>
                                 </div>
@@ -69,13 +69,13 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
 
                         ${() => {
                             if(isAdmin) return renderHtml`
-                                <div class="bn-editable-area">
-                                    <div class="bn-editable-area-header">
-                                        <a class="bn-editable-area-button" href="/admin/edit_post_meta?id=${post.id}" target="_overlay">Edit</a>
+                                <div class="editable-area">
+                                    <div class="editable-area-header">
+                                        <a class="editable-area-button" href="/admin/edit_post_meta?id=${post.id}" target="_overlay">Edit</a>
                                     </div>
-                                    <div class="bn-editable-area-body">
-                                        <section class="bn-section">
-                                            <h3 class="bn-section-title">Meta</h3>
+                                    <div class="editable-area-body">
+                                        <section class="section">
+                                            <h3 class="section-title">Meta</h3>
                                             <p><b>Slug:</b> ${post.slug}</p>
                                             <p><b>Tags:</b> ${async () => {
                                                 const tags = await post.tags.all().map(({ name }) => `"${name}"`).join(', ');
@@ -88,11 +88,11 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                                     </div>
                                 </div>
 
-                                <section class="bn-section">
-                                    <h3 class="bn-section-title">Danger area</h3>
+                                <section class="section">
+                                    <h3 class="section-title">Danger area</h3>
                                     <p>
                                         <button
-                                            class="ps-button is-primary"
+                                            class="button is-primary"
                                             data-node-wrapper="anchor"
                                             data-method="post"
                                             data-href="/admin/delete_post?id=${post.id}"
@@ -106,27 +106,27 @@ export default async ({ params, renderHtml, renderMarkdown, formatDate, renderVi
                         
                     </div>
 
-                    <footer class="bn-article-footer bn-canvas">
-                        <nav class="bn-navigation">
-                            <div class="bn-navigation-previous">
+                    <footer class="article-footer canvas">
+                        <nav class="navigation">
+                            <div class="navigation-previous">
                                 ${() => {
                                     if(previousPost) return renderHtml`
-                                        <a class="bn-navigation-link" href="/${previousPost.slug}">
-                                            <span class="bn-navigation-label">Previous issue</span>
-                                            <h4 class="bn-navigation-title">${previousPost.title}</h4>
+                                        <a class="navigation-link" href="/${previousPost.slug}">
+                                            <span class="navigation-label">Previous issue</span>
+                                            <h4 class="navigation-title">${previousPost.title}</h4>
                                         </a>
                                     `;
                                 }}
                             </div>
 
-                            <div class="bn-navigation-middle"></div>
+                            <div class="navigation-middle"></div>
 
-                            <div class="bn-navigation-next">
+                            <div class="navigation-next">
                                 ${() => {
                                     if(nextPost) return renderHtml`
-                                        <a class="bn-navigation-link" href="/${nextPost.slug}">
-                                            <span class="bn-navigation-label">Next issue</span>
-                                            <h4 class="bn-navigation-title">${nextPost.title}</h4>
+                                        <a class="navigation-link" href="/${nextPost.slug}">
+                                            <span class="navigation-label">Next issue</span>
+                                            <h4 class="navigation-title">${nextPost.title}</h4>
                                         </a>
                                     `;
                                 }}

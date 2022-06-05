@@ -2,92 +2,92 @@
 created within the Ghost editor. The main content handles
 headings, text, images and lists. We deal with cards lower down. */
 
-.bn-content {
+.content {
     margin-top: 4rem;
 }
 
 /* Default vertical spacing */
-.bn-content > * + * {
+.content > * + * {
     margin-top: 2.8rem;
     margin-bottom: 0;
 }
 
 /* [id] represents all headings h1-h6, reset all margins */
-.bn-content > [id] {
+.content > [id] {
     margin: 0;
 }
 
 /* Add back a top margin to all headings, unless a heading
 is the very first element in the post content */
-.bn-content > [id]:not(:first-child) {
+.content > [id]:not(:first-child) {
     margin-top: 4.8rem;
 }
 
 /* Add a small margin between a heading and anything after it */
-.bn-content > [id] + * {
+.content > [id] + * {
     margin-top: 1.6rem;
 }
 
 /* A larger margin before/after HRs and blockquotes */
-.bn-content > hr,
-.bn-content > blockquote {
+.content > hr,
+.content > blockquote {
     position: relative;
     margin-top: 4rem;
 }
 
-.bn-content > hr + *,
-.bn-content > blockquote + * {
+.content > hr + *,
+.content > blockquote + * {
     margin-top: 4rem;
 }
 
 /* Now the content typography styles */
-.bn-content h3 {
+.content h3 {
     font-weight: 600;
 }
 
-.bn-content a {
+.content a {
     color: var(--accent-color);
     text-decoration: underline;
     word-break: break-word;
 }
 
-.bn-content > blockquote:not([class]),
-.bn-content > ol,
-.bn-content > ul,
-.bn-content > dl,
-.bn-content > p {
+.content > blockquote:not([class]),
+.content > ol,
+.content > ul,
+.content > dl,
+.content > p {
     font-size: var(--content-font-size, 1.9rem);
     letter-spacing: var(--content-letter-spacing, 0);
 }
 
-.bn-content ul,
-.bn-content ol,
-.bn-content dl {
+.content ul,
+.content ol,
+.content dl {
     padding-left: 2.8rem;
 }
 
-.bn-content li + li {
+.content li + li {
     margin-top: 0.8rem;
 }
 
 @media (max-width: 767px) {
-    .bn-content {
+    .content {
         margin-top: 3.2rem;
     }
 
-    .bn-content > * + * {
+    .content > * + * {
         margin-top: 2rem;
     }
 
-    .bn-content > [id]:not(:first-child) {
+    .content > [id]:not(:first-child) {
         margin-top: 3.2rem;
     }
 
-    .bn-content > blockquote:not([class]),
-    .bn-content > ol,
-    .bn-content > ul,
-    .bn-content > dl,
-    .bn-content > p {
+    .content > blockquote:not([class]),
+    .content > ol,
+    .content > ul,
+    .content > dl,
+    .content > p {
         font-size: 1.7rem;
     }
 }

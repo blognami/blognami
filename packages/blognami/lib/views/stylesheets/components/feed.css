@@ -1,33 +1,33 @@
 
-.bn-feed-item + .bn-feed-item {
+.feed-item + .feed-item {
     margin-top: 8rem;
 }
 
-.bn-feed-item-link {
+.feed-item-link {
     display: block;
 }
 
-.bn-feed-item-link:hover {
+.feed-item-link:hover {
     opacity: 1;
 }
 
-.bn-feed-item-title {
+.feed-item-title {
     font-size: 3.4rem;
     font-weight: 600;
 }
 
-.bn-feed-item-link:hover .bn-feed-item-title {
+.feed-item-link:hover .feed-item-title {
     opacity: 0.8;
 }
 
-.bn-feed-item-excerpt {
+.feed-item-excerpt {
     margin-top: 1.2rem;
     font-size: 1.8rem;
     line-height: 1.5;
     letter-spacing: -0.01em;
 }
 
-.bn-feed-item-meta {
+.feed-item-meta {
     margin-top: 2rem;
     font-size: 1.2rem;
     font-weight: 500;
@@ -36,27 +36,27 @@
     text-transform: uppercase;
 }
 
-.bn-feed-item-date {
+.feed-item-date {
     color: var(--accent-color);
 }
 
-.bn-feed-item-meta-wrapper {
+.feed-item-meta-wrapper {
     display: inline-flex;
     align-items: center;
 }
 
-.bn-featured .bn-feed-item + .bn-feed-item {
+.featured .feed-item + .feed-item {
     margin-top: 2.8rem;
 }
 
-.bn-featured .bn-feed-item-title {
+.featured .feed-item-title {
     font-size: 1.9rem;
     font-weight: 600;
     line-height: 1.25;
     letter-spacing: -0.01em;
 }
 
-.bn-featured .bn-feed-item-excerpt {
+.featured .feed-item-excerpt {
     margin-top: 0.8rem;
     font-family: var(--font-sans);
     font-size: inherit;
@@ -65,11 +65,11 @@
     letter-spacing: 0;
 }
 
-.bn-featured .bn-feed-item-meta {
+.featured .feed-item-meta {
     margin-top: 1.6rem;
 }
 
-.bn-feed-loadmore {
+.feed-loadmore {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -87,16 +87,16 @@
     border: 1px solid var(--color-light-gray);
 }
 
-.bn-feed-loadmore:hover {
+.feed-loadmore:hover {
     border-color: var(--color-mid-gray);
 }
 
 @media (max-width: 767px) {
-    .bn-feed-item + .bn-feed-item {
+    .feed-item + .feed-item {
         margin-top: 6.4rem;
     }
 
-    .bn-feed-loadmore {
+    .feed-loadmore {
         margin-top: 6.4rem;
     }
 }
