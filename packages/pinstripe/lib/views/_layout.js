@@ -4,8 +4,8 @@ export default async ({ params: { title, body, isSignedIn, user }, renderHtml })
     <html>
         <head>
             <title>${title}</title>
-            <link rel="stylesheet" href="/stylesheets/all.css">
-            <script src="/bundle.js"></script>
+            <link rel="stylesheet" href="/assets/stylesheets/all.css">
+            <script src="/assets/javascripts/all.js"></script>
         </head>
         <body>
             <nav class="navbar" role="navigation" aria-label="main navigation">        
