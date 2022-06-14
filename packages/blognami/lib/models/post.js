@@ -15,7 +15,7 @@ export default {
             if(this.published && !this.publishedAt){
                 this.publishedAt = new Date();
             }
-        })
+        });
     },
 
     get readingMinutes(){

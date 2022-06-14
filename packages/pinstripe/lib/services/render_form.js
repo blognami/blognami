@@ -1,8 +1,6 @@
 
 import { ValidationError } from '../validation_error.js';
 import { capitalize } from '../inflector.js';
-import { Base } from '../base.js';
-import { Validatable } from '../validatable.js';
 
 export default {
     create(){
@@ -12,7 +10,7 @@ export default {
     async render(formAdaptable, options = {}){
         const { params, renderHtml } = this;
 
-        const formAdapter = await (typeof formAdaptable.toFormAdapter == 'function' ? formAdaptable.toFormAdapter() : createObjectFormAdapter(formAdaptable));
+        const formAdapter = await formAdaptable.toFormAdapter();
         
         const values = {};
         normalizeFields(options.fields || formAdapter.fields).forEach(({ name }) => {
@@ -85,7 +83,7 @@ export default {
                                     `
                                 }
                             }}
-                            ${fields.map(({ label, name, type, value, nodeWrapper, error }) => {
+                            ${fields.map(({ label, name, type, value, nodeWrapper, placeholder, error }) => {
                                 if(type == 'hidden'){
                                     return renderHtml`
                                         <input type="hidden" name="${name}" value="${value}">
@@ -97,7 +95,7 @@ export default {
                                         ${() => {
                                             if(type == 'textarea'){
                                                 return renderHtml`
-                                                    <textarea class="textarea${error ? ' is-error' : ''}" name="${name}"${nodeWrapper ? renderHtml` data-node-wrapper="${nodeWrapper}"` : undefined}>${value}</textarea>
+                                                    <textarea class="textarea${error ? ' is-error' : ''}" name="${name}"${nodeWrapper ? renderHtml` data-node-wrapper="${nodeWrapper}"` : undefined}${placeholder ? renderHtml` placeholder="${placeholder}"` : undefined}>${value}</textarea>
                                                 `;
                                             }
                                             if(type == 'checkbox'){
@@ -106,7 +104,7 @@ export default {
                                                 `;
                                             }
                                             return renderHtml`
-                                                <input class="input${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}"${nodeWrapper ? renderHtml` data-node-wrapper="${nodeWrapper}"` : undefined}>
+                                                <input class="input${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}"${nodeWrapper ? renderHtml` data-node-wrapper="${nodeWrapper}"` : undefined}${placeholder ? renderHtml` placeholder="${placeholder}"` : undefined}>
                                             `;
                                         }}
                                         ${() => {
@@ -157,31 +155,9 @@ const extractFields = (formAdapter, options) => {
         out.label = optionsField.label || formAdapterField.label || capitalize(out.name);
         out.type = optionsField.type || formAdapterField.type || 'text';
         out.nodeWrapper = optionsField.nodeWrapper || formAdapterField.nodeWrapper;
+        out.placeholder = optionsField.placeholder || formAdapterField.placeholder;
         out.value = formAdapterField.value;
         return out;
     });
 };
 
-const createObjectFormAdapter = object => {
-    const title = object.title || 'Submit';
-    const fields = normalizeFields(object.fields) || [];
-    const submitTitle = object.submitTitle || title;
-    const cancelTitle = object.cancelTitle || 'Cancel';
-    const success = object.success || (() => {});
-    const model = Base.extend().include({
-        meta(){
-            this.include(Validatable);
-            this.include(object.model || {});
-        }
-    }).new();
-
-    return {
-        title, fields, submitTitle, cancelTitle,
-        
-        async submit(values, _success){
-            Object.assign(model, values);
-            await model.validate();
-            return _success(model) || success(model);
-        }
-    }
-};

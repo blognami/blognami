@@ -21,7 +21,6 @@ export default async ({ tenants, site, users, posts }) => {
     const user = await users.insert({
         name: 'Admin',
         email: 'admin@example.com',
-        password: 'secret',
         role: 'admin'
     });
 

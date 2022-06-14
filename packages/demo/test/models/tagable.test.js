@@ -19,7 +19,6 @@ test(`tagable`, async () => {
     const user = await users.insert({
         name: 'Admin',
         email: 'admin@example.com',
-        password: 'secret',
         role: 'admin'
     });
 

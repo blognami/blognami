@@ -112,8 +112,11 @@ Adapter.register('mysql').include({
                 });
             },
 
-            async _fetchRows(sql){
+            async getUnixTimestamp(){
+                return Object.values((await this.run`select unix_timestamp()`).pop()).pop();
+            },
 
+            async _fetchRows(sql){
                 return this._mapRows(await new Promise((resolve, reject) => {
                     const query = buildQuery(sql);
                     if(query.match(/^\s*(create|drop|alter)/im)){

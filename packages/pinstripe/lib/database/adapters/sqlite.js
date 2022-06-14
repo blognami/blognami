@@ -86,6 +86,10 @@ Adapter.register('sqlite').include({
                 // do nothing
             },
 
+            async getUnixTimestamp(){
+                return parseInt(Object.values((await this.run`select strftime('%s', 'now')`).pop()).pop());
+            },
+
             async _fetchRows(sql){
                 return this._mapRows(await new Promise((resolve, reject) => {
                     const [ query, params ] = buildQuery(sql);

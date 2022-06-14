@@ -68,6 +68,8 @@ export const Database = Base.extend().include({
 
     destroy: deligateToAdapter('destroy'),
 
+    getUnixTimestamp: deligateToAdapter('getUnixTimestamp'),
+
     async __getMissing(name){
         if(Union.classes[name]){
             return Union.create(name, this);
