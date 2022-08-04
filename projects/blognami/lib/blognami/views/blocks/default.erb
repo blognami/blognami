@@ -1,0 +1,20 @@
+<%
+    prefix = params[:_path].sub(/\A\/blocks\//, '');
+
+    names = Slick::View
+        .registered_classes
+        .keys
+        .select{|name| name.match(/\Ablocks\/.+/) && name != 'blocks/default'}
+        .map{|name| name.sub(/\Ablocks\//, '')}
+        .filter{|name| name.start_with?(prefix)}
+        .sort
+%>
+<div class="default-block">
+    <p>Insert block:</p>
+    <ul>
+        <% names.each do |name| %>
+            <% li name, "data-node-wrapper" => "markdown-editor/line-inserter", "data-line-content" => "/#{name}" %>
+        <% end %>
+    </ul>
+</div>
+

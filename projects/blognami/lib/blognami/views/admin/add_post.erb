@@ -1,0 +1,8 @@
+<%
+    render_form(posts, {
+        fields: [ :user_id, :title ],
+        success: Proc.new do |post|
+            span "data-node-wrapper" => "anchor", "data-href" => "/#{post.slug}", "data-target" => "_top", "data-trigger" => "click"
+        end
+    })
+%>

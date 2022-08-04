@@ -1,0 +1,6 @@
+<%
+    render_form(posts.id_eq(params[:id]).first, {
+        fields: ['title']
+    })
+%>
+

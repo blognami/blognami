@@ -1,0 +1,37 @@
+<% 
+    
+    posts = database.posts;
+    
+    if signed_in?
+        posts = posts.order_by(:published, :asc)
+    else
+        posts = posts.published_eq(true)
+    end
+
+    posts = posts.order_by(:published_at, :desc)
+    
+    page_size = params[:page_size] ? params[:page_size].to_i : 10;
+
+    posts = posts.paginate(1, page_size); 
+%>
+
+
+<% render_view "_layout" do %>
+    <section class="section">
+        <h2 class="section-title">Latest posts</h2>
+
+        <div class="feed">
+            <% render_view '_posts', posts: posts %>
+        </div>
+
+        <% if posts.count == 0 %>
+            Additional posts will be published soon.
+        <% end %>
+
+        <% if posts.all.count < posts.count %>
+            <% button "Load more posts",  :class => "feed-loadmore btn", "data-node-wrapper" => "anchor", "data-method" => "post", "data-href" => "/?page_size=#{page_size + 10}" %>
+        <% end %>
+
+
+    </section>
+<% end %>

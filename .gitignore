@@ -1,9 +1,11 @@
 
 node_modules/
 build/
+pkg/
 
 *.db
 *.log
 .DS_Store
 bundle.css
 bundle.css.map
+Gemfile.lock

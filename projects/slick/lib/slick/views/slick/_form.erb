@@ -1,0 +1,59 @@
+<%
+    method = params[:method]
+    title = params[:title]
+    fields = params[:fields]
+    submit_title = params[:submit_title]
+    cancel_title = params[:cancel_title]
+    unsaved_changes_confirm = params[:unsaved_changes_confirm]
+    other_errors = params[:other_errors]
+%>
+
+<div class="modal" data-node-wrapper="anchor" data-action="remove" data-ignore-events-from-children="true">
+    <button data-node-wrapper="anchor" data-action="remove"></button>
+    <% form :class => "card", :method => "post", :enctype => "multipart/form-data", :autocomplete => "off", "data-unsaved-changes-confirm" => unsaved_changes_confirm, "data-has-unsaved-changes" => (method == 'post' ? "true" : nil) do %>
+        <div class="card-header">
+            <p class="card-header-title"><%= title %></p>
+        </div>
+        <div class="card-body">
+            <% if other_errors.length > 0 %>
+                <div class="field">
+                    <% other_errors.each do |i, error| %>
+                        <p class="is-error"><%= error %></p>
+                    <% end %>
+                </div>
+            <% end %>
+            <% fields.each do |i, field| %>
+                <% if field[:type] == 'hidden' %>
+                    <% input :type => "hidden", :name=> field[:name], :value => field[:value] %>
+                <% else %>
+                    <div>
+                        <label class="label"><%= field[:label] %></label>
+                        <%
+                            type = field[:type]
+                            name = field[:name]
+                            value = field[:value]
+                            node_wrapper = field[:node_wrapper]
+                            placeholder = field[:placeholder]
+                            error = field[:error]
+
+                            if type == 'textarea'
+                                textarea value, :class => "textarea#{error ? ' is-error' : ''}", :name => name, "data-node-wrapper" => node_wrapper, :placeholder => placeholder
+                            elsif type == 'checkbox'
+                                input :class => "input#{error ? ' is-error' : ''}", :type => "checkbox", :name => name, :checked => !value.nil?, "data-node-wrapper" => node_wrapper
+                            else
+                                input :class => "input#{error ? ' is-error' : ''}", :name => name, :type => type, :value => value, "data-node-wrapper" => node_wrapper, :placeholder => placeholder
+                            end
+
+                            p error, :class => "is-error" if error
+                        
+                        %>
+                    </div>
+                <% end %>
+            <% end %>
+        </div>
+        <div class="card-footer">
+            <button class="button" type="submit"><%= submit_title %></button>
+            <button class="button" data-node-wrapper="anchor" data-action="remove"><%= cancel_title %></button>
+        </div>
+    <% end %>
+</div>

@@ -1,0 +1,19 @@
+<% if !role?(:admin) %>
+    <%
+        response.headers = 403
+    %>
+    <div class="modal" data-node-wrapper="anchor" data-target="_top" data-ignore-events-from-children="true">
+        <button data-node-wrapper="anchor" data-target="_top"></button>
+        <div class="card">
+            <div class="card-header">
+                <p class="card-header-title">Access denied</p>
+            </div>
+            <div class="card-body">
+                <p>You need to be an &quot;admin&quot; user to do this.</p>
+            </div>
+            <div class="card-footer">
+                <button data-node-wrapper="anchor" data-target="_top">OK</button>
+            </div>
+        </div>
+    </div>
+<% end %>

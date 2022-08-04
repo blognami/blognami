@@ -1,0 +1,8 @@
+<%
+    render_form(pages, {
+        fields: [ :user_id, :title ],
+        success: Proc.new do |page|
+            span "data-node-wrapper" => "anchor", "data-href" => "/#{page.slug}", "data-target" => "_top", "data-trigger" => "click"
+        end
+    })
+%>

@@ -1,0 +1,7 @@
+<%
+    slug = params[:_path].sub(/\A\//, '')
+    pageable = pageables.slug_eq(slug).first
+    render_view "pageables/_#{pageable.class.name}", Hash[pageable.class.name, pageable, :page_size, params[:page_size]] if pageable
+    render_view "_404" if response.body.length == 0
+%>
+

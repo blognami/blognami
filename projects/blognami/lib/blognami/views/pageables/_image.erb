@@ -1,0 +1,4 @@
+<%
+    response.headers["Content-Type"] = params[:image].type
+    echo params[:image].data
+%>

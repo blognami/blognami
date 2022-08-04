@@ -1,0 +1,22 @@
+
+<% params.posts.each do |post| %>
+    <article class="feed-item">
+        <% a :class => "feed-item-link", :href => "/#{post.slug}" do %>
+            <header class="feed-item-header">
+                <h2 class="feed-item-title"><%= post.title %></h2>
+            </header>
+
+            <div class="feed-item-excerpt"><%= post.excerpt_from_body %></div>
+
+            <footer class="feed-item-meta">
+                <% if post.published_at %>
+                    <% time post.published_at.strftime("%b %d, %Y"), :class => "feed-item-date", :datetime => post.published_at.strftime("%Y-%m-%d") %>
+                    —
+                <% end %>
+                <span class="feed-item-meta-wrapper">
+                    <span class="feed-item-duration"><%= post.reading_minutes %> min read</span>
+                </span>
+            </footer>
+        <% end %>
+    </article>
+<% end %>

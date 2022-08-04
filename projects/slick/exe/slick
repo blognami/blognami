@@ -1,0 +1,8 @@
+
+if ENV['BUNDLER_VERSION'].nil? && system('bundle info slick > /dev/null 2>&1')
+    exec "bundle exec slick #{ARGV.map{|a| "\"#{a.gsub(/\"/, '\"')}\""}.join(' ')}"
+else
+    require "slick"
+
+    Slick::Command.run(*ARGV)
+end

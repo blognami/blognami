@@ -1,0 +1,7 @@
+<%
+    if site.nil?
+        response.status = 404
+        response.headers['Content-Type'] = 'text/plain'
+        response.body << 'Not found'
+    end
+%>

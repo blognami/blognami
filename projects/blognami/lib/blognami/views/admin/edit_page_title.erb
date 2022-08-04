@@ -1,0 +1,5 @@
+<%
+    render_form(pages.id_eq(params[:id]).first, {
+        fields: ['title']
+    })
+%>
