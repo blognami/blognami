@@ -1,42 +1,37 @@
 
-import { Base } from './base.js';
 import { unescapeHtml } from './unescape_html.js';
 import { StringReader } from './string_reader.js';
 import { SELF_CLOSING_TAGS, TEXT_ONLY_TAGS } from './constants.js';
 
-const CloseTag = Base.extend().include({
-    initialize(type){
+class CloseTag {
+    constructor(type){
         this.type = type;
     }
-});
+}
 
+export class VirtualNode {
 
-export const VirtualNode = Base.extend().include({
-    meta(){
-        this.assignProps({
-            fromString(html){
-                const out = new this();
-                out.appendHtml(html);
-                return out;
-            },
-        
-            deserialize(o, parent = null){
-                const { type, attributes, children } = typeof o == 'string' ? JSON.parse(o) : o;
-                const out = new this(parent, type, attributes);
-                out.children = children.map(
-                    child => this.deserialize(child, this)
-                );
-                return out;
-            }
-        });
-    },
-    
-    initialize(parent = null, type = '#fragment', attributes = {}){
+    static fromString(html){
+        const out = new this();
+        out.appendHtml(html);
+        return out;
+    }
+
+    static deserialize(o, parent = null){
+        const { type, attributes, children } = typeof o == 'string' ? JSON.parse(o) : o;
+        const out = new this(parent, type, attributes);
+        out.children = children.map(
+            child => this.deserialize(child, this)
+        );
+        return out;
+    }
+
+    constructor(parent = null, type = '#fragment', attributes = {}){
         this.parent = parent;
         this.type = type;
         this.attributes = attributes;
         this.children = [];
-    },
+    }
 
     get text(){
         const out = [];
@@ -46,13 +41,13 @@ export const VirtualNode = Base.extend().include({
             }
         });
         return out.join('');
-    },
+    }
 
     appendNode(type, attributes = {}){
         const out = new this.constructor(this, type, attributes);
         this.children.push(out);
         return out;
-    },
+    }
 
     appendHtml(html){
         if(!(html instanceof StringReader)){
@@ -133,16 +128,16 @@ export const VirtualNode = Base.extend().include({
             }
         }
 
-    },
+    }
 
     traverse(fn){
         fn.call(this, this);
         this.children.forEach(child => child.traverse(fn));
-    },
+    }
 
     serialize(){
         return JSON.stringify(this, ['type', 'attributes', 'children']);
-    },
+    }
 
     toString(){
         if(this.type == '#doctype') return '<!DOCTYPE html>';
@@ -170,7 +165,7 @@ export const VirtualNode = Base.extend().include({
         if(this.type != '#fragment' && !SELF_CLOSING_TAGS.includes(this.type)) out.push(`</${this.type}>`);
         return out.join('');
     }
-});
+}
 
 const escapeHtml = html => html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\"/g, "&quot;");
 

@@ -206,6 +206,8 @@ Slick::Database::Adapter.register :mysql do
                         type = 'primary_key'
                     elsif name == 'id'
                         type = 'alternate_key'
+                    elsif name.match(/_id\z/)
+                        type = 'foreign_key'
                     else
                         type = Slick::Database::Adapter::MYSQL_COLUMN_TYPE_TO_TYPE_MAP[
                             row['Type']

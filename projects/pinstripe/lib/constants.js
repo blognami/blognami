@@ -11,6 +11,7 @@ export const SELF_CLOSING_TAGS = [
     'link',
     'meta',
     'param',
+    'slot',
     'source',
     'track'
 ];

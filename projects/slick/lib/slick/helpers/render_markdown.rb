@@ -20,7 +20,7 @@ Slick::Helpers.define_method :render_markdown do |stringable, options = {}|
                     slash_block_node = node.replace("<div></div>").first
                     slash_block_node.attributes.merge!({
                         :class => "frame",
-                        'data-node-wrapper': 'frame',
+                        'data-decorator': 'pinstripe-frame',
                         'data-line-number' => line_number,
                         'data-url' => "/blocks/#{name.url_escape}?args=#{args.url_escape}"
                     })

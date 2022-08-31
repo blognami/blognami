@@ -1,5 +1,5 @@
 
-import './node_wrappers/index.js';
+import './decorators/index.js';
 import './initialize.js';
 
-export { defineNodeWrapper } from './node_wrapper.js';
+export { defineDecorator } from './node_wrapper.js';

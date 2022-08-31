@@ -1,6 +1,4 @@
 
-import { Url } from '../url.js';
-
 export function loadFrame(confirm, target, method, url){
     if(confirm && !window.confirm(confirm)){
         return;
@@ -9,10 +7,8 @@ export function loadFrame(confirm, target, method, url){
     let frame;
     
     if(target == '_overlay'){
-        this.document.descendants.filter(node => node.is('html')).forEach(node => {
-            node.addClass('has-overlay');
-        });
-        frame = this.document.descendants.find(node => node.is('body')).append(`<div class="overlay" data-node-wrapper="overlay" data-load-on-init="false"></div>`).pop();
+        this.document.body.clip();
+        frame = this.document.descendants.find(node => node.is('body')).append(`<pinstripe-overlay load-on-init="false"></div>`).pop();
         frame._parent = this;
         this._overlayChild = frame;
     } else {
@@ -20,12 +16,20 @@ export function loadFrame(confirm, target, method, url){
         if(!frame) return;
     }
 
-    url = Url.fromString(url || frame.url, this.frame.url);
+    url = new URL(url || frame.url, this.frame.url);
     if(url.host != frame.url.host || url.port != frame.url.port){
         return;
     }
 
-    frame.load({ ...this.values, _method: method, _url: url });
+
+    if(method.match(/POST|PUT|PATCH/i)){
+        const formData = new FormData();
+        const values = this.values;
+        Object.keys(values).forEach((name) => formData.append(name, values[name]));
+        frame.load(url, { method, body: formData });
+    } else {
+        frame.load(url, { method });
+    }    
 }
 
 export function removeFrame(confirm, target){

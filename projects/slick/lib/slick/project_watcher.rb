@@ -37,6 +37,8 @@ class Slick::ProjectWatcher
                 @child_process_pid = Process.fork
                 break if !@child_process_pid
             end
+
+            sleep 1
         end
     end
 

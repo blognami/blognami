@@ -1,5 +1,5 @@
 <%
     render_form(posts.id_eq(params[:id]).first, {
-        fields: [{ name: 'body', type: 'textarea', node_wrapper: 'markdown-editor/anchor'}]
+        fields: [{ name: 'body', type: 'textarea', decorator: 'pinstripe-markdown-editor/anchor'}]
     })
 %>

@@ -1,50 +1,42 @@
 
-import { Base } from './base.js';
-import { initializeRegistries } from './registrable.js';
 import { VirtualNode } from './virtual_node.js';
 import { EventWrapper } from './event_wrapper.js';
-import { overload } from './overload.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
-import { Registrable } from './registrable.js';
+import { assignProps } from './assign_props.js';
 
-export const NodeWrapper = Base.extend().include({
-    meta(){
+const decorators = {};
 
-        this.include(Registrable);
+export class NodeWrapper {
 
-        const { register } = this;
+    static defineDecorator(name, fn){
+        const previousFn = decorators[name];
+        decorators[name] = function(){
+            fn.call(this, previousFn);
+        };
+    }
 
-        this.assignProps({
-            register(name, ...args){
-                return register.call(this, dasherize(name),  ...args);
-            },
+    static instanceFor(node){
+        if(!node._nodeWrapper){
+            const nodeWrapper = new NodeWrapper(node);
+            node._nodeWrapper = nodeWrapper;
+            const decoratorNames = [];
+            decoratorNames.push(nodeWrapper.type);
+            decoratorNames.push('*');
+            if(nodeWrapper.attributes['data-decorator']) decoratorNames.push(nodeWrapper.attributes['data-decorator']);
+            while(decoratorNames.length){
+                nodeWrapper.apply(decoratorNames.shift());
+            }
+            nodeWrapper.trigger('init', { bubbles: false });
+        }
+        return node._nodeWrapper;
+    }
 
-            instanceFor(node){
-                if(!node._nodeWrapper){
-                    initializeRegistries();
-
-                    node._nodeWrapper = NodeWrapper.new(node, true);
-
-                    const { nodeWrapper = node._nodeWrapper.type == '#document' ? 'document' : undefined } = node._nodeWrapper.data;
-
-                    if(nodeWrapper) {
-                        node._nodeWrapper = this.create(nodeWrapper, node);
-                    } else {
-                        node._nodeWrapper = NodeWrapper.new(node);
-                    }
-
-                    node._nodeWrapper.trigger('init', { bubbles: false });
-                }
-                return node._nodeWrapper;
-            },
-        });
-    },
-
-    initialize(node, skipInit = false){
+    constructor(node, skipInit = false){
         this.node = node;
         this._registeredEventListeners = [];
         this._registeredObservers = [];
         this._registeredTimers = [];
+        this._registeredAbortControllers = [];
         this._virtualNodeFilters = [];
 
         if(skipInit) return;
@@ -77,11 +69,11 @@ export const NodeWrapper = Base.extend().include({
                 this.trigger(trigger);
             }, 0);
         }
-    },
+    }
 
     get type(){
         return this.node instanceof DocumentType ? '#doctype' : this.node.nodeName.toLowerCase();
-    },
+    }
 
     get attributes(){
         const out = {}
@@ -91,7 +83,7 @@ export const NodeWrapper = Base.extend().include({
             }
         }
         return out;
-    },
+    }
 
     get data(){
         const { attributes } = this;
@@ -102,7 +94,7 @@ export const NodeWrapper = Base.extend().include({
                 return;
             }
             const value = attributes[name];
-            const mappedName = camelize(matches[1]);
+            const mappedName = matches[1].toLowerCase().replace(/-[a-z]/g, item => item[1].toUpperCase());
             try {
                 out[mappedName] = JSON.parse(value);
             } catch(e){
@@ -110,19 +102,19 @@ export const NodeWrapper = Base.extend().include({
             }
         })
         return out;
-    },
+    }
 
     get text(){
         return this.node.textContent;
-    },
+    }
 
     get realParent(){
         return this.node.parentNode ? this.constructor.instanceFor(this.node.parentNode) : null;
-    },
+    }
 
     get parent(){
         return this._parent ? this._parent : this.realParent;
-    },
+    }
 
     get parents(){
         const out = []
@@ -134,13 +126,13 @@ export const NodeWrapper = Base.extend().include({
             }
         }
         return out;
-    },
+    }
 
     get children(){
         return [...this.node.childNodes].map(
             node => this.constructor.instanceFor(node)
         );
-    },
+    }
 
     get siblings(){
         if(this.parent){
@@ -148,7 +140,7 @@ export const NodeWrapper = Base.extend().include({
         } else {
             return [this];
         }
-    },
+    }
 
     get previousSibling(){
         if(this.node.previousSibling){
@@ -156,7 +148,7 @@ export const NodeWrapper = Base.extend().include({
         } else {
             return null;
         }
-    },
+    }
 
     get nextSibling(){
         if(this.node.nextSibling){
@@ -164,7 +156,7 @@ export const NodeWrapper = Base.extend().include({
         } else {
             return null;
         }
-    },
+    }
 
     get nextSiblings(){
         const out = []
@@ -174,7 +166,7 @@ export const NodeWrapper = Base.extend().include({
             out.push(current);
         }
         return out;
-    },
+    }
 
     get previousSiblings(){
         const out = []
@@ -184,7 +176,7 @@ export const NodeWrapper = Base.extend().include({
             out.push(current);
         }
         return out;
-    },
+    }
 
     get descendants(){
         const out = this.children;
@@ -192,15 +184,15 @@ export const NodeWrapper = Base.extend().include({
             out.push(...out[i].children);
         }
         return out;
-    },
+    }
 
     get isInput(){
         return this.is('input, textarea');
-    },
+    }
 
     get name(){
         return this.attributes.name;
-    },
+    }
     
     get value(){
         if(this.is('input[type="file"]')){
@@ -213,31 +205,31 @@ export const NodeWrapper = Base.extend().include({
             return this.is(':checked') ? true : false;
         }
         return this.node.value;
-    },
+    }
 
     set value(value){
         this.node.value = value;
-    },
+    }
 
     get selectionStart(){
         return this.node.selectionStart || 0;
-    },
+    }
 
     get selectionEnd(){
         return this.node.selectionEnd || 0;
-    },
+    }
 
     set selectionStart(position){
         this.node.selectionStart = position;
-    },
+    }
 
     set selectionEnd(position){
         this.node.selectionEnd = position;
-    },
+    }
 
     get inputs(){
         return this.descendants.filter((descendant) => descendant.isInput);
-    },
+    }
 
     get values(){
         const out = {}
@@ -248,31 +240,43 @@ export const NodeWrapper = Base.extend().include({
             }
         })
         return out;
-    },
+    }
 
     get frame(){
         return this.parents.find(({ isFrame }) => isFrame);
-    },
+    }
 
     get document(){
         return this.parents.find(({ isDocument }) => isDocument) || this;
-    },
+    }
 
     get overlay(){
         return this.parents.find(({ isOverlay }) => isOverlay);
-    },
+    }
+
+    get shadow(){
+        if(!this.node.shadowRoot){
+            this.node.attachShadow({ mode: 'open' });
+            this.shadow.patch(`<slot>`);
+        }
+        return NodeWrapper.instanceFor(this.node.shadowRoot);
+    }
 
     focus(){
         this.node.focus();
         return this;
-    },
+    }
 
     is(selector){
         if(typeof selector == 'function'){
             return selector.call(this, this)
         }
-        return (this.node.matches || this.node.matchesSelector || this.node.msMatchesSelector || this.node.mozMatchesSelector || this.node.webkitMatchesSelector || this.node.oMatchesSelector || (() => false)).call(this.node, selector);
-    },
+        try {
+            return matchesSelector.call(this.node, selector);
+        } catch(e){
+            return false;
+        }
+    }
 
     on(name, ...args){
         const fn = args.pop()
@@ -294,7 +298,7 @@ export const NodeWrapper = Base.extend().include({
         this._registeredEventListeners.push([name, wrapperFn]);
 
         return this;
-    },
+    }
     
     trigger(name, options = {}){
         let event;
@@ -311,19 +315,19 @@ export const NodeWrapper = Base.extend().include({
         this.node.dispatchEvent(event);
 
         return this;
-    },
+    }
 
     setTimeout(...args){
         const out = setTimeout(...args);
         this._registeredTimers.push(out);
         return out;
-    },
+    }
 
     setInterval(...args){
         const out = setInterval(...args);
         this._registeredTimers.push(out);
         return out;
-    },
+    }
 
     remove(){
         if(this.realParent){
@@ -331,20 +335,21 @@ export const NodeWrapper = Base.extend().include({
             if(this.realParent) this.realParent.node.removeChild(this.node);
         }
         return this;
-    },
+    }
 
     addClass(name){
         this.node.classList.add(name);
         return this;
-    },
+    }
 
     removeClass(name){
         this.node.classList.remove(name);
         return this;
-    },
+    }
 
-    patch: overload({
-        string(html){
+    patch(arg1){
+        if(typeof arg1 == 'string'){
+            const html = arg1;
             cleanChildren.call(this);
             if(TEXT_ONLY_TAGS.includes(this.type)){
                 insert.call(this, { type: '#text', attributes: { value: html }, children: [] });
@@ -353,81 +358,131 @@ export const NodeWrapper = Base.extend().include({
             }
             initChildren.call(this);
             return this.children;
-        },
-
-        object(attributes){
-            patchAttributes.call(this, attributes);
-            return this;
         }
-    }),
+        const attributes = arg1;
+        patchAttributes.call(this, attributes);
+        return this;
+    }
 
     append(html){
         return prepend.call(this, html);
-    },
+    }
 
     prepend(html){
         return prepend.call(this, html, this.children[0]);
-    },
+    }
 
     insertBefore(html){
         return prepend.call(this.realParent, html, this);
-    },
+    }
 
     insertAfter(html){
         return prepend.call(this.realParent, html, this.nextSibling);
-    },
+    }
 
     addVirtualNodeFilter(fn){
         this._virtualNodeFilters.push(fn);
         return this;
-    },
+    }
 
-    observe: overload({
-        ['object, function'](options, fn){
-            const { add = false, remove = false, alter = false } = options;
+    observe(...args){
+        if(args.length == 1) args.unshift({ add: true, remove: true, alter: true });
+        const [ options, fn ] = args;
+        const { add = false, remove = false, alter = false } = options;
 
-            const observer = new MutationObserver(mutations => {
-                mutations.forEach(
-                    mutation => {
-                        if(mutation.type == 'childList'){
-                            if(add) mutation.addedNodes.forEach(node => fn(NodeWrapper.instanceFor(node), 'add'));
-                            if(remove) mutation.removedNodes.forEach(node => fn(NodeWrapper.instanceFor(node), 'remove'));
-                        }
-                        if(mutation.type == 'attributes' && alter){
-                            fn(NodeWrapper.instanceFor(mutation.target), 'alter', mutation.attributeName);
-                        }
-                        if(mutation.type == 'characterData' && alter){
-                            fn(NodeWrapper.instanceFor(mutation.target), 'alter', 'value');
-                        }
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(
+                mutation => {
+                    if(mutation.type == 'childList'){
+                        if(add) mutation.addedNodes.forEach(node => fn(NodeWrapper.instanceFor(node), 'add'));
+                        if(remove) mutation.removedNodes.forEach(node => fn(NodeWrapper.instanceFor(node), 'remove'));
                     }
-                )
-            });
-        
-            observer.observe(this.node, {
-                attributes: alter,
-                characterData: 'alter',
-                childList: add || remove,
-                subtree: true
-            });
+                    if(mutation.type == 'attributes' && alter){
+                        fn(NodeWrapper.instanceFor(mutation.target), 'alter', mutation.attributeName);
+                    }
+                    if(mutation.type == 'characterData' && alter){
+                        fn(NodeWrapper.instanceFor(mutation.target), 'alter', 'value');
+                    }
+                }
+            )
+        });
     
-            this._registeredObservers.push(observer);
+        observer.observe(this.node, {
+            attributes: alter,
+            characterData: 'alter',
+            childList: add || remove,
+            subtree: true
+        });
 
-            return this;
-        },
+        this._registeredObservers.push(observer);
 
-        function(fn){
-            return this.observe({ add: true, remove: true, alter: true }, fn);
+        return this;
+    }
+
+    async fetch(url, options = {}){
+        const { progressBar } = this.document;
+        const frame = this.frame || this;
+        const normalizedUrl = new URL(url, frame.url);
+        const abortController = new AbortController();
+        this._registeredAbortControllers.push(abortController);
+        progressBar.start();
+        const cleanUp = () => {
+            this._registeredAbortControllers = this._registeredAbortControllers.filter(item => item !== abortController);
+            progressBar.stop();
+        };
+        try {
+            const out = await fetch(normalizedUrl, Object.assign({
+                signal: abortController.signal
+            }, options));
+            cleanUp();
+            return out;
+        } catch(e){
+            cleanUp();
+            throw e;
         }
-    })
-});
+    }
+
+    abort(){
+        while(this._registeredAbortControllers.length){
+            this._registeredAbortControllers.pop().abort();
+        }
+        return this;
+    }
+
+    assignProps(...sources){
+        return assignProps(this, ...sources);
+    }
+
+    apply(name){
+        if(decorators[name]) decorators[name].call(this);
+        return this;
+    }
+
+    find(...args){
+        if(args.length == 1) args.unshift('descendants');
+        const [ collection, selector ] = args;
+        return this[collection].find(item => item.is(selector));
+    }
+
+    findAll(){
+        if(args.length == 1) args.unshift('descendants');
+        const [ collection, selector ] = args;
+        return this[collection].filter(item => item.is(selector));
+    }
+
+}
+
+const matchesSelector = (() => {
+    if(typeof window == 'undefined') return () => false;
+    const node = document.documentElement;
+    return node.matches || node.matchesSelector || node.msMatchesSelector || node.mozMatchesSelector || node.webkitMatchesSelector || node.oMatchesSelector;
+})();
 
 function cleanChildren(){
     this.children.forEach(child => clean.call(child));
 }
 
 function clean(){
-    if(this.is('.progress-bar')) return;
-
     [...this.node.childNodes].forEach(node => node._nodeWrapper && clean.call(node._nodeWrapper));
 
     while(this._registeredEventListeners.length){
@@ -439,6 +494,8 @@ function clean(){
     }
 
     clearTimers.call(this);
+
+    this.abort();
 
     if(this._overlayChild) this._overlayChild.remove();
 
@@ -474,7 +531,6 @@ function createVirtualNode(html){
 }
 
 function patch(attributes, virtualChildren){
-    if(this.is('.progress-bar')) return;
     const isEmptyFrame = this.is('.frame') && virtualChildren.length == 0;
     if(isEmptyFrame && attributes['data-load-on-init'] === undefined){
         attributes['data-load-on-init'] = 'true';
@@ -509,7 +565,7 @@ function patchAttributes(attributes){
 
 function patchChildren(virtualChildren){
     const children = [...this.node.childNodes].map(
-        node => NodeWrapper.new(node, true)
+        node => new NodeWrapper(node, true)
     );
 
     for(let i = 0; i < virtualChildren.length; i++){
@@ -557,7 +613,7 @@ function insert(virtualNode, referenceChild, returnNodeWrapper = true){
     }
 
     children.forEach(child => {
-        insert.call(NodeWrapper.new(node, true), child, null, false);
+        insert.call(new NodeWrapper(node, true), child, null, false);
     })
     
     this.node.insertBefore(
@@ -578,15 +634,6 @@ function normalizeVirtualNode(){
         ];
     }
 
-    if(this.type == 'body'){
-        const progressBar = new this.constructor(this, 'div', {class: 'progress-bar', 'data-node-wrapper': 'progress-bar'})
-        this.children = [
-            progressBar,
-            ...this.children
-        ];
-        progressBar.appendNode('div');
-    }
-
     if(this.type == '#text'){
         this.attributes.value = this.attributes.value.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
     }
@@ -598,53 +645,8 @@ function normalizeVirtualNode(){
     if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
         this.attributes.value = this.attributes.value.replace(/^\n/, '');
     }
-    
 }
-
-const snakeify = (stringable) => {
-    return `${stringable}`.split(/\//).map(segment =>
-        segment.replace(/([A-Z])/g, '_$1').toLocaleLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/(^_|_$)/g, '')
-    ).join('/');
-};
-
-const dasherize = (stringable) => {
-    return snakeify(stringable).replace(/_/g, '-');
-};
-
-const capitalize = (stringable) => {
-    const [first, ...rest] = `${stringable}`;
-    return `${first.toLocaleUpperCase()}${rest.join('')}`;
-};
-
-const uncapitalize = (stringable) => {
-    const [first, ...rest] = `${stringable}`;
-    return `${first.toLocaleLowerCase()}${rest.join('')}`;
-};
-
-const pascalize = (stringable) => {
-    return snakeify(stringable).replace(/^[0-9]+/, '').split(/[^a-z0-9]+/).map(word => capitalize(word)).join('')
-};
-
-const camelize = (stringable) => {
-    return uncapitalize(pascalize(stringable));
-};
 
 EventWrapper.NodeWrapper = NodeWrapper;
 
-export const defineNodeWrapper = overload({
-    ['string, object'](name, include){
-        const abstract = include.abstract;
-        delete include.abstract;
-        NodeWrapper.register(name, abstract).include(include);
-    },
-
-    ['string, function'](name, initialize ){
-        defineNodeWrapper(name, { 
-            initialize(...args) {
-                this.constructor.parent.prototype.initialize.call(this, ...args);
-
-                initialize.call(this, this);
-            }
-        });
-    }
-});
+export const defineDecorator = (...args) => NodeWrapper.defineDecorator(...args);

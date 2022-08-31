@@ -186,6 +186,8 @@ Slick::Database::Adapter.register :sqlite do
                         type = 'primary_key'
                     elsif name == 'id'
                         type = 'alternate_key'
+                    elsif name.match(/_id\z/)
+                        type = 'foreign_key'
                     else
                         type = Slick::Database::Adapter::SQLITE_COLUMN_TYPE_TO_TYPE_MAP[
                             row['type']
@@ -383,7 +385,7 @@ Slick::Database::Adapter.register :sqlite do
                 end
             end)
         end
-        [ query.join(' ').force_encoding("ASCII-8BIT"), values ]
+        [ query.join(' ').force_encoding("ASCII-8BIT"), values.map{|value| value.kind_of?(String) ? value.force_encoding("ASCII-8BIT") : value } ]
     end
 
     def flatten(items)

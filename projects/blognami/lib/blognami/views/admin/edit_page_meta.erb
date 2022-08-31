@@ -2,7 +2,7 @@
     render_form(pages.id_eq(params[:id]).first, {
         fields: ['slug', 'published'],
         success: Proc.new do |page|
-            span "data-node-wrapper" => "anchor", "data-href" => "/#{page.slug}", "data-target" => "_top", "data-trigger" => "click"
+            span "data-decorator" => "pinstripe-anchor", "data-href" => "/#{page.slug}", "data-target" => "_top", "data-trigger" => "click"
         end
     })
 %>

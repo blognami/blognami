@@ -29,7 +29,7 @@
         <% end %>
 
         <% if posts.all.count < posts.count %>
-            <% button "Load more posts",  :class => "feed-loadmore btn", "data-node-wrapper" => "anchor", "data-method" => "post", "data-href" => "/?page_size=#{page_size + 10}" %>
+            <% button "Load more posts",  :class => "feed-loadmore btn", "data-decorator" => "pinstripe-anchor", "data-method" => "post", "data-href" => "/?page_size=#{page_size + 10}" %>
         <% end %>
 
 
