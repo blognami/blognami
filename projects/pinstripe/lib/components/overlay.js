@@ -1,7 +1,7 @@
 
-import { defineDecorator } from "../node_wrapper.js";
+import { whenever } from "../node_wrapper.js";
 
-defineDecorator('pinstripe-overlay', function(){
+whenever('pinstripe-overlay', function(){
     this.apply('pinstripe-frame');
 
     this.shadow.patch(`

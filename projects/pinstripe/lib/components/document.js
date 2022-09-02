@@ -1,7 +1,7 @@
 
-import { defineDecorator } from "../node_wrapper.js";
+import { whenever } from "../node_wrapper.js";
 
-defineDecorator('pinstripe-document', function(){
+whenever('pinstripe-document', function(){
     this.apply('pinstripe-frame');
 
     window.onpopstate = (event) => {
@@ -27,28 +27,27 @@ defineDecorator('pinstripe-document', function(){
         async load(url, options = {}){
             const { replace, method = 'GET', headers = {}, ...otherOptions } = options;
             const previousUrl = this.url.toString();
+            const normalizedUrl = new URL(url, previousUrl).toString();
     
-            const out = await load.call(this, url, Object.assign({
+            if(method == 'GET' && previousUrl != normalizedUrl){
+                if(replace){
+                    history.replaceState(normalizedUrl, null, normalizedUrl);
+                } else {
+                    history.pushState(normalizedUrl, null, normalizedUrl);
+                    window.scrollTo(0, 0);
+                }
+            }
+    
+            return load.call(this, url, Object.assign({
                 method,
                 headers: Object.assign({
                     'x-pinstripe-frame-type': 'document'
                 }, headers)
             }, otherOptions));
-    
-            if(method == 'GET' && previousUrl != this.url.toString()){
-                if(replace){
-                    history.replaceState(this.url.toString(), null, this.url.toString());
-                } else {
-                    history.pushState(this.url.toString(), null, this.url.toString());
-                    window.scrollTo(0, 0);
-                }
-            }
-    
-            return out;
         }
     });
 });
 
-defineDecorator('#document', function(){
+whenever('#document', function(){
     this.apply('pinstripe-document');
 });

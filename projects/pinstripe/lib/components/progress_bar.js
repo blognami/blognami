@@ -1,7 +1,7 @@
 
-import { defineDecorator } from "../node_wrapper.js";
+import { whenever } from "../node_wrapper.js";
 
-defineDecorator('pinstripe-progress-bar', function(){
+whenever('pinstripe-progress-bar', function(){
     this.shadow.patch(`
         <div class="progress-bar"></div>
 

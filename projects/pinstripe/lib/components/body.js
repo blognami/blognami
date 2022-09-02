@@ -1,7 +1,7 @@
 
-import { defineDecorator } from "../node_wrapper.js";
+import { whenever } from "../node_wrapper.js";
 
-defineDecorator('pinstripe-body', function (){
+whenever('pinstripe-body', function (){
     this.shadow.patch(`
         <pinstripe-progress-bar></pinstripe-progress-bar>
         <slot>
@@ -33,6 +33,6 @@ defineDecorator('pinstripe-body', function (){
 
 });
 
-defineDecorator('body', function(){
+whenever('body', function(){
     this.apply('pinstripe-body');
 });

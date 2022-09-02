@@ -4,15 +4,37 @@ import { EventWrapper } from './event_wrapper.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
 import { assignProps } from './assign_props.js';
 
-const decorators = {};
-
 export class NodeWrapper {
 
+    static decorators = {};
+
     static defineDecorator(name, fn){
-        const previousFn = decorators[name];
-        decorators[name] = function(){
+        const previousFn = this.decorators[name];
+        this.decorators[name] = function(){
             fn.call(this, previousFn);
         };
+    }
+
+    static whenever(arg1, fn){
+        if(typeof arg1 == 'function'){
+            this.defineDecorator('*', function(previousFn){
+                if(previousFn) previousFn.call(this)
+                if(this.is(arg1)) fn.call(this);
+            });
+            return;
+        }
+        const name = '' + arg1;
+        if(name.match(/^(\/|\*$|#document$|#doctype$|#document-fragment$|#text$|#comment$|[a-z0-9\-_\/]+$)/i)){
+            this.defineDecorator(name, fn);
+            return;
+        }
+        if(!this.decorators[name]){
+            this.defineDecorator('*', function(previousFn){
+                if(previousFn) previousFn.call(this)
+                if(this.is(name)) this.apply(name);
+            });
+        }
+        this.defineDecorator(name, fn);
     }
 
     static instanceFor(node){
@@ -454,8 +476,9 @@ export class NodeWrapper {
     }
 
     apply(name){
-        if(decorators[name]) decorators[name].call(this);
-        return this;
+        const decorator = this.constructor.decorators[name];
+        if(decorator) console.log('apply', name)
+        if(decorator) return decorator.call(this);
     }
 
     find(...args){
@@ -649,4 +672,4 @@ function normalizeVirtualNode(){
 
 EventWrapper.NodeWrapper = NodeWrapper;
 
-export const defineDecorator = (...args) => NodeWrapper.defineDecorator(...args);
+export const whenever = (...args) => NodeWrapper.whenever(...args);

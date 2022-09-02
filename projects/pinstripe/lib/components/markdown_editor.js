@@ -1,7 +1,7 @@
 
-import { defineDecorator } from "../node_wrapper.js";
+import { whenever } from "../node_wrapper.js";
 
-defineDecorator('pinstripe-markdown-editor', function(){
+whenever('pinstripe-markdown-editor', function(){
     const anchorTextarea = this.frame.parent;
     const editorTextarea = this.descendants.find(n => n.is('.markdown-editor-text-pane > textarea'));
 
@@ -40,7 +40,7 @@ defineDecorator('pinstripe-markdown-editor', function(){
     });
 });
 
-defineDecorator('pinstripe-markdown-editor/line-inserter', function(){
+whenever('pinstripe-markdown-editor/line-inserter', function(){
     this.on('click', () => {
         const { lineContent } = this.data;
         const { lineNumber } = this.parents.find(n => n.is('[data-line-number]')).data;
@@ -50,7 +50,7 @@ defineDecorator('pinstripe-markdown-editor/line-inserter', function(){
     });
 });
 
-defineDecorator('pinstripe-markdown-editor/anchor', function(){
+whenever('pinstripe-markdown-editor/anchor', function(){
     this.apply('pinstripe-anchor');
 
     this.patch({ 

@@ -1,8 +1,8 @@
 
-import { defineDecorator } from "../node_wrapper.js";
+import { whenever } from "../node_wrapper.js";
 import { loadFrame } from "./helpers.js";
 
-defineDecorator('pinstripe-form', function(){
+whenever('pinstripe-form', function(){
     const { confirm, target = '_self', method = 'GET', action } = { ...this.attributes, ...this.data };
     
     this.on('submit', (event) => {
@@ -23,6 +23,6 @@ defineDecorator('pinstripe-form', function(){
     });
 });
 
-defineDecorator('form', function(){
+whenever('form', function(){
     this.apply('pinstripe-form');
 });

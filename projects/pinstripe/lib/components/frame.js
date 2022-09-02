@@ -1,9 +1,9 @@
 
-import { defineDecorator } from "../node_wrapper.js";
+import { whenever } from "../node_wrapper.js";
 
-defineDecorator('pinstripe-frame', function (){
-
-    const { loadOnInit = this.children.length == 0 } = this.data;
+whenever('pinstripe-frame', function (){
+    let loadOnInit = this.children.length == 0;
+    if(this.attributes['load-on-init']) loadOnInit = this.attributes['load-on-init']  == 'true';
     
     if(loadOnInit){
         this.on('init', () => this.load());
@@ -31,14 +31,21 @@ defineDecorator('pinstripe-frame', function (){
     
         async load(url = this.url, options = {}){
             this.abort();
+
+            this.url = url;
+
+            const html = await this.apply(this.url.pathname);
+            if(html){
+                this.patch(html);
+                return;
+            }
+
             const { headers = {}, ...otherOptions } = options;
             const response = await this.fetch(url, Object.assign({
                 headers: Object.assign({
                     'x-pinstripe-frame-type': 'basic'
                 }, headers)
             }, otherOptions));
-    
-            this.url = url;
     
             return this.patch(await response.text());
         }
