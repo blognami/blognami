@@ -111,16 +111,15 @@ export class NodeWrapper {
         const { attributes } = this;
         const out = {};
         Object.keys(attributes).forEach(name => {
-            const matches = name.match(/^data-(.+)$/);
-            if(!matches){
-                return;
-            }
+            let normalizedName = name;
+            const matches = normalizedName.match(/^data-(.+)$/);
+            if(matches) normalizedName = matches[1];
+            normalizedName = normalizedName.toLowerCase().replace(/-[a-z]/g, item => item[1].toUpperCase());
             const value = attributes[name];
-            const mappedName = matches[1].toLowerCase().replace(/-[a-z]/g, item => item[1].toUpperCase());
             try {
-                out[mappedName] = JSON.parse(value);
+                out[normalizedName] = JSON.parse(value);
             } catch(e){
-                out[mappedName] = value;
+                out[normalizedName] = value;
             }
         })
         return out;

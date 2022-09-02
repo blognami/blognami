@@ -2,8 +2,8 @@
 import { whenever } from "../node_wrapper.js";
 
 whenever('pinstripe-frame', function (){
-    let loadOnInit = this.children.length == 0;
-    if(this.attributes['load-on-init']) loadOnInit = this.attributes['load-on-init']  == 'true';
+    let { loadOnInit } = this.data;
+    if(loadOnInit == undefined) loadOnInit = this.children.length == 0;
     
     if(loadOnInit){
         this.on('init', () => this.load());
