@@ -1,8 +1,8 @@
 
-import { whenever } from "../node_wrapper.js";
+import { defineComponent } from "../node_wrapper.js";
 import { loadFrame, removeFrame } from "./helpers.js";
 
-whenever('pinstripe-anchor', function (){
+defineComponent('pinstripe-anchor', function (){
     const { ignoreEventsFromChildren = false } = this.data;
     this.on('click', (event) => {
         if(ignoreEventsFromChildren && event.target != this) return;
@@ -16,6 +16,6 @@ whenever('pinstripe-anchor', function (){
     if(this.is('input, textarea')) this.on('keyup', (event) => this.trigger('click'));
 });
 
-whenever('a', function(){
+defineComponent('a', function(){
     this.apply('pinstripe-anchor');
 });

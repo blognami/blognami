@@ -6,48 +6,21 @@ import { assignProps } from './assign_props.js';
 
 export class NodeWrapper {
 
-    static decorators = {};
+    static components = {};
 
-    static defineDecorator(name, fn){
-        const previousFn = this.decorators[name];
-        this.decorators[name] = function(){
+    static defineComponent(name, fn){
+        const previousFn = this.components[name];
+        this.components[name] = function(){
             fn.call(this, previousFn);
         };
-    }
-
-    static whenever(arg1, fn){
-        if(typeof arg1 == 'function'){
-            this.defineDecorator('*', function(previousFn){
-                if(previousFn) previousFn.call(this)
-                if(this.is(arg1)) fn.call(this);
-            });
-            return;
-        }
-        const name = '' + arg1;
-        if(name.match(/^(\/|\*$|#document$|#doctype$|#document-fragment$|#text$|#comment$|[a-z0-9\-_\/]+$)/i)){
-            this.defineDecorator(name, fn);
-            return;
-        }
-        if(!this.decorators[name]){
-            this.defineDecorator('*', function(previousFn){
-                if(previousFn) previousFn.call(this)
-                if(this.is(name)) this.apply(name);
-            });
-        }
-        this.defineDecorator(name, fn);
     }
 
     static instanceFor(node){
         if(!node._nodeWrapper){
             const nodeWrapper = new NodeWrapper(node);
             node._nodeWrapper = nodeWrapper;
-            const decoratorNames = [];
-            decoratorNames.push(nodeWrapper.type);
-            decoratorNames.push('*');
-            if(nodeWrapper.attributes['data-decorator']) decoratorNames.push(nodeWrapper.attributes['data-decorator']);
-            while(decoratorNames.length){
-                nodeWrapper.apply(decoratorNames.shift());
-            }
+            nodeWrapper.apply(nodeWrapper.type);
+            nodeWrapper.apply(nodeWrapper.attributes['data-component'])
             nodeWrapper.trigger('init', { bubbles: false });
         }
         return node._nodeWrapper;
@@ -475,9 +448,8 @@ export class NodeWrapper {
     }
 
     apply(name){
-        const decorator = this.constructor.decorators[name];
-        if(decorator) console.log('apply', name)
-        if(decorator) return decorator.call(this);
+        const component = this.constructor.components[name];
+        if(component) return component.call(this);
     }
 
     find(...args){
@@ -671,4 +643,5 @@ function normalizeVirtualNode(){
 
 EventWrapper.NodeWrapper = NodeWrapper;
 
-export const whenever = (...args) => NodeWrapper.whenever(...args);
+export const defineComponent = (...args) => NodeWrapper.defineComponent(...args);
+

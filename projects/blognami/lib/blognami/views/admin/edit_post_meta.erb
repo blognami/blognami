@@ -2,7 +2,7 @@
     render_form(posts.id_eq(params[:id]).first, {
         fields: ['slug', { name: 'tags', type: 'textarea'}, 'featured', 'published'],
         success: Proc.new do |post|
-            span "data-decorator" => "pinstripe-anchor", "data-href" => "/#{post.slug}", "data-target" => "_top", "data-trigger" => "click"
+            span "data-component" => "pinstripe-anchor", "data-href" => "/#{post.slug}", "data-target" => "_top", "data-trigger" => "click"
         end
     })
 %>

@@ -17,7 +17,7 @@ Slick::Helper.register :render_form do
         if params[:_method] == 'post'
             begin
                 form_adapter.submit(values, &success)
-                span "data-decorator" => "pinstripe-anchor", "data-target" => "_parent", "data-trigger" => "click" if response.body.join.strip.length == 0
+                span "data-component" => "pinstripe-anchor", "data-target" => "_parent", "data-trigger" => "click" if response.body.join.strip.length == 0
                 exit
             rescue => exception
                 raise exception if !exception.kind_of?(Slick::ValidationError)
@@ -89,7 +89,7 @@ Slick::Helper.register :render_form do
             out['name'] = options_field['name']
             out['label'] = options_field['label'] || form_adapter_field['label'] || out['name'].capitalize
             out['type'] = options_field['type'] || form_adapter_field['type'] || 'text'
-            out['decorator'] = options_field['decorator'] || form_adapter_field['decorator']
+            out['component'] = options_field['component'] || form_adapter_field['component']
             out['placeholder'] = options_field['placeholder'] || form_adapter_field['placeholder']
             out['value'] = form_adapter_field['value']
             out
@@ -122,7 +122,7 @@ end
 #         if(params._method == 'POST'){
 #             try {
 #                 return await formAdapter.submit(values, success) || renderHtml`
-#                     <span data-decorator="pinstripe-anchor" data-target="_parent" data-trigger="click"></span>
+#                     <span data-component="pinstripe-anchor" data-target="_parent" data-trigger="click"></span>
 #                 `;
 #             } catch(e){
 #                 if(!(e instanceof ValidationError)){
@@ -157,8 +157,8 @@ end
 #         });
 
 #         return renderHtml`
-#             <div class="modal" data-decorator="pinstripe-anchor" data-action="remove" data-ignore-events-from-children="true">
-#                 <button data-decorator="pinstripe-anchor" data-action="remove"></button>
+#             <div class="modal" data-component="pinstripe-anchor" data-action="remove" data-ignore-events-from-children="true">
+#                 <button data-component="pinstripe-anchor" data-action="remove"></button>
 #                 <form
 #                     class="card"
 #                     method="post"
@@ -194,16 +194,16 @@ end
 #                                         ${() => {
 #                                             if(type == 'textarea'){
 #                                                 return renderHtml`
-#                                                     <textarea class="textarea${error ? ' is-error' : ''}" name="${name}"${nodeWrapper ? renderHtml` data-decorator="pinstripe-${nodeWrapper}"` : undefined}${placeholder ? renderHtml` placeholder="${placeholder}"` : undefined}>${value}</textarea>
+#                                                     <textarea class="textarea${error ? ' is-error' : ''}" name="${name}"${nodeWrapper ? renderHtml` data-component="pinstripe-${nodeWrapper}"` : undefined}${placeholder ? renderHtml` placeholder="${placeholder}"` : undefined}>${value}</textarea>
 #                                                 `;
 #                                             }
 #                                             if(type == 'checkbox'){
 #                                                 return renderHtml`
-#                                                     <input class="input${error ? ' is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${nodeWrapper ? renderHtml` data-decorator="pinstripe-${nodeWrapper}"` : undefined}>
+#                                                     <input class="input${error ? ' is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${nodeWrapper ? renderHtml` data-component="pinstripe-${nodeWrapper}"` : undefined}>
 #                                                 `;
 #                                             }
 #                                             return renderHtml`
-#                                                 <input class="input${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}"${nodeWrapper ? renderHtml` data-decorator="pinstripe-${nodeWrapper}"` : undefined}${placeholder ? renderHtml` placeholder="${placeholder}"` : undefined}>
+#                                                 <input class="input${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}"${nodeWrapper ? renderHtml` data-component="pinstripe-${nodeWrapper}"` : undefined}${placeholder ? renderHtml` placeholder="${placeholder}"` : undefined}>
 #                                             `;
 #                                         }}
 #                                         ${() => {
@@ -219,7 +219,7 @@ end
 #                         </div>
 #                         <div class="card-footer">
 #                             <button class="button" type="submit">${submitTitle}</button>
-#                             <button class="button" data-decorator="pinstripe-anchor" data-action="remove">${cancelTitle}</button>
+#                             <button class="button" data-component="pinstripe-anchor" data-action="remove">${cancelTitle}</button>
 #                         </div>
 #                     </div>
 #             </div>

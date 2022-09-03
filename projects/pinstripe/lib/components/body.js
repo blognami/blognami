@@ -1,7 +1,7 @@
 
-import { whenever } from "../node_wrapper.js";
+import { defineComponent } from "../node_wrapper.js";
 
-whenever('pinstripe-body', function (){
+defineComponent('pinstripe-body', function (){
     this.shadow.patch(`
         <pinstripe-progress-bar></pinstripe-progress-bar>
         <slot>
@@ -33,6 +33,6 @@ whenever('pinstripe-body', function (){
 
 });
 
-whenever('body', function(){
+defineComponent('body', function(){
     this.apply('pinstripe-body');
 });

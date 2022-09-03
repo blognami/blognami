@@ -1,7 +1,7 @@
 
-import { whenever } from "../node_wrapper.js";
+import { defineComponent } from "../node_wrapper.js";
 
-whenever('pinstripe-document', function(){
+defineComponent('pinstripe-document', function(){
     this.apply('pinstripe-frame');
 
     window.onpopstate = (event) => {
@@ -48,6 +48,6 @@ whenever('pinstripe-document', function(){
     });
 });
 
-whenever('#document', function(){
+defineComponent('#document', function(){
     this.apply('pinstripe-document');
 });

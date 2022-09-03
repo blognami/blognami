@@ -1,7 +1,7 @@
 
-import { whenever } from "../node_wrapper.js";
+import { defineComponent } from "../node_wrapper.js";
 
-whenever('pinstripe-progress-bar', function(){
+defineComponent('pinstripe-progress-bar', function(){
     this.shadow.patch(`
         <div class="progress-bar"></div>
 

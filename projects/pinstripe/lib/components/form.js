@@ -1,8 +1,8 @@
 
-import { whenever } from "../node_wrapper.js";
+import { defineComponent } from "../node_wrapper.js";
 import { loadFrame } from "./helpers.js";
 
-whenever('pinstripe-form', function(){
+defineComponent('pinstripe-form', function(){
     const { confirm, target = '_self', method = 'GET', action } = { ...this.attributes, ...this.data };
     
     this.on('submit', (event) => {
@@ -23,6 +23,6 @@ whenever('pinstripe-form', function(){
     });
 });
 
-whenever('form', function(){
+defineComponent('form', function(){
     this.apply('pinstripe-form');
 });

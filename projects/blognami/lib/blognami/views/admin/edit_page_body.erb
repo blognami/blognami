@@ -1,5 +1,5 @@
 <%
     render_form(pages.id_eq(params[:id]).first, {
-        fields: [{ name: 'body', type: 'textarea', decorator: 'pinstripe-markdown-editor/anchor'}]
+        fields: [{ name: 'body', type: 'textarea', component: 'pinstripe-markdown-editor/anchor'}]
     })
 %>

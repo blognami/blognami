@@ -1,7 +1,7 @@
 
-import { whenever } from "../node_wrapper.js";
+import { defineComponent } from "../node_wrapper.js";
 
-whenever('pinstripe-overlay', function(){
+defineComponent('pinstripe-overlay', function(){
     this.apply('pinstripe-frame');
 
     this.shadow.patch(`

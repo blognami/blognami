@@ -1,7 +1,7 @@
 
-import { whenever } from "../node_wrapper.js";
+import { defineComponent } from "../node_wrapper.js";
 
-whenever('pinstripe-frame', function (){
+defineComponent('pinstripe-frame', function (){
     let { loadOnInit } = this.data;
     if(loadOnInit == undefined) loadOnInit = this.children.length == 0;
     
