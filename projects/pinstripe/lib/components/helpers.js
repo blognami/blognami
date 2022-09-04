@@ -17,10 +17,9 @@ export function loadFrame(confirm, target, method, url){
     }
 
     url = new URL(url || frame.url, this.frame.url);
-    if(url.host != frame.url.host || url.port != frame.url.port){
+    if(url.protocol != 'data:' && (url.host != frame.url.host || url.port != frame.url.port)){
         return;
     }
-
 
     if(method.match(/POST|PUT|PATCH/i)){
         const formData = new FormData();

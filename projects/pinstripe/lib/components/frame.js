@@ -1,5 +1,5 @@
 
-import { defineComponent } from "../node_wrapper.js";
+import { defineComponent } from "../components.js";
 
 defineComponent('pinstripe-frame', function (){
     let { loadOnInit } = this.data;
@@ -33,12 +33,6 @@ defineComponent('pinstripe-frame', function (){
             this.abort();
 
             this.url = url;
-
-            const html = await this.apply(this.url.pathname);
-            if(html){
-                this.patch(html);
-                return;
-            }
 
             const { headers = {}, ...otherOptions } = options;
             const response = await this.fetch(url, Object.assign({

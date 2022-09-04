@@ -1,5 +1,5 @@
 
-import { defineComponent } from "../node_wrapper.js";
+import { defineComponent } from "../components.js";
 import { loadFrame, removeFrame } from "./helpers.js";
 
 defineComponent('pinstripe-anchor', function (){

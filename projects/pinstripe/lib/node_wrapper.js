@@ -3,17 +3,9 @@ import { VirtualNode } from './virtual_node.js';
 import { EventWrapper } from './event_wrapper.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
 import { assignProps } from './assign_props.js';
+import { components } from './components.js';
 
 export class NodeWrapper {
-
-    static components = {};
-
-    static defineComponent(name, fn){
-        const previousFn = this.components[name];
-        this.components[name] = function(){
-            fn.call(this, previousFn);
-        };
-    }
 
     static instanceFor(node){
         if(!node._nodeWrapper){
@@ -448,7 +440,7 @@ export class NodeWrapper {
     }
 
     apply(name){
-        const component = this.constructor.components[name];
+        const component = components[name];
         if(component) return component.call(this);
     }
 
@@ -642,6 +634,3 @@ function normalizeVirtualNode(){
 }
 
 EventWrapper.NodeWrapper = NodeWrapper;
-
-export const defineComponent = (...args) => NodeWrapper.defineComponent(...args);
-

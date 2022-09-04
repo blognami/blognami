@@ -1,5 +1,5 @@
 
-import { defineComponent } from "../node_wrapper.js";
+import { defineComponent } from "../components.js";
 
 defineComponent('pinstripe-document', function(){
     this.apply('pinstripe-frame');

@@ -1,5 +1,5 @@
 
-import { defineComponent } from "../node_wrapper.js";
+import { defineComponent } from "../components.js";
 
 defineComponent('pinstripe-body', function (){
     this.shadow.patch(`

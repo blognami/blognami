@@ -1,5 +1,5 @@
 
-import { defineComponent } from "../node_wrapper.js";
+import { defineComponent } from "../components.js";
 import { loadFrame } from "./helpers.js";
 
 defineComponent('pinstripe-form', function(){
