@@ -1,4 +1,0 @@
-
-require "slick"
-
-run Slick

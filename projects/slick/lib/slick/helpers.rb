@@ -1,4 +1,0 @@
-
-module Slick::Helpers
-    
-end

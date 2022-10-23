@@ -1,6 +1,0 @@
-source "https://rubygems.org"
-
-# Specify your gem's dependencies in slick.gemspec
-gemspec
-
-gem "puma", "~> 5.6"

@@ -4,6 +4,7 @@ build/
 pkg/
 
 *.db
+*.db-journal
 *.log
 .DS_Store
 bundle.css

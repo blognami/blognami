@@ -16,20 +16,17 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       matrix:
-        ruby: [2.7, 3.0]
+        node: [16.x]
         database-adapter: [mysql, sqlite]
+        tenancy: [single, multi]
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js 14.x
+    - name: Use Node.js ${{ matrix.node }}
       uses: actions/setup-node@v1
       with:
-        node-version: 14.x
-    - name: Use Ruby ${{ matrix.ruby }}
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-    - run: rake init
-    - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} rake test
+        node-version: ${{ matrix.node }}
+    - run: yarn install
+    - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} yarn test
       env:
         CI: true
 

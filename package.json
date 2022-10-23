@@ -1,0 +1,22 @@
+{
+  "private": true,
+  "type": "module",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "scripts": {
+    "clean": "lerna run clean && rm -rf ./node_modules",
+    "start": "lerna run start --scope demo --stream",
+    "watch": "nodemon -e js --exec 'yarn start'",
+    "test": "yarn test:unit && yarn test:models",
+    "test:unit": "lerna run test:unit --stream",
+    "test:models": "lerna run test:models --stream",
+    "publish-all": "lerna publish"
+  },
+  "dependencies": {
+    "lerna": "^4.0.0",
+    "nodemon": "^2.0.12"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

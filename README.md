@@ -2,9 +2,8 @@
 
 ## Package index
 
-- [Blognami](https://github.com/blognami/blognami/tree/main/projects/blognami)
-- [Pinstripe](https://github.com/blognami/blognami/tree/main/projects/pinstripe)
-- [Slick](https://github.com/blognami/blognami/tree/main/projects/slick)
+- [Blognami](https://github.com/blognami/blognami/tree/main/packages/blognami)
+- [Pinstripe](https://github.com/blognami/blognami/tree/main/packages/pinstripe)
 
 ## License
 
