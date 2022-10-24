@@ -168,6 +168,7 @@ function prepare(query){
             if(typeof value?.toSql == 'function') return value.toSql();
             return this.adapt({
                 mysql(){
+                    if(typeof value == 'boolean') return `'${value}'`;
                     return mysql.escape(value);
                 },
 
