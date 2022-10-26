@@ -3,20 +3,16 @@ import { spawnSync } from 'child_process';
 
 export default {
    async run(){
-      const { name, dependencies } = this.parseArgs(({ extractArg, extractOptions }) => {
-         const name = extractArg('');
-         if(name == ''){
-            console.error('A project name must be given.');
-            process.exit();
-         }
-   
-         const { with: dependencies } = extractOptions({
-            with: []
-         });
-   
-         return { name, dependencies };
-      })
-   
+
+      const { extractArg, extractOptions } = this.cliUtils;
+      const name = extractArg('');
+      if(name == ''){
+         console.error('A project name must be given.');
+         process.exit();
+      }
+      const { with: dependencies } = extractOptions({
+         with: []
+      });
       if(!dependencies.includes('pinstripe')){
          dependencies.unshift('pinstripe')
       }

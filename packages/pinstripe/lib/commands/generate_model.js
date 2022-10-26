@@ -1,17 +1,14 @@
 
 export default {
     async run(){
-        const { name , fields } = this.parseArgs(({ extractArg, extractFields }) => {
-            const name = this.inflector.snakeify(extractArg(''));
-            if(name == ''){
-                console.error('A model name must be given.');
-                process.exit();
-            }
-    
-            const fields = extractFields();
-    
-            return { name , fields };
-        });
+
+        const { extractArg, extractFields } = this.cliUtils;
+        const name = this.inflector.snakeify(extractArg(''));
+        if(name == ''){
+            console.error('A model name must be given.');
+            process.exit();
+        }
+        const fields = extractFields();
     
         const collectionName = this.inflector.camelize(this.inflector.pluralize(name));
         if(!await this.database[collectionName].exists){

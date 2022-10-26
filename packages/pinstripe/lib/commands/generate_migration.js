@@ -1,18 +1,17 @@
 
 export default {
     async run(){
-        const { suffix, fields, table } = this.parseArgs(({ extractArg, extractFields, extractOptions }) => {
-            const suffix = this.inflector.snakeify(extractArg('migration'));
-            const fields = extractFields();
-            const { table } = extractOptions({
-                table: (() => {
-                    const matches = suffix.match(/_to_(.+)$/);
-                    if(matches){
-                        return matches[1];
-                    }
-                })()
-            });
-            return { suffix, fields, table };
+        const { extractArg, extractFields, extractOptions } = this.cliUtils;
+
+        const suffix = this.inflector.snakeify(extractArg('migration'));
+        const fields = extractFields();
+        const { table } = extractOptions({
+            table: (() => {
+                const matches = suffix.match(/_to_(.+)$/);
+                if(matches){
+                    return matches[1];
+                }
+            })()
         });
 
         const unixTime = Math.floor(new Date().getTime() / 1000);
