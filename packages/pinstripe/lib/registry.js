@@ -62,7 +62,7 @@ export const Registry = {
             for(name){
                 const normalizedName = this.normalizeName(name);
                 if(!classes[normalizedName]){
-                    classes[normalizedName] = this.extend().include({
+                    classes[normalizedName] = this.registry.extend().include({
                         meta(){
                             this.assignProps({ name: normalizedName, includes: [] });
                             this.include(this.createInitialMixin(normalizedName));

@@ -14,7 +14,7 @@ export default {
     
             await generateFile(`lib/node_wrappers/_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { nodeWrapperImporter as default } from 'pinstripe';`);
+                line(`export { componentImporter as default } from 'pinstripe';`);
                 line();
             });
     

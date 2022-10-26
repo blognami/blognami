@@ -12,7 +12,7 @@ export const Client = Class.extend().include({
     initialize(){
         this.modules = [];
 
-        this.addModule(`import ${JSON.stringify(fileURLToPath(`${import.meta.url}/../client/index.js`))};`);
+        this.addModule(`import ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};`);
     },
 
     addModule(...modules){

@@ -1,24 +1,53 @@
 
+import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
+
 import { VirtualNode } from './virtual_node.js';
 import { EventWrapper } from './event_wrapper.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
-import { assignProps } from './assign_props.js';
-import { components } from './components.js';
 
-export class NodeWrapper {
+import { Class } from './class.js';
+import { Registry } from './registry.js';
+import { Client } from './client.js'; // pinstripe-if-client: const Client = undefined;
+import { Inflector } from './inflector.js';
 
-    static instanceFor(node){
-        if(!node._nodeWrapper){
-            const nodeWrapper = new NodeWrapper(node);
-            node._nodeWrapper = nodeWrapper;
-            nodeWrapper.apply(nodeWrapper.type);
-            nodeWrapper.apply(nodeWrapper.attributes['data-component'])
-            nodeWrapper.trigger('init', { bubbles: false });
-        }
-        return node._nodeWrapper;
-    }
+export const Component = Class.extend().include({
+    meta(){
+        this.include(Registry);
 
-    constructor(node, skipInit = false){
+        const { importFile } = this;
+
+        this.assignProps({
+            instanceFor(node){
+                if(!node._component){
+                    node._component = Component.new(node, true);
+                    node._component = Component.create(
+                        node._component.attributes['data-component'] || node._component.type,
+                        node
+                    );
+                    if(node.isConnected) node._component.trigger('init', { bubbles: false });
+                }
+                return node._component;
+            },
+
+            normalizeName(name){
+                return Inflector.instance.dasherize(name);
+            },
+
+            async importFile(params){
+                const { filePath, relativeFilePathWithoutExtension } = params;
+                if((await import(filePath)).default){
+                    Client.instance.addModule(`
+                        import { Component } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};
+                        import include from ${JSON.stringify(filePath)};
+                        Component.register(${JSON.stringify(relativeFilePathWithoutExtension)}, include);
+                    `);
+                }
+                return importFile.call(this, params);
+            }
+        });
+    },
+
+    initialize(node, skipInit = false){
         this.node = node;
         this._registeredEventListeners = [];
         this._registeredObservers = [];
@@ -56,11 +85,11 @@ export class NodeWrapper {
                 this.trigger(trigger);
             }, 0);
         }
-    }
+    },
 
     get type(){
         return this.node instanceof DocumentType ? '#doctype' : this.node.nodeName.toLowerCase();
-    }
+    },
 
     get attributes(){
         const out = {}
@@ -70,7 +99,7 @@ export class NodeWrapper {
             }
         }
         return out;
-    }
+    },
 
     get data(){
         const { attributes } = this;
@@ -88,19 +117,19 @@ export class NodeWrapper {
             }
         })
         return out;
-    }
+    },
 
     get text(){
         return this.node.textContent;
-    }
+    },
 
     get realParent(){
         return this.node.parentNode ? this.constructor.instanceFor(this.node.parentNode) : null;
-    }
+    },
 
     get parent(){
         return this._parent ? this._parent : this.realParent;
-    }
+    },
 
     get parents(){
         const out = []
@@ -112,13 +141,13 @@ export class NodeWrapper {
             }
         }
         return out;
-    }
+    },
 
     get children(){
         return [...this.node.childNodes].map(
             node => this.constructor.instanceFor(node)
         );
-    }
+    },
 
     get siblings(){
         if(this.parent){
@@ -126,7 +155,7 @@ export class NodeWrapper {
         } else {
             return [this];
         }
-    }
+    },
 
     get previousSibling(){
         if(this.node.previousSibling){
@@ -134,7 +163,7 @@ export class NodeWrapper {
         } else {
             return null;
         }
-    }
+    },
 
     get nextSibling(){
         if(this.node.nextSibling){
@@ -142,7 +171,7 @@ export class NodeWrapper {
         } else {
             return null;
         }
-    }
+    },
 
     get nextSiblings(){
         const out = []
@@ -152,7 +181,7 @@ export class NodeWrapper {
             out.push(current);
         }
         return out;
-    }
+    },
 
     get previousSiblings(){
         const out = []
@@ -162,7 +191,7 @@ export class NodeWrapper {
             out.push(current);
         }
         return out;
-    }
+    },
 
     get descendants(){
         const out = this.children;
@@ -170,15 +199,15 @@ export class NodeWrapper {
             out.push(...out[i].children);
         }
         return out;
-    }
+    },
 
     get isInput(){
         return this.is('input, textarea');
-    }
+    },
 
     get name(){
         return this.attributes.name;
-    }
+    },
     
     get value(){
         if(this.is('input[type="file"]')){
@@ -191,31 +220,31 @@ export class NodeWrapper {
             return this.is(':checked') ? true : false;
         }
         return this.node.value;
-    }
+    },
 
     set value(value){
         this.node.value = value;
-    }
+    },
 
     get selectionStart(){
         return this.node.selectionStart || 0;
-    }
+    },
 
     get selectionEnd(){
         return this.node.selectionEnd || 0;
-    }
+    },
 
     set selectionStart(position){
         this.node.selectionStart = position;
-    }
+    },
 
     set selectionEnd(position){
         this.node.selectionEnd = position;
-    }
+    },
 
     get inputs(){
         return this.descendants.filter((descendant) => descendant.isInput);
-    }
+    },
 
     get values(){
         const out = {}
@@ -226,32 +255,32 @@ export class NodeWrapper {
             }
         })
         return out;
-    }
+    },
 
     get frame(){
         return this.parents.find(({ isFrame }) => isFrame);
-    }
+    },
 
     get document(){
         return this.parents.find(({ isDocument }) => isDocument) || this;
-    }
+    },
 
     get overlay(){
         return this.parents.find(({ isOverlay }) => isOverlay);
-    }
+    },
 
     get shadow(){
         if(!this.node.shadowRoot){
             this.node.attachShadow({ mode: 'open' });
             this.shadow.patch(`<slot>`);
         }
-        return NodeWrapper.instanceFor(this.node.shadowRoot);
-    }
+        return Component.instanceFor(this.node.shadowRoot);
+    },
 
     focus(){
         this.node.focus();
         return this;
-    }
+    },
 
     is(selector){
         if(typeof selector == 'function'){
@@ -262,7 +291,7 @@ export class NodeWrapper {
         } catch(e){
             return false;
         }
-    }
+    },
 
     on(name, ...args){
         const fn = args.pop()
@@ -284,7 +313,7 @@ export class NodeWrapper {
         this._registeredEventListeners.push([name, wrapperFn]);
 
         return this;
-    }
+    },
     
     trigger(name, options = {}){
         let event;
@@ -301,19 +330,19 @@ export class NodeWrapper {
         this.node.dispatchEvent(event);
 
         return this;
-    }
+    },
 
     setTimeout(...args){
         const out = setTimeout(...args);
         this._registeredTimers.push(out);
         return out;
-    }
+    },
 
     setInterval(...args){
         const out = setInterval(...args);
         this._registeredTimers.push(out);
         return out;
-    }
+    },
 
     remove(){
         if(this.realParent){
@@ -321,17 +350,17 @@ export class NodeWrapper {
             if(this.realParent) this.realParent.node.removeChild(this.node);
         }
         return this;
-    }
+    },
 
     addClass(name){
         this.node.classList.add(name);
         return this;
-    }
+    },
 
     removeClass(name){
         this.node.classList.remove(name);
         return this;
-    }
+    },
 
     patch(arg1){
         if(typeof arg1 == 'string'){
@@ -348,28 +377,28 @@ export class NodeWrapper {
         const attributes = arg1;
         patchAttributes.call(this, attributes);
         return this;
-    }
+    },
 
     append(html){
         return prepend.call(this, html);
-    }
+    },
 
     prepend(html){
         return prepend.call(this, html, this.children[0]);
-    }
+    },
 
     insertBefore(html){
         return prepend.call(this.realParent, html, this);
-    }
+    },
 
     insertAfter(html){
         return prepend.call(this.realParent, html, this.nextSibling);
-    }
+    },
 
     addVirtualNodeFilter(fn){
         this._virtualNodeFilters.push(fn);
         return this;
-    }
+    },
 
     observe(...args){
         if(args.length == 1) args.unshift({ add: true, remove: true, alter: true });
@@ -380,14 +409,14 @@ export class NodeWrapper {
             mutations.forEach(
                 mutation => {
                     if(mutation.type == 'childList'){
-                        if(add) mutation.addedNodes.forEach(node => fn(NodeWrapper.instanceFor(node), 'add'));
-                        if(remove) mutation.removedNodes.forEach(node => fn(NodeWrapper.instanceFor(node), 'remove'));
+                        if(add) mutation.addedNodes.forEach(node => fn(Component.instanceFor(node), 'add'));
+                        if(remove) mutation.removedNodes.forEach(node => fn(Component.instanceFor(node), 'remove'));
                     }
                     if(mutation.type == 'attributes' && alter){
-                        fn(NodeWrapper.instanceFor(mutation.target), 'alter', mutation.attributeName);
+                        fn(Component.instanceFor(mutation.target), 'alter', mutation.attributeName);
                     }
                     if(mutation.type == 'characterData' && alter){
-                        fn(NodeWrapper.instanceFor(mutation.target), 'alter', 'value');
+                        fn(Component.instanceFor(mutation.target), 'alter', 'value');
                     }
                 }
             )
@@ -403,7 +432,7 @@ export class NodeWrapper {
         this._registeredObservers.push(observer);
 
         return this;
-    }
+    },
 
     async fetch(url, options = {}){
         const { progressBar } = this.document;
@@ -426,29 +455,20 @@ export class NodeWrapper {
             cleanUp();
             throw e;
         }
-    }
+    },
 
     abort(){
         while(this._registeredAbortControllers.length){
             this._registeredAbortControllers.pop().abort();
         }
         return this;
-    }
-
-    assignProps(...sources){
-        return assignProps(this, ...sources);
-    }
-
-    apply(name){
-        const component = components[name];
-        if(component) return component.call(this);
-    }
+    },
 
     find(...args){
         if(args.length == 1) args.unshift('descendants');
         const [ collection, selector ] = args;
         return this[collection].find(item => item.is(selector));
-    }
+    },
 
     findAll(){
         if(args.length == 1) args.unshift('descendants');
@@ -456,7 +476,7 @@ export class NodeWrapper {
         return this[collection].filter(item => item.is(selector));
     }
 
-}
+});
 
 const matchesSelector = (() => {
     if(typeof window == 'undefined') return () => false;
@@ -469,7 +489,7 @@ function cleanChildren(){
 }
 
 function clean(){
-    [...this.node.childNodes].forEach(node => node._nodeWrapper && clean.call(node._nodeWrapper));
+    [...this.node.childNodes].forEach(node => node._component && clean.call(node._component));
 
     while(this._registeredEventListeners.length){
         this.node.removeEventListener(...this._registeredEventListeners.pop());
@@ -485,7 +505,7 @@ function clean(){
 
     if(this._overlayChild) this._overlayChild.remove();
 
-    delete this.node._nodeWrapper;
+    delete this.node._component;
 }
 
 function clearTimers(){
@@ -551,7 +571,7 @@ function patchAttributes(attributes){
 
 function patchChildren(virtualChildren){
     const children = [...this.node.childNodes].map(
-        node => new NodeWrapper(node, true)
+        node => new Component(node, true)
     );
 
     for(let i = 0; i < virtualChildren.length; i++){
@@ -582,7 +602,7 @@ function patchChildren(virtualChildren){
     }
 }
 
-function insert(virtualNode, referenceChild, returnNodeWrapper = true){
+function insert(virtualNode, referenceChild, returnComponent = true){
     const { type, attributes, children } = virtualNode;
 
     let node;
@@ -599,7 +619,7 @@ function insert(virtualNode, referenceChild, returnNodeWrapper = true){
     }
 
     children.forEach(child => {
-        insert.call(new NodeWrapper(node, true), child, null, false);
+        insert.call(new Component(node, true), child, null, false);
     })
     
     this.node.insertBefore(
@@ -607,8 +627,8 @@ function insert(virtualNode, referenceChild, returnNodeWrapper = true){
         referenceChild && referenceChild.node
     );
     
-    if(returnNodeWrapper){
-        return NodeWrapper.instanceFor(node);
+    if(returnComponent){
+        return Component.instanceFor(node);
     }
 }
 
@@ -633,4 +653,17 @@ function normalizeVirtualNode(){
     }
 }
 
-EventWrapper.NodeWrapper = NodeWrapper;
+EventWrapper.Component = Component;
+
+[
+    ['#document', 'pinstripe-document'],
+    ['a', 'pinstripe-anchor'],
+    ['body', 'pinstripe-body'],
+    ['form', 'pinstripe-form']
+].forEach(([name, include]) => {
+    Component.register(name, {
+        meta(){
+            this.include(include);
+        }
+    })
+});

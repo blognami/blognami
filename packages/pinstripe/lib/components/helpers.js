@@ -8,7 +8,7 @@ export function loadFrame(confirm, target, method, url){
     
     if(target == '_overlay'){
         this.document.body.clip();
-        frame = this.document.descendants.find(node => node.is('body')).append(`<pinstripe-overlay load-on-init="false"></div>`).pop();
+        frame = this.document.descendants.find(node => node.is('body')).append(`<pinstripe-overlay load-on-init="false"></pinstripe-overlay>`).pop();
         frame._parent = this;
         this._overlayChild = frame;
     } else {

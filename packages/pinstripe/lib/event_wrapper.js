@@ -13,7 +13,7 @@ export class EventWrapper {
     }
 
     get target(){
-        return EventWrapper.NodeWrapper.instanceFor(this.event.target);
+        return EventWrapper.Component.instanceFor(this.event.target);
     }
 
     stopPropagation(){

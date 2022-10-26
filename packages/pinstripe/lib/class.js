@@ -7,9 +7,8 @@ export class Class {
 
     static include(...includes){
         includes.forEach(include => {
+            if(typeof include.meta == 'function') include.meta.call(this);
             this.prototype.assignProps(include, name => name != 'meta');
-            if(typeof include.meta != 'function') return;
-            include.meta.call(this);
         });
         return this;
     }
@@ -20,6 +19,10 @@ export class Class {
 
     static new(...args){
         return new this(...args);
+    }
+
+    static get parent(){
+        return this.__proto__;
     }
 
     constructor(...args){

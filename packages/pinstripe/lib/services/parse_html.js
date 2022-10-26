@@ -1,5 +1,5 @@
 
-import { parseHtml } from '../client/virtual_node.js';
+import { parseHtml } from '../virtual_node.js';
 
 export default {
     create(){
