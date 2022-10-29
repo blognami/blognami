@@ -25,7 +25,7 @@ export default {
         const extractFields = () => extractArgs().map(arg => {
             const matches = arg.match(/^(\^|)([^:]*)(:|)(.*)$/);
             const mandatory = matches[1] == '^';
-            const name = inflector.camelize(matches[2]);
+            const name = this.inflector.camelize(matches[2]);
             const type =  matches[4] || 'string';
             return {
                 mandatory,
@@ -41,7 +41,7 @@ export default {
                 const arg = args.shift();
                 const matches = arg.match(optionPattern);
                 if(matches){
-                    currentName = camelize(matches[1]);
+                    currentName = this.inflector.camelize(matches[1]);
                     if(out[currentName] === undefined){
                         out[currentName] = [];
                     }
