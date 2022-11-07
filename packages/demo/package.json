@@ -15,7 +15,6 @@
     "test:models:sqlite": "DATABASE_ADAPTER=sqlite DATABASE_FILENAME=test.db NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models"
   },
   "dependencies": {
-    "@faker-js/faker": "^6.0.0-alpha.5",
     "blognami": "^0.15.0",
     "pinstripe": "^0.15.0"
   },

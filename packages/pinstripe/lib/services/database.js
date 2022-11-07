@@ -4,9 +4,11 @@ import { Client } from "../database/client.js";
 
 export default {
     create(){
-        if(!this.context.root.databaseClient){
-            this.context.root.databaseClient = Client.new();
-        }
-        return this.defer(() => Database.new(this.context.root.databaseClient));
+        return this.defer(async () => {
+            if(!this.context.root.databaseClient){
+                this.context.root.databaseClient = Client.new(await this.config.database);
+            }
+            return Database.new(this.context.root.databaseClient)
+        });
     }
 };

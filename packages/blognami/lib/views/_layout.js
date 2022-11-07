@@ -72,66 +72,10 @@ export default {
                         <main id="main" class="main outer">
                             <div class="inner">
                                 <div class="wrapper">
-    
-                                    ${body}
-    
-                                    <aside class="sidebar">
-                                        <section class="section">
-                                            <h2 class="section-title">About</h2>
-                                                ${async () => {
-                                                    if(isSignedIn) return this.renderHtml`
-                                                        <div class="editable-area">
-                                                            <div class="editable-area-header">
-                                                                <a class="editable-area-button" href="/admin/edit_site_description" target="_overlay">Edit</a>
-                                                            </div>
-                                                            <div class="editable-area-body">
-                                                                ${this.renderMarkdown(await site.description)}
-                                                            </div>
-                                                        </div>
-                                                    `;
-                                                    return this.renderMarkdown(await site.description)
-                                                }}
-                                        </section>
-                        
-                                        ${async () => {
-                                            if(await featuredPosts.count() > 0) return this.renderHtml`
-                                                <section class="section">
-                                                    <h3 class="section-title">Featured</h3>
-                                                    <div class="featured feed">
-                                                        ${this.renderView('_posts', { posts: featuredPosts })}
-                                                    </div>
-                                                </section>
-                                            `;
-                                        }}
-    
-                                        ${async () => {
-                                            if(await tags.count() > 0) return this.renderHtml`
-                                                <section class="section">
-                                                    <h3 class="section-title">Tags</h3>
-                            
-                                                    <div class="tags">
-                                                        ${tags.all().map(({ name, slug }) => this.renderHtml`
-                                                            <a class="tags-item" href="/${slug}">
-                                                                <h3 class="tags-name">${name}</h3>
-                                                                <span class="tags-count">
-                                                                    ${async () => {
-                                                                        const count = await this.database.posts.where({ taggedWith: name }).count();
-                                                                        if(count == 1) return this.renderHtml`
-                                                                            ${count} post
-                                                                        `;
-    
-                                                                        return this.renderHtml`
-                                                                            ${count} posts
-                                                                        `;
-                                                                    }}
-                                                                </span>
-                                                            </a>
-                                                        `)}
-                                                    </div>
-                                                </section>
-                                            `;
-                                        }}
-                                    </aside>
+                                    <div>
+                                        ${body}
+                                    </div>
+                                    ${this.renderSidebar({ isSignedIn, site, featuredPosts, tags })}
                                 </div>
                             </div>
                         </main>
@@ -148,6 +92,68 @@ export default {
                     </div>
                 </body>
             </html>
+        `;
+    },
+
+    renderSidebar({ isSignedIn, site, featuredPosts, tags }){
+        return this.renderHtml`
+            <aside class="sidebar">
+                <section class="section">
+                    <h2 class="section-title">About</h2>
+                        ${async () => {
+                            if(isSignedIn) return this.renderHtml`
+                                <div class="editable-area">
+                                    <div class="editable-area-header">
+                                        <a class="editable-area-button" href="/admin/edit_site_description" target="_overlay">Edit</a>
+                                    </div>
+                                    <div class="editable-area-body">
+                                        ${this.renderMarkdown(await site.description)}
+                                    </div>
+                                </div>
+                            `;
+                            return this.renderMarkdown(await site.description)
+                        }}
+                </section>
+
+                ${async () => {
+                    if(await featuredPosts.count() > 0) return this.renderHtml`
+                        <section class="section">
+                            <h3 class="section-title">Featured</h3>
+                            <div class="featured feed">
+                                ${this.renderView('_posts', { posts: featuredPosts })}
+                            </div>
+                        </section>
+                    `;
+                }}
+
+                ${async () => {
+                    if(await tags.count() > 0) return this.renderHtml`
+                        <section class="section">
+                            <h3 class="section-title">Tags</h3>
+
+                            <div class="tags">
+                                ${tags.all().map(({ name, slug }) => this.renderHtml`
+                                    <a class="tags-item" href="/${slug}">
+                                        <h3 class="tags-name">${name}</h3>
+                                        <span class="tags-count">
+                                            ${async () => {
+                                                const count = await this.database.posts.where({ taggedWith: name }).count();
+                                                if(count == 1) return this.renderHtml`
+                                                    ${count} post
+                                                `;
+
+                                                return this.renderHtml`
+                                                    ${count} posts
+                                                `;
+                                            }}
+                                        </span>
+                                    </a>
+                                `)}
+                            </div>
+                        </section>
+                    `;
+                }}
+            </aside>
         `;
     }
 };

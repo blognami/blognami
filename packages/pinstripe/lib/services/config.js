@@ -1,23 +1,40 @@
 
+let createConfigPromise;
+
 export default {
-    async create(){
-        if(process.env.DATABASE_ADAPTER == 'mysql'){
-            return {
-                database: {
-                    adapter: 'mysql',
-                    host: 'localhost',
-                    user: 'root',
-                    password: '',
-                    database: `${ await this.project.config.name }_${process.env.NODE_ENV || 'development'}`
-                }
+    create(){
+        return this.defer(() => {
+            if(!createConfigPromise){
+                createConfigPromise = (async () => ({ 
+                    database: await this.createDatabaseConfig()  
+                }))();
             }
+            return createConfigPromise;
+        });
+    },
+
+    async createDatabaseConfig(){
+        const out = { adapter: 'sqlite' };
+
+        Object.keys(process.env).forEach(name => {
+            const matches = name.match(/^DATABASE_(.+)$/);
+            if(!matches) return;
+            const normalizedName = matches[1].toLowerCase().split(/_+/).map((s, i) => i > 0 ? s[0].toUpperCase() + s.slice(1) : s).join('');
+            out[normalizedName] = process.env[name];
+        });
+
+        const { adapter } = out;
+
+        if(adapter == 'sqlite'){
+            return Object.assign({
+                filename: `${await this.project.rootPath}/${process.env.NODE_ENV || 'development'}.db`
+            }, out);
         }
-    
-        return {
-            database: {
-                adapter: 'sqlite',
-                filename: `${ await this.project.rootPath }/${ await this.project.config.name }_${process.env.NODE_ENV || 'development'}.db`
-            }
-        }
+
+        return Object.assign({
+            host: 'localhost',
+            user: 'root',
+            password: '',
+        }, out);
     }
 };

@@ -1,6 +1,7 @@
 {
   "type": "module",
   "name": "blognami",
+  "description": "A slick publishing platform for Node.js.",
   "version": "0.15.0",
   "author": "Jody Salt",
   "license": "MIT",

@@ -1,15 +1,12 @@
 
-//TODO: use parseHtml service
-// import { VirtualNode } from '../virtual_node.js';
-// import { Url } from '../url.js';
 import { View } from '../view.js';
 import { default as mimeTypes } from 'mime-types';
 
 export default {
     async run(){
         this.pages = {};
-        const urls = Object.keys(View.classes).filter(path => !path.match(/(^|\/)_/)).map(path => {
-            return Url.fromString(`/${path.replace(/(^|\/)index$/, '')}`.replace(/^\/+/, '/'));
+        const urls = this.viewNames.filter(path => !path.match(/(^|\/)_/)).map(path => {
+            return new URL(`/${path.replace(/(^|\/)index$/, '')}`.replace(/^\/+/, '/'), 'http://localhost/');
         });
 
         while(urls.length){
@@ -25,7 +22,7 @@ export default {
                     const { params, headers } = pages.shift();
                     const contentType = headers['content-type'];
 
-                    const path = params._url.path;
+                    const path = params._url.pathname;
                     let filePath = path.replace(/^\//, '');
                     if(filePath.match(/(^|\/)$/)){
                         filePath = `${filePath}index`;
@@ -34,7 +31,7 @@ export default {
                         filePath = `${filePath}.${mimeTypes.extension(contentType)}`
                     }
                     
-                    const data = (await this.fetch({ _url: Url.fromString(path) }))[2];
+                    const data = (await this.fetch({ _url: new URL(path, 'http://localhost/') }))[2];
 
                     await generateFile(filePath, () => {
                         echo(data.join(''));
@@ -54,7 +51,7 @@ export default {
         page.headers = headers;
         if(status != 200 || headers['content-type'] != 'text/html') return;
         const html = data.join('');
-        const virtualDom = VirtualNode.fromString(html);
+        const virtualDom = this.parseHtml(html);
         const urls = this.extractUrls(virtualDom);
         while(urls.length){
             const url = urls.shift();
@@ -68,7 +65,7 @@ export default {
             ['src', 'href'].forEach(name => {
                 const value = attributes[name];
                 if(!value) return;
-                const url = Url.fromString(value);
+                const url = new URL(value, 'http://localhost/');
                 if(url.host != 'localhost') return;
                 out.push(url);
             });

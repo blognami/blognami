@@ -21,9 +21,13 @@ export default {
     
             await generateFile(`lib/commands/${normalizedName}.js`, () => {
                 line();
-                line(`export default () => {`);
+                line(`export default {`);
                 indent(() => {
-                    line(`console.log('${this.inflector.dasherize(normalizedName)} command coming soon!')`);
+                    line('run(){');
+                    indent(() => {
+                        line(`console.log('${this.inflector.dasherize(normalizedName)} command coming soon!')`);
+                    });
+                    line('}');
                 });
                 line('};');
                 line();

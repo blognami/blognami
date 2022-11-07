@@ -5,28 +5,8 @@ import { existsSync, unlinkSync } from 'fs';
 import { Class } from "../class.js";
 
 export const Client = Class.extend().include({
-    initialize(){
-        this.config = { adapter: 'sqlite' }
-        Object.keys(process.env).forEach(name => {
-            const matches = name.match(/^DATABASE_(.+)$/);
-            if(!matches) return;
-            const normalizedName = matches[1].toLowerCase().split(/_+/).map((s, i) => i > 0 ? s[0].toUpperCase() + s.slice(1) : s).join('');
-            this.config[normalizedName] = process.env[name];
-        });
-        
-        const { adapter } = this.config
-        if(adapter == 'sqlite'){
-            this.config = Object.assign({
-                filename: `${process.env.NODE_ENV || 'development'}.db`
-            }, this.config);
-        } else if(adapter == 'mysql'){
-            this.config = Object.assign({
-                host: 'localhost',
-                user: 'root',
-                password: '',
-            }, this.config);
-        }
-        
+    initialize(config){
+        this.config = config;
         this.lockLevel = 0;
         this.transactionLevel = 0;
     },

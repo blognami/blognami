@@ -16,19 +16,27 @@ export default {
     
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/views/_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/views/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { viewImporter as default } from 'pinstripe';`);
+                line(`export { View as default } from 'pinstripe';`);
                 line();
             });
     
             await generateFile(`lib/views/${normalizedName}`, () => {
                 line();
-                line('export default ({ renderHtml, params }) => renderHtml(`');
+                line('export default {');
                 indent(() => {
-                    line(`<h1>${normalizedName} view<h1></h1>`);
+                    line('render(){')
+                    indent(() => {
+                        line('return this.renderHtml`')
+                        indent(() => {
+                            line(`<h1>${normalizedName} view<h1></h1>`);
+                        });
+                        line('`;')
+                    });
+                    line('}')
                 });
-                line('`);');
+                line('};');
                 line();
             });
         });
