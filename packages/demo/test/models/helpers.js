@@ -1,11 +1,10 @@
 
-import 'blognami';
+import '../../lib/index.js';
 
 import { Workspace } from 'pinstripe';
 
 export const reset = async () => Workspace.run(async function(){
-    await this.database.drop();
-    await this.database.migrate();
+    await this.runCommand('reset-database');
 });
 
 export { Workspace } from 'pinstripe';
