@@ -10,7 +10,7 @@ export default {
             }
             return Database.new(this.context.root.databaseClient, {
                 tenant: {
-                    name: this.initialParams._headers['x-tenant'],
+                    name: this.initialParams._headers['x-tenant'] || this.initialParams._url.hostname.replace(/\..*$/, ''),
                     host: this.initialParams._url.hostname
                 }
             })
