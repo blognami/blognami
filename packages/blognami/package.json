@@ -2,7 +2,7 @@
   "type": "module",
   "name": "blognami",
   "description": "A slick publishing platform for Node.js.",
-  "version": "0.16.2",
+  "version": "0.17.0",
   "author": "Jody Salt",
   "license": "MIT",
   "scripts": {
@@ -15,6 +15,6 @@
     "sass": "^1.36.0"
   },
   "dependencies": {
-    "pinstripe": "^0.16.2"
+    "pinstripe": "^0.17.0"
   }
 }
