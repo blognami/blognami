@@ -11,11 +11,9 @@ Database.include({
                 const { tenant } = this.options;
                 if(tenant && out.info.tenants){
                     const { name, host } = tenant;
-                    if(name) {
-                        this.tenant = await out.tenants.where({ name }).first();
-                    } else {
-                        this.tenant = await out.tenants.where({ host }).first();
-                    }
+                    this.tenant = await (await out.tenants.tap(function(){
+                        this.where('(? = ? or ? = ?)', this.tableReference.createColumnReference('name'), name, this.tableReference.createColumnReference('host'), host);
+                    })).first();
                 }
                 return out;
             },

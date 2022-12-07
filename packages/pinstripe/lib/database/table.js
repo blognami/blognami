@@ -168,11 +168,12 @@ export const Table = Class.extend().include({
     },
 
     where(...args){
-        if(typeof args[0] == 'string'){
+        if(typeof args[0] == 'string' || Array.isArray(args[0])){
             this.expressions.push(args);
             return this;
         }
-        const [ scopedBy = {} ] = args;
+        const [ scopedBy ] = args;
+        if(typeof scopedBy != 'object') throw new Error(`Invalid argument (0) - expected object, array or string.`);
         const names = Object.keys(scopedBy);
         while(names.length){
             const name = names.shift();
@@ -180,6 +181,11 @@ export const Table = Class.extend().include({
             if(!fn) throw new Error(`No such scope "${name}" exists for "${this.constructor.name}".`);
             fn.call(this, scopedBy[name]);
         }
+        return this;
+    },
+
+    async tap(fn){
+        await fn.call(this);
         return this;
     },
 
