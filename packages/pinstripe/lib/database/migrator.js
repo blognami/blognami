@@ -17,7 +17,7 @@ export const Migrator = Class.extend().include({
         const migrations = Migration.names.map(name => Migration.for(name)).sort((a, b) => a.schemaVersion - b.schemaVersion);
         for(let i in migrations){
             const migration = migrations[i];
-            const isMigrationApplied = this.database.table('pinstripeAppliedMigrations').where({ schemaVersion: migration.schemaVersion }).count() > 0;
+            const isMigrationApplied = await this.database.table('pinstripeAppliedMigrations').where({ schemaVersion: migration.schemaVersion }).count() > 0;
             if(!isMigrationApplied){
                 if(isDevelopmentEnvironment) console.log(`Applying migration: ${migration.name}`);
                 await migration.new(this.database).migrate();
