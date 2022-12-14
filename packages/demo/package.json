@@ -11,8 +11,8 @@
     "clean": "rm -rf ./node_modules",
     "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
     "test:models": "yarn test:models:$(echo ${DATABASE_ADAPTER:-sqlite})",
-    "test:models:mysql": "DATABASE_ADAPTER=mysql DATABASE_DATABASE=blognami_test NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
-    "test:models:sqlite": "DATABASE_ADAPTER=sqlite DATABASE_FILENAME=test.db NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models"
+    "test:models:mysql": "DATABASE_ADAPTER=mysql NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
+    "test:models:sqlite": "DATABASE_ADAPTER=sqlite NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models"
   },
   "dependencies": {
     "blognami": "^0.17.0",

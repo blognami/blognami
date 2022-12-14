@@ -1,33 +1,47 @@
 
+import { existsSync } from 'fs';
+
 let createConfigPromise;
 
 export default {
     create(){
         return this.defer(() => {
             if(!createConfigPromise){
-                createConfigPromise = (async () => ({ 
-                    database: await this.createDatabaseConfig()  
-                }))();
+                createConfigPromise = this.createConfig();
             }
             return createConfigPromise;
         });
     },
 
-    async createDatabaseConfig(){
-        const out = { adapter: 'sqlite' };
+    async createConfig(){
+        let out = {};
+        const candidateConfigFilePath = `${await this.project.rootPath}/pinstripe.config.js`;
+        if(existsSync(candidateConfigFilePath)){
+            out = await (await import(candidateConfigFilePath)).default;
+        }
 
-        Object.keys(process.env).forEach(name => {
-            const matches = name.match(/^DATABASE_(.+)$/);
-            if(!matches) return;
-            const normalizedName = matches[1].toLowerCase().split(/_+/).map((s, i) => i > 0 ? s[0].toUpperCase() + s.slice(1) : s).join('');
-            out[normalizedName] = process.env[name];
-        });
+        const { 
+            database = { adapter: 'sqlite' },
+            mail = {}
+        } = out;
+        
+        return {
+            ...out,
+            database: await this.normalizeDatabaseConfig(database),
+            mail
+        };
+    },
+
+    async normalizeDatabaseConfig(config){
+        const out = { ...config };
 
         const { adapter } = out;
 
+        const environment = process.env.NODE_ENV || 'development';
+
         if(adapter == 'sqlite'){
             return Object.assign({
-                filename: `${await this.project.rootPath}/${process.env.NODE_ENV || 'development'}.db`
+                filename: `${await this.project.rootPath}/${environment}.db`
             }, out);
         }
 
@@ -35,6 +49,7 @@ export default {
             host: 'localhost',
             user: 'root',
             password: '',
+            database: `${await this.project.name}_${environment}`
         }, out);
     }
 };

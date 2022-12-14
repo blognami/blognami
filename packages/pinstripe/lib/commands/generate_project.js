@@ -32,6 +32,40 @@ export default {
                },
             }, null, 2));
          });
+
+         await generateFile(`pinstripe.config.js`, () => {
+            line(`const environment = process.env.NODE_ENV || 'development';`);
+            line();
+            line(`let database;`);
+            line(`if(environment == 'production'){`)
+            indent(() => {
+               line(`database = {`);
+               indent(() => {
+                  line(`adapter: 'mysql',`)
+                  line(`host: 'localhost',`);
+                  line(`user: 'root',`);
+                  line(`password: '',`);
+                  line(`database: \`${this.inflector.snakeify(name)}_\${environment}\``);
+               });
+               line(`};`);
+            });
+            line(`} else {`);
+            indent(() => {
+               line(`database = {`);
+               indent(() => {
+                  line(`adapter: 'sqlite',`);
+                  line(`filename: \`\${environment}.db\``)
+               });
+               line(`};`);
+            });
+            line(`}`);
+            line();
+            line(`export default {`);
+            indent(() => {
+               line(`database`);
+            })
+            line(`};`);
+         });
    
          await generateFile(`lib/index.js`, () => {
             line();
