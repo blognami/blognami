@@ -22,7 +22,7 @@ export default {
 
         const { 
             database = { adapter: 'sqlite' },
-            mail = {}
+            mail = { adapter: 'dummy' }
         } = out;
         
         return {

@@ -34,6 +34,7 @@ export default {
          });
 
          await generateFile(`pinstripe.config.js`, () => {
+            line();
             line(`const environment = process.env.NODE_ENV || 'development';`);
             line();
             line(`let database;`);
@@ -60,9 +61,38 @@ export default {
             });
             line(`}`);
             line();
+            line(`let mail;`);
+            line(`if(environment == 'production'){`)
+            indent(() => {
+               line(`mail = {`);
+               indent(() => {
+                  line(`adapter: 'smtp',`)
+                  line(`host: "smtp.example.com",`)
+                  line(`port: 465,`);
+                  line(`secure: true, // use TLS`);
+                  line(`auth: {`);
+                  indent(() => {
+                     line(`user: "username",`);
+                     line(`pass: "password",`);
+                  });
+                  line(`}`);
+               });
+               line(`};`);
+            });
+            line(`} else {`);
+            indent(() => {
+               line(`mail = {`);
+               indent(() => {
+                  line(`adapter: 'dummy'`);
+               });
+               line(`};`);
+            });
+            line(`}`);
+            line();
             line(`export default {`);
             indent(() => {
-               line(`database`);
+               line(`database,`);
+               line(`mail`);
             })
             line(`};`);
          });
