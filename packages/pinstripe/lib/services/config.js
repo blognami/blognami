@@ -39,17 +39,25 @@ export default {
 
         const environment = process.env.NODE_ENV || 'development';
 
-        if(adapter == 'sqlite'){
+        if(adapter == 'mysql'){
             return Object.assign({
-                filename: `${await this.project.rootPath}/${environment}.db`
+                host: 'localhost',
+                user: 'root',
+                password: '',
+                database: `${await this.project.name}_${environment}`
             }, out);
         }
 
         return Object.assign({
-            host: 'localhost',
-            user: 'root',
-            password: '',
-            database: `${await this.project.name}_${environment}`
+            adapter: 'sqlite',
+            filename: `${await this.project.rootPath}/${environment}.db`
         }, out);
+    },
+
+    normalizeMailConfig(config){
+        return {
+            defaults: {},
+            ...config
+        };
     }
 };

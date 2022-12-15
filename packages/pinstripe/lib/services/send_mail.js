@@ -13,9 +13,9 @@ export default {
         });
     },
 
-    createDummy(){
+    createDummy({ defaults }){
         return (mailOptions = {}) => {
-            const { text, html, ...otherMailOptions } = mailOptions;
+            const { text, html, ...otherMailOptions } = { ...defaults, ...mailOptions };
             console.log('');
             console.log('----------------------------------------');
             console.log(chalk.green('sendMail'));
@@ -39,8 +39,8 @@ export default {
         }
     },
 
-    createSmtp(config){
-        const transport = createTransport(config);
+    createSmtp({ defaults, ...config }){
+        const transport = createTransport(config, defaults);
         return (mailOptions = {}) => transport.sendMail(mailOptions);
     }
 };
