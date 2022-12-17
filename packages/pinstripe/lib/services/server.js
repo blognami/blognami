@@ -40,8 +40,6 @@ export default {
         const { method, url, headers } = request;
         const _url = new URL(url, 'http://localhost');
 
-        if(headers['x-host']) _url.host = headers['x-host'];
-
         const urlParams = {};
         _url.searchParams.forEach((value, key) => {
             urlParams[key] = value;

@@ -11,12 +11,15 @@ export const Database = Class.extend().include({
         this.assignProps({ name: 'database' });
     },
 
-    async initialize(client, options = {}){
+    async initialize(client){
         this.client = client;
-        this.options = options;
         if(!loadSchemaPromise) loadSchemaPromise = Row.loadSchema(client);
         await loadSchemaPromise;
         return trapify(this);
+    },
+
+    get withoutTenantScope(){
+        return Database.new(this.client);
     },
 
     table(name, fn){

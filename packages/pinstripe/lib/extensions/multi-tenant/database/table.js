@@ -16,7 +16,7 @@ Table.include({
             
             initialize(...args){
                 const out = initialize.call(this, ...args);
-                if(this.constructor.columns.tenantId && this.database.options.tenant){
+                if(this.constructor.columns.tenantId && this.database.scopedByTenant){
                     if(this.database.tenant){
                         this.where({ tenantId: this.database.tenant.id });
                     } else {
