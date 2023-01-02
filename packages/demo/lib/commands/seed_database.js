@@ -8,11 +8,11 @@ export default {
         if(process.env.TENANCY == 'multi'){
             await this.database.tenants.insert({
                 name: 'test',
-                host: 'localhost'
+                host: '127.0.0.1'
             });
         }
     
-        if(process.env.NODE_ENV == 'test') return;
+        if(process.env.SKIP_FIXTURES == 'true') return;
     
         await this.database.site.update({
             title: 'Hello World!',

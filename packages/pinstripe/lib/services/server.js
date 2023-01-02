@@ -38,7 +38,7 @@ export default {
 
     async extractParams(request){
         const { method, url, headers } = request;
-        const _url = new URL(url, 'http://localhost');
+        const _url = new URL(url, 'http://127.0.0.1');
 
         const urlParams = {};
         _url.searchParams.forEach((value, key) => {

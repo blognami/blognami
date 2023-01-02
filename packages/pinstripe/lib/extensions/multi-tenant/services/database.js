@@ -14,7 +14,7 @@ export default {
             if(out.info.tenants){
                 const headers = this.initialParams._headers;
                 const hostname = this.initialParams._url.hostname;
-                const host = (headers['host'] || hostname).toLowerCase();
+                const host = (headers['host'] || hostname).replace(/\:\d+$/, '').toLowerCase();
                 const { primaryDomain = '' } = await this.config;
                 const domainSuffix = `\.${primaryDomain}`.toLowerCase();
 

@@ -7,9 +7,10 @@
     "clean": "lerna run clean && rm -rf ./node_modules",
     "start": "lerna run start --scope demo --stream",
     "watch": "nodemon -e js,ejs,css --exec 'yarn start'",
-    "test": "yarn test:unit && yarn test:models",
+    "test": "yarn test:unit && yarn test:models && yarn test:e2e",
     "test:unit": "lerna run test:unit --stream",
     "test:models": "lerna run test:models --stream",
+    "test:e2e": "lerna run test:e2e --stream",
     "publish-all": "lerna publish"
   },
   "dependencies": {

@@ -4,7 +4,7 @@ export default {
         if(!this.context.hasOwnProperty('params')){
             this.context.params = {
                 _method: 'GET',
-                _url: new URL('http://localhost/'),
+                _url: new URL('http://127.0.0.1/'),
                 _headers: {}
             };
         }
