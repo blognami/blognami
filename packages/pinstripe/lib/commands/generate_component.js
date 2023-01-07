@@ -12,13 +12,13 @@ export default {
     
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/node_wrappers/_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/components/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { componentImporter as default } from 'pinstripe';`);
+                line(`export { Component as default } from 'pinstripe';`);
                 line();
             });
     
-            await generateFile(`lib/node_wrappers/${normalizedName}.client.js`, () => {
+            await generateFile(`lib/components/${normalizedName}.js`, () => {
                 line();
                 line(`export default {`);
                 indent(() => {

@@ -11,9 +11,9 @@ export default {
     
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/services/_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/services/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { serviceImporter as default } from 'pinstripe';`);
+                line(`export { ServiceFactory as default } from 'pinstripe';`);
                 line();
             });
     

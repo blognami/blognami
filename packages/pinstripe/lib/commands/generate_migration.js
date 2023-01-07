@@ -21,9 +21,9 @@ export default {
     
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/migrations/_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/migrations/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { migrationImporter as default } from 'pinstripe';`);
+                line(`export { Migration as default } from 'pinstripe/database';`);
                 line();
             });
     

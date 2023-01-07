@@ -22,9 +22,9 @@ export default {
     
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/models/_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/models/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { modelImporter as default } from 'pinstripe';`);
+                line(`export { Row as default } from 'pinstripe/database';`);
                 line();
             });
     

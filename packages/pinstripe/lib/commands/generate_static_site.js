@@ -31,7 +31,7 @@ export default {
                         filePath = `${filePath}.${mimeTypes.extension(contentType)}`
                     }
                     
-                    const data = (await this.fetch({ _url: new URL(path, 'http://localhost/') }))[2];
+                    const data = (await this.fetch({ _url: new URL(path, 'http://127.0.0.1/') }))[2];
 
                     await generateFile(filePath, () => {
                         echo(data.join(''));
