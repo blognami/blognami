@@ -7,7 +7,7 @@ export default {
         return this.defer(async () => {
             const { mail: mailConfig = {} } = await this.config;
             const { adapter = 'dummy', ...adapterConfig } = mailConfig;
-            if(adapter == 'dummy') return this.createDummy();
+            if(adapter == 'dummy') return this.createDummy(adapterConfig);
             if(adapter == 'smtp') return this.createSmtp(adapterConfig);
             throw new Error(`No such mail adapter '${adapter}' exists.`);
         });
