@@ -1,12 +1,11 @@
 
-import { View } from '../view.js';
 import { default as mimeTypes } from 'mime-types';
 
 export default {
     async run(){
         this.pages = {};
         const urls = this.viewNames.filter(path => !path.match(/(^|\/)_/)).map(path => {
-            return new URL(`/${path.replace(/(^|\/)index$/, '')}`.replace(/^\/+/, '/'), 'http://localhost/');
+            return new URL(path, 'http://127.0.0.1/');
         });
 
         while(urls.length){
@@ -65,8 +64,8 @@ export default {
             ['src', 'href'].forEach(name => {
                 const value = attributes[name];
                 if(!value) return;
-                const url = new URL(value, 'http://localhost/');
-                if(url.host != 'localhost') return;
+                const url = new URL(value, 'http://127.0.0.1/');
+                if(url.host != '127.0.0.1') return;
                 out.push(url);
             });
         });
