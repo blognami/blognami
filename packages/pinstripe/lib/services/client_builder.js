@@ -58,8 +58,8 @@ export default {
                 build.onLoad({ filter: /\.js$/ }, async args => {
                     const { path } = args;
                     const contents = await promisify(readFile)(path, 'utf8');
+                    if(!contents.match(/pinstripe-if-client/)) return;
                     const alteredContents = contents.replace(/(.*)\/\/\s*pinstripe-if-client:\s*(.*)/g, '$2 // pinstripe-if-server: $1');
-        
                     return { contents: alteredContents, loader: 'js' };
                 });
             }
