@@ -6,10 +6,11 @@ export default {
         const pageable = await this.database.pageables.where({ slug }).first();
         if(pageable) {
             const pageableName = pageable.constructor.name;
-            return this.renderView(`pageables/_${pageable.constructor.name}`, {
+            const out = await this.renderView(`pageables/_${pageable.constructor.name}`, {
                 ...otherParams,
                 [pageableName]: pageable,
             });
+            if(out != undefined) return out;
         }
         return this.renderView('_404');
     }

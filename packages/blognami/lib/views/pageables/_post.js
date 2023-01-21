@@ -2,6 +2,7 @@
 export default {
     async render(){
         const { post } = this.params;
+
         const postUser = await post.user;
     
         const previousPost = await this.database.posts.where({ idNe: post.id, publishedAtLt: post.publishedAt }).orderBy('publishedAt', 'desc').first();
@@ -15,6 +16,8 @@ export default {
     
         const isSignedIn = user !== undefined;
         const isAdmin = isSignedIn && user.role == 'admin';
+
+        if(!post.published && !isAdmin) return;
     
         return this.renderView('_layout', {
             title: post.title,

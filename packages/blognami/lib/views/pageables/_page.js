@@ -11,6 +11,8 @@ export default {
     
         const isSignedIn = user !== undefined;
         const isAdmin = isSignedIn && user.role == 'admin';
+
+        if(!page.published && !isAdmin) return;
     
         return this.renderView('_layout', {
             title: page.title,
