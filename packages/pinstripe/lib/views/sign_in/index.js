@@ -17,10 +17,12 @@ export default {
                     const user = await this.database.users.where({ email }).first();
                     if(user){
                         const password = await user.generatePassword();
-                        await this.sendMail({ 
+                        
+                        this.runInNewWorkspace(({ sendMail }) => sendMail({ 
                             to: email,
                             subject: 'Your one-time-password',
-                            text: `Your one-time-password: "${password}" - this will be valid for approximately 3 mins.`});
+                            text: `Your one-time-password: "${password}" - this will be valid for approximately 3 mins.`
+                        }));
                     }
                     return this.renderHtml`
                         <span data-component="pinstripe-anchor" data-trigger="click" data-href="/sign_in/verify_password?email=${email}"></span>
