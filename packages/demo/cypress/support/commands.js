@@ -23,3 +23,22 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('typeOtpFor', { prevSubject: true }, async (subject, email) => {
+   const response = await fetch(`/test/generate-otp?email=${encodeURIComponent(email)}`);
+   const { otp } = await response.json();
+   cy.get(subject.selector).type(otp);
+   return subject;
+});
+
+Cypress.Commands.add('signIn', (email) => {
+    cy.get('.navbar-item').contains('Sign in').click();
+    cy.get('input[name="email"]').type(email);
+    cy.get('button[type="submit"]').contains('Next').click();
+    cy.get('input[name="password"]').typeOtpFor(email);
+    cy.get('button[type="submit"]').contains('Submit').click();
+});
+
+Cypress.Commands.add('signOut', () => {
+    cy.get('.navbar-item').contains('Sign out').click();
+});

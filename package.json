@@ -11,6 +11,7 @@
     "test:unit": "lerna run test:unit --stream",
     "test:models": "lerna run test:models --stream",
     "test:e2e": "lerna run test:e2e --stream",
+    "cypress:open": "lerna run cypress:open --scope demo --stream",
     "publish-all": "lerna publish"
   },
   "dependencies": {
