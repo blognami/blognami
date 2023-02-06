@@ -1,8 +1,8 @@
 
 import 'blognami';
-import { importAll } from 'pinstripe';
-import 'pinstripe/multi-app';
+import { importAll } from 'sintra';
+import 'sintra/multi-app';
 
-if(process.env.TENANCY == 'multi') import('pinstripe/multi-tenant');
+if(process.env.TENANCY == 'multi') import('sintra/multi-tenant');
 
 importAll(import.meta.url);

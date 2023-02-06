@@ -1,20 +1,11 @@
 
-import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
+import { Class, TEXT_ONLY_TAGS, Inflector, VirtualNode, Registry } from "haberdash";
 
-import { VirtualNode } from './virtual_node.js';
 import { EventWrapper } from './event_wrapper.js';
-import { TEXT_ONLY_TAGS } from './constants.js';
-
-import { Class } from './class.js';
-import { Registry } from './registry.js';
-import { Client } from './client.js'; // pinstripe-if-client: const Client = undefined;
-import { Inflector } from './inflector.js';
 
 export const Component = Class.extend().include({
     meta(){
         this.include(Registry);
-
-        const { importFile } = this;
 
         this.assignProps({
             instanceFor(node){
@@ -31,18 +22,6 @@ export const Component = Class.extend().include({
 
             normalizeName(name){
                 return Inflector.instance.dasherize(name);
-            },
-
-            async importFile(params){
-                const { filePath, relativeFilePathWithoutExtension } = params;
-                if((await import(filePath)).default){
-                    Client.instance.addModule(`
-                        import { Component } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};
-                        import include from ${JSON.stringify(filePath)};
-                        Component.register(${JSON.stringify(relativeFilePathWithoutExtension)}, include);
-                    `);
-                }
-                return importFile.call(this, params);
             }
         });
     },

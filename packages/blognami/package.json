@@ -15,6 +15,6 @@
     "sass": "^1.36.0"
   },
   "dependencies": {
-    "pinstripe": "^0.21.0"
+    "sintra": "^0.21.0"
   }
 }

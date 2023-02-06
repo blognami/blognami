@@ -1,5 +1,5 @@
 
-import { inflector } from "pinstripe";
+import { inflector } from 'haberdash';
 
 export default {
     meta(){

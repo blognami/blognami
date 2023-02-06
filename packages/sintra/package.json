@@ -1,0 +1,52 @@
+{
+  "type": "module",
+  "name": "sintra",
+  "description": "A slick web framework for Node.js.",
+  "version": "0.21.0",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js",
+    "./database": "./lib/database/index.js",
+    "./multi-tenant": "./lib/extensions/multi-tenant/index.js",
+    "./multi-app": "./lib/extensions/multi-app/index.js"
+  },
+  "bin": {
+    "sintra": "./cli.js"
+  },
+  "scripts": {
+    "clean": "rm -rf ./node_modules",
+    "start": "IS_LOCAL_SINTRA=true sintra start-server",
+    "test": "yarn test:unit",
+    "test:unit": "#jest lib"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
+    "@babel/preset-env": "^7.9.0",
+    "babel-jest": "^25.1.0",
+    "jest": "^28.0.1",
+    "jest-environment-jsdom": "^29.1.2",
+    "ramda": "^0.27.0"
+  },
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "busboy": "^0.3.1",
+    "chalk": "^4.1.0",
+    "cron-parser": "^4.3.0",
+    "haberdash": "0.21.0",
+    "esbuild": "^0.15.12",
+    "html-entities": "^2.3.2",
+    "js-yaml": "^4.1.0",
+    "luxon": "^2.3.1",
+    "markdown-it": "^12.2.0",
+    "memfs": "^3.2.2",
+    "mime-types": "^2.1.28",
+    "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.2",
+    "pinstripe": "0.21.0",
+    "sqlite3": "^5.0.2",
+    "tmp": "^0.2.1",
+    "unionfs": "^4.4.0"
+  }
+}
