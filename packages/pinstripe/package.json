@@ -2,7 +2,7 @@
   "type": "module",
   "name": "pinstripe",
   "description": "A slick web framework for your browser.",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -22,6 +22,6 @@
     "jest-environment-jsdom": "^29.1.2"
   },
   "dependencies": {
-    "haberdash": "0.21.0"
+    "haberdash": "^0.22.0"
   }
 }

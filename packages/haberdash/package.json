@@ -2,7 +2,7 @@
   "type": "module",
   "name": "haberdash",
   "description": "A slick utility library.",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {

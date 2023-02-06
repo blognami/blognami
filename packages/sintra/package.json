@@ -2,7 +2,7 @@
   "type": "module",
   "name": "sintra",
   "description": "A slick web framework for Node.js.",
-  "version": "0.21.0",
+  "version": "0.22.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -34,8 +34,8 @@
     "busboy": "^0.3.1",
     "chalk": "^4.1.0",
     "cron-parser": "^4.3.0",
-    "haberdash": "0.21.0",
     "esbuild": "^0.15.12",
+    "haberdash": "^0.22.0",
     "html-entities": "^2.3.2",
     "js-yaml": "^4.1.0",
     "luxon": "^2.3.1",
@@ -44,7 +44,7 @@
     "mime-types": "^2.1.28",
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.2",
-    "pinstripe": "0.21.0",
+    "pinstripe": "^0.22.0",
     "sqlite3": "^5.0.2",
     "tmp": "^0.2.1",
     "unionfs": "^4.4.0"
