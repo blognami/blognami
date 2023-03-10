@@ -103,7 +103,9 @@ export const Component = Class.extend().include({
     },
 
     get realParent(){
-        return this.node.parentNode ? this.constructor.instanceFor(this.node.parentNode) : null;
+        if(this.node.parentNode) return this.constructor.instanceFor(this.node.parentNode);
+        if(this.node.host instanceof Element) return this.constructor.instanceFor(this.node.host);
+        return null;
     },
 
     get parent(){
@@ -464,6 +466,9 @@ const matchesSelector = (() => {
 })();
 
 function cleanChildren(){
+    if(this.node.shadowRoot){
+        this.shadow.children.forEach(child => clean.call(child));
+    }
     this.children.forEach(child => clean.call(child));
 }
 
@@ -494,6 +499,9 @@ function clearTimers(){
 }
 
 function initChildren(){
+    if(this.node.shadowRoot){
+        this.shadow.children.forEach(child => initChildren.call(child));
+    }
     this.children.forEach(child => initChildren.call(child));
 }
 
@@ -516,13 +524,18 @@ function createVirtualNode(html){
 }
 
 function patch(attributes, virtualChildren){
-    const isEmptyFrame = this.is('.frame') && virtualChildren.length == 0;
+    const isEmptyFrame = this.isFrame && virtualChildren.length == 0;
     if(isEmptyFrame && attributes['data-load-on-init'] === undefined){
         attributes['data-load-on-init'] = 'true';
     }
     patchAttributes.call(this, attributes);
     if(isEmptyFrame) return;
-    patchChildren.call(this, virtualChildren);
+    if(this.is('pinstripe-silo, [data-component="pinstripe-silo"]')){
+        patchChildren.call(this.shadow, virtualChildren);
+        patchChildren.call(this, []);
+    } else {
+        patchChildren.call(this, virtualChildren);
+    }
 }
 
 function patchAttributes(attributes){
@@ -601,10 +614,17 @@ function insert(virtualNode, referenceChild, returnComponent = true){
         insert.call(new Component(node, true), child, null, false);
     })
     
-    this.node.insertBefore(
-        node,
-        referenceChild && referenceChild.node
-    );
+    if(this.is('pinstripe-silo, [data-component="pinstripe-silo"]')){
+        this.shadow.node.insertBefore(
+            node,
+            referenceChild && referenceChild.node
+        );
+    } else {
+        this.node.insertBefore(
+            node,
+            referenceChild && referenceChild.node
+        );
+    }
     
     if(returnComponent){
         return Component.instanceFor(node);
