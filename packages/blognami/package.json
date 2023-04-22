@@ -15,6 +15,7 @@
     "sass": "^1.36.0"
   },
   "dependencies": {
+    "generate-avatar": "^1.4.10",
     "sintra": "^0.22.0"
   }
 }

@@ -31,7 +31,7 @@ export const Client = Class.extend().include({
                 }
             });   
         }
-        return run.call(this, ...prepare.call(this, query));
+        return run.call(this, ...prepare.call(this, await resolveQuery(query)));
     },
 
     async lock(fn){
@@ -129,6 +129,17 @@ export const Client = Class.extend().include({
     }
 });
 
+
+async function resolveQuery(query){
+    let out = await query;
+    if(Array.isArray(out)){
+        out = [ ...out ];
+        for(let i = 0; i < out.length; i++){
+            out[i] = await resolveQuery(out[i]);
+        }
+    }
+    return out;
+}
 
 function flattenFirst(query){
     if(!Array.isArray(query[0])) return query;

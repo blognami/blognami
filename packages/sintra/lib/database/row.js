@@ -149,79 +149,82 @@ export const Row = Model.extend().include({
                     modifiedFields[name] = this[name];
                 }
             });
-            if(Object.keys(modifiedFields).length == 0) return this;
+            
+            if(Object.keys(modifiedFields).length) {
+                const query = [];
 
-            const query = [];
+                const tableReference = TableReference.new(this.constructor.collectionName);
 
-            const tableReference = TableReference.new(this.constructor.collectionName);
-
-            if(this._exists){
-                query.push('update ? set ', tableReference);
-                Object.keys(modifiedFields).forEach((name, i) => {
-                    if(name == 'id') return;
-                    this.database.client.adapt({
-                        mysql(){
-                            if(name.match(/(^id|Id)$/)){
-                                query.push(i > 0 ? ', ? = uuid_to_bin(?)' : '? = uuid_to_bin(?)', tableReference.createColumnReference(name), modifiedFields[name]);
-                            } else {
-                                query.push(i > 0 ? ', ? = ?' : '? = ?', tableReference.createColumnReference(name), modifiedFields[name]);
-                            } 
-                        },
-
-                        sqlite(){
-                            query.push(i > 0 ? `, \`${name}\` = ?` : `\`${name}\` = ?`, modifiedFields[name]);
-                        }
-                    });
-                });
-                this.database.client.adapt(this, {
-                    mysql(){
-                        query.push(' where ? = uuid_to_bin(?)', tableReference.createColumnReference('id'), this._initialFields.id);
-                    },
-
-                    sqlite(){
-                        query.push(' where ? = ?', tableReference.createColumnReference('id'), this._initialFields.id);
-                    }
-                });
-                
-            } else {
-                query.push('insert into ?(', tableReference);
-                Object.keys(modifiedFields).forEach((name, i) => {
-                    this.database.client.adapt({
-                        mysql(){
-                            query.push(i > 0 ? ', ?' : '?', tableReference.createColumnReference(name));
-                        },
-
-                        sqlite(){
-                            query.push(i > 0 ? `, \`${name}\`` : `\`${name}\``,);
-                        }
-                    });
-                });
-                query.push(') values(');
-                Object.keys(modifiedFields).forEach((name, i) => {
-                    if(name.match(/(^id|Id)$/)){
+                if(this._exists){
+                    query.push('update ? set ', tableReference);
+                    Object.keys(modifiedFields).forEach((name, i) => {
+                        if(name == 'id') return;
                         this.database.client.adapt({
                             mysql(){
-                                query.push(i > 0 ? ', uuid_to_bin(?)' : 'uuid_to_bin(?)', modifiedFields[name]);
+                                if(name.match(/(^id|Id)$/)){
+                                    query.push(i > 0 ? ', ? = uuid_to_bin(?)' : '? = uuid_to_bin(?)', tableReference.createColumnReference(name), modifiedFields[name]);
+                                } else {
+                                    query.push(i > 0 ? ', ? = ?' : '? = ?', tableReference.createColumnReference(name), modifiedFields[name]);
+                                } 
                             },
 
                             sqlite(){
-                                query.push(i > 0 ? ', ?' : '?', modifiedFields[name]);
+                                query.push(i > 0 ? `, \`${name}\` = ?` : `\`${name}\` = ?`, modifiedFields[name]);
                             }
                         });
-                    } else {
-                        query.push(i > 0 ? ', ?' : '?', modifiedFields[name]);
-                    }
+                    });
+                    this.database.client.adapt(this, {
+                        mysql(){
+                            query.push(' where ? = uuid_to_bin(?)', tableReference.createColumnReference('id'), this._initialFields.id);
+                        },
+
+                        sqlite(){
+                            query.push(' where ? = ?', tableReference.createColumnReference('id'), this._initialFields.id);
+                        }
+                    });
+                    
+                } else {
+                    query.push('insert into ?(', tableReference);
+                    Object.keys(modifiedFields).forEach((name, i) => {
+                        this.database.client.adapt({
+                            mysql(){
+                                query.push(i > 0 ? ', ?' : '?', tableReference.createColumnReference(name));
+                            },
+
+                            sqlite(){
+                                query.push(i > 0 ? `, \`${name}\`` : `\`${name}\``,);
+                            }
+                        });
+                    });
+                    query.push(') values(');
+                    Object.keys(modifiedFields).forEach((name, i) => {
+                        if(name.match(/(^id|Id)$/)){
+                            this.database.client.adapt({
+                                mysql(){
+                                    query.push(i > 0 ? ', uuid_to_bin(?)' : 'uuid_to_bin(?)', modifiedFields[name]);
+                                },
+
+                                sqlite(){
+                                    query.push(i > 0 ? ', ?' : '?', modifiedFields[name]);
+                                }
+                            });
+                        } else {
+                            query.push(i > 0 ? ', ?' : '?', modifiedFields[name]);
+                        }
+                    });
+                    query.push(')');
+                }
+
+                await this.database.run(query);
+
+                Object.keys(modifiedFields).forEach(name => {
+                    this[name] = modifiedFields[name];
+                    this._initialFields[name] = modifiedFields[name];
                 });
-                query.push(')');
+
+                this._exists = true;
+
             }
-
-            await this.database.run(query);
-
-            Object.keys(modifiedFields).forEach(name => {
-                this[name] = modifiedFields[name];
-            });
-
-            this._exists = true;
 
             await (this._exists ? this._runAfterUpdateCallbacks() : this._runAfterInsertCallbacks());
 
@@ -325,6 +328,11 @@ function defineRelationship({ name, type, collectionName, fromKey, toKey, cascad
     this.prototype.assignProps({
         get [name](){
             return defer(() => {
+                if(fromKey != 'id'){
+                    const out = this.database[collectionName].where({ [toKey]: this[fromKey] });
+                    if(type == 'singular') return out.first();
+                    return out;
+                }
                 const out = this.database[this.constructor.collectionName].where({ id: this.id })[name];
                 if(type == 'singular') return out.first();
                 return out;

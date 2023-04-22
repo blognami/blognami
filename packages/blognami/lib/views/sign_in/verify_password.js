@@ -3,7 +3,15 @@ import * as crypto from 'crypto';
 
 export default {
     render(){
-        const { email } = this.params;
+        const { title = 'Sign In', redirectUrl, email } = this.params;
+        
+        let optionalParams = '';
+        if(title != 'Sign In'){
+            optionalParams += `&title=${encodeURIComponent(title)}`;
+        }
+        if(redirectUrl){
+            optionalParams += `&redirectUrl=${encodeURIComponent(redirectUrl)}`;
+        }
         
         const that = this;
 
@@ -14,22 +22,24 @@ export default {
                     this.validateWith(async function(){
                         if(!this.isValidationError('password')){
                             const user = await that.database.users.where({ email }).first();
-                            if(!user || !(await user.verifyPassword(this.password))){
+                            if((user && !await user.verifyPassword(this.password)) || (!user && !await that.database.site.verifyPassword(email, this.password))){
                                 this.setValidationError('general', `Either your email ("${email}") or password is incorrect.`);
-                            }
-                            if(user){
-                                await user.logFailedSignIn();
+                                if(user) await user.logFailedSignIn();
                             }
                         }
                     });
                 }
             }),
             {
-                title: 'Sign In',
+                title,
                 fields: [{ name: 'password', type: 'password', label: 'Your one-time-password', placeholder: 'Enter the one-time-password this has just been sent to you (via email).' }],
-            
+                submitTitle: 'Next',
+                
                 async success(){
                     const user = await that.database.users.where({ email }).first();
+                    if(!user) return that.renderHtml`
+                        <span data-component="pinstripe-anchor" data-trigger="click" data-href="/sign_in/create_account?email=${encodeURIComponent(email)}&password=${encodeURIComponent(await that.database.site.generatePassword(email))}${optionalParams}"></span>
+                    `;
                     await user.logSuccessfulSignIn();
                     const passString = crypto.randomUUID();
                     const session = await that.database.sessions.insert({
@@ -39,7 +49,16 @@ export default {
                     });
                     
                     const [ status, headers, body ] = await that.renderHtml`
-                        <span data-component="pinstripe-anchor" data-target="_top" data-trigger="click"></span>
+                        ${() => {
+                            if(redirectUrl){
+                                return that.renderHtml`
+                                    <span data-component="pinstripe-anchor" data-href="${redirectUrl}" data-trigger="click"></span>
+                                `;
+                            }
+                            return that.renderHtml`
+                                <span data-component="pinstripe-anchor" data-target="_top" data-trigger="click"></span>
+                            `;
+                        }}
                     `.toResponseArray();
             
                     headers['Set-Cookie'] = `sintraSession=${session.id}:${passString}; Path=/`;

@@ -487,6 +487,8 @@ export const Table = Class.extend().include({
     }
 });
 
+Union.Table = Table;
+
 function joinToUnion(fromKey, collectionName, toKey){
     return Union.new(
         this.database,

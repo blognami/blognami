@@ -1,25 +1,28 @@
-/**
- * @jest-environment jsdom
- */
 
 import { VirtualNode } from './virtual_node';
-import R from 'ramda';
 
 [   
     {
         html: '<a class="&pound; ssdsd" href="?foo=apple&bar=pear">Test</a>',
-        expectedProperties: {
-            'children.length': 1,
-            'children.0.type': 'a',
-            'children.0.attributes.href': '?foo=apple&bar=pear',
-            'children.0.children.length': 1
-        }
+        expectedProperties: [
+            [({ children }) => children.length, 1],
+            [({ children }) => children[0].type, 'a'],
+            [({ children }) => children[0].attributes.href, '?foo=apple&bar=pear'],
+            [({ children }) => children[0].children.length, 1]
+        ]
+    },
+
+    {
+        html: `<img src="<svg>">`,
+        expectedProperties: [
+            [({ children }) => children[0].attributes.src, '<svg>'],
+        ]
     }
 ].forEach(({ html, expectedProperties }, i) => {
     const fragment = VirtualNode.fromString(html);
-    for(const path in expectedProperties){
-        test(`fromString (${i}, ${path})`, () => {
-            expect(R.path(path.split(/\./), fragment)).toBe(expectedProperties[path]);
+    expectedProperties.forEach(([selector, expectedValue]) => {
+        test(`fromString (${i})`, () => {
+            expect(selector(fragment)).toBe(expectedValue);
         });
-    }
+    })
 });

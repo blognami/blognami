@@ -29,15 +29,23 @@ export default {
     
             await generateFile(`lib/migrations/${name}.js`, () => {
                 line();
-                line(`export default async ({ database }) => {`);
+                line(`export default {`);
                 indent(() => {
-                    line();
-                    if(table && fields.length){
-                        fields.forEach(({ name, type }) => {
-                            line(`await database.${table}.addColumn('${name}', '${type}');`);
-                        });
-                        line();
-                    }
+                    line(`async migrate(){`);
+                    indent(() => {
+                        if(table && fields.length){
+                            line(`await this.database.table('${table}', async ${table} => {`);
+                            indent(() => {
+                                fields.forEach(({ name, type }) => {
+                                    line(`await ${table}.addColumn('${name}', '${type}');`);
+                                });
+                            })
+                            line(`});`);
+                        } else {
+                            line();
+                        }
+                    })
+                    line(`}`);
                 })
                 line('};');
                 line();

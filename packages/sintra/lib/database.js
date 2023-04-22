@@ -1,5 +1,5 @@
 
-import { Class, trapify } from 'haberdash';
+import { Class, trapify, defer } from 'haberdash';
 import { Table, Union, Row, Migrator } from './database/index.js';
 
 let loadSchemaPromise;
@@ -22,26 +22,30 @@ export const Database = Class.extend().include({
     },
 
     table(name, fn){
-        const out = Table.create(name, this);
-        if(fn) return fn.call(out, out);
-        return out;
+        return defer(() => {
+            const out = Table.create(name, this);
+            if(fn) return fn.call(out, out);
+            return out;
+        });
     },
 
     union(name){
-        return Union.create(name, this);
+        return defer(() => Union.create(name, this));
     },
 
-    async singleton(name){
-        const { abstract, singleton, collectionName } = Row.for(name);
-        if(!singleton || abstract) return;
-        const table = this.table(collectionName);
-        const out = await table.first();
-        if(out) return out;
-        return this.lock(async () => {
+    singleton(name){
+        return defer(async () => {
+            const { abstract, singleton, collectionName } = Row.for(name);
+            if(!singleton || abstract) return;
+            const table = this.table(collectionName);
             const out = await table.first();
             if(out) return out;
-            await table.insert();
-            return table.first();
+            return this.lock(async () => {
+                const out = await table.first();
+                if(out) return out;
+                await table.insert();
+                return table.first();
+            });
         });
     },
 

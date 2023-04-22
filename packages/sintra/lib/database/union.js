@@ -11,7 +11,7 @@ export const Union = Class.extend().include({
             },
 
             create(name, database){
-                return this.new(database, this.tableNamesFor(name).map(tableName => database.table(tableName)));
+                return this.new(database, this.tableNamesFor(name).map(tableName => this.Table.create(tableName, database)));
             }
         });
     },

@@ -1,5 +1,6 @@
 
 import { spawnSync } from 'child_process';
+import * as crypto from 'crypto';
 
 export default {
    async run(){
@@ -92,7 +93,8 @@ export default {
             line(`export default {`);
             indent(() => {
                line(`database,`);
-               line(`mail`);
+               line(`mail,`);
+               line(`salt: '${crypto.randomUUID()}'`)
             })
             line(`};`);
          });

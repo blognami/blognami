@@ -6,6 +6,7 @@ export default {
             await sites.addColumn('description', 'text');
             await sites.addColumn('accentColor', 'string');
             await sites.addColumn('language', 'string');
+            await sites.addColumn('salt', 'string');
         });
     }
 };

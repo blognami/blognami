@@ -88,6 +88,7 @@ export default {
                                                 }}</p>
                                                 <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
                                                 <p><b>Published:</b> ${post.published ? 'true' : 'false'}</p>
+                                                <p><b>enableComments:</b> ${post.enableComments ? 'true' : 'false'}</p>
                                             </section>
                                         </div>
                                     </div>
@@ -108,6 +109,9 @@ export default {
                                 `;
                             }}
                             
+                            ${() => {
+                                if(post.enableComments) return this.renderView('_comments', { commentable: post })
+                            }}
                         </div>
     
                         <footer class="article-footer canvas">

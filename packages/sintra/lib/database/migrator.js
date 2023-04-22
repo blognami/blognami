@@ -8,7 +8,7 @@ export const Migrator = Class.extend().include({
     },
 
     async migrate(){
-        if(!this.database.table('sintraAppliedMigrations').exists){
+        if(!await this.database.table('sintraAppliedMigrations').exists){
             await this.database.table('sintraAppliedMigrations', async sintraAppliedMigrations => {
                 await sintraAppliedMigrations.addColumn('schemaVersion', 'integer');
             });

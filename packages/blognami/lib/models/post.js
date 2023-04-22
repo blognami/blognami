@@ -5,6 +5,7 @@ export default {
     meta(){
         this.include('pageable');
         this.include('tagable');
+        this.include('commentable');
         
         this.belongsTo('user');
 

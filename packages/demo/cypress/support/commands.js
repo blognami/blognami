@@ -36,7 +36,7 @@ Cypress.Commands.add('signIn', (email) => {
     cy.get('input[name="email"]').type(email);
     cy.get('button[type="submit"]').contains('Next').click();
     cy.get('input[name="password"]').typeOtpFor(email);
-    cy.get('button[type="submit"]').contains('Submit').click();
+    cy.get('button[type="submit"]').contains('Next').click();
 });
 
 Cypress.Commands.add('signOut', () => {

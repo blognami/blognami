@@ -154,7 +154,7 @@ const extractFields = (formAdapter, options) => {
         out.type = optionsField.type || formAdapterField.type || 'text';
         out.component = optionsField.component || formAdapterField.component;
         out.placeholder = optionsField.placeholder || formAdapterField.placeholder;
-        out.value = formAdapterField.value;
+        out.value = optionsField.value || formAdapterField.value;
         return out;
     });
 };

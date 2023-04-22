@@ -11,7 +11,7 @@ export default {
         const fields = extractFields();
     
         const collectionName = this.inflector.camelize(this.inflector.pluralize(name));
-        if(!await this.database[collectionName].exists){
+        if(!await this.database[collectionName]){
             const denormalizedFields = fields.map(({ mandatory, name, type }) => {
                 return `${ mandatory ? '^' : '' }${name}:${type}`
             });
