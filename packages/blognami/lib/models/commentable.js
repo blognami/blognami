@@ -1,7 +1,6 @@
 
-import { defer } from 'haberdash';
-
-import { Table } from "sintra/database";
+import { defer } from 'pinstripe/util';
+import { Table } from "pinstripe/database";
 
 export default {
     meta(){

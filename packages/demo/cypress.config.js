@@ -7,7 +7,7 @@ export default defineConfig({
 
     setupNodeEvents(on, config) {
       on('after:spec', () => {
-        execSync(`sintra reset-database`, {
+        execSync(`pinstripe reset-database`, {
           stdio: 'inherit'
         });
       });

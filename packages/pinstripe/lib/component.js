@@ -1,11 +1,20 @@
 
-import { Class, TEXT_ONLY_TAGS, Inflector, VirtualNode, Registry } from "haberdash";
+import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
+import { Class } from './class.js';
+import { TEXT_ONLY_TAGS } from './constants.js';
+import { Inflector } from './inflector.js';
+import { VirtualNode } from './virtual_node.js';
+import { Registry } from './registry.js';
 
 import { EventWrapper } from './event_wrapper.js';
+import { Client } from './client.js'; // pinstripe-if-client: const Client = undefined;
+
 
 export const Component = Class.extend().include({
     meta(){
         this.include(Registry);
+
+        const { importFile } = this;
 
         this.assignProps({
             instanceFor(node){
@@ -22,6 +31,18 @@ export const Component = Class.extend().include({
 
             normalizeName(name){
                 return Inflector.instance.dasherize(name);
+            },
+
+            async importFile(params){
+                const { filePath, relativeFilePathWithoutExtension } = params;
+                if((await import(filePath)).default){
+                    Client.instance.addModule(`
+                        import { Component } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};
+                        import include from ${JSON.stringify(filePath)};
+                        Component.register(${JSON.stringify(relativeFilePathWithoutExtension)}, include);
+                    `);
+                }
+                return importFile.call(this, params);
             }
         });
     },
@@ -524,7 +545,8 @@ function createVirtualNode(html){
 }
 
 function patch(attributes, virtualChildren){
-    const isEmptyFrame = this.isFrame && virtualChildren.length == 0;
+    const isFrame = this.type == 'pinstripe-frame' || this.attributes['data-component'] == 'pinstripe-frame';
+    const isEmptyFrame = isFrame && virtualChildren.length == 0;
     if(isEmptyFrame && attributes['data-load-on-init'] === undefined){
         attributes['data-load-on-init'] = 'true';
     }

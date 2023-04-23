@@ -9,7 +9,7 @@ export default {
             <span data-component="pinstripe-anchor" data-target="_top" data-trigger="click"></span>
         `.toResponseArray();
     
-        headers['Set-Cookie'] = 'sintraSession=';
+        headers['Set-Cookie'] = 'pinstripeSession=';
     
         return [ status, headers, body ];
     }

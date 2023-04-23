@@ -3,9 +3,7 @@
 ## Package index
 
 - [Blognami](https://github.com/blognami/blognami/tree/main/packages/blognami)
-- [Haberdash](https://github.com/blognami/blognami/tree/main/packages/haberdash)
 - [Pinstripe](https://github.com/blognami/blognami/tree/main/packages/pinstripe)
-- [Sintra](https://github.com/blognami/blognami/tree/main/packages/sintra)
 
 ## License
 

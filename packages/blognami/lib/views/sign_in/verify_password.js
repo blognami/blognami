@@ -61,7 +61,7 @@ export default {
                         }}
                     `.toResponseArray();
             
-                    headers['Set-Cookie'] = `sintraSession=${session.id}:${passString}; Path=/`;
+                    headers['Set-Cookie'] = `pinstripeSession=${session.id}:${passString}; Path=/`;
             
                     return [ status, headers, body ];
                 }

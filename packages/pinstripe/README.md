@@ -1,9 +1,9 @@
 
 # Welcome to Pinstripe
 
-## What is pinstripe?
+## What is Pinstripe?
 
-A slick web framework for your browser.
+A slick web framework for Node.js.
 
 ## License
 

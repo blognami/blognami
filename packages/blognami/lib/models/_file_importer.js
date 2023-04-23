@@ -1,1 +1,1 @@
-export { Row as default } from 'sintra/database';
+export { Row as default } from 'pinstripe/database';

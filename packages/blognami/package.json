@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "generate-avatar": "^1.4.10",
-    "sintra": "^0.22.0"
+    "pinstripe": "^0.22.0"
   }
 }
