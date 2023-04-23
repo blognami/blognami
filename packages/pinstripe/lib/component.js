@@ -1,12 +1,12 @@
 
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
+
 import { Class } from './class.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
 import { Inflector } from './inflector.js';
 import { VirtualNode } from './virtual_node.js';
 import { Registry } from './registry.js';
-
-import { EventWrapper } from './event_wrapper.js';
+import { ComponentEvent } from './component_event.js';
 import { Client } from './client.js'; // pinstripe-if-client: const Client = undefined;
 
 
@@ -300,7 +300,7 @@ export const Component = Class.extend().include({
         const selector = args.pop()
 
         const wrapperFn = (event, ...args) => {
-            const eventWrapper = EventWrapper.instanceFor(event)
+            const eventWrapper = ComponentEvent.instanceFor(event)
             if(selector){
                 if(eventWrapper.target.is(selector)){
                     return fn.call(eventWrapper.target, eventWrapper, ...args);
@@ -674,7 +674,7 @@ function normalizeVirtualNode(){
     }
 }
 
-EventWrapper.Component = Component;
+ComponentEvent.Component = Component;
 
 [
     ['#document', 'pinstripe-document'],
