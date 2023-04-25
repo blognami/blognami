@@ -6,7 +6,7 @@ export default {
         }
     
         const [ status, headers, body ] = await this.renderHtml`
-            <span data-component="pinstripe-anchor" data-target="_top" data-trigger="click"></span>
+            <span data-component="a" data-target="_top" data-trigger="click"></span>
         `.toResponseArray();
     
         headers['Set-Cookie'] = 'pinstripeSession=';

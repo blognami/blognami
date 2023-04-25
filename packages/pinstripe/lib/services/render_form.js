@@ -21,7 +21,7 @@ export default {
         if(this.params._method == 'POST'){
             try {
                 return await formAdapter.submit(values, success) || this.renderHtml`
-                    <span data-component="pinstripe-anchor" data-target="_parent" data-trigger="click"></span>
+                    <span data-component="a" data-target="_parent" data-trigger="click"></span>
                 `;
             } catch(e){
                 if(!(e instanceof ValidationError)){
@@ -56,8 +56,8 @@ export default {
         });
 
         return this.renderHtml`
-            <div class="modal" data-component="pinstripe-anchor" data-action="remove" data-ignore-events-from-children="true">
-                <button data-component="pinstripe-anchor" data-action="remove"></button>
+            <div class="modal" data-component="a" data-action="remove" data-ignore-events-from-children="true">
+                <button data-component="a" data-action="remove"></button>
                 <form
                     class="card"
                     method="post"
@@ -118,7 +118,7 @@ export default {
                         </div>
                         <div class="card-footer">
                             <button class="button" type="submit">${submitTitle}</button>
-                            <button class="button" data-component="pinstripe-anchor" data-action="remove">${cancelTitle}</button>
+                            <button class="button" data-component="a" data-action="remove">${cancelTitle}</button>
                         </div>
                     </div>
             </div>

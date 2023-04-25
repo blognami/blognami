@@ -98,7 +98,7 @@ export default {
                                         <p>
                                             <button
                                                 class="button is-primary"
-                                                data-component="pinstripe-anchor"
+                                                data-component="a"
                                                 data-method="post"
                                                 data-href="/admin/delete_post?id=${post.id}"
                                                 data-target="_overlay"

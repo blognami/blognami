@@ -40,7 +40,7 @@ export default {
                     }));
 
                     return this.renderHtml`
-                        <span data-component="pinstripe-anchor" data-trigger="click" data-href="/sign_in/verify_password?email=${encodeURIComponent(email)}${optionalParams}"></span>
+                        <span data-component="a" data-trigger="click" data-href="/sign_in/verify_password?email=${encodeURIComponent(email)}${optionalParams}"></span>
                     `;
                 }
             }

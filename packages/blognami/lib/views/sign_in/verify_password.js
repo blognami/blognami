@@ -38,7 +38,7 @@ export default {
                 async success(){
                     const user = await that.database.users.where({ email }).first();
                     if(!user) return that.renderHtml`
-                        <span data-component="pinstripe-anchor" data-trigger="click" data-href="/sign_in/create_account?email=${encodeURIComponent(email)}&password=${encodeURIComponent(await that.database.site.generatePassword(email))}${optionalParams}"></span>
+                        <span data-component="a" data-trigger="click" data-href="/sign_in/create_account?email=${encodeURIComponent(email)}&password=${encodeURIComponent(await that.database.site.generatePassword(email))}${optionalParams}"></span>
                     `;
                     await user.logSuccessfulSignIn();
                     const passString = crypto.randomUUID();
@@ -52,11 +52,11 @@ export default {
                         ${() => {
                             if(redirectUrl){
                                 return that.renderHtml`
-                                    <span data-component="pinstripe-anchor" data-href="${redirectUrl}" data-trigger="click"></span>
+                                    <span data-component="a" data-href="${redirectUrl}" data-trigger="click"></span>
                                 `;
                             }
                             return that.renderHtml`
-                                <span data-component="pinstripe-anchor" data-target="_top" data-trigger="click"></span>
+                                <span data-component="a" data-target="_top" data-trigger="click"></span>
                             `;
                         }}
                     `.toResponseArray();

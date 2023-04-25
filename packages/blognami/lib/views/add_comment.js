@@ -7,7 +7,7 @@ export default {
 
         if(!this.user){
             return this.renderHtml`
-                <span data-component="pinstripe-anchor" data-trigger="click" data-href="/sign_in?title=${encodeURIComponent('Add comment')}&redirectUrl=${encodeURIComponent(`/add_comment?commentableId=${this.params.commentableId}`)}"></span>
+                <span data-component="a" data-trigger="click" data-href="/sign_in?title=${encodeURIComponent('Add comment')}&redirectUrl=${encodeURIComponent(`/add_comment?commentableId=${this.params.commentableId}`)}"></span>
             `;
         }
 
@@ -21,7 +21,7 @@ export default {
         await this.notifyUsers(comment);
 
         return this.renderHtml`
-            <span data-component="pinstripe-anchor" data-target="_top" data-trigger="click"></span>
+            <span data-component="a" data-target="_top" data-trigger="click"></span>
         `;
     },
 

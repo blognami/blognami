@@ -9,7 +9,6 @@ import { Registry } from './registry.js';
 import { ComponentEvent } from './component_event.js';
 import { Client } from './client.js'; // pinstripe-if-client: const Client = undefined;
 
-
 export const Component = Class.extend().include({
     meta(){
         this.include(Registry);
@@ -40,6 +39,10 @@ export const Component = Class.extend().include({
                         import { Component } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};
                         import include from ${JSON.stringify(filePath)};
                         Component.register(${JSON.stringify(relativeFilePathWithoutExtension)}, include);
+                    `);
+                } else {
+                    Client.instance.addModule(`
+                        import ${JSON.stringify(filePath)};
                     `);
                 }
                 return importFile.call(this, params);
@@ -675,16 +678,3 @@ function normalizeVirtualNode(){
 }
 
 ComponentEvent.Component = Component;
-
-[
-    ['#document', 'pinstripe-document'],
-    ['a', 'pinstripe-anchor'],
-    ['body', 'pinstripe-body'],
-    ['form', 'pinstripe-form']
-].forEach(([name, include]) => {
-    Component.register(name, {
-        meta(){
-            this.include(include);
-        }
-    })
-});

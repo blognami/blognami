@@ -59,11 +59,11 @@ Component.register('pinstripe-markdown-editor/line-inserter', {
 
 Component.register('pinstripe-markdown-editor/anchor', {
     meta(){
-        this.include('pinstripe-anchor');
+        this.include('a');
     },
 
     initialize(...args){
-        this.constructor.for('pinstripe-anchor').prototype.initialize.call(this, ...args);
+        this.constructor.for('a').prototype.initialize.call(this, ...args);
 
         this.patch({ 
             ...this.attributes,

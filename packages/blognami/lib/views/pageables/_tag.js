@@ -39,7 +39,7 @@ export default {
     
                     ${async () => {
                         if(await posts.all().length < await posts.count()) return this.renderHtml`
-                            <button class="feed-loadmore btn" data-component="pinstripe-anchor" data-method="post" data-href="?pageSize=${pageSize + 10}">Load more posts</button>
+                            <button class="feed-loadmore btn" data-component="a" data-method="post" data-href="?pageSize=${pageSize + 10}">Load more posts</button>
                         `;
                     }}
                 </section>
