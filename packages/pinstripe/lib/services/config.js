@@ -1,5 +1,6 @@
 
 import { existsSync } from 'fs';
+import { resolve, isAbsolute } from 'path';
 
 let createConfigPromise;
 
@@ -48,10 +49,12 @@ export default {
             }, out);
         }
 
-        return Object.assign({
-            adapter: 'sqlite',
-            filename: `${await this.project.rootPath}/${environment}.db`
-        }, out);
+        let filename = out.filename || `${environment}.db`;
+        if(!isAbsolute(filename)){
+            filename = resolve(`${await this.project.rootPath}/${filename}`);
+        }
+
+        return Object.assign({ adapter: 'sqlite' }, out, { filename });
     },
 
     normalizeMailConfig(config){
