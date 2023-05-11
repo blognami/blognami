@@ -1,6 +1,5 @@
 
 import { Workspace } from "../workspace.js";
-import { View } from "../view.js";
 
 export default {
     create(){
@@ -48,7 +47,7 @@ export default {
         const candidateIndexView = [...viewNameSegments, 'index'].join('/');
         const candidateDefaultView = [...viewNameSegments, 'default'].join('/');
 
-        if(!View.mixins[candidateIndexView] && !View.mixins[candidateDefaultView]){
+        if(!this.app.isView(candidateIndexView) && !this.app.isView(candidateDefaultView)){
             viewNameSegments.pop();
         }
 

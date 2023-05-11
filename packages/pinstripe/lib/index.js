@@ -1,6 +1,7 @@
 
 // pinstripe-if-client: import './initialize.js';
 
+export * from './app.js'; // pinstripe-if-client: export const App = undefined;
 export * from './command.js'; // pinstripe-if-client: export const Command = undefined;
 export * from './context.js'; // pinstripe-if-client: export const Context = undefined;
 export * from './component.js';

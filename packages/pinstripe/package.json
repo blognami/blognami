@@ -9,7 +9,6 @@
     ".": "./lib/index.js",
     "./database": "./lib/database/index.js",
     "./multi-tenant": "./lib/extensions/multi-tenant/index.js",
-    "./multi-app": "./lib/extensions/multi-app/index.js",
     "./util": "./lib/util.js"
   },
   "bin": {

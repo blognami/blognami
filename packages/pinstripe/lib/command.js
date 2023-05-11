@@ -10,7 +10,9 @@ export const Command = Class.extend().include({
         this.include(ServiceConsumer);
 
         this.assignProps({
-            normalizeName: (...args) => inflector.dasherize(...args),
+            normalizeName(name){
+                return inflector.dasherize(name);
+            },
 
             get schedules(){
                 if(!this.hasOwnProperty('_schedules')){

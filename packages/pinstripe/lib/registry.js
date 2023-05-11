@@ -6,12 +6,12 @@ export const Registry = {
 
         const { include } = this;
 
-        let classes = {};
-
         this.assignProps({
             registry: this,
 
             mixins: {},
+
+            cache: {},
 
             get names(){
                 return Object.keys(this.mixins).sort();
@@ -43,7 +43,7 @@ export const Registry = {
             register(name, mixin = {}){
                 const normalizedName = this.normalizeName(name);
                 this.mixins[normalizedName] = this.normalizeMixin(normalizedName, mixin, this.mixins[normalizedName]);
-                classes = {};
+                this.clearCache();
             },
 
             unregister(name){
@@ -51,8 +51,8 @@ export const Registry = {
                 delete this.mixins[normalizedName];
             },
 
-            clearCachedClasses(){
-                classes = {};
+            clearCache(){
+                this.registry.cache = {};
             },
 
             createInitialMixin(name){
@@ -61,6 +61,8 @@ export const Registry = {
 
             for(name){
                 const normalizedName = this.normalizeName(name);
+                if(!this.cache.classes) this.cache.classes = {};
+                const { classes } = this.cache;
                 if(!classes[normalizedName]){
                     classes[normalizedName] = this.registry.extend().include({
                         meta(){
@@ -71,11 +73,6 @@ export const Registry = {
                     });
                 }
                 return classes[normalizedName];
-            },
-
-            reset(){
-                classes = {};
-                this.initialize();
             },
 
             include(...includes){

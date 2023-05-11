@@ -19,9 +19,9 @@ export const Row = Model.extend().include({
 
             async loadSchema(client){
                 await Table.loadSchema(client);
-                this.clearCachedClasses();
+                this.clearCache();
                 this.names.forEach(name => this.for(name));
-                Table.clearCachedClasses();
+                Table.clearCache();
                 Table.names.forEach(name => Table.for(name));
             },
 
@@ -358,8 +358,6 @@ function coerceValue(name, value){
     return value;
 }
 
-
-//TODO: refactor - remove if possible
 const extractSettableProps = (o) => {
     const out = [];
     getAllProps(o).forEach((name) => {

@@ -2,37 +2,35 @@
 import http from 'http';
 import Busboy from 'busboy';
 
-import { Workspace } from '../workspace.js';
-
 export default {
     create(){
         return this;
     },
 
-    start(options = {}){
-        const { host, port } = Object.assign({
-            host: process.env.HOST || '127.0.0.1',
-            port: parseInt(process.env.PORT || '3000')
-        }, options);
-    
-        http.createServer(async (request, response) => {
-            try {
-                const params = await this.extractParams(request);
-                const [ status, headers, body ] = await this.fetch(params);
-                response.statusCode = status;
-                Object.keys(headers).forEach(
-                    (name) => response.setHeader(name, headers[name])
-                )
-                body.forEach(chunk => response.write(chunk));
-                response.end();
-            } catch (e){
-                response.statusCode = 500;
-                response.setHeader('content-type', 'text/plain');
-                response.end((e.stack || e).toString());
-            }
-            console.log(`${request.method}: ${request.url} (${response.statusCode})`);
-        }).listen(port, host, () => {
-            console.log(`Pinstripe running at http://${host}:${port}/`)
+    start(apps = [{ name: 'main', host: '127.0.0.1', port: 3000 }]){
+        apps.forEach(({ name, host, port }) => {
+            http.createServer(async (request, response) => {
+                try {
+                    const params = await this.extractParams(request);
+                    if(!params._headers['x-app']) params._headers['x-app'] = name;
+
+                    const [ status, headers, body ] = await this.fetch(params);
+                    
+                    response.statusCode = status;
+                    Object.keys(headers).forEach(
+                        (name) => response.setHeader(name, headers[name])
+                    )
+                    body.forEach(chunk => response.write(chunk));
+                    response.end();
+                } catch (e){
+                    response.statusCode = 500;
+                    response.setHeader('content-type', 'text/plain');
+                    response.end((e.stack || e).toString());
+                }
+                console.log(`${request.method}: ${request.url} (${response.statusCode})`);
+            }).listen(port, host, () => {
+                console.log(`Pinstripe running "${name}" app at "http://${host}:${port}/"`)
+            });
         });
     },
 
