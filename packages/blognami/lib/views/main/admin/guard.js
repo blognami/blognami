@@ -18,7 +18,7 @@ export default {
                             <p>You need to be an &quot;admin&quot; user to do this.</p>
                         </div>
                         <div class="card-footer">
-                            <button data-component="a" data-target="_top">OK</button>
+                            <button class="button is-primary" data-component="a" data-target="_top">OK</button>
                         </div>
                     </div>
                 </div>

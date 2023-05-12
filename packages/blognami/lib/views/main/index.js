@@ -6,11 +6,9 @@ export default {
         if(await this.session){
             user = await this.session.user;
         }
-    
-        const isSignedIn = user !== undefined;
         
         let posts = this.database.posts;
-        if(isSignedIn){
+        if(user?.role == 'admin'){
             posts = posts.orderBy('published', 'asc')
         } else {
             posts = posts.where({ published: true });

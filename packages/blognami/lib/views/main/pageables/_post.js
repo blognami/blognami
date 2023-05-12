@@ -14,8 +14,7 @@ export default {
             user = await this.session.user;
         }
     
-        const isSignedIn = user !== undefined;
-        const isAdmin = isSignedIn && user.role == 'admin';
+        const isAdmin = user?.role == 'admin';
 
         if(!post.published && !isAdmin) return;
     

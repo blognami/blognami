@@ -10,9 +10,10 @@ export default {
         }
     
         const isSignedIn = user !== undefined;
+        const isAdmin = user?.role == 'admin';
         
         let posts = this.database.posts;
-        if(isSignedIn){
+        if(isAdmin){
             posts = posts.orderBy('published', 'asc')
         } else {
             posts = posts.where({ published: true });
@@ -52,13 +53,15 @@ export default {
                             <div class="navbar-menu">
                                 ${() => {
                                     if(isSignedIn) return this.renderHtml`
-                                        <div class="navbar-item has-dropdown">
-                                            Add
-                                            <div class="navbar-dropdown">
-                                                <a class="navbar-item" href="/admin/add_page?userId=${user.id}" target="_overlay">Page</a>
-                                                <a class="navbar-item" href="/admin/add_post?userId=${user.id}" target="_overlay">Post</a>
+                                        ${isAdmin && this.renderHtml`
+                                            <div class="navbar-item has-dropdown">
+                                                Add
+                                                <div class="navbar-dropdown">
+                                                    <a class="navbar-item" href="/admin/add_page?userId=${user.id}" target="_overlay">Page</a>
+                                                    <a class="navbar-item" href="/admin/add_post?userId=${user.id}" target="_overlay">Post</a>
+                                                </div>
                                             </div>
-                                        </div>
+                                        `}
                                         <a class="navbar-item" href="/sign_out" target="_overlay">Sign out</a>
                                     `;
                                     return this.renderHtml`
@@ -75,7 +78,7 @@ export default {
                                     <div>
                                         ${body}
                                     </div>
-                                    ${this.renderSidebar({ isSignedIn, site, featuredPosts, tags })}
+                                    ${this.renderSidebar({ isSignedIn, isAdmin, site, featuredPosts, tags })}
                                 </div>
                             </div>
                         </main>
@@ -95,13 +98,13 @@ export default {
         `;
     },
 
-    renderSidebar({ isSignedIn, site, featuredPosts, tags }){
+    renderSidebar({ isAdmin, site, featuredPosts, tags }){
         return this.renderHtml`
             <aside class="sidebar">
                 <section class="section">
                     <h2 class="section-title">About</h2>
                         ${async () => {
-                            if(isSignedIn) return this.renderHtml`
+                            if(isAdmin) return this.renderHtml`
                                 <div class="editable-area">
                                     <div class="editable-area-header">
                                         <a class="editable-area-button" href="/admin/edit_site_description" target="_overlay">Edit</a>
