@@ -11,7 +11,7 @@ export const Project = Class.extend().include({
     },
 
     async initialize(){
-        const configPath = await findInPath('package.json', process.cwd());
+        const configPath = (await findInPath('package.json', process.cwd())).shift();
         if(!configPath){
             return;
         }
@@ -41,7 +41,9 @@ export const Project = Class.extend().include({
 
         this.entryPath = this.exports['.'] || this.main;
 
-        this.localPinstripePath = await findInPath('node_modules/.bin/pinstripe', process.cwd());
+        this.localPinstripePath = (await findInPath('node_modules/.bin/pinstripe', process.cwd())).shift();
+        
+        this.nodePaths = await findInPath('node_modules/', process.cwd());
     },
 
     get exists(){
@@ -54,18 +56,17 @@ export const Project = Class.extend().include({
 });
 
 const findInPath = async (offset, base) => {
-    if(!base){
-        return;
-    }
-    while(true) {
+    const out = [];
+    while(base) {
         const candidatePath = `${base}/${offset}`;
         if(existsSync(candidatePath)){
-            return await promisify(realpath)(candidatePath);
+            out.push(await promisify(realpath)(candidatePath));
         }
         if(base == '/'){
             break;
         }
         base = await promisify(realpath)(`${base}/..`);
     }
+    return out;
 };
 

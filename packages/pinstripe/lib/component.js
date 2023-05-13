@@ -30,24 +30,32 @@ export const Component = Class.extend().include({
 
             normalizeName(name){
                 return Inflector.instance.dasherize(name);
-            },
-
-            async importFile(params){
-                const { filePath, relativeFilePathWithoutExtension } = params;
-                if((await import(filePath)).default){
-                    Client.instance.addModule(`
-                        import { Component } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};
-                        import include from ${JSON.stringify(filePath)};
-                        Component.register(${JSON.stringify(relativeFilePathWithoutExtension)}, include);
-                    `);
-                } else {
-                    Client.instance.addModule(`
-                        import ${JSON.stringify(filePath)};
-                    `);
-                }
-                return importFile.call(this, params);
             }
         });
+
+        this.FileImporter.register('js', {
+            meta(){
+                const { importFile} = this.prototype;
+
+                this.include({
+                    async importFile(params){
+                        const { filePath, relativeFilePathWithoutExtension } = params;
+                        if((await import(filePath)).default){
+                            Client.instance.addModule(`
+                                import { Component } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};
+                                import include from ${JSON.stringify(filePath)};
+                                Component.register(${JSON.stringify(relativeFilePathWithoutExtension)}, include);
+                            `);
+                        } else {
+                            Client.instance.addModule(`
+                                import ${JSON.stringify(filePath)};
+                            `);
+                        }
+                        return importFile.call(this, params);
+                    }
+                })
+            }
+        })
     },
 
     initialize(node, skipInit = false){
@@ -351,8 +359,8 @@ export const Component = Class.extend().include({
 
     remove(){
         if(this.realParent){
-            clearTimers.call(this);
-            if(this.realParent) this.realParent.node.removeChild(this.node);
+            clean.call(this);
+            this.realParent.node.removeChild(this.node);
         }
         return this;
     },
@@ -497,6 +505,8 @@ function cleanChildren(){
 }
 
 function clean(){
+    this.trigger('clean', { bubbles: false });
+
     [...this.node.childNodes].forEach(node => node._component && clean.call(node._component));
 
     while(this._registeredEventListeners.length){

@@ -38,6 +38,8 @@ export default {
             sourcemap: true,
             outfile: outFile,
             plugins: [this.plugin],
+            nodePaths: await this.project.nodePaths,
+            minify: process.env.NODE_ENV == 'production'
         });
 
         const out = {
