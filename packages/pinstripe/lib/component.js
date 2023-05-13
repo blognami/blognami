@@ -285,6 +285,7 @@ export const Component = Class.extend().include({
     get shadow(){
         if(!this.node.shadowRoot){
             this.node.attachShadow({ mode: 'open' });
+            this.shadow.observe({ add: true }, component => component.descendants);
             this.shadow.patch(`<slot>`);
         }
         return Component.instanceFor(this.node.shadowRoot);
