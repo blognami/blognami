@@ -78,8 +78,9 @@ export const Component = Class.extend().include({
             this.setTimeout(() => this.node.focus());
         }
 
-        const { autosubmit, trigger } = this.data;
+        const { autosubmit, trigger, decorate } = this.data;
 
+        // replace with pinstripe-autosubmitter?
         if(autosubmit){
             let hash = JSON.stringify(this.values);
             this.setInterval(() => {
@@ -91,6 +92,7 @@ export const Component = Class.extend().include({
             }, 100);
         }
 
+        // replace with script?
         if(trigger){
             this.setTimeout(() => {
                 this.trigger(trigger);
@@ -154,6 +156,10 @@ export const Component = Class.extend().include({
             }
         }
         return out;
+    },
+
+    get parentsIncludingThis(){
+        return [this, ...this.parents];
     },
 
     get children(){
@@ -275,7 +281,7 @@ export const Component = Class.extend().include({
     },
 
     get document(){
-        return this.parents.find(({ isDocument }) => isDocument) || this;
+        return this.find('parentsIncludingThis', ({ isDocument }) => isDocument);
     },
 
     get overlay(){
@@ -489,7 +495,6 @@ export const Component = Class.extend().include({
         const [ collection, selector ] = args;
         return this[collection].filter(item => item.is(selector));
     }
-
 });
 
 const matchesSelector = (() => {

@@ -25,7 +25,7 @@ export default {
         return this.body.progressBar;
     },
 
-    async load(url, options = {}){
+    async load(url = this.url.toString(), options = {}){
         const { replace, method = 'GET', headers = {}, ...otherOptions } = options;
         const previousUrl = this.url.toString();
         const normalizedUrl = new URL(url, previousUrl).toString();

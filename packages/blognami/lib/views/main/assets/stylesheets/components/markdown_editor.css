@@ -1,8 +1,8 @@
 .markdown-editor {
     display: flex;
     flex-direction: row;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: calc(100vh - 4rem);
     max-width: 120.0rem;
     background: #fff;
     z-index: 1;

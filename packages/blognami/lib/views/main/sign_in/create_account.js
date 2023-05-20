@@ -41,7 +41,14 @@ export default {
                         ${() => {
                             if(redirectUrl){
                                 return that.renderHtml`
-                                    <span data-component="a" data-href="${redirectUrl}" data-trigger="click"></span>
+                                    <span data-component="a" data-href="${redirectUrl}">
+                                        <script type="pinstripe">
+                                            this.parent.trigger('click');
+                                            
+                                            const { document } = this;
+                                            this.overlay.on('close', () => document.load());
+                                        </script>
+                                    </span>
                                 `;
                             }
                             return that.renderHtml`
