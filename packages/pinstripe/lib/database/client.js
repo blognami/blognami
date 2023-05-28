@@ -10,6 +10,7 @@ export const Client = Class.extend().include({
         this.config = config;
         this.lockLevel = 0;
         this.transactionLevel = 0;
+        this.cache = {};
     },
 
     async run(query){
@@ -175,11 +176,21 @@ function prepare(query){
 }
 
 function run(query, values){
-    console.log(`Query: ${query}`);
+    const cacheKey = JSON.stringify([query, values]);
     
     return this.adapt(this, {
-        mysql(){
-            return new Promise((resolve, reject) => {
+        async mysql(){
+            if(query.match(/^\s*(create|drop|alter|insert|update|delete)/im)){
+                this.cache = {};
+            }
+            
+            const cache = query.match(/^\s*select/im) ? this.cache : undefined;
+
+            if(cache && cache[cacheKey]) return [...cache[cacheKey]];
+
+            console.log(`Query: ${query}`);
+            
+            const out = await new Promise((resolve, reject) => {
                 this.connection.query(query, (error, rows) => {
                     if(error){
                         reject(error);
@@ -191,10 +202,24 @@ function run(query, values){
                     }
                 });
             });
+
+            if(cache) cache[cacheKey] = out;
+
+            return  [...out];
         },
 
-        sqlite(){
-            return new Promise((resolve, reject) => {
+        async sqlite(){
+            if(query.match(/^\s*(create|drop|alter|insert|update|delete)/im)){
+                this.cache = {};
+            }
+
+            const cache = query.match(/^\s*select/im) && !query.match(/^\s*(select\s+([\s\S]+?)\s+from\s+sqlite_schema|pragma)/im) ? this.cache : undefined;
+
+            if(cache && cache[cacheKey]) return [...cache[cacheKey]];
+
+            console.log(`Query: ${query}`);
+
+            const out = await new Promise((resolve, reject) => {
                 this.connection.all(query, ...values, (error, rows) => {
                     if(error){
                         reject(error);
@@ -206,6 +231,10 @@ function run(query, values){
                     }
                 });
             });
+        
+            if(cache) cache[cacheKey] = out;
+
+            return  [...out];
         }
     });
 }
