@@ -1,6 +1,7 @@
 
 import http from 'http';
 import Busboy from 'busboy';
+import { createHash } from 'crypto';
 
 export default {
     create(){
@@ -15,7 +16,17 @@ export default {
                     if(!params._headers['x-app']) params._headers['x-app'] = name;
 
                     const [ status, headers, body ] = await this.fetch(params);
+
+                    const etag = this.createHash(body);
+
+                    if(params._headers['if-none-match'] == etag){
+                        response.statusCode = 304;
+                        response.end();
+                        return;
+                    }
                     
+                    headers.etag = etag;
+
                     response.statusCode = status;
                     Object.keys(headers).forEach(
                         (name) => response.setHeader(name, headers[name])
@@ -84,5 +95,9 @@ export default {
         
             request.pipe(busboy);
         });
+    },
+
+    createHash(data){
+        return createHash('sha1').update(JSON.stringify(data)).digest('base64');
     }
 };
