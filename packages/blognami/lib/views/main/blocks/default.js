@@ -5,7 +5,7 @@ export default {
         const path = params._url.pathname;
         const prefix = path.replace(/^\/blocks\//, '');
     
-        const names = this.viewNames
+        const names = this.app.viewNames
             .filter(name => name.match(/^blocks\/.+/) && name != 'blocks/default')
             .map(name => name.replace(/^blocks\//, ''))
             .filter(name => name.startsWith(prefix))

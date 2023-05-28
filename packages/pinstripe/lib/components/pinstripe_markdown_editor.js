@@ -1,5 +1,6 @@
 
-import { Component } from '../component.js'
+import { Component } from '../component.js';
+import { Markdown } from '../markdown.js';
 
 export default {
     initialize(...args){
@@ -24,9 +25,7 @@ export default {
     
         this.on('submit', () => {
             const { value } = this.values;
-            const formData = new FormData();
-            formData.append('value', value);
-            previewFrame.load(previewFrame.url, { method: 'POST', body: formData });
+            previewFrame.patch(Markdown.render(value).toString());
             anchorTextarea.value = value;
         });
     },

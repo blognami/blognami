@@ -7,7 +7,7 @@ export default {
                     <div class="markdown-editor-text-pane">
                         <textarea name="value">${this.params.value}</textarea>
                     </div>
-                    <div class="markdown-editor-preview-pane" data-url="/markdown_editor/preview" data-component="pinstripe-frame"></div>
+                    <div class="markdown-editor-preview-pane"></div>
                 </div>
             </pinstripe-modal>
         `;
