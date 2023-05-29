@@ -26,11 +26,11 @@ export default {
     },
 
     async load(url = this.url.toString(), options = {}){
-        const { replace, method = 'GET', headers = {}, ...otherOptions } = options;
+        const { replace, method = 'GET', headers = {}, preload = false, ...otherOptions } = options;
         const previousUrl = this.url.toString();
         const normalizedUrl = new URL(url, previousUrl).toString();
 
-        if(method == 'GET' && previousUrl != normalizedUrl){
+        if(method == 'GET' && previousUrl != normalizedUrl && !preload){
             if(replace){
                 history.replaceState(normalizedUrl, null, normalizedUrl);
             } else {
@@ -43,7 +43,8 @@ export default {
             method,
             headers: Object.assign({
                 'x-pinstripe-frame-type': 'document'
-            }, headers)
+            }, headers),
+            preload
         }, otherOptions));
     }
 };

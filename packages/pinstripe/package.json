@@ -18,7 +18,7 @@
     "clean": "rm -rf ./node_modules",
     "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
     "test": "yarn test:unit",
-    "test:unit": "#jest lib"
+    "test:unit": "jest lib"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

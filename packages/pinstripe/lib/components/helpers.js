@@ -1,4 +1,8 @@
 
+import { LruCache } from '../lru_cache.js';
+
+export const loadCache = LruCache.new();
+
 export function loadFrame(confirm, target, method, url){
     if(confirm && !window.confirm(confirm)){
         return;
@@ -40,7 +44,7 @@ export function removeFrame(confirm, target){
     if(frame) frame.remove();
 }
 
-function getFrame(target){
+export function getFrame(target){
     if(target == '_self') return this.frame;
     if(target == '_top') return this.document;
     if(target.match(/^_parent/)){

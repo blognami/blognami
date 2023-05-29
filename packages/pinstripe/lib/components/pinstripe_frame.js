@@ -1,4 +1,6 @@
 
+import { loadCache } from "./helpers.js";
+
 export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
@@ -33,7 +35,13 @@ export default {
     async load(url = this.url, options = {}){
         this.abort();
 
-        this.url = url;
+        const { method = 'GET', preload = false } = options
+
+        const cachedHtml = method == 'GET' ? loadCache.get(url.toString()) : undefined;
+
+        const out = cachedHtml && !preload ? this.patch(cachedHtml) : undefined;
+
+        if(!preload) this.url = url;
 
         const { headers = {}, ...otherOptions } = options;
         const response = await this.fetch(url, Object.assign({
@@ -42,6 +50,12 @@ export default {
             }, headers)
         }, otherOptions));
 
-        return this.patch(await response.text());
+        const html = await response.text();
+
+        if(html == cachedHtml) return out;
+
+        if(method == 'GET') loadCache.put(url.toString(), html);
+
+        if(!preload) return this.patch(html);
     }
 };

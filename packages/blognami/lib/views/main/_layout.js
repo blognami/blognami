@@ -65,7 +65,7 @@ export default {
                                         <a class="navbar-item" href="/sign_out" target="_overlay">Sign out</a>
                                     `;
                                     return this.renderHtml`
-                                        <a class="navbar-item" href="/sign_in" target="_overlay">Sign in</a>
+                                        <a class="navbar-item" href="/sign_in" target="_overlay" data-preload>Sign in</a>
                                     `;
                                 }}
                             </div>
