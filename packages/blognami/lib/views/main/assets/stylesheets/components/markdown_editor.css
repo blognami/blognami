@@ -24,10 +24,14 @@
     width: 100%;
     resize: none;
     outline: none;
-    font-size: 1.6rem;
-    font-family: monospace;
     padding: 1em;
 }
+
+.markdown-editor-text-pane > textarea, .markdown-editor-preview-pane > p {
+    font-size: 1.6rem;
+    font-family: monospace;
+}
+
 .markdown-editor-preview-pane {
     overflow-y: auto;
     padding: 1em;
