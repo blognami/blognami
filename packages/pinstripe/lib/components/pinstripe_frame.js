@@ -34,28 +34,22 @@ export default {
 
     async load(url = this.url, options = {}){
         this.abort();
-
-        const { method = 'GET', preload = false } = options
-
+        const { method = 'GET', placeholderUrl } = options;
         const cachedHtml = method == 'GET' ? loadCache.get(url.toString()) : undefined;
-
-        const out = cachedHtml && !preload ? this.patch(cachedHtml) : undefined;
-
-        if(!preload) this.url = url;
-
-        const { headers = {}, ...otherOptions } = options;
-        const response = await this.fetch(url, Object.assign({
-            headers: Object.assign({
-                'x-pinstripe-frame-type': 'basic'
-            }, headers)
-        }, otherOptions));
-
+        const out = cachedHtml ? this.patch(cachedHtml) : undefined;
+        let minimumDelay = 0;
+        if(!cachedHtml && placeholderUrl){
+            const placeholderHtml = loadCache.get(placeholderUrl.toString());
+            if(placeholderHtml) {
+                this.patch(placeholderHtml);
+                minimumDelay = 300;
+            }
+        }
+        this.url = url;
+        const response = await this.fetch(url, { minimumDelay, ...options })
         const html = await response.text();
-
         if(html == cachedHtml) return out;
-
         if(method == 'GET') loadCache.put(url.toString(), html);
-
-        if(!preload) return this.patch(html);
+        return this.patch(html);
     }
 };

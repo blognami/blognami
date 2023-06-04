@@ -30,15 +30,6 @@ export default {
     },
 
     isOverlay: true,
-        
-    load(url, options = {}){
-        let { headers = {}, ...otherOptions } = options;
-        this.constructor.for('pinstripe-frame').prototype.load.call(this, url, Object.assign({
-            headers: Object.assign({
-                'x-pinstripe-frame-type': 'overlay'
-            }, headers)
-        }, otherOptions));
-    },
 
     remove(...args){
         if(window.getSelection().type == 'Range') return;

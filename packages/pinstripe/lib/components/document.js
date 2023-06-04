@@ -1,4 +1,8 @@
 
+import { loadCache } from "./helpers.js";
+
+const preloading = {};
+
 export default {
     meta(){
         this.include('pinstripe-frame');
@@ -26,11 +30,11 @@ export default {
     },
 
     async load(url = this.url.toString(), options = {}){
-        const { replace, method = 'GET', headers = {}, preload = false, ...otherOptions } = options;
+        const { replace, method = 'GET' } = options;
         const previousUrl = this.url.toString();
         const normalizedUrl = new URL(url, previousUrl).toString();
 
-        if(method == 'GET' && previousUrl != normalizedUrl && !preload){
+        if(method == 'GET' && previousUrl != normalizedUrl){
             if(replace){
                 history.replaceState(normalizedUrl, null, normalizedUrl);
             } else {
@@ -39,12 +43,16 @@ export default {
             }
         }
 
-        return this.constructor.for('pinstripe-frame').prototype.load.call(this, url, Object.assign({
-            method,
-            headers: Object.assign({
-                'x-pinstripe-frame-type': 'document'
-            }, headers),
-            preload
-        }, otherOptions));
+        return this.constructor.for('pinstripe-frame').prototype.load.call(this, url, options);
+    },
+
+    async preload(url){
+        if(loadCache.get(url.toString())) return;
+        if(preloading[url.toString()]) return;
+        preloading[url.toString()] = true;
+        const response = await fetch(url);
+        const html = await response.text();
+        loadCache.put(url.toString(), html);
+        delete preloading[url.toString()];
     }
 };

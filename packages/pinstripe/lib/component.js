@@ -455,20 +455,25 @@ export const Component = Class.extend().include({
     },
 
     async fetch(url, options = {}){
+        const { minimumDelay = 0, ...otherOptions } = options;
         const { progressBar } = this.document;
         const frame = this.frame || this;
         const normalizedUrl = new URL(url, frame.url);
         const abortController = new AbortController();
         this._registeredAbortControllers.push(abortController);
         progressBar.start();
+        let minimumDelayTimeout;
         const cleanUp = () => {
+            clearTimeout(minimumDelayTimeout);
             this._registeredAbortControllers = this._registeredAbortControllers.filter(item => item !== abortController);
             progressBar.stop();
         };
         try {
-            const out = await fetch(normalizedUrl, Object.assign({
-                signal: abortController.signal
-            }, options));
+            const promises = [
+                fetch(normalizedUrl, { signal: abortController.signal, ...otherOptions }), 
+                new Promise(resolve => minimumDelayTimeout = setTimeout(resolve, minimumDelay))
+            ];
+            const [ out ] = await Promise.all(promises);
             cleanUp();
             return out;
         } catch(e){

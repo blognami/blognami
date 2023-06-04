@@ -4,7 +4,7 @@ export default {
         return  this.renderHtml`
             ${this.params.posts.all().map(({ slug, title, excerptFromBody, readingMinutes, publishedAt } ) => this.renderHtml`
                 <article class="feed-item">
-                    <a class="feed-item-link" href="/${slug}">
+                    <a class="feed-item-link" href="/${slug}" data-placeholder="/placeholders/post">
                         <header class="feed-item-header">
                             <h2 class="feed-item-title">${title}</h2>
                         </header>

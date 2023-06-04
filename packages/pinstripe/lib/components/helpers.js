@@ -3,7 +3,7 @@ import { LruCache } from '../lru_cache.js';
 
 export const loadCache = LruCache.new();
 
-export function loadFrame(confirm, target, method, url){
+export function loadFrame(confirm, target, method, url, placeholderUrl){
     if(confirm && !window.confirm(confirm)){
         return;
     }
@@ -25,23 +25,16 @@ export function loadFrame(confirm, target, method, url){
         return;
     }
 
+    if(placeholderUrl) placeholderUrl = new URL(placeholderUrl, this.frame.url);
+
     if(method.match(/POST|PUT|PATCH/i)){
         const formData = new FormData();
         const values = this.values;
         Object.keys(values).forEach((name) => formData.append(name, values[name]));
-        frame.load(url, { method, body: formData });
+        frame.load(url, { method, body: formData, placeholderUrl });
     } else {
-        frame.load(url, { method });
+        frame.load(url, { method, placeholderUrl });
     }    
-}
-
-export function removeFrame(confirm, target){
-    if(confirm && !window.confirm(confirm)){
-        return;
-    }
-
-    const frame = getFrame.call(this, target);
-    if(frame) frame.remove();
 }
 
 export function getFrame(target){
@@ -51,5 +44,5 @@ export function getFrame(target){
         const index = target.split(/_/).length - 1;
         return this.parents.filter(n => n.isFrame)[index];
     }
-    return this.frame.decendants.find(n => n.isFrame && n.data.name == target);
+    return this.frame.descendants.find(n => n.isFrame && n.data.name == target);
 }
