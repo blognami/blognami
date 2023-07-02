@@ -33,8 +33,12 @@ export default {
                                         ${post.tags.all().map(({ slug, name }, i) => this.renderHtml`${i > 0 ? ', ' : ''}<a class="article-tag" href="/${slug}">${name}</a>`)}
                                     `;
                                 }}
-                                —
-                                <time datetime="${this.formatDate(post.publishedAt, 'yyyy-MM-dd')}">${this.formatDate(post.publishedAt)}</time>
+                                ${() => {
+                                    if(post.publishedAt) return this.renderHtml`
+                                        —
+                                        <time datetime="${this.formatDate(post.publishedAt, 'yyyy-MM-dd')}">${this.formatDate(post.publishedAt)}</time>
+                                    `;
+                                }}
                             </span>
                             
                             ${() => {

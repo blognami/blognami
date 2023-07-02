@@ -45,10 +45,10 @@ export default {
                 </head>
                 
                 <body>
-                    <div class="navbar">
+                    <div class="navbar" data-testid="navbar">
                         <div class="navbar-inner">
                             <div class="navbar-brand">
-                                <a class="navbar-item" href="/">${site.title}</a>
+                                <a class="navbar-item" href="/" data-testid="title">${site.title}</a>
                             </div>
                             <div class="navbar-menu">
                                 ${() => {
@@ -62,10 +62,10 @@ export default {
                                                 </div>
                                             </div>
                                         `}
-                                        <a class="navbar-item" href="/sign_out" target="_overlay">Sign out</a>
+                                        <a class="navbar-item" href="/sign_out" target="_overlay" data-testid="sign-out">Sign out</a>
                                     `;
                                     return this.renderHtml`
-                                        <a class="navbar-item" href="/sign_in" target="_overlay" data-preload>Sign in</a>
+                                        <a class="navbar-item" href="/sign_in" target="_overlay" data-preload data-testid="sign-in">Sign in</a>
                                     `;
                                 }}
                             </div>
@@ -75,14 +75,14 @@ export default {
                         <main id="main" class="main outer">
                             <div class="inner">
                                 <div class="wrapper">
-                                    <div>
+                                    <div data-testid="body">
                                         ${body}
                                     </div>
                                     ${this.renderSidebar({ isSignedIn, isAdmin, site, featuredPosts, tags })}
                                 </div>
                             </div>
                         </main>
-                        <footer class="foot outer">
+                        <footer class="foot outer" data-testid="footer">
                             <div class="foot-inner inner">
                                 <div class="copyright">
                                     ${site.title} © ${new Date().getFullYear()}
@@ -100,8 +100,8 @@ export default {
 
     renderSidebar({ isAdmin, site, featuredPosts, tags }){
         return this.renderHtml`
-            <aside class="sidebar">
-                <section class="section">
+            <aside class="sidebar" data-testid="sidebar">
+                <section class="section" data-testid="about-section">
                     <h2 class="section-title">About</h2>
                         ${async () => {
                             if(isAdmin) return this.renderHtml`
@@ -120,7 +120,7 @@ export default {
 
                 ${async () => {
                     if(await featuredPosts.count() > 0) return this.renderHtml`
-                        <section class="section">
+                        <section class="section" data-testid="featured-section">
                             <h3 class="section-title">Featured</h3>
                             <div class="featured feed">
                                 ${this.renderView('_posts', { posts: featuredPosts })}
@@ -131,7 +131,7 @@ export default {
 
                 ${async () => {
                     if(await tags.count() > 0) return this.renderHtml`
-                        <section class="section">
+                        <section class="section" data-testid="tags-section">
                             <h3 class="section-title">Tags</h3>
 
                             <div class="tags">

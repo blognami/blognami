@@ -9,12 +9,12 @@ export default {
         
         let posts = this.database.posts;
         if(user?.role == 'admin'){
-            posts = posts.orderBy('published', 'asc')
+            posts = posts.orderBy('published', 'asc');
         } else {
             posts = posts.where({ published: true });
         }
     
-        posts = posts.orderBy('publishedAt', 'desc');
+        posts = posts.orderBy('publishedAt', 'desc').orderBy('title', 'asc');
         
         const pageSize = params.pageSize ? parseInt(params.pageSize) : 10;
         posts = posts.paginate(1, pageSize);
@@ -36,7 +36,7 @@ export default {
     
                     ${async () => {
                         if(await posts.all().length < await posts.count()) return this.renderHtml`
-                            <button class="feed-loadmore btn" data-component="a" data-method="post" data-href="/?pageSize=${pageSize + 10}">Load more posts</button>
+                            <button class="feed-loadmore btn" data-component="a" data-method="post" data-href="/?pageSize=${pageSize + 10}" data-testid="load-more">Load more posts</button>
                         `;
                     }}
                 </section>

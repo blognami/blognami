@@ -31,6 +31,11 @@ Cypress.Commands.add('typeOtpFor', { prevSubject: true }, async (subject, email)
    return subject;
 });
 
+Cypress.Commands.add('getByTestId', (...path) => path.reduce((cy, testId, i) => {
+    if(i == 0) return cy.get(`[data-testid="${testId}"]`);
+    return cy.find(`[data-testid="${testId}"]`);
+}, cy));
+
 Cypress.Commands.add('signIn', (email) => {
     cy.get('.navbar-item').contains('Sign in').click();
     cy.get('input[name="email"]').type(email);

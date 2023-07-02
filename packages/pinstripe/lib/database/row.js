@@ -353,7 +353,7 @@ const getPropertyDescriptor = (o, name) => o ? Object.getOwnPropertyDescriptor(o
 function coerceValue(name, value){
     const columns = Table.for(this.constructor.collectionName).columns;
     const type = columns[name];
-    if(type == 'date' || type == 'datetime') return new Date(value);
+    if(type == 'date' || type == 'datetime') return value != undefined ? new Date(value) : value;
     if(type == 'boolean') return `${value}` == 'true' || `${value}` == '1';
     return value;
 }

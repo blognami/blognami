@@ -4,6 +4,7 @@ build/
 pkg/
 videos/
 screenshots/
+downloads/
 
 *.db
 *.db-journal

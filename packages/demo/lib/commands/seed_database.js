@@ -15,8 +15,11 @@ export default {
         if(process.env.SKIP_FIXTURES == 'true') return;
     
         await this.database.site.update({
-            title: 'Hello World!',
-            description: 'Thoughts, stories and ideas.',
+            title: 'Lorem ipsum',
+            description: [
+                'Provident itaque iste.',
+                '  * [Osinski Extensions](/osinski-extensions)'
+            ].join('\n'),
             language: 'en'
         });
     
@@ -33,7 +36,7 @@ export default {
     },
 
     async loadDir(dirPath, currentDirPath){
-        const items = await promisify(readdir)(currentDirPath);
+        const items = (await promisify(readdir)(currentDirPath)).reverse();
         for(let i in items){
             const item = items[i];
             const currentPath = `${currentDirPath}/${item}`;
@@ -63,9 +66,7 @@ export default {
         };
 
         if(!entity.slug){
-            const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
-            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/.]+$/, '');
-            entity.slug = relativeFilePathWithoutExtension;
+            entity.slug = filePath.replace(/^.*\//, '').replace(/\.[^/.]+$/, '');
         }
 
         if(!entity.title){

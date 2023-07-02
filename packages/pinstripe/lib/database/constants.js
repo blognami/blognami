@@ -64,7 +64,7 @@ export const MYSQL_KEY_COMPARISON_OPERATORS = {
 };
 
 export const TYPE_TO_DEFAULT_VALUE_MAP = {
-    boolean: 'false',
+    boolean: false,
     decimal: 0,
     float: 0,
     integer: 0,

@@ -7,15 +7,15 @@ context('Admin', () => {
 
     describe('Home page - signed out', () => {
         it(`should have correct navbar`, () => {
-            cy.get('.navbar-item').contains('Hello World!');
-            cy.get('.navbar-item').contains('Sign in');
+            cy.getByTestId('navbar', 'title').contains('Lorem ipsum');
+            cy.getByTestId('navbar', 'sign-in').contains('Sign in');
         });
     });
 
     describe('Home page - signed in', () => {
         it(`should have correct text`, () => {
             cy.signIn('admin@example.com');
-            cy.get('.navbar-item').contains('Add');
+            cy.getByTestId('navbar').contains('Add');
             cy.signOut();
         });
     });

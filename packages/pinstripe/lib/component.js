@@ -597,7 +597,7 @@ function patchAttributes(attributes){
             }
         })
         Object.keys(attributes).forEach((key) => {
-            if(currentAttributes[key] != attributes[key]){
+            if(!currentAttributes.hasOwnProperty(key) || currentAttributes[key] != attributes[key]){
                 this.node.setAttribute(key, attributes[key]);
                 if(key == 'value'){
                     this.node.value = attributes[key];

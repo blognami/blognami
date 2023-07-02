@@ -32,7 +32,11 @@ export default {
         );
     },
 
+    loading: false,
+
     async load(url = this.url, options = {}){
+        if(this.loading) return;
+        this.loading = true;
         this.abort();
         const { method = 'GET', placeholderUrl } = options;
         const cachedHtml = method == 'GET' ? loadCache.get(url.toString()) : undefined;
@@ -46,10 +50,11 @@ export default {
             }
         }
         this.url = url;
-        const response = await this.fetch(url, { minimumDelay, ...options })
+        const response = await this.fetch(url, { minimumDelay, ...options });
         const html = await response.text();
+        this.loading = false;
         if(html == cachedHtml) return out;
         if(method == 'GET') loadCache.put(url.toString(), html);
-        return this.patch(html);
+        this.patch(html);
     }
 };
