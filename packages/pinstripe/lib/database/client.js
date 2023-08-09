@@ -110,7 +110,7 @@ export const Client = Class.extend().include({
     async destroy(){
         if(this.connection) await this.adapt(this, {
             async mysql(){
-                await this.connection.destroy();
+                await this.connection.end();
             },
 
             async sqlite(){
@@ -177,6 +177,8 @@ function prepare(query){
 
 function run(query, values){
     const cacheKey = JSON.stringify([query, values]);
+
+    const isTest = process.env.NODE_ENV == 'test';
     
     return this.adapt(this, {
         async mysql(){
@@ -188,7 +190,7 @@ function run(query, values){
 
             if(cache && cache[cacheKey]) return [...cache[cacheKey]];
 
-            console.log(`Query: ${query}`);
+            if(!isTest) console.log(`Query: ${query}`);
             
             const out = await new Promise((resolve, reject) => {
                 this.connection.query(query, (error, rows) => {
@@ -217,7 +219,7 @@ function run(query, values){
 
             if(cache && cache[cacheKey]) return [...cache[cacheKey]];
 
-            console.log(`Query: ${query}`);
+            if(!isTest) console.log(`Query: ${query}`);
 
             const out = await new Promise((resolve, reject) => {
                 this.connection.all(query, ...values, (error, rows) => {

@@ -16,6 +16,7 @@ export default {
     createDummy({ defaults }){
         return (mailOptions = {}) => {
             const { text, html, ...otherMailOptions } = { ...defaults, ...mailOptions };
+            if(process.env.NODE_ENV == 'test') return;
             console.log('');
             console.log('----------------------------------------');
             console.log(chalk.green('sendMail'));

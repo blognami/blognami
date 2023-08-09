@@ -10,6 +10,8 @@ export default {
 
     start(apps = [{ name: 'main', host: '127.0.0.1', port: 3000 }]){
         apps.forEach(({ name, host, port }) => {
+            const isTest = process.env.NODE_ENV == 'test';
+
             http.createServer(async (request, response) => {
                 try {
                     const params = await this.extractParams(request);
@@ -38,9 +40,9 @@ export default {
                     response.setHeader('content-type', 'text/plain');
                     response.end((e.stack || e).toString());
                 }
-                console.log(`${request.method}: ${request.url} (${response.statusCode})`);
+                if(!isTest) console.log(`${request.method}: ${request.url} (${response.statusCode})`);
             }).listen(port, host, () => {
-                console.log(`Pinstripe running "${name}" app at "http://${host}:${port}/"`)
+                if(!isTest) console.log(`Pinstripe running "${name}" app at "http://${host}:${port}/"`)
             });
         });
     },
