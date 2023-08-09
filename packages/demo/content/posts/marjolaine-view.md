@@ -1,6 +1,7 @@
 ---
 title: Marjolaine View
 published: true
+publishedAt: 2023-07-01 12:40
 ---
 
 Qui et ab. Animi exercitationem aliquid aut rem nihil. Placeat cum quis. Hic est id atque blanditiis.

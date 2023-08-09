@@ -13,8 +13,6 @@ export const Component = Class.extend().include({
     meta(){
         this.include(Registry);
 
-        const { importFile } = this;
-
         this.assignProps({
             instanceFor(node){
                 if(!node._component){
@@ -35,7 +33,7 @@ export const Component = Class.extend().include({
 
         this.FileImporter.register('js', {
             meta(){
-                const { importFile} = this.prototype;
+                const { importFile } = this.prototype;
 
                 this.include({
                     async importFile(params){
@@ -593,7 +591,8 @@ function patchAttributes(attributes){
         const currentAttributes = this.attributes;
         Object.keys(currentAttributes).forEach((key) => {
             if(attributes[key] === undefined){
-                this.node.removeAttribute(key);
+                Element.prototype.removeAttribute.call(this.node, key); // work around for https://github.com/cypress-io/cypress/issues/26206
+                // this.node.removeAttribute(key);
             }
         })
         Object.keys(attributes).forEach((key) => {

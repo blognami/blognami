@@ -13,3 +13,4 @@ downloads/
 bundle.css
 bundle.css.map
 Gemfile.lock
+dump.sql

@@ -1,6 +1,7 @@
 ---
 title: Wisozk Row
 published: true
+publishedAt: 2023-07-01 12:01
 ---
 
 Autem magnam sapiente nihil ut perspiciatis. Totam reprehenderit omnis distinctio tempora et voluptatum. Quia delectus nihil autem numquam dolor vel neque. Quo quasi qui in accusantium beatae corrupti ut. Aut explicabo velit ad labore. Quisquam molestias consequuntur maxime sit.

@@ -1,6 +1,7 @@
 ---
 title: Tristian Mission
 published: true
+publishedAt: 2023-07-01 12:07
 ---
 
 Odit at alias in natus rerum ipsa ut consequuntur. Consectetur voluptatibus distinctio. Labore aut quo eligendi rem placeat possimus modi labore. Est minima et atque voluptatem minima et ab. Architecto assumenda soluta quasi nemo. Repellat sit voluptatem nam ut iste.

@@ -1,6 +1,7 @@
 ---
 title: Lamont Camp
 published: true
+publishedAt: 2023-07-01 12:48
 ---
 
 Corrupti necessitatibus molestias nihil cum magnam quibusdam labore eos. Autem molestiae voluptates odit neque tenetur qui. Esse dolores possimus facilis autem omnis. Est dolores natus at molestias eveniet. Fuga id commodi quia possimus id. Reprehenderit natus placeat.

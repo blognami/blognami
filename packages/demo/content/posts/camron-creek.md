@@ -1,6 +1,7 @@
 ---
 title: Camron Creek
 published: true
+publishedAt: 2023-07-01 13:34
 ---
 
 Eos sit rerum qui sed neque perferendis impedit nostrum in. Dignissimos nobis beatae aliquam. Possimus sunt est sed consectetur quod nisi sed quidem. Qui fugit cumque quam.

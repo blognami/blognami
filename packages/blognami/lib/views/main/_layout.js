@@ -45,10 +45,10 @@ export default {
                 </head>
                 
                 <body>
-                    <div class="navbar" data-testid="navbar">
+                    <div class="navbar" data-test-id="navbar">
                         <div class="navbar-inner">
                             <div class="navbar-brand">
-                                <a class="navbar-item" href="/" data-testid="title">${site.title}</a>
+                                <a class="navbar-item" href="/" data-test-id="title">${site.title}</a>
                             </div>
                             <div class="navbar-menu">
                                 ${() => {
@@ -62,10 +62,10 @@ export default {
                                                 </div>
                                             </div>
                                         `}
-                                        <a class="navbar-item" href="/sign_out" target="_overlay" data-testid="sign-out">Sign out</a>
+                                        <a class="navbar-item" href="/sign_out" target="_overlay" data-test-id="sign-out">Sign out</a>
                                     `;
                                     return this.renderHtml`
-                                        <a class="navbar-item" href="/sign_in" target="_overlay" data-preload data-testid="sign-in">Sign in</a>
+                                        <a class="navbar-item" href="/sign_in" target="_overlay" data-preload data-test-id="sign-in">Sign in</a>
                                     `;
                                 }}
                             </div>
@@ -75,14 +75,14 @@ export default {
                         <main id="main" class="main outer">
                             <div class="inner">
                                 <div class="wrapper">
-                                    <div data-testid="body">
+                                    <div data-test-id="main">
                                         ${body}
                                     </div>
                                     ${this.renderSidebar({ isSignedIn, isAdmin, site, featuredPosts, tags })}
                                 </div>
                             </div>
                         </main>
-                        <footer class="foot outer" data-testid="footer">
+                        <footer class="foot outer" data-test-id="footer">
                             <div class="foot-inner inner">
                                 <div class="copyright">
                                     ${site.title} © ${new Date().getFullYear()}
@@ -100,8 +100,8 @@ export default {
 
     renderSidebar({ isAdmin, site, featuredPosts, tags }){
         return this.renderHtml`
-            <aside class="sidebar" data-testid="sidebar">
-                <section class="section" data-testid="about-section">
+            <aside class="sidebar" data-test-id="sidebar">
+                <section class="section" data-test-id="about-section">
                     <h2 class="section-title">About</h2>
                         ${async () => {
                             if(isAdmin) return this.renderHtml`
@@ -120,7 +120,7 @@ export default {
 
                 ${async () => {
                     if(await featuredPosts.count() > 0) return this.renderHtml`
-                        <section class="section" data-testid="featured-section">
+                        <section class="section" data-test-id="featured-section">
                             <h3 class="section-title">Featured</h3>
                             <div class="featured feed">
                                 ${this.renderView('_posts', { posts: featuredPosts })}
@@ -131,7 +131,7 @@ export default {
 
                 ${async () => {
                     if(await tags.count() > 0) return this.renderHtml`
-                        <section class="section" data-testid="tags-section">
+                        <section class="section" data-test-id="tags-section">
                             <h3 class="section-title">Tags</h3>
 
                             <div class="tags">

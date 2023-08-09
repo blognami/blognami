@@ -1,6 +1,7 @@
 ---
 title: Swift Parkway
 published: true
+publishedAt: 2023-07-01 12:14
 ---
 
 Voluptas modi cum doloribus cumque. Laudantium vitae molestias voluptatem delectus dolorum. Minima dicta quo sunt sint adipisci rerum quaerat sint non. Amet minima ut nulla laboriosam earum dolorum necessitatibus. Ad voluptas et nemo eaque. Soluta et rerum.

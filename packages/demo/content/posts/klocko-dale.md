@@ -1,6 +1,7 @@
 ---
 title: Klocko Dale
 published: true
+publishedAt: 2023-07-01 12:52
 ---
 
 Consequatur porro ut. Voluptatum ut enim quia excepturi. Sunt omnis reiciendis commodi facilis molestiae corrupti asperiores quaerat.

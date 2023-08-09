@@ -1,6 +1,7 @@
 ---
 title: Colton Station
 published: true
+publishedAt: 2023-07-01 13:29
 ---
 
 Inventore voluptatem cupiditate quis quisquam dolor. Officia aut dicta et qui et amet maxime eum. Velit inventore molestiae nobis quas et voluptates.

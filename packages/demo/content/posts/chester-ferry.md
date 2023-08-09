@@ -1,6 +1,7 @@
 ---
 title: Chester Ferry
 published: true
+publishedAt: 2023-07-01 13:31
 ---
 
 Distinctio laborum enim at quibusdam iste. Quaerat non illo. Sint fuga mollitia et saepe beatae ut.

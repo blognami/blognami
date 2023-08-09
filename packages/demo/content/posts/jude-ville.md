@@ -1,6 +1,7 @@
 ---
 title: Jude Ville
 published: true
+publishedAt: 2023-07-01 12:56
 ---
 
 Dolorum officiis non. Velit rerum aut ut at consequatur. Veniam numquam dolores ut fugiat consequatur non. Est tempora voluptas quasi aut ut enim provident. Porro reiciendis vel error.

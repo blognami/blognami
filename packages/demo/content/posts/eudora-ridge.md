@@ -1,6 +1,7 @@
 ---
 title: Eudora Ridge
 published: true
+publishedAt: 2023-07-01 13:18
 ---
 
 Vel sint consequatur inventore dolorem omnis sit autem ab. Et aut voluptates. Provident et in. Fuga nobis et ab ut. Animi eligendi nam ullam necessitatibus aut consectetur. Sit dolorem quia eaque quia corporis.

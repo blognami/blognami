@@ -1,6 +1,7 @@
 ---
 title: Kris Dale
 published: true
+publishedAt: 2023-07-01 12:51
 ---
 
 Ipsum alias suscipit. Necessitatibus adipisci nihil. Vitae vel voluptatum nostrum. Et ipsa id autem voluptate inventore eaque neque alias autem. Rem aut ipsum qui alias provident blanditiis distinctio est. Nam quisquam sunt molestias voluptas quod minima laborum.

@@ -27,7 +27,7 @@ export default {
                     `;
                 })}
                 <div class="comments-footer">
-                    <a href="/add_comment?commentableId=${commentable.id}" target="_overlay">${commentable.constructor.name == 'comment' ? 'Reply' : 'Add comment'}</a>
+                    <a href="/add_comment?commentableId=${commentable.id}" target="_overlay" data-test-id="add-comment">${commentable.constructor.name == 'comment' ? 'Reply' : 'Add comment'}</a>
                 </div>
             </div>
         `;

@@ -1,6 +1,7 @@
 ---
 title: Paucek Course
 published: true
+publishedAt: 2023-07-01 12:29
 ---
 
 Quo sapiente laudantium ullam nobis quisquam harum. Quis aperiam maxime voluptatem suscipit. Et earum corrupti nihil. Et molestiae cupiditate non qui sunt in laborum sapiente voluptatem. Vel illo quia quis ipsam optio.

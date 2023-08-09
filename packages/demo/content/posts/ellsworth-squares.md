@@ -1,6 +1,7 @@
 ---
 title: Ellsworth Squares
 published: true
+publishedAt: 2023-07-01 13:21
 ---
 
 Illum incidunt nobis vitae. Aut vel ad. Perspiciatis iusto maiores nobis optio et assumenda porro. Vel in accusantium est officiis. Est est ut nihil dolor provident sapiente voluptatum recusandae quas. Error vero laborum odit dolorem.

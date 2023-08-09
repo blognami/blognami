@@ -1,6 +1,7 @@
 ---
 title: Mavis Camp
 published: true
+publishedAt: 2023-07-01 12:38
 ---
 
 Dicta eos hic. Quam aperiam pariatur nostrum ut. Sequi quae in nam recusandae vel.

@@ -14,8 +14,8 @@
     "test:models:mysql": "DATABASE_ADAPTER=mysql SKIP_FIXTURES=true NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
     "test:models:sqlite": "DATABASE_ADAPTER=sqlite SKIP_FIXTURES=true NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
     "test:e2e": "yarn test:e2e:$(echo ${DATABASE_ADAPTER:-sqlite})",
-    "test:e2e:mysql": "NODE_ENV=test DATABASE_ADAPTER=mysql start-server-and-test 'pinstripe reset-database && yarn start' http://127.0.0.1:3000 'yarn cypress:run'",
-    "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'pinstripe reset-database && yarn start' http://127.0.0.1:3000 'yarn cypress:run'",
+    "test:e2e:mysql": "NODE_ENV=test DATABASE_ADAPTER=mysql start-server-and-test 'pinstripe reset-database-and-dump-sql && yarn start' http://127.0.0.1:3000 'yarn cypress:run'",
+    "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'pinstripe reset-database-and-dump-sql && yarn start' http://127.0.0.1:3000 'yarn cypress:run'",
     "cypress:run": "cypress run",
     "cypress:open": "cypress open"
   },

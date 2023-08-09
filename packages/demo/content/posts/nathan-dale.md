@@ -1,6 +1,7 @@
 ---
 title: Nathan Dale
 published: true
+publishedAt: 2023-07-01 12:33
 tags: Excepturi Corporis
 ---
 

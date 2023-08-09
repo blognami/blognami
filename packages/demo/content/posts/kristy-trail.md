@@ -1,6 +1,7 @@
 ---
 title: Kristy Trail
 published: true
+publishedAt: 2023-07-01 12:50
 ---
 
 Et perspiciatis dolores. Et placeat culpa error cumque. Architecto est enim aut aut sed. Maxime numquam cupiditate iure ullam tempora et nam id. Laudantium cum sed laborum sed est consequatur explicabo dolorem. Totam quidem modi ipsum vel impedit provident.

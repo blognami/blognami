@@ -24,26 +24,67 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('typeOtpFor', { prevSubject: true }, async (subject, email) => {
-   const response = await fetch(`/test/generate-otp?email=${encodeURIComponent(email)}`);
-   const { otp } = await response.json();
-   cy.get(subject.selector).type(otp);
-   return subject;
+Cypress.Commands.add('resetDatabaseFromSql', async () => {
+    await fetch(`/test/reset-database-from-sql`);
 });
 
-Cypress.Commands.add('getByTestId', (...path) => path.reduce((cy, testId, i) => {
-    if(i == 0) return cy.get(`[data-testid="${testId}"]`);
-    return cy.find(`[data-testid="${testId}"]`);
-}, cy));
-
 Cypress.Commands.add('signIn', (email) => {
-    cy.get('.navbar-item').contains('Sign in').click();
-    cy.get('input[name="email"]').type(email);
-    cy.get('button[type="submit"]').contains('Next').click();
-    cy.get('input[name="password"]').typeOtpFor(email);
-    cy.get('button[type="submit"]').contains('Next').click();
+    cy.getByTestId('navbar', 'sign-in').click();
+    cy.topModal().submitForm({ email });
+    cy.topModal().submitForm({ password: email });
 });
 
 Cypress.Commands.add('signOut', () => {
-    cy.get('.navbar-item').contains('Sign out').click();
+    cy.getByTestId('navbar', 'sign-out').click();
+});
+
+Cypress.Commands.add('getByTestId', (...path) => cy.waitForLoadingToFinish().then(() => path.reduce((cy, testId, i) => {
+    if(i == 0) return cy.get(`[data-test-id="${testId}"]`);
+    return cy.find(`[data-test-id="${testId}"]`);
+}, cy)));
+
+Cypress.Commands.add('submitForm', { prevSubject: true }, (subject, values = {}) => {
+    Object.keys(values).forEach((name) => {
+        const value = values[name];
+        cy.get(subject).find(`input[name="${name}"], textarea[name="${name}"]`).then(($input) => {
+            if($input.is('input[type="password"]')){
+                cy.wrap($input).clear().typeOtpFor(value);
+            } else if($input.is('input[type="checkbox"]')){
+                if(value){
+                    cy.wrap($input).check();
+                } else {
+                    cy.wrap($input).uncheck();
+                }
+            } else if($input.is('[data-component="pinstripe-markdown-editor/anchor"]')){
+                cy.wrap($input).click();
+                cy.get('textarea[name="value"]');
+                cy.focused().clear().type(value);
+                cy.closeTopModal();
+            } else {
+                cy.wrap($input).clear().type(value);
+            }
+        });
+    })
+    cy.get(subject).find('button[type="submit"]').click();
+    cy.waitForLoadingToFinish();
+});
+
+Cypress.Commands.add('typeOtpFor', { prevSubject: true }, async (subject, email) => {
+    const response = await fetch(`/test/generate-otp?email=${encodeURIComponent(email)}`);
+    const { otp } = await response.json();
+    cy.get(subject).type(otp);
+    return subject;
+ });
+
+Cypress.Commands.add('topModal',() => cy.waitForLoadingToFinish().then(() => cy.get('pinstripe-modal').last()));
+
+Cypress.Commands.add('closeTopModal', () => cy.topModal().shadow().find('button').click());
+
+Cypress.Commands.add('waitForLoadingToFinish', () => {
+    cy.window().then(async (window) => {
+        while(true){
+            await new Promise(resolve => setTimeout(resolve, 100));
+            if(window.document._component.progressBar.startCount == 0) break;
+        }
+    });
 });

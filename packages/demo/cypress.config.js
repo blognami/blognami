@@ -6,11 +6,14 @@ export default defineConfig({
     baseUrl: 'http://127.0.0.1:3000',
 
     setupNodeEvents(on, config) {
-      on('after:spec', () => {
-        execSync(`pinstripe reset-database`, {
-          stdio: 'inherit'
-        });
-      });
+      on('task', {
+        'reset-database-from-sql': () => {
+          execSync(`pinstripe reset-database-from-sql`, {
+            stdio: 'inherit'
+          });
+          return null;
+        }
+      })
     },
   },
 });

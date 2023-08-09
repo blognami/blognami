@@ -45,15 +45,15 @@ export default {
                                 if(isAdmin) return this.renderHtml`
                                     <div class="editable-area">
                                         <div class="editable-area-header">
-                                            <a class="editable-area-button" href="/admin/edit_post_title?id=${post.id}" target="_overlay">Edit</a>
+                                            <a class="editable-area-button" href="/admin/edit_post_title?id=${post.id}" target="_overlay" data-test-id="edit-post-title">Edit</a>
                                         </div>
                                         <div class="editable-area-body">
-                                            <h1 class="article-title">${post.title}</h1>
+                                            <h1 class="article-title" data-test-id="post-title">${post.title}</h1>
                                         </div>
                                     </div>
                                 `;
                                 return this.renderHtml`
-                                    <h1 class="article-title">${post.title}</h1>
+                                    <h1 class="article-title" data-test-id="post-title">${post.title}</h1>
                                 `;
                             }}
     
@@ -64,9 +64,9 @@ export default {
                                 if(isAdmin) return this.renderHtml`
                                     <div class="editable-area">
                                         <div class="editable-area-header">
-                                            <a class="editable-area-button" href="/admin/edit_post_body?id=${post.id}" target="_overlay">Edit</a>
+                                            <a class="editable-area-button" href="/admin/edit_post_body?id=${post.id}" target="_overlay" data-test-id="edit-post-body">Edit</a>
                                         </div>
-                                        <div class="editable-area-body content canvas">
+                                        <div class="editable-area-body content canvas" data-test-id="post-body">
                                             ${this.renderMarkdown(post.body)}
                                         </div>
                                     </div>
@@ -78,10 +78,10 @@ export default {
                                 if(isAdmin) return this.renderHtml`
                                     <div class="editable-area">
                                         <div class="editable-area-header">
-                                            <a class="editable-area-button" href="/admin/edit_post_meta?id=${post.id}" target="_overlay">Edit</a>
+                                            <a class="editable-area-button" href="/admin/edit_post_meta?id=${post.id}" target="_overlay" data-test-id="edit-post-meta">Edit</a>
                                         </div>
                                         <div class="editable-area-body">
-                                            <section class="section">
+                                            <section class="section" data-test-id="post-meta">
                                                 <h3 class="section-title">Meta</h3>
                                                 <p><b>Slug:</b> ${post.slug}</p>
                                                 <p><b>Tags:</b> ${async () => {
@@ -96,7 +96,7 @@ export default {
                                         </div>
                                     </div>
     
-                                    <section class="section">
+                                    <section class="section" data-test-id="danger-area">
                                         <h3 class="section-title">Danger area</h3>
                                         <p>
                                             <button
@@ -106,6 +106,7 @@ export default {
                                                 data-href="/admin/delete_post?id=${post.id}"
                                                 data-target="_overlay"
                                                 data-confirm="Are you really sure you want to delete this post?"
+                                                data-test-id="delete-post"
                                             >Delete this Post</button>
                                         </p>
                                     </section>
@@ -122,7 +123,7 @@ export default {
                                 <div class="navigation-previous">
                                     ${() => {
                                         if(previousPost) return this.renderHtml`
-                                            <a class="navigation-link" href="/${previousPost.slug}">
+                                            <a class="navigation-link" href="/${previousPost.slug}" data-test-id="previous-post">
                                                 <span class="navigation-label">Previous issue</span>
                                                 <h4 class="navigation-title">${previousPost.title}</h4>
                                             </a>
@@ -135,7 +136,7 @@ export default {
                                 <div class="navigation-next">
                                     ${() => {
                                         if(nextPost) return this.renderHtml`
-                                            <a class="navigation-link" href="/${nextPost.slug}">
+                                            <a class="navigation-link" href="/${nextPost.slug}" data-test-id="next-post">
                                                 <span class="navigation-label">Next issue</span>
                                                 <h4 class="navigation-title">${nextPost.title}</h4>
                                             </a>

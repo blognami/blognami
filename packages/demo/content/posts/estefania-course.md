@@ -1,6 +1,7 @@
 ---
 title: Estefania Course
 published: true
+publishedAt: 2023-07-01 13:20
 ---
 
 Debitis id sed. Sit odio repellendus nesciunt deserunt nihil. Non dignissimos ipsum.

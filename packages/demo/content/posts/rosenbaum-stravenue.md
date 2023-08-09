@@ -1,6 +1,7 @@
 ---
 title: Rosenbaum Stravenue
 published: true
+publishedAt: 2023-07-01 12:23
 ---
 
 Architecto quae rerum quidem est. Nostrum rerum reiciendis sint consequuntur quia commodi. Dolores explicabo molestiae vel alias vel. Quisquam ipsa ipsam totam esse molestiae molestiae.

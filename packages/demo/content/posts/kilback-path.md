@@ -1,6 +1,7 @@
 ---
 title: Kilback Path
 published: true
+publishedAt: 2023-07-01 12:53
 ---
 
 Suscipit et et ducimus fugiat labore dolor eos qui vitae. Vel sit nihil assumenda sunt quaerat vero. Sit inventore voluptate voluptas non voluptatum. Est nihil qui eum qui. Voluptate maxime animi provident.

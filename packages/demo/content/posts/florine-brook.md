@@ -1,6 +1,7 @@
 ---
 title: Florine Brook
 published: true
+publishedAt: 2023-07-01 13:14
 ---
 
 Eaque possimus sit repellat in eos odio maxime. Eveniet veniam eius ex. Soluta et unde ducimus vitae laboriosam eos.

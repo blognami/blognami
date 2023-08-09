@@ -1,6 +1,7 @@
 ---
 title: Earline Wells
 published: true
+publishedAt: 2023-07-01 13:23
 ---
 
 Repudiandae eveniet illum ex. Explicabo impedit quibusdam ad sit nesciunt quis sed autem. Vel earum autem et dolores veniam. Vel perferendis nulla aut sint. Et ut esse perspiciatis. Eligendi in quasi numquam sequi perferendis.

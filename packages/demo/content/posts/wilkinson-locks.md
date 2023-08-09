@@ -1,6 +1,7 @@
 ---
 title: Wilkinson Locks
 published: true
+publishedAt: 2023-07-01 12:02
 ---
 
 Perspiciatis porro porro rem quis. Aspernatur ullam officiis sunt voluptatibus. Est et fugiat ea aut autem sed consequuntur non. Debitis molestiae consequatur voluptas alias hic. Eos qui amet a enim inventore. Aliquam fugit quod ea esse voluptatem quos culpa.

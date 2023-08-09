@@ -1,6 +1,7 @@
 ---
 title: Carter Fort
 published: true
+publishedAt: 2023-07-01 13:33
 ---
 
 Mollitia nostrum ab earum pariatur est ut nobis ut sint. Voluptatem fugit consequuntur et ducimus illum. Ut id officiis.

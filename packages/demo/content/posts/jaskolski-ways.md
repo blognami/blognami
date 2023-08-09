@@ -1,6 +1,7 @@
 ---
 title: Jaskolski Ways
 published: true
+publishedAt: 2023-07-01 13:01
 ---
 
 Quo enim necessitatibus. Ab officiis ut vero qui odit aliquam animi maxime. Eum quasi aliquid commodi omnis dolore soluta.
