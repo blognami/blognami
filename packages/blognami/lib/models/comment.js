@@ -17,5 +17,11 @@ export default {
                 this.setValidationError('general', `Comments have not been enabled.`);
             }
         });
+
+        this.beforeValidation(function(){
+            if(!this.createdAt){
+                this.createdAt = new Date();
+            }
+        });
     }
 };

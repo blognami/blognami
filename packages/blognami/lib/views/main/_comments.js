@@ -5,7 +5,7 @@ export default {
 
         return this.renderHtml`
             <div class="comments">
-                ${commentable.comments.all().map(async comment => {
+                ${commentable.comments.orderBy('createdAt').all().map(async comment => {
                     const user = await comment.user;
     
                     return this.renderHtml`
@@ -16,7 +16,7 @@ export default {
                             <div class="comment-main">
                                 <div class="comment-meta">
                                     <div>${user?.name}</div>
-                                    <div>${this.formatDate(comment.publishedAt, `LLL dd, yyyy 'at' hh:mm a`)}</div>
+                                    <div data-test-id="comment-created-at">${this.formatDate(comment.createdAt, `LLL dd, yyyy 'at' hh:mm a`)}</div>
                                 </div>
                                 <div class="comment-body content">${this.renderMarkdown(comment.body)}</div>
                                 ${() => {

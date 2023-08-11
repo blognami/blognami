@@ -57,6 +57,7 @@ export function describeApp(role){
     
                 it(`should have an interface to allow the user to add comments`, () => {
                     cy.getByTestId('main').contains("Hello world!").should('not.exist');
+                    cy.getByTestId('main', 'comment-created-at').should('not.exist');
                     cy.getByTestId('main', 'add-comment').contains("Add comment").click();
                     cy.topModal().contains('Add comment');
                     if(role == 'guest'){
@@ -66,6 +67,7 @@ export function describeApp(role){
                     }
                     cy.topModal().submitForm({ body: 'Hello world!' });
                     cy.getByTestId('main').contains("Hello world!").should('exist');
+                    cy.getByTestId('main', 'comment-created-at').should('not.contain', 'Invalid DateTime');
                 });
 
                 it(`should have an interface to allow the user to navigate to the previous/next posts`, () => {

@@ -36,7 +36,7 @@ export default {
                                 ${() => {
                                     if(post.publishedAt) return this.renderHtml`
                                         —
-                                        <time datetime="${this.formatDate(post.publishedAt, 'yyyy-MM-dd')}">${this.formatDate(post.publishedAt)}</time>
+                                        <time datetime="${this.formatDate(post.publishedAt, 'yyyy-MM-dd')}" data-test-id="post-published-at">${this.formatDate(post.publishedAt)}</time>
                                     `;
                                 }}
                             </span>

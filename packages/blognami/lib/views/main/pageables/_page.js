@@ -22,7 +22,7 @@ export default {
                             <span class="article-meta">
                                 By <a href="/${pageUser.slug}">${pageUser.name}</a>
                                 —
-                                <time datetime="${this.formatDate(page.publishedAt, 'yyyy-MM-dd')}">${this.formatDate(page.publishedAt)}</time>
+                                <time datetime="${this.formatDate(page.publishedAt, 'yyyy-MM-dd')}" data-test-id="page-published-at">${this.formatDate(page.publishedAt)}</time>
                             </span>
                             
                             ${() => {

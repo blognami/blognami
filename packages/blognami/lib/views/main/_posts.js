@@ -14,7 +14,7 @@ export default {
                         <footer class="feed-item-meta">
                             ${() => {
                                 if(publishedAt) return this.renderHtml`
-                                    <time class="feed-item-date" datetime="${this.formatDate(publishedAt, 'yyyy-MM-dd')}">${this.formatDate(publishedAt)}</time>
+                                    <time class="feed-item-date" datetime="${this.formatDate(publishedAt, 'yyyy-MM-dd')}" data-test-id="post-published-at">${this.formatDate(publishedAt)}</time>
                                     —
                                 `;
                             }}

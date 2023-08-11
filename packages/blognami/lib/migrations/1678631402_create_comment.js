@@ -6,7 +6,7 @@ export default {
             await comments.addColumn('userId', 'foreign_key');
             await comments.addColumn('body', 'text');
             await comments.addColumn('approved', 'boolean',  { index: true });
-            await comments.addColumn('publishedAt', 'datetime');
+            await comments.addColumn('createdAt', 'datetime');
         });
     }
 };
