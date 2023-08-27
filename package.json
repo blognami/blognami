@@ -12,7 +12,8 @@
     "test:models": "lerna run test:models --stream",
     "test:e2e": "lerna run test:e2e --stream",
     "cypress:open": "lerna run cypress:open --scope demo --stream",
-    "publish-all": "lerna publish from-package"
+    "publish-all": "lerna publish from-package",
+    "version-all": "lerna version"
   },
   "dependencies": {
     "lerna": "^4.0.0",
