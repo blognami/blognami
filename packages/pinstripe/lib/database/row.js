@@ -11,6 +11,8 @@ import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP } from './constants.js';
 
 export const Row = Model.extend().include({
     meta(){
+        this.assignProps({ name: 'Row' });
+
         this.include(Registry);
 
         defineCallbacks.call(this, 'beforeInsert', 'afterInsert', 'beforeUpdate', 'afterUpdate', 'beforeDelete', 'afterDelete')

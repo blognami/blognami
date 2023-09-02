@@ -17,6 +17,8 @@ import { Union } from "./union.js";
 
 export const Table = Class.extend().include({
     meta(){
+        this.assignProps({ name: 'Table' });
+
         this.include(Registry);
 
         this.assignProps({

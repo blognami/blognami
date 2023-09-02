@@ -88,7 +88,7 @@ export default {
                                     ${site.title} © ${new Date().getFullYear()}
                                 </div>    
                                 <div class="powered-by">
-                                    <a href="https://blognami.org/" target="_blank" rel="noopener">Powered by Blognami</a>
+                                    <a href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
                                 </div>
                             </div>
                         </footer>

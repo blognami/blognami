@@ -4,6 +4,8 @@ import { Registry } from '../registry.js';
 
 export const Migration = Class.extend().include({
     meta(){
+        this.assignProps({ name: 'Migration' });
+
         this.include(Registry);
 
         this.assignProps({

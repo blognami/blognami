@@ -1,8 +1,11 @@
 
 import { Class } from './class.js';
 
+export const registries = {};
+
 export const Registry = {
     meta(){
+        registries[this.name] = this;
 
         const { include } = this;
 
@@ -66,7 +69,7 @@ export const Registry = {
                 if(!classes[normalizedName]){
                     classes[normalizedName] = this.registry.extend().include({
                         meta(){
-                            this.assignProps({ name: normalizedName, includes: [] });
+                            this.assignProps({ name: normalizedName, includes: [], filePaths: [] });
                             this.include(this.createInitialMixin(normalizedName));
                             this.include(this.mixins[normalizedName] || {});
                         }
@@ -115,7 +118,12 @@ export const Registry = {
                             if(relativeFilePathWithoutExtension == '_file_importer') return;
                             const include = (await import(filePath)).default;
                             if(!include) return;
-                            that.register(relativeFilePathWithoutExtension, include);
+                            that.register(relativeFilePathWithoutExtension, {
+                                meta(){
+                                    this.filePaths.push(filePath);
+                                    this.include(include);
+                                }
+                            });
                         }
                     });
                 }
