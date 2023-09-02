@@ -10,6 +10,10 @@ View.FileImporter.register('md', {
         let extractParamsPromise;
 
         View.register(relativeFilePathWithoutExtension, {
+            meta(){
+                this.filePaths.push(filePath);
+            },
+
             async render(){
                 if(!extractParamsPromise){
                     extractParamsPromise = await this.extractParams();

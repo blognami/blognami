@@ -6,6 +6,8 @@ import { ServiceConsumer } from './service_consumer.js';
 
 export const App = Class.extend().include({
     meta(){
+        this.assignProps({ name: 'App' });
+
         this.include(Registry);
         this.include(ServiceConsumer);
     },

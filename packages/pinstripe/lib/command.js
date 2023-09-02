@@ -6,6 +6,8 @@ import { ServiceConsumer } from './service_consumer.js';
 
 export const Command = Class.extend().include({
     meta(){
+        this.assignProps({ name: 'Command' });
+
         this.include(Registry);
         this.include(ServiceConsumer);
 

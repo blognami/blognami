@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "blognami",
-  "description": "A slick publishing platform for Node.js.",
+  "description": "A slick CMS for Node.js.",
   "version": "0.24.1",
   "author": "Jody Salt",
   "license": "MIT",
@@ -17,5 +17,10 @@
   "dependencies": {
     "generate-avatar": "^1.4.10",
     "pinstripe": "^0.24.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/blognami"
   }
 }

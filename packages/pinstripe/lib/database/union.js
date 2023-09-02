@@ -6,6 +6,8 @@ import { Row } from './row.js';
 export const Union = Class.extend().include({
     meta(){
         this.assignProps({
+            name: 'Union',
+
             tableNamesFor(name){
                 const rowName = inflector.singularize(name);
                 return Row.for(rowName).includedIn.filter(name => !Row.for(name).abstract).map(name => Row.for(name).collectionName);

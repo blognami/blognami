@@ -46,5 +46,10 @@
     "sqlite3": "^5.0.2",
     "tmp": "^0.2.1",
     "unionfs": "^4.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/pinstripe"
   }
 }

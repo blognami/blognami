@@ -11,6 +11,8 @@ import { Client } from './client.js'; // pinstripe-if-client: const Client = und
 
 export const Component = Class.extend().include({
     meta(){
+        this.assignProps({ name: 'Component' });
+
         this.include(Registry);
 
         this.assignProps({

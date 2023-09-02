@@ -5,6 +5,8 @@ import { Registry } from './registry.js';
 
 export const ServiceFactory = Class.extend().include({
     meta(){
+        this.assignProps({ name: 'ServiceFactory' });
+
         this.include(Registry);
 
         this.assignProps({

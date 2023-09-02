@@ -9,6 +9,8 @@ import { ServiceConsumer } from './service_consumer.js';
 
 export const View = Class.extend().include({
     meta(){
+        this.assignProps({ name: 'View' });
+
         this.include(Registry);
         this.include(ServiceConsumer);
         
@@ -62,6 +64,10 @@ export const View = Class.extend().include({
         this.FileImporter.include({
             importFile({ relativeFilePath, filePath }){
                 registry.register(relativeFilePath, {
+                    meta(){
+                        this.filePaths.push(filePath);
+                    },
+
                     render(){
                         return renderFile(filePath);
                     }

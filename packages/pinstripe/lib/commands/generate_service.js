@@ -18,13 +18,15 @@ export default {
             });
     
             await generateFile(`lib/services/${this.inflector.snakeify(name)}.js`, () => {
-                line();
-                line(`export default () => {`);
+                line(`export default {`);
                 indent(() => {
-                    line(`return 'Example ${this.inflector.camelize(name)} service'`);
+                    line('create(){');
+                    indent(() => {
+                        line(`return 'Example ${this.inflector.camelize(name)} service'`);
+                    });
+                    line('}');
                 });
                 line('};');
-                line();
             });
     
         });
