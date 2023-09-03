@@ -16,7 +16,7 @@ export default {
                 <p>Insert block:</p>
                 <ul>
                     ${names.map(name => this.renderHtml`
-                        <li data-component="pinstripe-markdown-editor/line-inserter" data-line-content="/${name}">${name}</li>
+                        <li data-component="blognami-markdown-editor/line-inserter" data-line-content="/${name}">${name}</li>
                     `)}
                 </ul>
             </div>

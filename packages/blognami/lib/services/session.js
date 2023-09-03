@@ -2,11 +2,11 @@
 export default {
     create(){
         return this.defer(async () => {
-            const { pinstripeSession } = this.cookies;
-            if(!pinstripeSession){
+            const { blognamiSession } = this.cookies;
+            if(!blognamiSession){
                 return;
             }
-            const [ id, passString ] = pinstripeSession.split(/:/);
+            const [ id, passString ] = blognamiSession.split(/:/);
             const session = await this.database.sessions.where({ id, passString }).first();
             if(session && session.lastAccessedAt < (Date.now() - 1000 * 60 * 5)){
                 await session.update({

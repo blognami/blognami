@@ -6,9 +6,9 @@ export default {
             body: this.renderHtml`
                 <section class="section">
                     <article class="article">
-                        <pinstripe-skeleton>
+                        <blognami-skeleton>
                             <h1 class="article-title">Loading post...</h1>
-                        </pinstripe-skeleton>
+                        </blognami-skeleton>
                     </article>
                 </section>
             `

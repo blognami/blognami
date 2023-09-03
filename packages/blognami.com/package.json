@@ -9,10 +9,10 @@
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
-    "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server --app docs"
+    "start": "IS_LOCAL_BLOGNAMI=true blognami start-server --app docs"
   },
   "dependencies": {
     "blognami": "^0.24.1",
-    "pinstripe": "^0.24.1"
+    "blognami": "^0.24.1"
   }
 }

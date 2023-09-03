@@ -4,6 +4,6 @@
 ## Getting started
 
 ```bash
-    pinstripe init-database
-    pinstripe start-server
+    blognami init-database
+    blognami start-server
 ```

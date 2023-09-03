@@ -8,7 +8,7 @@ export default {
         if(!this.user){
             return this.renderHtml`
                 <span data-component="a" data-href="/sign_in?title=${encodeURIComponent('Add comment')}&redirectUrl=${encodeURIComponent(`/add_comment?commentableId=${this.params.commentableId}`)}">
-                    <script type="pinstripe">
+                    <script type="blognami">
                         this.parent.trigger('click');
                     </script>
                 </span>
@@ -16,7 +16,7 @@ export default {
         }
 
         return this.renderForm(this.database.comments, {
-            fields: ['commentableId', { name: 'userId', value: this.user.id}, { name: 'body', type: 'textarea', component: 'pinstripe-markdown-editor/anchor'}],
+            fields: ['commentableId', { name: 'userId', value: this.user.id}, { name: 'body', type: 'textarea', component: 'blognami-markdown-editor/anchor'}],
             success: this.success.bind(this)
         });
     },
@@ -26,7 +26,7 @@ export default {
 
         return this.renderHtml`
             <span data-component="a" data-target="_top">
-                <script type="pinstripe">
+                <script type="blognami">
                     this.parent.trigger('click');
                 </script>
             </span>

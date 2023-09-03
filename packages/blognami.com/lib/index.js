@@ -1,5 +1,5 @@
 
-import { importAll } from 'pinstripe';
+import { importAll } from 'blognami';
 
 import 'blognami';
 

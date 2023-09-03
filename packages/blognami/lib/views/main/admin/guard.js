@@ -8,7 +8,7 @@ export default {
     
         if(!user || user.role != 'admin'){
             const [ status, headers, body ] = await this.renderHtml`
-                <pinstripe-modal>
+                <blognami-modal>
                     <div class="card">
                         <div class="card-header">
                             <p class="card-header-title">Access denied</p>
@@ -19,13 +19,13 @@ export default {
                         <div class="card-footer">
                             <button class="button is-primary">
                                 OK
-                                <script type="pinstripe">
+                                <script type="blognami">
                                     this.parent.on('click', () => this.trigger('close'));
                                 </script>
                             </button>
                         </div>
                     </div>
-                </pinstripe-modal>
+                </blognami-modal>
             `.toResponseArray();
     
             return [403, headers, body];

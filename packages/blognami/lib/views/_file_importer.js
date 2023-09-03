@@ -1,2 +1,1 @@
-
-export { View as default } from 'pinstripe';
+export { View as default } from 'blognami';

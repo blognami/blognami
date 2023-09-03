@@ -42,7 +42,7 @@ export default {
                             if(redirectUrl){
                                 return that.renderHtml`
                                     <span data-component="a" data-href="${redirectUrl}">
-                                        <script type="pinstripe">
+                                        <script type="blognami">
                                             this.parent.trigger('click');
                                             
                                             const { document } = this;
@@ -57,7 +57,7 @@ export default {
                         }}
                     `.toResponseArray();
             
-                    headers['Set-Cookie'] = `pinstripeSession=${session.id}:${passString}; Path=/`;
+                    headers['Set-Cookie'] = `blognamiSession=${session.id}:${passString}; Path=/`;
             
                     return [ status, headers, body ];
                 }
