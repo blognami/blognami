@@ -1,1 +1,1 @@
-export { Migration as default } from 'pinstripe/database';
+export { Migration as default } from 'blognami/database';

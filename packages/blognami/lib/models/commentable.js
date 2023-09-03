@@ -1,6 +1,6 @@
 
-import { defer } from 'pinstripe/util';
-import { Table } from "pinstripe/database";
+import { defer } from 'blognami/util';
+import { Table } from "blognami/database";
 
 export default {
     meta(){

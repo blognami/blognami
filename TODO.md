@@ -1,4 +1,4 @@
 
 * implement blognami.org
-* implement pinstripejs.org
+* implement blognamijs.org
 * implement cypress tests

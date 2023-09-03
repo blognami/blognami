@@ -1,5 +1,5 @@
 
-import { inflector } from 'pinstripe/util';
+import { inflector } from 'blognami/util';
 
 export default {
     meta(){

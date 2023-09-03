@@ -7,13 +7,13 @@ export default {
     
         const [ status, headers, body ] = await this.renderHtml`
             <span data-component="a" data-target="_top">
-                <script type="pinstripe">
+                <script type="blognami">
                     this.parent.trigger('click');
                 </script>
             </span>
         `.toResponseArray();
     
-        headers['Set-Cookie'] = 'pinstripeSession=';
+        headers['Set-Cookie'] = 'blognamiSession=';
     
         return [ status, headers, body ];
     }

@@ -55,7 +55,7 @@ Cypress.Commands.add('submitForm', { prevSubject: true }, (subject, values = {})
                 } else {
                     cy.wrap($input).uncheck();
                 }
-            } else if($input.is('[data-component="pinstripe-markdown-editor/anchor"]')){
+            } else if($input.is('[data-component="blognami-markdown-editor/anchor"]')){
                 cy.wrap($input).click();
                 cy.get('textarea[name="value"]');
                 cy.focused().clear().type(value);
@@ -76,7 +76,7 @@ Cypress.Commands.add('typeOtpFor', { prevSubject: true }, async (subject, email)
     return subject;
  });
 
-Cypress.Commands.add('topModal',() => cy.waitForLoadingToFinish().then(() => cy.get('pinstripe-modal').last()));
+Cypress.Commands.add('topModal',() => cy.waitForLoadingToFinish().then(() => cy.get('blognami-modal').last()));
 
 Cypress.Commands.add('closeTopModal', () => cy.topModal().shadow().find('button').click());
 
