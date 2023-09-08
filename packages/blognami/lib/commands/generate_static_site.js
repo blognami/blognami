@@ -1,19 +1,36 @@
 
 import { default as mimeTypes } from 'mime-types';
 
+import { App, View } from 'blognami';
+
 export default {
     async run(){
+
+        const { extractOptions } = this.cliUtils;
+
+        const { app = 'main' } = extractOptions();
+
+        const { viewNames } = View.mapperFor(App.create(app, this.context).compose());
+
         this.pages = {};
-        const urls = this.viewNames.filter(path => !path.match(/(^|\/)_/)).map(path => {
+        const urls = viewNames.filter(path => !path.match(/(^|\/)_/)).map(path => {
             return new URL(path, 'http://127.0.0.1/');
         });
 
+        urls.push(new URL('http://127.0.0.1/404'));
+
         while(urls.length){
-            await this.crawlPage({ _url: urls.shift() });
+            await this.crawlPage({ _url: urls.shift(), _headers: { 'x-app': app } });
         }
 
-        const pages = Object.values(this.pages).filter(page => page.status == 200 && Object.keys(page.params).length == 1);
+        const pages = Object.values(this.pages).filter(page => {
+            const { _method, _url, _headers, ...otherParams } = page.params;
+            return _url.pathname == '/404' || (page.status == 200 && !Object.keys(otherParams).length)
+        });
+
         const { inProjectRootDir, generateDir, generateFile, echo } = this.fsBuilder;
+
+        const isGenerated = {};
 
         await inProjectRootDir(async () => {
             await generateDir('build/static', async () => {
@@ -30,11 +47,14 @@ export default {
                         filePath = `${filePath}.${mimeTypes.extension(contentType)}`
                     }
                     
-                    const data = (await this.fetch({ _url: new URL(path, 'http://127.0.0.1/') }))[2];
+                    const data = (await this.fetch({ _url: new URL(path, 'http://127.0.0.1/'), _headers: { 'x-app': app } }))[2];
 
-                    await generateFile(filePath, () => {
-                        echo(data.join(''));
-                    });
+                    if(!isGenerated[filePath]){
+                        isGenerated[filePath] = true;
+                        await generateFile(filePath, () => {
+                            echo(data.join(''));
+                        });    
+                    }
                 }
             });
         });
@@ -54,7 +74,7 @@ export default {
         const urls = this.extractUrls(virtualDom);
         while(urls.length){
             const url = urls.shift();
-            await this.crawlPage({ ...url.params, _url: url });
+            await this.crawlPage({ ...url.params, _headers: params._headers, _url: url });
         }
     },
 

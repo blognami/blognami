@@ -1,4 +1,7 @@
 
+import { View } from 'blognami';
+import { readFile } from 'fs/promises';
+
 export default {
     async run(){
         const [ name = '' ] = this.args;
@@ -7,13 +10,26 @@ export default {
             console.error('A view name must be given.');
             process.exit();
         }
-    
+
+        const existingFilePaths = [ ...View.for(normalizedName).filePaths ];
+        const existingFilePath = existingFilePaths.pop();
+        const existingFileExtension = (existingFilePath ? existingFilePath.match(/^.*\.([^\/]+)$/) : [])[1];
         if(!normalizedName.match(/\.[^\/]+$/)){
-            normalizedName = `${normalizedName}.js`;
+            if(existingFileExtension) {
+                normalizedName = `${normalizedName}.${existingFileExtension}`;
+            } else {
+                normalizedName = `${normalizedName}.js`;
+            }
         }
+
+        const normalizedNameExtension = normalizedName.match(/^.*\.([^\/]+)$/)[1];
+
+        const useExistingFile = normalizedNameExtension == existingFileExtension;
     
-        const { inProjectRootDir, generateFile, line, indent } = this.fsBuilder;
-    
+        const existingFileData = useExistingFile ? (await readFile(existingFilePath)).toString('utf8') : '';
+
+        const { inProjectRootDir, generateFile, line, indent, echo } = this.fsBuilder;
+
         await inProjectRootDir(async () => {
     
             await generateFile(`lib/views/_file_importer.js`, { skipIfExists: true }, () => {
@@ -21,23 +37,29 @@ export default {
                 line(`export { View as default } from 'blognami';`);
                 line();
             });
-    
+
             await generateFile(`lib/views/${normalizedName}`, () => {
-                line();
-                line('export default {');
-                indent(() => {
-                    line('render(){')
+                if(useExistingFile){
+                    echo(existingFileData);
+                } else if(normalizedNameExtension == 'js') {
+                    line();
+                    line('export default {');
                     indent(() => {
-                        line('return this.renderHtml`')
+                        line('render(){')
                         indent(() => {
-                            line(`<h1>${normalizedName} view<h1></h1>`);
+                            line('return this.renderHtml`')
+                            indent(() => {
+                                line(`<h1>${normalizedName} view</h1>`);
+                            });
+                            line('`;')
                         });
-                        line('`;')
+                        line('}')
                     });
-                    line('}')
-                });
-                line('};');
-                line();
+                    line('};');
+                    line();
+                } else {
+                    line();
+                }
             });
         });
     }

@@ -17,7 +17,8 @@
     "test:e2e": "lerna run test:e2e --stream",
     "cypress:open": "lerna run cypress:open --scope demo --stream",
     "publish-all": "lerna publish from-package --yes",
-    "version-all": "lerna version"
+    "version-all": "lerna version",
+    "build:blognami.com": "lerna run build --scope blognami.com --stream"
   },
   "dependencies": {
     "lerna": "^4.0.0",

@@ -9,7 +9,8 @@
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
-    "start": "IS_LOCAL_BLOGNAMI=true blognami start-server --app docs"
+    "start": "IS_LOCAL_BLOGNAMI=true blognami start-server --app portal",
+    "build": "IS_LOCAL_BLOGNAMI=true blognami generate-static-site --app portal"
   },
   "dependencies": {
     "blognami": "^0.25.0"
