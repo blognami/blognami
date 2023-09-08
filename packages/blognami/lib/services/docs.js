@@ -68,7 +68,7 @@ export default {
     },
 
     async getPackageRootPath(path){
-        const packageJsonPath = (await this.findInPath('package.json', path)).shift();
+        const packageJsonPath = (await this.findInPath('package.json', path.replace(/[^/]*$/, ''))).shift();
         if(!packageJsonPath) return;
         return packageJsonPath.replace(/package.json$/, '');
     },
