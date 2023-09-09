@@ -1,9 +1,8 @@
 
 export default {
     async render(){
-        const { name: packageName } = await this.project;
-        const capitalizedPackageName = this.inflector.capitalize(packageName);
-        const { title = capitalizedPackageName, body } = this.params;
+        const { title = 'Blognami', showSidebar = true, body } = this.params;
+        const { _url: { pathname } } = this.initialParams;
 
         return this.renderHtml`
             <!DOCTYPE html>
@@ -23,27 +22,40 @@ export default {
                     <div class="navbar" data-test-id="navbar">
                         <div class="navbar-inner">
                             <div class="navbar-brand">
-                                <a class="navbar-item" href="/" data-test-id="title">${ capitalizedPackageName }</a>
+                                <img src="/assets/images/logo.svg">
+                                <a class="navbar-item" href="/" data-test-id="title">Blognami</a>
+                            </div>
+                            <div class="navbar-buttons">
+                                <a class="navbar-button ${pathname == '/' ? `is-selected` : ''}" href="/">Home</a>
+                                <a class="navbar-button ${pathname.match(/^\/docs(|\/.*)$/) ? `is-selected` : ''}" href="/docs/guides/introduction">Docs</a>
+                                <a class="navbar-button" href="https://github.com/blognami" target="_blank">Github</a>
                             </div>
                         </div>
                     </div>
                     <div class="site">
                         <main id="main" class="main outer">
-                            <div class="inner">
-                                <div class="wrapper">
-                                    <div data-test-id="main">
-                                        <div class="content canvas">
-                                            ${body}
+                            ${() => {
+                                if(showSidebar){
+                                    return this.renderHtml`
+                                        <div class="inner">
+                                            <div class="wrapper">
+                                                <div data-test-id="main">
+                                                    <div class="content canvas">
+                                                        ${body}
+                                                    </div>
+                                                </div>
+                                                ${this.renderSidebar()}
+                                            </div>
                                         </div>
-                                    </div>
-                                    ${this.renderSidebar()}
-                                </div>
-                            </div>
+                                    `;
+                                }
+                                return body;
+                            }}
                         </main>
                         <footer class="foot outer" data-test-id="footer">
                             <div class="foot-inner inner">
                                 <div class="copyright">
-                                    ${capitalizedPackageName} © ${new Date().getFullYear()}
+                                    Jody Salt © ${new Date().getFullYear()}
                                 </div>    
                                 <div class="powered-by">
                                     <a href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
@@ -61,11 +73,17 @@ export default {
 
         return this.renderHtml`
             <aside class="sidebar" data-test-id="sidebar">
+                <section class="section">
+                    <h2 class="section-title">Guides</h2>
+                    <ul>
+                        <li><a href="/docs/guides/introduction">Introduction</a></li>
+                    </ul>
+                </section>
                 ${Object.keys(docs).filter(name => Object.keys(docs[name]).length > 0).map(name => {
                     const items = docs[name];
 
                     return this.renderHtml`
-                        <section class="section" data-test-id="about-section">
+                        <section class="section">
                             <h2 class="section-title">${name}</h2>
                             <ul>
                                 ${Object.values(items).map(({ name, slug })  => this.renderHtml`

@@ -16,7 +16,10 @@
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
-    "start": "IS_LOCAL_BLOGNAMI=true blognami start-server",
+    "start": "yarn start:main",
+    "start:main": "IS_LOCAL_BLOGNAMI=true blognami start-server",
+    "start:docs": "IS_LOCAL_BLOGNAMI=true blognami start-server --app docs",
+    "build:docs": "IS_LOCAL_BLOGNAMI=true blognami generate-static-site --app docs",
     "test": "yarn test:unit",
     "test:unit": "jest lib"
   },
