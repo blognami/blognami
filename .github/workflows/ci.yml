@@ -43,8 +43,8 @@ jobs:
           node-version: 18.x
       - run: |
           yarn install
-          yarn build:blognami.com
-          cd packages/blognami.com/build/static
+          yarn build:docs
+          cd packages/blognami/build/static
           touch .nojekyll
           echo "blognami.com" > CNAME
           git init
@@ -58,6 +58,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
           force: true
-          directory: ./packages/blognami.com/build/static
+          directory: ./packages/blognami/build/static
 
 

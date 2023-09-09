@@ -9,8 +9,8 @@
     "watch": "yarn watch:demo",
     "start:demo": "lerna run start --scope demo --stream",
     "watch:demo": "nodemon -e js,jsx,md,css,html --exec 'yarn start:demo'",
-    "start:blognami.com": "lerna run start --scope blognami.com --stream",
-    "watch:blognami.com": "nodemon -e js,jsx,md,css,html --exec 'yarn start:blognami.com'",
+    "start:docs": "lerna run start:docs --scope blognami --stream",
+    "watch:docs": "nodemon -e js,jsx,md,css,html --exec 'yarn start:docs'",
     "test": "yarn test:unit && yarn test:models && yarn test:e2e",
     "test:unit": "lerna run test:unit --stream",
     "test:models": "lerna run test:models --stream",
@@ -18,7 +18,7 @@
     "cypress:open": "lerna run cypress:open --scope demo --stream",
     "publish-all": "lerna publish from-package --yes",
     "version-all": "lerna version",
-    "build:blognami.com": "lerna run build --scope blognami.com --stream"
+    "build:docs": "lerna run build:docs --scope blognami --stream"
   },
   "dependencies": {
     "lerna": "^4.0.0",
