@@ -136,6 +136,20 @@ export const Component = Class.extend().include({
         return this.node.textContent;
     },
 
+    get html(){
+        return this.node.innerHTML;
+    },
+
+    get templates(){
+        const out = {};
+        this.findAll('children', 'template').forEach(child => {
+            const { attributes, html } = child;
+            const { 'data-name': name = 'main' } = attributes;
+            out[name] = html;
+        });
+        return out;
+    },
+
     get realParent(){
         if(this.node.parentNode) return this.constructor.instanceFor(this.node.parentNode);
         if(this.node.host instanceof Element) return this.constructor.instanceFor(this.node.host);
@@ -495,7 +509,7 @@ export const Component = Class.extend().include({
         return this[collection].find(item => item.is(selector));
     },
 
-    findAll(){
+    findAll(...args){
         if(args.length == 1) args.unshift('descendants');
         const [ collection, selector ] = args;
         return this[collection].filter(item => item.is(selector));
@@ -576,9 +590,8 @@ function patch(attributes, virtualChildren){
     }
     patchAttributes.call(this, attributes);
     if(isEmptyFrame) return;
-    if(this.is('blognami-silo, [data-component="blognami-silo"]')){
-        patchChildren.call(this.shadow, virtualChildren);
-        patchChildren.call(this, []);
+    if(this.type == 'template'){
+        patchChildren.call(Component.instanceFor(this.node.content), virtualChildren);
     } else {
         patchChildren.call(this, virtualChildren);
     }
@@ -658,20 +671,17 @@ function insert(virtualNode, referenceChild, returnComponent = true){
     }
 
     children.forEach(child => {
-        insert.call(new Component(node, true), child, null, false);
+        if(type == 'template'){
+            insert.call(new Component(node.content, true), child, null, false);
+        } else {
+            insert.call(new Component(node, true), child, null, false);
+        }
     })
     
-    if(this.is('blognami-silo, [data-component="blognami-silo"]')){
-        this.shadow.node.insertBefore(
-            node,
-            referenceChild && referenceChild.node
-        );
-    } else {
-        this.node.insertBefore(
-            node,
-            referenceChild && referenceChild.node
-        );
-    }
+    this.node.insertBefore(
+        node,
+        referenceChild && referenceChild.node
+    );
     
     if(returnComponent){
         return Component.instanceFor(node);
