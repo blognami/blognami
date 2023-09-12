@@ -100,6 +100,7 @@ export class VirtualNode {
                 }
                 
                 if(matches = type.match(/^\/(.*)/)){
+                    if(SELF_CLOSING_TAGS.includes(matches[1])) continue; 
                     throw new CloseTag(matches[1]);
                 }
 
