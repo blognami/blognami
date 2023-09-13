@@ -22,13 +22,24 @@ export default {
             }
             if(current.node.scrollIntoView) current.node.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
         })
-    
-        this.on('submit', () => {
+
+        const updatePreview = () => {
             const { value } = this.values;
             previewFrame.patch(Markdown.render(value).toString());
             anchorTextarea.value = value;
-        });
-    },
+        };
+
+        updatePreview();
+
+        let previousValue = editorTextarea.value;
+        this.setInterval(() => {
+            const { value } = editorTextarea;
+            if(previousValue != value){
+                previousValue = value;
+                updatePreview();
+            }
+        }, 100);
+},
 
     replaceLine(index, content){
         const editorTextarea = this.descendants.find(n => n.is('.markdown-editor-text-pane > textarea'));
@@ -47,8 +58,8 @@ Component.register('blognami-markdown-editor/line-inserter', {
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
         this.on('click', () => {
-            const { lineContent } = this.data;
-            const { lineNumber } = this.parents.find(n => n.is('[data-line-number]')).data;
+            const { lineContent } = this.params;
+            const { lineNumber } = this.parents.find(n => n.is('[data-line-number]')).params;
             const markdownEditor =  this.parents.find(n => n.is('.markdown-editor'));
     
             markdownEditor.replaceLine(lineNumber - 1, lineContent);

@@ -21,7 +21,9 @@ export default {
         if(this.params._method == 'POST'){
             try {
                 return await formAdapter.submit(values, success) || this.renderHtml`
-                    <span data-component="a" data-target="_parent" data-trigger="click"></span>
+                    <span data-component="a" data-target="_parent">
+                        <script type="blognami">this.parent.trigger('click');</script>
+                    </span>
                 `;
             } catch(e){
                 if(!(e instanceof ValidationError)){

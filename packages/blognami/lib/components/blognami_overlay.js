@@ -35,7 +35,7 @@ export default {
         if(window.getSelection().type == 'Range') return;
 
         let canRemove = true;
-        this.descendants.filter(n => n.isForm).forEach(({ hasUnsavedChanges, data: { unsavedChangesConfirm } }) => {
+        this.descendants.filter(n => n.isForm).forEach(({ hasUnsavedChanges, params: { unsavedChangesConfirm } }) => {
             if(hasUnsavedChanges && unsavedChangesConfirm && !confirm(unsavedChangesConfirm)){
                 canRemove = false;
             }
