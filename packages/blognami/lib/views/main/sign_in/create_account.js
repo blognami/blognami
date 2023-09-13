@@ -52,7 +52,7 @@ export default {
                                 `;
                             }
                             return that.renderHtml`
-                                <span data-component="a" data-target="_top" data-trigger="click"></span>
+                                <span data-component="a" data-target="_top"><script type="blognami">this.parent.trigger('click');</script></span>
                             `;
                         }}
                     `.toResponseArray();

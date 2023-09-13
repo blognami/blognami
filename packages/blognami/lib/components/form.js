@@ -5,7 +5,7 @@ export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
-        const { confirm, target = '_self', method = 'GET', action } = { ...this.attributes, ...this.data };
+        const { confirm, target = '_self', method = 'GET', action } = this.params;
         
         this.on('submit', (event) => {
             event.preventDefault();
@@ -20,6 +20,6 @@ export default {
     isForm: true,
         
     get hasUnsavedChanges(){
-        return this.data.hasUnsavedChanges || JSON.stringify(this.values) != this._initialHash;
+        return this.params.hasUnsavedChanges == 'true' || JSON.stringify(this.values) != this._initialHash;
     }
 };

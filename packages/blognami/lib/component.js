@@ -77,27 +77,6 @@ export const Component = Class.extend().include({
         if(autofocus){
             this.setTimeout(() => this.node.focus());
         }
-
-        const { autosubmit, trigger, decorate } = this.data;
-
-        // replace with blognami-autosubmitter?
-        if(autosubmit){
-            let hash = JSON.stringify(this.values);
-            this.setInterval(() => {
-                const newHash = JSON.stringify(this.values);
-                if(hash != newHash){
-                    hash = newHash;
-                    this.trigger('submit');
-                }
-            }, 100);
-        }
-
-        // replace with script?
-        if(trigger){
-            this.setTimeout(() => {
-                this.trigger(trigger);
-            }, 0);
-        }
     },
 
     get type(){
@@ -114,21 +93,13 @@ export const Component = Class.extend().include({
         return out;
     },
 
-    get data(){
-        const { attributes } = this;
+    get params(){
         const out = {};
+        const { attributes } = this;
         Object.keys(attributes).forEach(name => {
-            let normalizedName = name;
-            const matches = normalizedName.match(/^data-(.+)$/);
-            if(matches) normalizedName = matches[1];
-            normalizedName = normalizedName.toLowerCase().replace(/-[a-z]/g, item => item[1].toUpperCase());
-            const value = attributes[name];
-            try {
-                out[normalizedName] = JSON.parse(value);
-            } catch(e){
-                out[normalizedName] = value;
-            }
-        })
+            const normalizedName = name.replace(/^data-/, '').replace(/-[a-z]/g, item => item[1].toUpperCase());
+            out[normalizedName] = attributes[name];
+        });
         return out;
     },
 
@@ -138,16 +109,6 @@ export const Component = Class.extend().include({
 
     get html(){
         return this.node.innerHTML;
-    },
-
-    get templates(){
-        const out = {};
-        this.findAll('children', 'template').forEach(child => {
-            const { attributes, html } = child;
-            const { 'data-name': name = 'main' } = attributes;
-            out[name] = html;
-        });
-        return out;
     },
 
     get realParent(){

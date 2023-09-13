@@ -5,12 +5,14 @@ export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
-        let { loadOnInit } = this.data;
-        if(loadOnInit == undefined) loadOnInit = this.children.length == 0;
-        
-        if(loadOnInit){
-            this.on('init', () => this.load());
+        let { loadOnInit } = this.params;
+        if(loadOnInit == undefined) {
+            loadOnInit = this.children.length == 0;
+        } else {
+            loadOnInit = loadOnInit == 'true';
         }
+        
+        if(loadOnInit) this.on('init', () => this.load());
     },
 
     isFrame: true,
@@ -18,7 +20,7 @@ export default {
     get url(){
         if(this._url === undefined){
             this._url = new URL(
-                this.attributes['data-url'] || window.location,
+                this.params.url || window.location,
                 this.frame ? this.frame.url : window.location
             );
         }

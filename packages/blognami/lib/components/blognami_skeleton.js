@@ -3,7 +3,7 @@ export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
-        const { height = 'auto', width = '100%', radius = '3px' } = this.attributes
+        const { height = 'auto', width = '100%', radius = '3px' } = this.params
         
         this.shadow.patch(`
             <style>
