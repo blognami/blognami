@@ -66,11 +66,11 @@ export const Component = Class.extend().include({
         this._registeredAbortControllers = [];
         this._virtualNodeFilters = [];
 
-        if(skipInit) return;
-
         this.addVirtualNodeFilter(function(){
             this.traverse(normalizeVirtualNode);
         });
+
+        if(skipInit) return;
 
         const { autofocus } = this.attributes;
 
@@ -342,7 +342,7 @@ export const Component = Class.extend().include({
     remove(){
         if(this.realParent){
             clean.call(this);
-            this.realParent.node.removeChild(this.node);
+            remove.call(this);
         }
         return this;
     },
@@ -362,9 +362,9 @@ export const Component = Class.extend().include({
             const html = arg1;
             cleanChildren.call(this);
             if(TEXT_ONLY_TAGS.includes(this.type)){
-                insert.call(this, { type: '#text', attributes: { value: html }, children: [] });
+                insert.call(new Component(this.node, true), { type: '#text', attributes: { value: html }, children: [] }, null, false);
             } else {
-                patchChildren.call(this, createVirtualNode.call(this, html).children);
+                patchChildren.call(new Component(this.node, true), createVirtualNode.call(this, html).children);
             }
             initChildren.call(this);
             return this.children;
@@ -477,6 +477,10 @@ export const Component = Class.extend().include({
     }
 });
 
+function remove(){
+    this.node.parentNode.removeChild(this.node);
+}
+
 const matchesSelector = (() => {
     if(typeof window == 'undefined') return () => false;
     const node = document.documentElement;
@@ -528,10 +532,10 @@ function initChildren(){
 function prepend(html, referenceChild){
     const out = [];
     if(TEXT_ONLY_TAGS.includes(this.type)){
-        out.push(insert.call(this, { type: '#text', attributes: { value: html }, children: [] }, referenceChild));
+        out.push(insert.call(new Component(this.node, true), { type: '#text', attributes: { value: html }, children: [] }, referenceChild));
     } else {
         createVirtualNode.call(this, html).children.forEach((virtualChild) => {
-            out.push(insert.call(this, virtualChild, referenceChild));
+            out.push(insert.call(new Component(this.node, true), virtualChild, referenceChild));
         });
     }
     return out;
@@ -552,9 +556,9 @@ function patch(attributes, virtualChildren){
     patchAttributes.call(this, attributes);
     if(isEmptyFrame) return;
     if(this.type == 'template'){
-        patchChildren.call(Component.instanceFor(this.node.content), virtualChildren);
+        patchChildren.call(new Component(this.node.content, true), virtualChildren);
     } else {
-        patchChildren.call(this, virtualChildren);
+        patchChildren.call(new Component(this.node, true), virtualChildren);
     }
 }
 
@@ -596,22 +600,22 @@ function patchChildren(virtualChildren){
         } else if(virtualChild.type == '#doctype'){
             // ignore
         } else if(virtualChild.type.match(/^#(text|comment)/)){
-            insert.call(this, virtualChild, child);
+            insert.call(this, virtualChild, child, false);
         } else {
             while(children.length > 0 && children[0].type.match(/^#/)){
-                children.shift().remove();
+                remove.call(children.shift());
             }
             child = children[0]
             if(child && child.type == virtualChild.type){
-                patch.call(children.shift(), virtualChild.attributes, virtualChild.children);
+                patch.call(new Component(children.shift().node, true), virtualChild.attributes, virtualChild.children);
             } else {
-                insert.call(this, virtualChild, child);
+                insert.call(new Component(this.node, true), virtualChild, child, false);
             }
         }
     }
 
     while(children.length > 0){
-        children.shift().remove();
+        remove.call(children.shift());
     }
 }
 
@@ -667,6 +671,16 @@ function normalizeVirtualNode(){
 
     if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
         this.attributes.value = this.attributes.value.replace(/^\n/, '');
+    }
+
+    if(this.type == 'blognami-silo'){
+        const children = [ ...this.children ];
+        const template = this.appendNode('template');
+        this.children = [template];
+        children.forEach(child => {
+            child.parent = template;
+        });
+        template.children = children;
     }
 }
 

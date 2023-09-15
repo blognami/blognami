@@ -6,6 +6,17 @@ const preloading = {};
 export default {
     meta(){
         this.include('blognami-frame');
+
+        this.prototype.assignProps({
+            get meta(){
+                const out = {};
+                this.head.findAll('meta').forEach(({ params }) => {
+                    const { name, content } = params;
+                    if(name) out[name] = content;
+                });
+                return out;
+            }
+        })
     },
 
     initialize(...args){    
@@ -17,6 +28,13 @@ export default {
     },
 
     isDocument: true,
+
+    get head(){
+        if(!this._head){
+            this._head = this.find('head');
+        }
+        return this._head;
+    },
     
     get body(){
         if(!this._body){
