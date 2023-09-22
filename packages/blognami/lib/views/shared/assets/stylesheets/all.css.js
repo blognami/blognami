@@ -1,12 +1,11 @@
 
-import { View } from 'blognami';
-
 let out;
 
 const prefixStylesheets = [
     'assets/stylesheets/vars.css',
     'assets/stylesheets/reset.css',
     'assets/stylesheets/global.css',
+    'assets/stylesheets/view.css',
 ];
 
 export default {

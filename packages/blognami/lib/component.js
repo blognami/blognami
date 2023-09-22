@@ -672,16 +672,6 @@ function normalizeVirtualNode(){
     if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
         this.attributes.value = this.attributes.value.replace(/^\n/, '');
     }
-
-    if(this.type == 'blognami-silo'){
-        const children = [ ...this.children ];
-        const template = this.appendNode('template');
-        this.children = [template];
-        children.forEach(child => {
-            child.parent = template;
-        });
-        template.children = children;
-    }
 }
 
 ComponentEvent.Component = Component;

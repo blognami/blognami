@@ -57,78 +57,15 @@ export default {
             }
         });
 
-        return this.renderHtml`
-            <blognami-modal>
-                <form
-                    class="card"
-                    method="post"
-                    enctype="multipart/form-data"
-                    autocomplete="off"
-                    ${unsavedChangesConfirm ? this.renderHtml`data-unsaved-changes-confirm="${unsavedChangesConfirm}"` : undefined}
-                    ${unsavedChangesConfirm && this.params._method == 'POST' ? this.renderHtml`data-has-unsaved-changes="true"` : undefined}
-                >
-                    <div class="card-header">
-                        <p class="card-header-title">${title}</p>
-                    </div>
-                    <div class="card-body">
-                        ${() => {
-                            if(otherErrors.length){
-                                return this.renderHtml`
-                                    <div class="field">
-                                        ${otherErrors.map(error => this.renderHtml`
-                                            <p class="is-error">${error}</p>
-                                        `)}
-                                    </div>
-                                `
-                            }
-                        }}
-                        ${fields.map(({ label, name, type, value, component, placeholder, error }) => {
-                            if(type == 'hidden'){
-                                return this.renderHtml`
-                                    <input type="hidden" name="${name}" value="${value}">
-                                `;
-                            }
-                            return this.renderHtml`
-                                <div>
-                                    <label class="label">${label}</label>
-                                    ${() => {
-                                        if(type == 'textarea'){
-                                            return this.renderHtml`
-                                                <textarea class="textarea${error ? ' is-error' : ''}" name="${name}"${component ? this.renderHtml` data-component="${component}"` : undefined}${placeholder ? this.renderHtml` placeholder="${placeholder}"` : undefined}>${value}</textarea>
-                                            `;
-                                        }
-                                        if(type == 'checkbox'){
-                                            return this.renderHtml`
-                                                <input class="input${error ? ' is-error' : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${component ? this.renderHtml` data-component="${component}"` : undefined}>
-                                            `;
-                                        }
-                                        return this.renderHtml`
-                                            <input class="input${error ? ' is-error' : ''}" name="${name}" type="${type}" value="${value}"${component ? this.renderHtml` data-component="${component}"` : undefined}${placeholder ? this.renderHtml` placeholder="${placeholder}"` : undefined}>
-                                        `;
-                                    }}
-                                    ${() => {
-                                        if(error){
-                                            return this.renderHtml`
-                                                <p class="is-error">${error}</p>
-                                            `;
-                                        }
-                                    }}
-                                </div>
-                            `;
-                        })}
-                    </div>
-                    <div class="card-footer">
-                        <button class="button" type="submit">${submitTitle}</button>
-                        <button class="button" type="button">
-                            ${cancelTitle}
-                            <script type="blognami">
-                                this.parent.on('click', () => this.trigger('close'));
-                            </script>
-                        </button>
-                    </div>
-                </form>
-            </blognami-modal>
-        `;
+        return this.renderView('_form', {
+            unsavedChangesConfirm,
+            method: this.params._method,
+            title,
+            otherErrors,
+            fields,
+            submitTitle,
+            cancelTitle
+        })
     }
 }
 
