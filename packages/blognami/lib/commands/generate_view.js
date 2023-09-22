@@ -45,11 +45,31 @@ export default {
                     line();
                     line('export default {');
                     indent(() => {
+                        line(`get styles(){`);
+                        indent(() => {
+                            line("const { root } = this.cssClasses;");
+                            line();
+                            line("return `");
+                            indent(() => {
+                                line(".${root}{");
+                                indent(() => {
+                                    line("background: yellow;")
+                                });
+                                line("}")
+                            });
+                            line("`;");
+                        });
+                        line('},');
+                        line();
                         line('render(){')
                         indent(() => {
                             line('return this.renderHtml`')
                             indent(() => {
-                                line(`<h1>${normalizedName} view</h1>`);
+                                line('<div class="${this.cssClasses.root}">');
+                                indent(() => {
+                                    line(`<h1>${normalizedName} view</h1>`);
+                                });
+                                line(`</div>`)
                             });
                             line('`;')
                         });

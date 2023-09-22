@@ -9,22 +9,22 @@ export default {
         if(!user || user.role != 'admin'){
             const [ status, headers, body ] = await this.renderHtml`
                 <blognami-modal>
-                    <div class="card">
-                        <div class="card-header">
-                            <p class="card-header-title">Access denied</p>
-                        </div>
-                        <div class="card-body">
-                            <p>You need to be an &quot;admin&quot; user to do this.</p>
-                        </div>
-                        <div class="card-footer">
-                            <button class="button is-primary">
-                                OK
-                                <script type="blognami">
-                                    this.parent.on('click', () => this.trigger('close'));
-                                </script>
-                            </button>
-                        </div>
-                    </div>
+                    ${
+                        this.renderView('_panel', {
+                            title: 'Access denied',
+                            body: this.renderHtml`
+                                <p>You need to be an &quot;admin&quot; user to do this.</p>
+                            `,
+                            footer: this.renderView('_button', {
+                                body: this.renderHtml`
+                                    OK
+                                    <script type="blognami">
+                                        this.parent.on('click', () => this.trigger('close'));
+                                    </script>
+                                `
+                            })
+                        })
+                    }
                 </blognami-modal>
             `.toResponseArray();
     
