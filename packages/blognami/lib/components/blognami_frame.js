@@ -36,8 +36,13 @@ export default {
 
     loading: false,
 
+    loadWasBlocked: false,
+
     async load(url = this.url, options = {}){
-        if(this.loading) return;
+        if(this.loading) {
+            this.loadWasBlocked = true;
+            return;
+        };
         this.loading = true;
         this.abort();
         const { method = 'GET', placeholderUrl } = options;
@@ -55,7 +60,8 @@ export default {
         const response = await this.fetch(url, { minimumDelay, ...options });
         const html = await response.text();
         this.loading = false;
-        if(html == cachedHtml) return out;
+        if(html == cachedHtml && !this.loadWasBlocked) return;
+        this.loadWasBlocked = false;
         if(method == 'GET') loadCache.put(url.toString(), html);
         this.patch(html);
     }
