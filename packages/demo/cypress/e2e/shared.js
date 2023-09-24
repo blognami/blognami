@@ -55,9 +55,11 @@ export function describeApp(role){
                     cy.getByTestId('main').contains('Similique fuga consequatur');
                 });
     
-                it(`should have an interface to allow the user to add comments`, () => {
+                it.only(`should have an interface to allow the user to add comments`, () => {
                     cy.getByTestId('main').contains("Hello world!").should('not.exist');
                     cy.getByTestId('main', 'comment-created-at').should('not.exist');
+                    cy.getByTestId('main', 'add-comment').contains("Add comment").click();
+                    cy.topModal().contains("Cancel").click();
                     cy.getByTestId('main', 'add-comment').contains("Add comment").click();
                     cy.topModal().contains('Add comment');
                     if(role == 'guest'){
