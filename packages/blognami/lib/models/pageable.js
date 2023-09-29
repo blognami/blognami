@@ -1,5 +1,5 @@
 
-import { inflector } from 'blognami/util';
+import { inflector } from 'haberdash/util';
 
 export default {
     meta(){

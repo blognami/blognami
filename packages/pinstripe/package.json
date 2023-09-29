@@ -1,0 +1,23 @@
+{
+  "type": "module",
+  "name": "pinstripe",
+  "description": "Surgically updates your app's DOM when a page changes.",
+  "version": "0.25.0",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js",
+    "./internal": "./lib/internal.js"
+  },
+  "scripts": {
+    "clean": "rm -rf ./node_modules"
+  },
+  "dependencies": {
+    "@blognami/util": "^0.25.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/pinstripe"
+  }
+}

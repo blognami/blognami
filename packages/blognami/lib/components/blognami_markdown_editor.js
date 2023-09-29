@@ -1,6 +1,6 @@
 
-import { Component } from '../component.js';
-import { Markdown } from '../markdown.js';
+import { Component } from '../../../haberdash/lib/component.js';
+import { Markdown } from '../../../haberdash/lib/markdown.js';
 
 export default {
     initialize(...args){
@@ -39,7 +39,7 @@ export default {
                 updatePreview();
             }
         }, 100);
-},
+    },
 
     replaceLine(index, content){
         const editorTextarea = this.descendants.find(n => n.is('.markdown-editor-text-pane > textarea'));

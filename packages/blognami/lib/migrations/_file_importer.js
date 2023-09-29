@@ -1,1 +1,1 @@
-export { Migration as default } from 'blognami/database';
+export { Migration as default } from 'haberdash/database';

@@ -8,7 +8,7 @@ export default {
         if(!this.user){
             return this.renderHtml`
                 <span data-component="a" data-href="/sign_in?title=${encodeURIComponent('Add comment')}&redirectUrl=${encodeURIComponent(`/add_comment?commentableId=${this.params.commentableId}`)}">
-                    <script type="blognami">
+                    <script type="pinstripe">
                         this.parent.trigger('click');
                     </script>
                 </span>
@@ -26,7 +26,7 @@ export default {
 
         return this.renderHtml`
             <span data-component="a" data-target="_top">
-                <script type="blognami">
+                <script type="pinstripe">
                     this.parent.trigger('click');
                 </script>
             </span>

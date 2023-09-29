@@ -38,7 +38,7 @@ export default {
                 async success(){
                     const user = await that.database.users.where({ email }).first();
                     if(!user) return that.renderHtml`
-                        <span data-component="a" data-href="/sign_in/create_account?email=${encodeURIComponent(email)}&password=${encodeURIComponent(await that.database.site.generatePassword(email))}${optionalParams}"><script type="blognami">this.parent.trigger('click');</script></span>
+                        <span data-component="a" data-href="/sign_in/create_account?email=${encodeURIComponent(email)}&password=${encodeURIComponent(await that.database.site.generatePassword(email))}${optionalParams}"><script type="pinstripe">this.parent.trigger('click');</script></span>
                     `;
                     await user.logSuccessfulSignIn();
                     const passString = crypto.randomUUID();
@@ -53,7 +53,7 @@ export default {
                             if(redirectUrl){
                                 return that.renderHtml`
                                     <span data-component="a" data-href="${redirectUrl}">
-                                        <script type="blognami">
+                                        <script type="pinstripe">
                                             this.parent.trigger('click');
                                             
                                             const { document } = this;
@@ -63,12 +63,12 @@ export default {
                                 `;
                             }
                             return that.renderHtml`
-                                <span data-component="a" data-target="_top"><script type="blognami">this.parent.trigger('click');</script></span>
+                                <span data-component="a" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
                             `;
                         }}
                     `.toResponseArray();
             
-                    headers['Set-Cookie'] = `blognamiSession=${session.id}:${passString}; Path=/`;
+                    headers['Set-Cookie'] = `haberdashSession=${session.id}:${passString}; Path=/`;
             
                     return [ status, headers, body ];
                 }

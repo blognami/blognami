@@ -25,6 +25,7 @@
     "nodemon": "^2.0.12"
   },
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "packages/@blognami/*"
   ]
 }

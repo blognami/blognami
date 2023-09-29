@@ -7,7 +7,7 @@ export default {
             fields: ['slug', 'published'],
             success({ slug }){
                 return that.renderHtml`
-                    <span data-component="a" data-href="/${slug}" data-target="_top"><script type="blognami">this.parent.trigger('click');</script></span>
+                    <span data-component="a" data-href="/${slug}" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
                 `;
             }
         })

@@ -8,7 +8,7 @@ export default {
     
         if(!user || user.role != 'admin'){
             const [ status, headers, body ] = await this.renderHtml`
-                <blognami-modal>
+                <pinstripe-modal>
                     ${
                         this.renderView('_panel', {
                             title: 'Access denied',
@@ -18,14 +18,14 @@ export default {
                             footer: this.renderView('_button', {
                                 body: this.renderHtml`
                                     OK
-                                    <script type="blognami">
+                                    <script type="pinstripe">
                                         this.parent.on('click', () => this.trigger('close'));
                                     </script>
                                 `
                             })
                         })
                     }
-                </blognami-modal>
+                </pinstripe-modal>
             `.toResponseArray();
     
             return [403, headers, body];

@@ -1,1 +1,1 @@
-export { Component as default } from 'blognami';
+export { Component as default } from 'haberdash';
