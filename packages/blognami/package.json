@@ -2,7 +2,7 @@
   "type": "module",
   "name": "blognami",
   "description": "A slick CMS for Node.js.",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "generate-avatar": "^1.4.10",
-    "haberdash": "^0.25.0"
+    "haberdash": "^0.26.0"
   },
   "repository": {
     "type": "git",
