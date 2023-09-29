@@ -1,6 +1,5 @@
 
-import { defer } from 'blognami/util';
-import { Table } from "blognami/database";
+import { defer } from 'haberdash/util';
 
 export default {
     meta(){

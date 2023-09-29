@@ -1,6 +1,7 @@
 {
   "packages": [
-    "packages/*"
+    "packages/*",
+    "packages/@blognami/*"
   ],
   "version": "0.25.0"
 }

@@ -55,7 +55,7 @@ export function describeApp(role){
                     cy.getByTestId('main').contains('Similique fuga consequatur');
                 });
     
-                it.only(`should have an interface to allow the user to add comments`, () => {
+                it(`should have an interface to allow the user to add comments`, () => {
                     cy.getByTestId('main').contains("Hello world!").should('not.exist');
                     cy.getByTestId('main', 'comment-created-at').should('not.exist');
                     cy.getByTestId('main', 'add-comment').contains("Add comment").click();

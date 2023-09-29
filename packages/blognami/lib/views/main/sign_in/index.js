@@ -40,7 +40,7 @@ export default {
                     }));
 
                     return this.renderHtml`
-                        <span data-component="a" data-href="/sign_in/verify_password?email=${encodeURIComponent(email)}${optionalParams}"><script type="blognami">this.parent.trigger('click');</script></span>
+                        <span data-component="a" data-href="/sign_in/verify_password?email=${encodeURIComponent(email)}${optionalParams}"><script type="pinstripe">this.parent.trigger('click');</script></span>
                     `;
                 }
             }

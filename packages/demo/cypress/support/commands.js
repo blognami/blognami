@@ -76,7 +76,7 @@ Cypress.Commands.add('typeOtpFor', { prevSubject: true }, async (subject, email)
     return subject;
  });
 
-Cypress.Commands.add('topModal',() => cy.waitForLoadingToFinish().then(() => cy.get('blognami-modal').last()));
+Cypress.Commands.add('topModal',() => cy.waitForLoadingToFinish().then(() => cy.get('pinstripe-modal').last()));
 
 Cypress.Commands.add('closeTopModal', () => cy.topModal().shadow().find('button').click());
 

@@ -8,7 +8,7 @@ export default {
             success(image){
                 return that.renderHtml`
                     <span data-component="blognami-markdown-editor/line-inserter" data-line-content="![${image.title}](/${image.slug})">
-                        <script type="blognami">
+                        <script type="pinstripe">
                             this.parent.trigger('click');
                         </script>
                     </span>
