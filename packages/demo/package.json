@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "name": "demo",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
@@ -20,8 +20,8 @@
     "cypress:open": "cypress open"
   },
   "dependencies": {
-    "blognami": "^0.25.0",
-    "haberdash": "^0.25.0"
+    "blognami": "^0.26.0",
+    "haberdash": "^0.26.0"
   },
   "devDependencies": {
     "@types/jest": "^27.4.0",
