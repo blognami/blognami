@@ -1,11 +1,11 @@
 
 export default {
     meta(){
-        this.include('a');
+        this.include('pinstripe-anchor');
     },
 
     initialize(...args){
-        this.constructor.for('a').prototype.initialize.call(this, ...args);
+        this.constructor.for('pinstripe-anchor').prototype.initialize.call(this, ...args);
 
         this.patch({ 
             ...this.attributes,

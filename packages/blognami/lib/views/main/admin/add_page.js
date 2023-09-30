@@ -7,7 +7,7 @@ export default {
             fields: ['userId', 'title'],
             success({ slug }){
                 return that.renderHtml`
-                    <span data-component="a" data-href="/${slug}" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
+                    <span data-component="pinstripe-anchor" data-href="/${slug}" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
                 `;
             }
         });

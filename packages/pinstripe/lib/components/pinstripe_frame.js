@@ -47,7 +47,7 @@ export default {
         this.abort();
         const { method = 'GET', placeholderUrl } = options;
         const cachedHtml = method == 'GET' ? loadCache.get(url.toString()) : undefined;
-        const out = cachedHtml ? this.patch(cachedHtml) : undefined;
+        if(cachedHtml) this.patch(cachedHtml);
         let minimumDelay = 0;
         if(!cachedHtml && placeholderUrl){
             const placeholderHtml = loadCache.get(placeholderUrl.toString());
