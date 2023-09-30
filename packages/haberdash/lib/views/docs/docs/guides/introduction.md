@@ -8,7 +8,7 @@ To see it in action run the following:
 
 ```bash
     yarn global add haberdash
-    haberdash generate-project foo
+    haberdash generate-project foo --with blognami
     cd foo
     haberdash init-database
     haberdash start-server
