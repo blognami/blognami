@@ -52,33 +52,3 @@ export default {
         editorTextarea.node.selectionEnd = position;
     }
 };
-
-Component.register('blognami-markdown-editor/line-inserter', {
-    initialize(...args){
-        this.constructor.parent.prototype.initialize.call(this, ...args);
-
-        this.on('click', () => {
-            const { lineContent } = this.params;
-            const { lineNumber } = this.parents.find(n => n.is('[data-line-number]')).params;
-            const markdownEditor =  this.parents.find(n => n.is('.markdown-editor'));
-    
-            markdownEditor.replaceLine(lineNumber - 1, lineContent);
-        });
-    }
-});
-
-Component.register('blognami-markdown-editor/anchor', {
-    meta(){
-        this.include('a');
-    },
-
-    initialize(...args){
-        this.constructor.for('a').prototype.initialize.call(this, ...args);
-
-        this.patch({ 
-            ...this.attributes,
-            'data-target': '_overlay',
-            'data-href': '/markdown_editor'
-        });
-    }
-});

@@ -4,7 +4,7 @@ export default {
         await this.database.posts.where({ id: this.params.id }).delete();
         
         return this.renderHtml`
-            <span data-component="a" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
+            <span data-component="pinstripe-anchor" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
         `;
     }
 };

@@ -17,7 +17,7 @@ export const Component = Class.extend().include({
                 if(!node._component){
                     node._component = Component.new(node, true);
                     node._component = Component.create(
-                        node._component.attributes['data-component'] || node._component.type,
+                        node._component.attributes['data-component'] || (node._component.type == '#document' ? 'pinstripe-document' : node._component.type),
                         node
                     );
                     if(node.isConnected) node._component.trigger('init', { bubbles: false });
@@ -626,6 +626,13 @@ function insert(virtualNode, referenceChild, returnComponent = true){
     }
 }
 
+const COMPONENT_MAP = {
+    a: 'pinstripe-anchor',
+    body: 'pinstripe-body',
+    form: 'pinstripe-body',
+    
+};
+
 function normalizeVirtualNode(){
     if(!this.parent && this.children.some(child => child.type == 'html')){
         this.children = [
@@ -644,6 +651,24 @@ function normalizeVirtualNode(){
 
     if(this.parent && this.parent.type == 'textarea' && this.type == '#text'){
         this.attributes.value = this.attributes.value.replace(/^\n/, '');
+    }
+
+    if(!this.attributes['data-component']){
+        if(this.type == 'a'){
+            this.attributes['data-component'] = 'pinstripe-anchor';
+        }
+
+        if(this.type == 'body'){
+            this.attributes['data-component'] = 'pinstripe-body';
+        }
+
+        if(this.type == 'form'){
+            this.attributes['data-component'] = 'pinstripe-form';
+        }
+
+        if(this.type == 'script' && this.attributes.type == 'pinstripe'){
+            this.attributes['data-component'] = 'pinstripe-script';
+        }
     }
 }
 

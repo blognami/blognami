@@ -41,7 +41,7 @@ export default {
                         ${() => {
                             if(redirectUrl){
                                 return that.renderHtml`
-                                    <span data-component="a" data-href="${redirectUrl}">
+                                    <span data-component="pinstripe-anchor" data-href="${redirectUrl}">
                                         <script type="pinstripe">
                                             this.parent.trigger('click');
                                             
@@ -52,7 +52,7 @@ export default {
                                 `;
                             }
                             return that.renderHtml`
-                                <span data-component="a" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
+                                <span data-component="pinstripe-anchor" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
                             `;
                         }}
                     `.toResponseArray();
