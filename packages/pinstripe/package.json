@@ -2,7 +2,7 @@
   "type": "module",
   "name": "pinstripe",
   "description": "Surgically updates your app's DOM when a page changes.",
-  "version": "0.26.0",
+  "version": "0.27.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -13,7 +13,7 @@
     "clean": "rm -rf ./node_modules"
   },
   "dependencies": {
-    "@blognami/util": "^0.26.0"
+    "@blognami/util": "^0.27.0"
   },
   "repository": {
     "type": "git",

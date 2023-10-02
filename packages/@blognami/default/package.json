@@ -2,7 +2,7 @@
   "type": "module",
   "name": "@blognami/default",
   "description": "Default app.",
-  "version": "0.26.0",
+  "version": "0.27.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -16,8 +16,8 @@
     "build:docs": "IS_LOCAL_BLOGNAMI=true blognami generate-static-site --app docs"
   },
   "dependencies": {
-    "generate-avatar": "^1.4.10",
-    "blognami": "^0.26.0"
+    "blognami": "^0.27.0",
+    "generate-avatar": "^1.4.10"
   },
   "repository": {
     "type": "git",
