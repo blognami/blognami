@@ -8,7 +8,7 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       on('task', {
         'reset-database-from-sql': () => {
-          execSync(`haberdash reset-database-from-sql`, {
+          execSync(`blognami reset-database-from-sql`, {
             stdio: 'inherit'
           });
           return null;

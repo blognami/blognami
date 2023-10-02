@@ -1,9 +1,8 @@
 
-import 'blognami';
+import '@blognami/default';
 
-import { importAll } from 'haberdash';
+import { importAll } from 'blognami';
 
-
-if(process.env.TENANCY == 'multi') import('haberdash/multi-tenant');
+if(process.env.TENANCY == 'multi') import('blognami/multi-tenant');
 
 importAll(import.meta.url);
