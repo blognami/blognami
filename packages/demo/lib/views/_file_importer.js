@@ -1,2 +1,2 @@
 
-export { View as default } from 'haberdash';
+export { View as default } from 'blognami';

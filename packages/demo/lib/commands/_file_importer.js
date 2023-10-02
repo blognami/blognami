@@ -1,2 +1,2 @@
 
-export { Command as default } from 'haberdash';
+export { Command as default } from 'blognami';

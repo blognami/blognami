@@ -1,23 +1,58 @@
 {
   "type": "module",
   "name": "blognami",
-  "description": "A slick CMS for Node.js.",
+  "description": "An MV* framework for Node.js.",
   "version": "0.26.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
-    ".": "./lib/index.js"
+    ".": "./lib/index.js",
+    "./database": "./lib/database/index.js",
+    "./multi-tenant": "./lib/extensions/multi-tenant/index.js",
+    "./util": "./lib/util.js"
+  },
+  "bin": {
+    "blognami": "./cli.js"
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
     "start": "yarn start:main",
-    "start:main": "IS_LOCAL_HABERDASH=true haberdash start-server",
-    "start:docs": "IS_LOCAL_HABERDASH=true haberdash start-server --app docs",
-    "build:docs": "IS_LOCAL_HABERDASH=true haberdash generate-static-site --app docs"
+    "start:main": "IS_LOCAL_BLOGNAMI=true blognami start-server",
+    "start:docs": "IS_LOCAL_BLOGNAMI=true blognami start-server --app docs",
+    "build:docs": "IS_LOCAL_BLOGNAMI=true blognami generate-static-site --app docs",
+    "test": "yarn test:unit",
+    "test:unit": "jest lib"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
+    "@babel/preset-env": "^7.9.0",
+    "babel-jest": "^25.1.0",
+    "jest": "^28.0.1",
+    "jest-environment-jsdom": "^29.1.2"
   },
   "dependencies": {
+    "@blognami/util": "^0.26.0",
+    "bcrypt": "^5.0.1",
+    "busboy": "^0.3.1",
+    "chalk": "^4.1.0",
+    "cron-parser": "^4.3.0",
+    "css": "^3.0.0",
+    "esbuild": "^0.15.12",
     "generate-avatar": "^1.4.10",
-    "haberdash": "^0.26.0"
+    "html-entities": "^2.3.2",
+    "js-yaml": "^4.1.0",
+    "luxon": "^2.3.1",
+    "markdown-it": "^12.2.0",
+    "memfs": "^3.2.2",
+    "mime-types": "^2.1.28",
+    "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.2",
+    "pinstripe": "^0.26.0",
+    "punycode": "^2.3.0",
+    "sqlite3": "^5.0.2",
+    "tmp": "^0.2.1",
+    "unionfs": "^4.4.0"
   },
   "repository": {
     "type": "git",

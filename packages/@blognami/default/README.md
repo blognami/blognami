@@ -3,7 +3,7 @@
 
 ## What is Blognami?
 
-Blognami is a full-stack MV* framework for Node.js.
+Blognami is a slick [content management system (CMS)](https://en.wikipedia.org/wiki/Content_management_system) for Node.js.
 
 ## License
 

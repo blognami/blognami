@@ -1,10 +1,10 @@
 
 import '../../lib/index.js';
 
-import { Workspace } from 'haberdash';
+import { Workspace } from 'blognami';
 
 export const reset = async () => Workspace.run(async function(){
     await this.runCommand('reset-database');
 });
 
-export { Workspace } from 'haberdash';
+export { Workspace } from 'blognami';
