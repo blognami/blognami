@@ -29,35 +29,35 @@ jobs:
       - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} yarn test
         env:
           CI: true
-  deploy:
-    name: Deploy to github pages
-    runs-on: ubuntu-latest
-    needs: [test]
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - run: |
-          yarn install
-          yarn build:docs
-          cd packages/blognami/build/static
-          touch .nojekyll
-          echo "blognami.com" > CNAME
-          git init
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add -A
-          git commit -m 'deploy'
+  # deploy:
+  #   name: Deploy to github pages
+  #   runs-on: ubuntu-latest
+  #   needs: [test]
+  #   if: github.ref == 'refs/heads/main'
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 18.x
+  #     - run: |
+  #         yarn install
+  #         yarn build:docs
+  #         cd packages/blognami/build/static
+  #         touch .nojekyll
+  #         echo "blognami.com" > CNAME
+  #         git init
+  #         git config --local user.email "action@github.com"
+  #         git config --local user.name "GitHub Action"
+  #         git add -A
+  #         git commit -m 'deploy'
           
-      - uses: ad-m/github-push-action@v0.6.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages
-          force: true
-          directory: ./packages/blognami/build/static
+  #     - uses: ad-m/github-push-action@v0.6.0
+  #       with:
+  #         github_token: ${{ secrets.GITHUB_TOKEN }}
+  #         branch: gh-pages
+  #         force: true
+  #         directory: ./packages/blognami/build/static
 
 

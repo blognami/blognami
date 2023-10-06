@@ -13,7 +13,8 @@
     "clean": "rm -rf ./node_modules"
   },
   "dependencies": {
-    "@blognami/util": "^0.27.0"
+    "@blognami/util": "^0.27.0",
+    "blognami": "^0.27.0"
   },
   "repository": {
     "type": "git",

@@ -25,8 +25,12 @@ View.FileImporter.register('md', {
             async extractParams(){
                 const data = await promisify(readFile)(filePath, 'utf8');
                 const [ frontMatter, body ] = this.extractFrontMatterAndBody(data);
-                const renderedBody = await this.renderMarkdown(body);
-                return { ...frontMatter, body: renderedBody };
+                return { 
+                    ...frontMatter, 
+                    body: this.renderView('_content', {
+                        body: this.renderMarkdown(body)
+                    })
+                };
             },
 
             extractFrontMatterAndBody(data){

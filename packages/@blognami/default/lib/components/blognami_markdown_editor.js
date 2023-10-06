@@ -6,14 +6,14 @@ export default {
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
         const anchorTextarea = this.frame.parent;
-        const editorTextarea = this.descendants.find(n => n.is('.markdown-editor-text-pane > textarea'));
+        const editorTextarea = this.descendants.find(n => n.is('[data-part="editor-textarea"]'));
     
         editorTextarea.value = anchorTextarea.value;
         editorTextarea.focus();
         editorTextarea.selectionStart = anchorTextarea.selectionStart;
         editorTextarea.selectionEnd = anchorTextarea.selectionEnd;
         
-        const previewFrame = this.frame.descendants.find(n => n.is('.markdown-editor-preview-pane'));
+        const previewFrame = this.frame.descendants.find(n => n.is('[data-part="editor-preview-pane"]'));
     
         previewFrame.observe((current) => {
             while(current.parent && current.parent != previewFrame) {
@@ -41,7 +41,7 @@ export default {
     },
 
     replaceLine(index, content){
-        const editorTextarea = this.descendants.find(n => n.is('.markdown-editor-text-pane > textarea'));
+        const editorTextarea = this.descendants.find(n => n.is('[data-part="editor-textarea"]'));
         const lines = editorTextarea.value.split(/\n/);
         lines[index] = content;
         editorTextarea.value = lines.join('\n');

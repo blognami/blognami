@@ -1,5 +1,19 @@
 
 export default {
+    styles: `
+        .title {
+            font-size: 7.4rem;
+            font-weight: 600;
+            line-height: 1;
+        }
+        
+        @media (max-width: 767px) {
+            .title {
+                font-size: 4.2rem;
+            }
+        }
+    `,
+
     render(){
         return this.renderView('_layout', {
             title: "Loading post...",
@@ -7,7 +21,7 @@ export default {
                 <section class="section">
                     <article class="article">
                         <pinstripe-skeleton>
-                            <h1 class="article-title">Loading post...</h1>
+                            <h1 class="${this.cssClasses.title}">Loading post...</h1>
                         </pinstripe-skeleton>
                     </article>
                 </section>

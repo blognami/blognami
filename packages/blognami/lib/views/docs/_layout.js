@@ -40,9 +40,9 @@ export default {
                                         <div class="inner">
                                             <div class="wrapper">
                                                 <div data-test-id="main">
-                                                    <div class="content canvas">
-                                                        ${body}
-                                                    </div>
+                                                    ${this.renderView('_content', {
+                                                        body
+                                                    })}
                                                 </div>
                                                 ${this.renderSidebar()}
                                             </div>
@@ -73,25 +73,27 @@ export default {
 
         return this.renderHtml`
             <aside class="sidebar" data-test-id="sidebar">
-                <section class="section">
-                    <h2 class="section-title">Guides</h2>
-                    <ul>
-                        <li><a href="/docs/guides/introduction">Introduction</a></li>
-                    </ul>
-                </section>
+                ${this.renderView('_section', {
+                    title: 'Guides',
+                    body: this.renderHtml`
+                        <ul>
+                            <li><a href="/docs/guides/introduction">Introduction</a></li>
+                        </ul>
+                    `
+                })}
                 ${Object.keys(docs).filter(name => Object.keys(docs[name]).length > 0).map(name => {
                     const items = docs[name];
 
-                    return this.renderHtml`
-                        <section class="section">
-                            <h2 class="section-title">${name}</h2>
+                    return this.renderView('_section', {
+                        title: name,
+                        body: this.renderHtml`
                             <ul>
                                 ${Object.values(items).map(({ name, slug })  => this.renderHtml`
                                     <li><a href="/docs/${slug}">${name}</a></li>
                                 `)}
                             </ul>
-                        </section>
-                    `
+                        `
+                    });
                 })}
             </aside>
         `;
