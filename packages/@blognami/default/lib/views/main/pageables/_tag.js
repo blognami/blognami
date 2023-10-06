@@ -23,27 +23,18 @@ export default {
     
         return this.renderView('_layout', {
             title: tag.name,
-            body: this.renderHtml`
-                <section class="section">
-                    <h2 class="section-title">Latest posts tagged "${tag.name}"</h2>
-    
-                    <div class="feed">
-                        ${this.renderView('_posts', { posts })}
-                    </div>
-    
-                    ${async () => {
-                        if(await posts.count() == 0) return this.renderHtml`
-                            Additional posts will be published soon.
-                        `;
-                    }}
-    
-                    ${async () => {
-                        if(await posts.all().length < await posts.count()) return this.renderHtml`
-                            <button class="feed-loadmore btn" data-component="pinstripe-anchor" data-method="post" data-href="?pageSize=${pageSize + 10}" data-test-id="load-more">Load more posts</button>
-                        `;
-                    }}
-                </section>
-            `
+            body: this.renderView('_section', {
+                title: `Latest posts tagged "${tag.name}"`,
+                body: async () => {
+                    if(await posts.count() > 0) return this.renderView('_posts', {
+                        posts,
+                        loadMoreUrl: `?pageSize=${pageSize + 10}`
+                    });
+                    return this.renderHtml`
+                        Additional posts will be published soon.
+                    `;
+                }
+            })
         });
     }
 };

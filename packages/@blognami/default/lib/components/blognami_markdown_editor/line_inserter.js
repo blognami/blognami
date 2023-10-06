@@ -6,7 +6,7 @@ export default {
         this.on('click', () => {
             const { lineContent } = this.params;
             const { lineNumber } = this.parents.find(n => n.is('[data-line-number]')).params;
-            const markdownEditor =  this.parents.find(n => n.is('.markdown-editor'));
+            const markdownEditor =  this.parents.find(n => n.is('[data-component="blognami-markdown-editor"]'));
     
             markdownEditor.replaceLine(lineNumber - 1, lineContent);
         });

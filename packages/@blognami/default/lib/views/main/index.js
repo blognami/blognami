@@ -20,27 +20,18 @@ export default {
         posts = posts.paginate(1, pageSize);
     
         return this.renderView('_layout', {
-            body: this.renderHtml`
-                <section class="section">
-                    <h2 class="section-title">Latest posts</h2>
-    
-                    <div class="feed">
-                        ${this.renderView('_posts', { posts })}
-                    </div>
-    
-                    ${async () => {
-                        if(await posts.count() == 0) return this.renderHtml`
-                            Additional posts will be published soon.
-                        `;
-                    }}
-    
-                    ${async () => {
-                        if(await posts.all().length < await posts.count()) return this.renderHtml`
-                            <button class="feed-loadmore btn" data-component="pinstripe-anchor" data-method="post" data-href="/?pageSize=${pageSize + 10}" data-test-id="load-more">Load more posts</button>
-                        `;
-                    }}
-                </section>
-            `
+            body: this.renderView('_section', {
+                title: 'Latest posts',
+                body: async () => {
+                    if(await posts.count() > 0) return this.renderView('_posts', {
+                        posts,
+                        loadMoreUrl: `/?pageSize=${pageSize + 10}`
+                    });
+                    return this.renderHtml`
+                        Additional posts will be published soon.
+                    `;
+                }
+            })
         });
     }
 }

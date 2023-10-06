@@ -1,5 +1,16 @@
 
 export default {
+    styles: `
+        .root {
+            border-width: 0.1rem;
+            border-style: dashed;
+            padding: 1em;
+        }
+        .root > ul > li {
+            cursor: pointer;
+        }
+    `,
+
     render(){
         const { params } = this;
         const path = params._url.pathname;
@@ -12,7 +23,7 @@ export default {
             .sort()
     
         return this.renderHtml`
-            <div class="default-block">
+            <div class="${this.cssClasses.root}">
                 <p>Insert block:</p>
                 <ul>
                     ${names.map(name => this.renderHtml`

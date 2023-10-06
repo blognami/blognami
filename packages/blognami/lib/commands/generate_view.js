@@ -45,21 +45,15 @@ export default {
                     line();
                     line('export default {');
                     indent(() => {
-                        line(`get styles(){`);
+                        line('styles: `');
                         indent(() => {
-                            line("const { root } = this.cssClasses;");
-                            line();
-                            line("return `");
+                            line(".root {");
                             indent(() => {
-                                line(".${root}{");
-                                indent(() => {
-                                    line("background: yellow;")
-                                });
-                                line("}")
+                                line("background: yellow;");
                             });
-                            line("`;");
+                            line("}");
                         });
-                        line('},');
+                        line('`,');
                         line();
                         line('render(){')
                         indent(() => {
@@ -71,9 +65,9 @@ export default {
                                 });
                                 line(`</div>`)
                             });
-                            line('`;')
+                            line('`;');
                         });
-                        line('}')
+                        line('}');
                     });
                     line('};');
                     line();

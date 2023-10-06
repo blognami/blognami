@@ -1,38 +1,83 @@
 
 export default {
+    styles: `
+        .site {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .main {
+            flex-grow: 1;
+            padding-top: 8rem;
+            padding-bottom: 8rem;
+        }
+        
+        .outer {
+            padding-right: var(--gap);
+            padding-left: var(--gap);
+        }
+        
+        .inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 767px) {
+            #main {
+                padding-top: 4.8rem;
+                padding-bottom: 4.8rem;
+            }
+        }
+        
+        .wrapper {
+            display: grid;
+            grid-template-columns: 4fr 2fr;
+            column-gap: 2.4rem;
+        }
+        
+        .sidebar {
+            top: 4.8rem;
+            height: max-content;
+            padding-left: 4rem;
+            font-size: 1.4rem;
+        }
+        
+        .sidebar .section + .section {
+            margin-top: 8rem;
+        }
+
+        .sidebar > *:not(:first-child) {
+            margin-top: 8rem;
+        }
+        
+        
+        @media (max-width: 767px) {
+            .wrapper {
+                grid-template-columns: 1fr;
+            }
+        
+            .sidebar {
+                padding-left: 0;
+                margin-top: 8rem;
+            }
+        }
+        
+        @media (min-width: 768px) and (max-width: 991px) {
+            .sidebar {
+                padding-left: 1.6rem;
+            }
+        }
+    `,
+
     async render(){
         const { params } = this;
         const { title, body } = params;
-    
-        let user;
-        if(await this.session){
-            user = await this.session.user;
-        }
-    
-        const isSignedIn = user !== undefined;
-        const isAdmin = user?.role == 'admin';
-        
-        let posts = this.database.posts;
-        if(isAdmin){
-            posts = posts.orderBy('published', 'asc')
-        } else {
-            posts = posts.where({ published: true });
-        }
-    
-        posts = posts.orderBy('publishedAt', 'desc');
-    
-        const featuredPosts = posts.where({ featured: true });
-        
-        const pageSize = params.pageSize ? parseInt(params.pageSize) : 10;
-        posts = posts.paginate(1, pageSize);
-    
-        const tags = this.database.posts.tags.orderBy('name');
-    
-        const site = await this.database.site;
+        const site = (await this.database.site) || {};
         
         return this.renderHtml`
             <!DOCTYPE html>
-            <html lang="${site.language}">
+            <html lang="${site.language || 'en'}">
                 <head>
                     <meta charset="utf-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -45,118 +90,24 @@ export default {
                 </head>
                 
                 <body>
-                    <div class="navbar" data-test-id="navbar">
-                        <div class="navbar-inner">
-                            <div class="navbar-brand">
-                                <a class="navbar-item" href="/" data-test-id="title">${site.title}</a>
-                            </div>
-                            <div class="navbar-menu">
-                                ${() => {
-                                    if(isSignedIn) return this.renderHtml`
-                                        ${isAdmin && this.renderHtml`
-                                            <div class="navbar-item has-dropdown">
-                                                Add
-                                                <div class="navbar-dropdown">
-                                                    <a class="navbar-item" href="/admin/add_page?userId=${user.id}" target="_overlay">Page</a>
-                                                    <a class="navbar-item" href="/admin/add_post?userId=${user.id}" target="_overlay">Post</a>
-                                                </div>
-                                            </div>
-                                        `}
-                                        <a class="navbar-item" href="/sign_out" target="_overlay" data-test-id="sign-out">Sign out</a>
-                                    `;
-                                    return this.renderHtml`
-                                        <a class="navbar-item" href="/sign_in" target="_overlay" data-preload data-test-id="sign-in">Sign in</a>
-                                    `;
-                                }}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="site">
-                        <main id="main" class="main outer">
-                            <div class="inner">
-                                <div class="wrapper">
+                    ${this.renderView('_header')}
+                    <div class="${this.cssClasses.site}">
+                        <main id="main" class="${this.cssClasses.main} ${this.cssClasses.outer}">
+                            <div class="${this.cssClasses.inner}">
+                                <div class="${this.cssClasses.wrapper}">
                                     <div data-test-id="main">
                                         ${body}
                                     </div>
-                                    ${this.renderSidebar({ isSignedIn, isAdmin, site, featuredPosts, tags })}
+                                    <aside class="${this.cssClasses.sidebar}" data-test-id="sidebar">
+                                        ${this.renderView('_sidebar')}
+                                    </aside>
                                 </div>
                             </div>
                         </main>
-                        <footer class="foot outer" data-test-id="footer">
-                            <div class="foot-inner inner">
-                                <div class="copyright">
-                                    ${site.title} © ${new Date().getFullYear()}
-                                </div>    
-                                <div class="powered-by">
-                                    <a href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
-                                </div>
-                            </div>
-                        </footer>
+                        ${this.renderView('_footer')}
                     </div>
                 </body>
             </html>
-        `;
-    },
-
-    renderSidebar({ isAdmin, site, featuredPosts, tags }){
-        return this.renderHtml`
-            <aside class="sidebar" data-test-id="sidebar">
-                <section class="section" data-test-id="about-section">
-                    <h2 class="section-title">About</h2>
-                        ${async () => {
-                            if(isAdmin) return this.renderHtml`
-                                <div class="editable-area">
-                                    <div class="editable-area-header">
-                                        <a class="editable-area-button" href="/admin/edit_site_description" target="_overlay">Edit</a>
-                                    </div>
-                                    <div class="editable-area-body">
-                                        ${this.renderMarkdown(await site.description)}
-                                    </div>
-                                </div>
-                            `;
-                            return this.renderMarkdown(await site.description)
-                        }}
-                </section>
-
-                ${async () => {
-                    if(await featuredPosts.count() > 0) return this.renderHtml`
-                        <section class="section" data-test-id="featured-section">
-                            <h3 class="section-title">Featured</h3>
-                            <div class="featured feed">
-                                ${this.renderView('_posts', { posts: featuredPosts })}
-                            </div>
-                        </section>
-                    `;
-                }}
-
-                ${async () => {
-                    if(await tags.count() > 0) return this.renderHtml`
-                        <section class="section" data-test-id="tags-section">
-                            <h3 class="section-title">Tags</h3>
-
-                            <div class="tags">
-                                ${tags.all().map(({ name, slug }) => this.renderHtml`
-                                    <a class="tags-item" href="/${slug}">
-                                        <h3 class="tags-name">${name}</h3>
-                                        <span class="tags-count">
-                                            ${async () => {
-                                                const count = await this.database.posts.where({ taggedWith: name }).count();
-                                                if(count == 1) return this.renderHtml`
-                                                    ${count} post
-                                                `;
-
-                                                return this.renderHtml`
-                                                    ${count} posts
-                                                `;
-                                            }}
-                                        </span>
-                                    </a>
-                                `)}
-                            </div>
-                        </section>
-                    `;
-                }}
-            </aside>
         `;
     }
 };

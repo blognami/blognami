@@ -11,10 +11,12 @@ export default {
         if(!item) return this.renderView('_404');
         const { name, markdown } = item;
         return this.renderView('_layout', {
-            body: this.renderHtml`
-                <h1>${name} ${this.inflector.singularize(matches[1])}</h1>
-                ${this.renderMarkdown(markdown)}
-            `
+            body: this.renderView('_content', {
+                body: this.renderHtml`
+                    <h1>${name} ${this.inflector.singularize(matches[1])}</h1>
+                    ${this.renderMarkdown(markdown)}
+                `
+            })
         });
     }
 };
