@@ -1,2 +1,2 @@
 
-export { Inflector, inflector } from '@blognami/util';
+export { Inflector, inflector } from 'blognami/util';

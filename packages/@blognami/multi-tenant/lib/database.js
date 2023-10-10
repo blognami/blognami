@@ -1,5 +1,5 @@
 
-import { Database } from '../../database.js';
+import { Database } from 'blognami';
 
 Database.include({
     get scopedByTenant(){

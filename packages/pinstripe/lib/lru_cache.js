@@ -1,2 +1,2 @@
 
-export { LruCache } from '@blognami/util';
+export { LruCache } from 'blognami/util';

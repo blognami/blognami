@@ -1,2 +1,2 @@
 
-export { Registry, registries } from '@blognami/util';
+export { Registry, registries } from 'blognami/util';

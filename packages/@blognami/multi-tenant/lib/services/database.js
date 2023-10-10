@@ -1,6 +1,6 @@
 
-import { Database } from "../../../database.js";
-import { Client } from "../../../database/client.js";
+import { Database } from 'blognami';
+import { Client } from "blognami/database";
 
 export default {
     create(){

@@ -1,2 +1,2 @@
 
-export { unescapeHtml } from '@blognami/util';
+export { decode as unescapeHtml } from "html-entities";
