@@ -2,8 +2,8 @@
 
 ## Package index
 
-- [@blognami/util](https://github.com/blognami/blognami/tree/main/packages/@blognami/util)
-- [blognami](https://github.com/blognami/blognami/tree/main/packages/blognami)
+- [@blognami/default](https://github.com/blognami/blognami/tree/main/packages/@blognami/default)
+- [@blognami/multi-tenant](https://github.com/blognami/blognami/tree/main/packages/@blognami/multi-tenant)
 - [demo](https://github.com/blognami/blognami/tree/main/packages/demo)
 - [blognami](https://github.com/blognami/blognami/tree/main/packages/blognami)
 - [pinstripe](https://github.com/blognami/blognami/tree/main/packages/pinstripe)

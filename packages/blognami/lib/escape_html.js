@@ -1,2 +1,2 @@
 
-export { escapeHtml } from '@blognami/util';
+export { encode as escapeHtml } from "html-entities";

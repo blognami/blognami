@@ -1,2 +1,2 @@
 
-export { Class } from '@blognami/util';
+export { Class } from 'blognami/util';

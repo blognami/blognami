@@ -1,5 +1,5 @@
 
-import { Table } from '../../../database/table.js';
+import { Table } from 'blognami/database';
 
 Table.include({
     meta(){

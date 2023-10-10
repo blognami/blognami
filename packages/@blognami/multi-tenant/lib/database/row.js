@@ -1,6 +1,5 @@
 
-import { Table } from '../../../database/table.js';
-import { Row } from '../../../database/row.js';
+import { Table, Row } from 'blognami/database';
 
 Row.include({
     meta(){

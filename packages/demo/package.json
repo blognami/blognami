@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@blognami/default": "^0.27.0",
+    "@blognami/multi-tenant": "^0.27.0",
     "blognami": "^0.27.0"
   },
   "devDependencies": {

@@ -1,10 +1,4 @@
 
-# Welcome to Blognami
+# @blognami/default
 
-## What is Blognami?
-
-Blognami is a slick [content management system (CMS)](https://en.wikipedia.org/wiki/Content_management_system) for Node.js.
-
-## License
-
-Blognami is released under the [MIT License](https://opensource.org/licenses/MIT).
+The default app.

@@ -1,2 +1,2 @@
 
-export { trapify } from '@blognami/util';
+export { trapify } from 'blognami/util';
