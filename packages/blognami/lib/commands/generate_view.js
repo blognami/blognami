@@ -43,18 +43,18 @@ export default {
                     echo(existingFileData);
                 } else if(normalizedNameExtension == 'js') {
                     line();
+                    line('export const styles = `');
+                    indent(() => {
+                        line(".root {");
+                        indent(() => {
+                            line("background: yellow;");
+                        });
+                        line("}");
+                    });
+                    line('`;');
+                    line();
                     line('export default {');
                     indent(() => {
-                        line('styles: `');
-                        indent(() => {
-                            line(".root {");
-                            indent(() => {
-                                line("background: yellow;");
-                            });
-                            line("}");
-                        });
-                        line('`,');
-                        line();
                         line('render(){')
                         indent(() => {
                             line('return this.renderHtml`')

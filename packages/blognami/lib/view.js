@@ -2,8 +2,7 @@
 import { promisify } from 'util'; // blognami-if-client: const promisify = undefined;
 import { readFile } from 'fs'; // blognami-if-client: const readFile = undefined;
 import { default as mimeTypes } from 'mime-types'; // blognami-if-client: const mimeTypes = undefined;
-import { createHash } from 'crypto'; // blognami-if-client: const createHash = undefined;
-import { parse as parseCss, stringify as stringifyCss } from 'css'; // blognami-if-client: const { parseCss, stringifyCss }  = {};
+import * as crypto from 'crypto'; // blognami-if-client: const crypto = undefined;
 
 import { Class } from './class.js';
 import { Registry } from './registry.js';
@@ -29,21 +28,6 @@ export const View = Class.extend().include({
                 return this.run(context, name, view => {
                     view.context.params = params;
                     return view.render();
-                });
-            },
-
-            renderStyles(context, name){
-                return this.run(context, name, view => {
-                    const { styles, hash } = view;
-                    if(!styles) return;
-                    const ast = parseCss(styles);
-                    traverseCssAst(ast, ({ selectors }) => {
-                        if(!Array.isArray(selectors)) return;
-                        selectors.forEach((selector, i) => {
-                            selectors[i] = selector.replace(/(^|[^\\])\./g, `$1.view-${hash}-`);
-                        });
-                    });
-                    return stringifyCss(ast);
                 });
             },
 
@@ -102,7 +86,7 @@ export const View = Class.extend().include({
 
     get hash(){
         if(!this._hash){
-            this._hash = createHash('sha1').update(this.constructor.name).digest('base64').replace(/[^a-z0-9]/ig, '').replace(/^(.{10}).*$/, '$1');
+            this._hash = createHash(this.constructor.name);
         }
         return this._hash;
     },
@@ -124,11 +108,7 @@ const renderFile = async filePath => [
     [ await promisify(readFile)(filePath) ]
 ];
 
-function traverseCssAst(node, fn){
-    if(Array.isArray(node)){
-        node.forEach(item => traverseCssAst(item, fn));
-    } else if(typeof node == 'object'){
-        Object.values(node).forEach(item => traverseCssAst(item, fn));
-        fn(node);
-    }
+export function createHash(data){
+    return crypto.createHash('sha1').update(data).digest('base64').replace(/[^a-z0-9]/ig, '').replace(/^(.{10}).*$/, '$1');
 }
+

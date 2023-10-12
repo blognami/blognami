@@ -1,16 +1,16 @@
 
-export default {
-    styles: `
-        .root {
-            border-width: 0.1rem;
-            border-style: dashed;
-            padding: 1em;
-        }
-        .root > ul > li {
-            cursor: pointer;
-        }
-    `,
+export const styles = `
+    .root {
+        border-width: 0.1rem;
+        border-style: dashed;
+        padding: 1em;
+    }
+    .root > ul > li {
+        cursor: pointer;
+    }
+`;
 
+export default {
     render(){
         const { params } = this;
         const path = params._url.pathname;

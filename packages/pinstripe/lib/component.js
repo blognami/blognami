@@ -20,6 +20,12 @@ export const Component = Class.extend().include({
                         node._component.attributes['data-component'] || (node._component.type == '#document' ? 'pinstripe-document' : node._component.type),
                         node
                     );
+                    (node._component.attributes.class || '').trim().split(/\s+/).forEach((className) => {
+                        const decoratorMethodName = `.${className}`;
+                        if(typeof node._component[decoratorMethodName] == 'function'){
+                            node._component[decoratorMethodName]();
+                        }
+                    });
                     if(node.isConnected) node._component.trigger('init', { bubbles: false });
                 }
                 return node._component;
@@ -625,13 +631,6 @@ function insert(virtualNode, referenceChild, returnComponent = true){
         return Component.instanceFor(node);
     }
 }
-
-const COMPONENT_MAP = {
-    a: 'pinstripe-anchor',
-    body: 'pinstripe-body',
-    form: 'pinstripe-body',
-    
-};
 
 function normalizeVirtualNode(){
     if(!this.parent && this.children.some(child => child.type == 'html')){

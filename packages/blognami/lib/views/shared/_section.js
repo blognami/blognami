@@ -1,33 +1,33 @@
 
+export const styles = `
+    .root {
+        max-width: 720px;
+    }
+
+    .title {
+        display: flex;
+        align-items: center;
+        margin-bottom: 2.4rem;
+        font-size: 1.2rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+    }
+
+    .title::after {
+        flex-grow: 1;
+        height: 1px;
+        margin-left: 1.6rem;
+        content: "";
+        background-color: var(--color-light-gray);
+    }
+
+    .root > * + * {
+        margin-top: 2rem;
+    }
+`;
+
 export default {
-    styles: `
-        .root {
-            max-width: 720px;
-        }
-
-        .title {
-            display: flex;
-            align-items: center;
-            margin-bottom: 2.4rem;
-            font-size: 1.2rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.01em;
-        }
-
-        .title::after {
-            flex-grow: 1;
-            height: 1px;
-            margin-left: 1.6rem;
-            content: "";
-            background-color: var(--color-light-gray);
-        }
-
-        .root > * + * {
-            margin-top: 2rem;
-        }
-    `,
-    
     render(){
         const { title, testId, level = 2, body} = this.params;
         

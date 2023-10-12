@@ -29,7 +29,7 @@ Component.include({
                         }
                         return importFile.call(this, params);
                     }
-                })
+                });
             }
         });
     }

@@ -1,22 +1,22 @@
 
+export const styles = `
+    .root {
+        border-width: 0.1rem;
+        border-style: dashed;
+        border-color: var(--color-dark-gray);
+    }
+    .header {
+        text-align: right;
+    }
+    .body, .header {
+        padding: 0.7rem;
+    }
+    .body > * + * {
+        margin-top: 2rem;
+    }
+`;
+
 export default {
-    styles: `
-        .root {
-            border-width: 0.1rem;
-            border-style: dashed;
-            border-color: var(--color-dark-gray);
-        }
-        .header {
-            text-align: right;
-        }
-        .body, .header {
-            padding: 0.7rem;
-        }
-        .body > * + * {
-            margin-top: 2rem;
-        }
-    `,
-    
     render(){
         const { body, url, testId } = this.params;
 
