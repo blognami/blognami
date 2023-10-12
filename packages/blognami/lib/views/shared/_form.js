@@ -1,79 +1,79 @@
 
+export const styles = `
+    .label {
+        color: #363636;
+        display: block;
+        font-size: 1.6rem;
+        font-weight: 700;
+    }
+
+    .label:not(:last-child) {
+        margin-bottom: 0.5em;
+    }
+
+    .input:not([type='checkbox']) {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        align-items: center;
+        border: 0.1rem solid transparent;
+        border-radius: 0.4rem;
+        box-shadow: inset 0 0.0625em 0.125em rgb(10 10 10 / 5%);
+        display: inline-flex;
+        font-size: 1.6rem;
+        height: 2.5em;
+        justify-content: flex-start;
+        line-height: 1.5;
+        padding-bottom: calc(0.5em - 0.1rem);
+        padding-left: calc(0.75em - 0.1rem);
+        padding-right: calc(0.75em - 0.1rem);
+        padding-top: calc(0.5em - 0.1rem);
+        position: relative;
+        vertical-align: top;
+        background-color: white;
+        border-color: #dbdbdb;
+        color: #363636;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .input:not([type='checkbox']):focus {
+        outline: none;
+        border-color: #485fc7;
+        box-shadow: 0 0 0 0.125em rgb(72 95 199 / 25%);
+    }
+
+    .input:not([type='checkbox']).is-error {
+        border-color: #f14668;
+    }
+
+    .input:not([type='checkbox']).is-error:focus {
+        outline: none;
+        box-shadow: 0 0 0 0.125em rgb(241 70 104 / 25%);
+    }
+
+    .input:not([type='checkbox']) + .is-error {
+        font-size: 1.2rem;
+        margin-top: 0.25rem;
+    }
+
+    .textarea {
+        border: 0.1rem solid #dbdbdb;
+        width: 100%;
+        min-height: 7em;
+        border-radius: 0.4rem;
+        padding-bottom: calc(0.5em - 0.1rem);
+        padding-left: calc(0.75em - 0.1rem);
+        padding-right: calc(0.75em - 0.1rem);
+        padding-top: calc(0.5em - 0.1rem);
+    }
+
+    .is-error:not(input):not(textarea) {
+        color: #f14668;
+        display: block;
+    }
+`;
+
 export default {
-    styles:`
-        .label {
-            color: #363636;
-            display: block;
-            font-size: 1.6rem;
-            font-weight: 700;
-        }
-
-        .label:not(:last-child) {
-            margin-bottom: 0.5em;
-        }
-
-        .input:not([type='checkbox']) {
-            -moz-appearance: none;
-            -webkit-appearance: none;
-            align-items: center;
-            border: 0.1rem solid transparent;
-            border-radius: 0.4rem;
-            box-shadow: inset 0 0.0625em 0.125em rgb(10 10 10 / 5%);
-            display: inline-flex;
-            font-size: 1.6rem;
-            height: 2.5em;
-            justify-content: flex-start;
-            line-height: 1.5;
-            padding-bottom: calc(0.5em - 0.1rem);
-            padding-left: calc(0.75em - 0.1rem);
-            padding-right: calc(0.75em - 0.1rem);
-            padding-top: calc(0.5em - 0.1rem);
-            position: relative;
-            vertical-align: top;
-            background-color: white;
-            border-color: #dbdbdb;
-            color: #363636;
-            max-width: 100%;
-            width: 100%;
-        }
-
-        .input:not([type='checkbox']):focus {
-            outline: none;
-            border-color: #485fc7;
-            box-shadow: 0 0 0 0.125em rgb(72 95 199 / 25%);
-        }
-
-        .input:not([type='checkbox']).is-error {
-            border-color: #f14668;
-        }
-
-        .input:not([type='checkbox']).is-error:focus {
-            outline: none;
-            box-shadow: 0 0 0 0.125em rgb(241 70 104 / 25%);
-        }
-
-        .input:not([type='checkbox']) + .is-error {
-            font-size: 1.2rem;
-            margin-top: 0.25rem;
-        }
-
-        .textarea {
-            border: 0.1rem solid #dbdbdb;
-            width: 100%;
-            min-height: 7em;
-            border-radius: 0.4rem;
-            padding-bottom: calc(0.5em - 0.1rem);
-            padding-left: calc(0.75em - 0.1rem);
-            padding-right: calc(0.75em - 0.1rem);
-            padding-top: calc(0.5em - 0.1rem);
-        }
-
-        .is-error:not(input):not(textarea) {
-            color: #f14668;
-            display: block;
-        }
-    `,
-    
     render(){
         const { 
             unsavedChangesConfirm,

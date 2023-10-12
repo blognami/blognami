@@ -9,5 +9,5 @@ export * from './import_all.js'; // blognami-if-client: export const importAll =
 export * from './markdown.js';
 export * from './project.js'; // blognami-if-client: export const project = undefined;
 export * from './service_factory.js';  // blognami-if-client: export const ServiceFactory = undefined;
-export * from './view.js';  // blognami-if-client: export const View = undefined;
+export * from './view.js';
 export * from './workspace.js'; // blognami-if-client: export const Workspace = undefined;

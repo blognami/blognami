@@ -1,39 +1,38 @@
 
-export default {
+export const styles = `
+    .article {
+        max-width: 650px;
+        margin: 0 auto 0 auto;
+    }
 
-    styles: `
-        .article {
-            max-width: 650px;
-            margin: 0 auto 0 auto;
-        }
-    
-        .meta {
-            display: block;
-            margin-bottom: 2rem;
-            font-size: 1.2rem;
-            font-weight: 500;
-            line-height: 1;
-            color: var(--color-secondary-text);
-            text-transform: uppercase;
-        }
-        
-        .meta a {
-            font-weight: 600;
-        }
-        
+    .meta {
+        display: block;
+        margin-bottom: 2rem;
+        font-size: 1.2rem;
+        font-weight: 500;
+        line-height: 1;
+        color: var(--color-secondary-text);
+        text-transform: uppercase;
+    }
+
+    .meta a {
+        font-weight: 600;
+    }
+
+    .title {
+        font-size: 7.4rem;
+        font-weight: 600;
+        line-height: 1;
+    }
+
+    @media (max-width: 767px) {
         .title {
-            font-size: 7.4rem;
-            font-weight: 600;
-            line-height: 1;
+            font-size: 4.2rem;
         }
-        
-        @media (max-width: 767px) {
-            .title {
-                font-size: 4.2rem;
-            }
-        }
-    `,
+    }
+`;
 
+export default {
     async render() {
         const { page } = this.params;
         const pageUser = await page.user;

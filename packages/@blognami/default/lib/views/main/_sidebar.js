@@ -1,32 +1,31 @@
 
+export const styles = `
+    .tags-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .tags-item + .tags-item {
+        margin-top: 1.6rem;
+    }
+
+    .tags-name {
+        font-size: 1.7rem;
+        font-weight: 600;
+        letter-spacing: 0;
+    }
+
+    .tags-count {
+        padding: 0.4rem 0.8rem;
+        font-size: 1.3rem;
+        line-height: 1;
+        border: 1px solid var(--color-light-gray);
+        border-radius: 32px;
+    }
+`;
+
 export default {
-    styles: `
-        .tags-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .tags-item + .tags-item {
-            margin-top: 1.6rem;
-        }
-        
-        .tags-name {
-            font-size: 1.7rem;
-            font-weight: 600;
-            letter-spacing: 0;
-        }
-        
-        .tags-count {
-            padding: 0.4rem 0.8rem;
-            font-size: 1.3rem;
-            line-height: 1;
-            border: 1px solid var(--color-light-gray);
-            border-radius: 32px;
-        }
-    `,
-
-
     async render(){
         const { params } = this;
     

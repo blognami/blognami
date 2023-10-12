@@ -1,50 +1,50 @@
 
+export const styles = `
+    .comments {
+        display: flex;
+        flex-direction: column;
+        gap: 3em;
+    }
+
+    .comments .comments {
+        margin-top: 1em;
+    }
+
+    .comment {
+        display: flex;
+        gap: 1em;
+        min-height: 150px;
+    }
+
+    .comment-avatar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 0 0 auto;
+    }
+
+    .comment-avatar img {
+        height: 2.5em;
+        width: 2.5em;
+        border-radius: 50%;
+        border-style: solid;
+        border-width: 2px;
+        border-color: var(--color-light-gray);
+    }
+
+    .comment-avatar::after {
+        content: ' ';
+        background: var(--color-light-gray);
+        width: 2px;
+        height: 100%;
+    }
+
+    .comment-main {
+        flex: 1 1 0;
+    }
+`;
+
 export default {
-    styles: `
-        .comments {
-            display: flex;
-            flex-direction: column;
-            gap: 3em;
-        }
-
-        .comments .comments {
-            margin-top: 1em;
-        }
-
-        .comment {
-            display: flex;
-            gap: 1em;
-            min-height: 150px;
-        }
-
-        .comment-avatar {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 0 0 auto;
-        }
-
-        .comment-avatar img {
-            height: 2.5em;
-            width: 2.5em;
-            border-radius: 50%;
-            border-style: solid;
-            border-width: 2px;
-            border-color: var(--color-light-gray);
-        }
-
-        .comment-avatar::after {
-            content: ' ';
-            background: var(--color-light-gray);
-            width: 2px;
-            height: 100%;
-        }
-
-        .comment-main {
-            flex: 1 1 0;
-        }
-    `,
-
     async render(){
         const { commentable, level = 0 } = this.params;
 
