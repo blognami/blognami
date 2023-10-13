@@ -92,9 +92,10 @@ export const View = Class.extend().include({
     },
 
     get cssClasses(){
-        return trapify({
-            __getMissing: (target, name) => `view-${this.hash}-${this.inflector.dasherize(name)}`
-        });
+        if(!this._cssClasses){
+            this._cssClasses = this.cssClassesFor(this.constructor.name);
+        }
+        return this._cssClasses;
     },
     
     render(){

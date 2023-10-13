@@ -108,7 +108,7 @@ export default {
                                     `
                                 }
                             }}
-                            ${fields.map(({ label, name, type, value, component, placeholder, error }) => {
+                            ${fields.map(({ label, name, type, value, component, placeholder, error, ...rest }) => {
                                 if(type == 'hidden'){
                                     return this.renderHtml`
                                         <input type="hidden" name="${name}" value="${value}">
@@ -118,6 +118,9 @@ export default {
                                     <div>
                                         <label class="${this.cssClasses.label}">${label}</label>
                                         ${() => {
+                                            if(type.match(/(^|\/)_/)){
+                                                return this.renderView(type, { label, name, type, value, component, placeholder, error, cssClasses: this.cssClasses, ...rest });
+                                            }
                                             if(type == 'textarea'){
                                                 return this.renderHtml`
                                                     <textarea class="${this.cssClasses.textarea}${error ? ` ${this.cssClasses.isError}` : ''}" name="${name}"${component ? this.renderHtml` data-component="${component}"` : undefined}${placeholder ? this.renderHtml` placeholder="${placeholder}"` : undefined}>${value}</textarea>

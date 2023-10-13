@@ -72,6 +72,8 @@ export default {
         `);
 
         this.shadow.on('click', '.root, .close-button', () => this.trigger('close'));
-    }
+    },
+
+    isModal: true
 }
 

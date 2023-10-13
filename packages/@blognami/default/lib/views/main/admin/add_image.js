@@ -7,7 +7,7 @@ export default {
             fields: [{ name: 'file', type: 'file' }],
             success(image){
                 return that.renderHtml`
-                    <span data-component="blognami-markdown-editor/line-inserter" data-line-content="![${image.title}](/${image.slug})">
+                    <span class="${that.cssClassesFor('main/markdown/editor').lineInserter}" data-line-content="![${image.title}](/${image.slug})">
                         <script type="pinstripe">
                             this.parent.trigger('click');
                         </script>
