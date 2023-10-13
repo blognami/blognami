@@ -242,6 +242,10 @@ export const Component = Class.extend().include({
         return this.parents.find(({ isOverlay }) => isOverlay);
     },
 
+    get modal(){
+        return this.parents.find(({ isModal }) => isModal);
+    },
+
     get shadow(){
         if(!this.node.shadowRoot){
             this.node.attachShadow({ mode: 'open' });

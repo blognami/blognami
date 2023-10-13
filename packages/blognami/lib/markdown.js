@@ -39,7 +39,7 @@ export const Markdown = Class.extend().include({
             paragraph.attributes = {
                 ...paragraph.attributes,
                 'data-component': 'pinstripe-frame',
-                'data-url': `/blocks/${name}?args=${encodeURIComponent(args)}`,
+                'data-url': `/markdown/slash_blocks/${name}?args=${encodeURIComponent(args)}`,
             };
             paragraph.children = [];
         });

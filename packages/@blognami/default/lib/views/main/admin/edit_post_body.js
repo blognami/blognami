@@ -2,7 +2,7 @@
 export default {
     async render(){
         return this.renderForm(this.database.posts.where({ id: this.params.id }).first(), {
-            fields: [{ name: 'body', type: 'textarea', component: 'blognami-markdown-editor/anchor'}]
+            fields: [{ name: 'body', type: 'markdown/_input' }]
         });
     }
 };

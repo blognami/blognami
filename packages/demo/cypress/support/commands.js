@@ -55,7 +55,7 @@ Cypress.Commands.add('submitForm', { prevSubject: true }, (subject, values = {})
                 } else {
                     cy.wrap($input).uncheck();
                 }
-            } else if($input.is('[data-component="blognami-markdown-editor/anchor"]')){
+            } else if($input.is('[data-test-id="markdown-input"]')){
                 cy.wrap($input).click();
                 cy.get('textarea[name="value"]');
                 cy.focused().clear().type(value);

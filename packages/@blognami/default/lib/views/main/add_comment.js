@@ -16,7 +16,7 @@ export default {
         }
 
         return this.renderForm(this.database.comments, {
-            fields: ['commentableId', { name: 'userId', value: this.user.id}, { name: 'body', type: 'textarea', component: 'blognami-markdown-editor/anchor'}],
+            fields: ['commentableId', { name: 'userId', value: this.user.id}, { name: 'body', type: 'markdown/_input'}],
             success: this.success.bind(this)
         });
     },
