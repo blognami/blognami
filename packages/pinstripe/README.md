@@ -3,9 +3,7 @@
 
 ## What is Pinstripe?
 
-Is front-end framework that surgically updates your app's DOM when a page changes.
-
-This gives the performance of a SPA using with a fraction of the complexity using well established classical patterns.
+Pinstripe is a slick [content management system (CMS)](https://en.wikipedia.org/wiki/Content_management_system) for Node.js.
 
 ## License
 
