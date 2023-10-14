@@ -1,0 +1,12 @@
+{
+  "type": "module",
+  "name": "@pinstripe/multi-tenant",
+  "version": "0.27.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "dependencies": {
+    "pinstripe": "^0.27.0"
+  }
+}

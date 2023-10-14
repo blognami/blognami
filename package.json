@@ -26,6 +26,6 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/@blognami/*"
+    "packages/@pinstripe/*"
   ]
 }
