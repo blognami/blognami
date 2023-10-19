@@ -9,18 +9,18 @@
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
-    "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
+    "start": "IS_LOCAL_BLOGNAMI=true blognami start-server",
     "test:models": "yarn test:models:$(echo ${DATABASE_ADAPTER:-sqlite})",
     "test:models:mysql": "DATABASE_ADAPTER=mysql SKIP_FIXTURES=true NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
     "test:models:sqlite": "DATABASE_ADAPTER=sqlite SKIP_FIXTURES=true NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
     "test:e2e": "yarn test:e2e:$(echo ${DATABASE_ADAPTER:-sqlite})",
-    "test:e2e:mysql": "NODE_ENV=test DATABASE_ADAPTER=mysql start-server-and-test 'pinstripe reset-database-and-dump-sql && yarn start' http://127.0.0.1:3000 'yarn cypress:run'",
-    "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'pinstripe reset-database-and-dump-sql && yarn start' http://127.0.0.1:3000 'yarn cypress:run'",
+    "test:e2e:mysql": "NODE_ENV=test DATABASE_ADAPTER=mysql start-server-and-test 'blognami reset-database-and-dump-sql && yarn start' http://127.0.0.1:3000 'yarn cypress:run'",
+    "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'blognami reset-database-and-dump-sql && yarn start' http://127.0.0.1:3000 'yarn cypress:run'",
     "cypress:run": "cypress run",
     "cypress:open": "cypress open"
   },
   "dependencies": {
-    "@pinstripe/multi-tenant": "^0.27.0",
+    "@blognami/multi-tenant": "^0.27.0",
     "blognami": "^0.27.0"
   },
   "devDependencies": {
