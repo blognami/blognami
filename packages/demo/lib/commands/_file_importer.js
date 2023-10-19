@@ -1,2 +1,2 @@
 
-export { Command as default } from 'pinstripe';
+export { Command as default } from 'blognami';
