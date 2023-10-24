@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@blognami/main",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -11,7 +11,7 @@
     "clean": "rm -rf ./node_modules"
   },
   "dependencies": {
-    "blognami": "^0.27.0",
+    "blognami": "^0.28.0",
     "generate-avatar": "^1.4.10"
   },
   "repository": {
