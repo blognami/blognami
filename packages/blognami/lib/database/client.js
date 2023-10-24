@@ -4,6 +4,8 @@ import { existsSync, unlinkSync } from 'fs';
 
 import { Class } from '../class.js';
 
+let sqliteConnectionCounters = {};
+let sqliteConnections = {};
 
 export const Client = Class.extend().include({
     initialize(config){
@@ -29,7 +31,13 @@ export const Client = Class.extend().include({
 
                 sqlite(){
                     const { filename } = this.config;
-                    this.connection = new sqlite.Database(filename);
+                    if(sqliteConnectionCounters[filename]){
+                        sqliteConnectionCounters[filename]++;
+                    } else {
+                        sqliteConnectionCounters[filename] = 1;
+                        sqliteConnections[filename] = new sqlite.Database(filename);
+                    }
+                    this.connection = sqliteConnections[filename];
                 }
             });   
         }
@@ -114,9 +122,16 @@ export const Client = Class.extend().include({
             },
 
             async sqlite(){
-                await new Promise((resolve, reject) => {
-                    this.connection.close(error => error ? reject(error) : resolve());
-                });
+                const { filename } = this.config;
+
+                sqliteConnectionCounters[filename]--;
+                if(sqliteConnectionCounters[filename] == 0){
+                    await new Promise((resolve, reject) => {
+                        this.connection.close(error => error ? reject(error) : resolve());
+                    });
+                    delete sqliteConnections[filename];
+                    delete sqliteConnectionCounters[filename];
+                }
             }
         })
         delete this.connection;

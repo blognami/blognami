@@ -3,6 +3,7 @@
 import cronParser from 'cron-parser';
 
 import { Command } from '../command.js';
+import { Workspace } from '../workspace.js';
 
 export default {
     create(){
@@ -52,13 +53,13 @@ export default {
                 }); 
                 
                 if(interval.hasNext()){
-                    await this.runCommand(command.name, ...args);
+                    await Workspace.run(async function(){
+                        await this.runCommand(command.name, ...args);
+                    });
                 }
             }
         }
     },
-
-    
 
     destroy(){
         return this.stop();

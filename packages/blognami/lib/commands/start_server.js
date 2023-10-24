@@ -26,6 +26,6 @@ export default {
 
         this.server.start(apps);
 
-        // if(!withoutBot) this.bot.start();
+        if(!withoutBot) this.bot.start();
     }
 };
