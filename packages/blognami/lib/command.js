@@ -29,7 +29,7 @@ export const Command = Class.extend().include({
             },
 
             async run(context, name = 'list-commands', ...args){
-                return context.fork().run(async context => {
+                await context.fork().run(async context => {
                     context.args = [ ...args ];
                     await this.create(name, context).run();
                 });
