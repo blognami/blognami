@@ -2,10 +2,11 @@
 
 ## Package index
 
+- [@blognami/docs](https://github.com/blognami/blognami/tree/main/packages/@blognami/docs)
+- [@blognami/main](https://github.com/blognami/blognami/tree/main/packages/@blognami/main)
 - [@blognami/multi-tenant](https://github.com/blognami/blognami/tree/main/packages/@blognami/multi-tenant)
+- [blognami](https://github.com/blognami/blognami/tree/main/packages/blognami)
 - [demo](https://github.com/blognami/blognami/tree/main/packages/demo)
-- [blognami](https://github.com/blognami/blognami/tree/main/packages/blognami)
-- [blognami](https://github.com/blognami/blognami/tree/main/packages/blognami)
 
 ## License
 

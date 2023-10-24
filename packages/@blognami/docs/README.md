@@ -1,9 +1,5 @@
 
 # @blognami/docs
 
-## Getting started
+The "docs" app.
 
-```bash
-    blognami init-database
-    blognami start-server
-```
