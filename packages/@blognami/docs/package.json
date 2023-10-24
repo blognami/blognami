@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@blognami/docs",
-  "version": "0.27.0",
+  "version": "0.28.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -13,6 +13,6 @@
     "build": "IS_LOCAL_BLOGNAMI=true blognami generate-static-site --app docs"
   },
   "dependencies": {
-    "blognami": "^0.27.0"
+    "blognami": "^0.28.0"
   }
 }
