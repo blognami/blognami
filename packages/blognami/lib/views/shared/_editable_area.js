@@ -5,6 +5,9 @@ export const styles = `
         border-style: dashed;
         border-color: var(--color-dark-gray);
     }
+    .root:not(:last-child){
+        margin-top: 2em;
+    }
     .header {
         text-align: right;
     }

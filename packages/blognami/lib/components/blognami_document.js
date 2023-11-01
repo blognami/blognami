@@ -1,5 +1,5 @@
 
-import { loadCache } from "./helpers.js";
+import { loadCache, normalizeUrl } from "./helpers.js";
 
 const preloading = {};
 
@@ -50,7 +50,7 @@ export default {
     async load(url = this.url.toString(), options = {}){
         const { replace, method = 'GET' } = options;
         const previousUrl = this.url.toString();
-        const normalizedUrl = new URL(url, previousUrl).toString();
+        const normalizedUrl = normalizeUrl(url, previousUrl).toString();
 
         if(method == 'GET' && previousUrl != normalizedUrl){
             if(replace){

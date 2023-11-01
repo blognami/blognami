@@ -1,5 +1,5 @@
 
-import { loadCache } from "./helpers.js";
+import { loadCache, normalizeUrl } from "./helpers.js";
 
 export default {
     initialize(...args){
@@ -19,7 +19,7 @@ export default {
         
     get url(){
         if(this._url === undefined){
-            this._url = new URL(
+            this._url = normalizeUrl(
                 this.params.url || window.location,
                 this.frame ? this.frame.url : window.location
             );
@@ -28,7 +28,7 @@ export default {
     },
 
     set url(url){
-        this._url = new URL(
+        this._url = normalizeUrl(
             url,
             this.url
         );
@@ -43,6 +43,7 @@ export default {
             this.loadWasBlocked = true;
             return;
         };
+        this.url = url;
         this.loading = true;
         this.abort();
         const { method = 'GET', placeholderUrl } = options;
@@ -56,13 +57,12 @@ export default {
                 minimumDelay = 300;
             }
         }
-        this.url = url;
-        const response = await this.fetch(url, { minimumDelay, ...options });
+        const response = await this.fetch(this.url, { minimumDelay, ...options });
         const html = await response.text();
         this.loading = false;
         if(html == cachedHtml && !this.loadWasBlocked) return;
         this.loadWasBlocked = false;
-        if(method == 'GET') loadCache.put(url.toString(), html);
+        if(method == 'GET') loadCache.put(this.url.toString(), html);
         this.patch(html);
     }
 };
