@@ -1,5 +1,13 @@
 
 export const styles = `
+    .form {
+        display: block;
+    }
+
+    .row:not(:first-of-type) {
+        margin-top: 1em;
+    }
+
     .label {
         color: #363636;
         display: block;
@@ -71,12 +79,53 @@ export const styles = `
         color: #f14668;
         display: block;
     }
+
+    .footer {
+        display: flex;
+        align-items: center;
+    }
+
+    .loading-indicator {
+        display: inline-flex;
+        align-items: center;
+        font-size: 12px;
+    }
+
+    @keyframes form-spinner {
+        to {transform: rotate(360deg);}
+    }
+
+    .spinner {
+        position: relative;
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        margin-right: 1em;
+    }
+       
+    .spinner:before {
+        content: '';
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1em;
+        height: 1em;
+        margin-top: -0.5em;
+        margin-left: -0.5em;
+        border-radius: 50%;
+        border: 2px solid #ccc;
+        border-top-color: #000;
+        animation: form-spinner .6s linear infinite;
+    }
 `;
 
 export default {
     render(){
-        const { 
+        const {
             unsavedChangesConfirm,
+            requiresProofOfWork,
+            isPlaceholder,
             method,
             title,
             otherErrors,
@@ -88,11 +137,15 @@ export default {
         return this.renderHtml`
             <blognami-modal>
                 <form
+                    class="${this.cssClasses.form}"
                     method="post"
                     enctype="multipart/form-data"
                     autocomplete="off"
                     ${unsavedChangesConfirm ? this.renderHtml`data-unsaved-changes-confirm="${unsavedChangesConfirm}"` : undefined}
                     ${unsavedChangesConfirm && method == 'POST' ? this.renderHtml`data-has-unsaved-changes="true"` : undefined}
+                    ${requiresProofOfWork ? this.renderHtml`data-requires-proof-of-work="true"` : undefined}
+                    data-placeholder="&_placeholder=true"
+                    ${isPlaceholder ? this.renderHtml`disabled` : ''}
                 >
                     ${this.renderView('_panel', {
                         title,
@@ -115,25 +168,33 @@ export default {
                                     `;
                                 }
                                 return this.renderHtml`
-                                    <div>
+                                    <div class="${this.cssClasses.row}">
                                         <label class="${this.cssClasses.label}">${label}</label>
                                         ${() => {
-                                            if(type.match(/(^|\/)_/)){
-                                                return this.renderView(type, { label, name, type, value, component, placeholder, error, cssClasses: this.cssClasses, ...rest });
-                                            }
-                                            if(type == 'textarea'){
+                                            const input = (() => {
+                                                if(type.match(/(^|\/)_/)){
+                                                    return this.renderView(type, { label, name, type, value, component, placeholder, error, cssClasses: this.cssClasses, ...rest });
+                                                }
+                                                if(type == 'textarea'){
+                                                    return this.renderHtml`
+                                                        <textarea class="${this.cssClasses.textarea}${error ? ` ${this.cssClasses.isError}` : ''}" name="${name}"${component ? this.renderHtml` data-component="${component}"` : undefined}${placeholder ? this.renderHtml` placeholder="${placeholder}"` : undefined}>${value}</textarea>
+                                                    `;
+                                                }
+                                                if(type == 'checkbox'){
+                                                    return this.renderHtml`
+                                                        <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${component ? this.renderHtml` data-component="${component}"` : undefined}>
+                                                    `;
+                                                }
                                                 return this.renderHtml`
-                                                    <textarea class="${this.cssClasses.textarea}${error ? ` ${this.cssClasses.isError}` : ''}" name="${name}"${component ? this.renderHtml` data-component="${component}"` : undefined}${placeholder ? this.renderHtml` placeholder="${placeholder}"` : undefined}>${value}</textarea>
+                                                    <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" name="${name}" type="${type}" value="${value}"${component ? this.renderHtml` data-component="${component}"` : undefined}${placeholder ? this.renderHtml` placeholder="${placeholder}"` : undefined}>
                                                 `;
-                                            }
-                                            if(type == 'checkbox'){
-                                                return this.renderHtml`
-                                                    <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${component ? this.renderHtml` data-component="${component}"` : undefined}>
-                                                `;
-                                            }
-                                            return this.renderHtml`
-                                                <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" name="${name}" type="${type}" value="${value}"${component ? this.renderHtml` data-component="${component}"` : undefined}${placeholder ? this.renderHtml` placeholder="${placeholder}"` : undefined}>
+                                            })();
+
+                                            if(isPlaceholder) return this.renderHtml`
+                                                <blognami-skeleton>${input}</blognami-skeleton>
                                             `;
+                                            
+                                            return input;
                                         }}
                                         ${() => {
                                             if(error){
@@ -147,18 +208,28 @@ export default {
                             })}
                         `,
                         footer: this.renderHtml`
-                            ${this.renderView('_button', {
-                                type: 'submit',
-                                body: submitTitle
-                            })}
-                            ${this.renderView('_button', {
-                                body: this.renderHtml`
-                                    ${cancelTitle}
-                                    <script type="blognami">
-                                        this.parent.on('click', () => this.trigger('close'));
-                                    </script>
-                                `
-                            })}
+                            <div class="${this.cssClasses.footer}">
+                                ${this.renderView('_button', {
+                                    type: 'submit',
+                                    body: submitTitle
+                                })}
+                                ${this.renderView('_button', {
+                                    body: this.renderHtml`
+                                        ${cancelTitle}
+                                        <script type="blognami">
+                                            this.parent.on('click', () => this.trigger('close'));
+                                        </script>
+                                    `
+                                })}
+                                ${() => {
+                                    if(isPlaceholder && requiresProofOfWork) return this.renderHtml`
+                                        <span class="${this.cssClasses.loadingIndicator}">
+                                            <span class="${this.cssClasses.spinner}"></span>
+                                            Generating anti-spam code - please be patient...
+                                        </span>
+                                    `;
+                                }}
+                            </div>
                         `
                     })}
                 </form>

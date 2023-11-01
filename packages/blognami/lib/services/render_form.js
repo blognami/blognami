@@ -1,3 +1,4 @@
+import * as crypto from 'crypto';
 
 import { ValidationError } from '../validation_error.js';
 import { Inflector } from '../inflector.js';
@@ -14,12 +15,17 @@ export default {
         normalizeFields(options.fields || formAdapter.fields).forEach(({ name }) => {
             values[name] = this.params[name];
         });
-
+        
+        const requiresProofOfWork = (options.requiresProofOfWork || formAdapter.requiresProofOfWork || false) && process.env.NODE_ENV != 'test';
         const success = options.success || (() => {});
 
         const errors = {};
         if(this.params._method == 'POST'){
             try {
+                if(requiresProofOfWork){
+                    if(!this.params._proofOfWork) throw new ValidationError({ _proofOfWork: 'Must not be blank' });
+                    if(!this.verifyProofOfWork(this.params._proofOfWork, values)) throw new ValidationError({ _proofOfWork: 'Must be a valid stamp' });
+                }
                 return await formAdapter.submit(values, success) || this.renderHtml`
                     <span data-component="blognami-anchor" data-target="_parent">
                         <script type="blognami">this.parent.trigger('click');</script>
@@ -59,13 +65,21 @@ export default {
 
         return this.renderView('_form', {
             unsavedChangesConfirm,
+            requiresProofOfWork,
+            isPlaceholder: this.params._placeholder == 'true',
             method: this.params._method,
             title,
             otherErrors,
             fields,
             submitTitle,
             cancelTitle
-        })
+        });
+    },
+
+    verifyProofOfWork(proofOfWork, values){
+        const hash = crypto.createHash('sha1').update(proofOfWork.replace(/\?/, JSON.stringify(values)), 'binary').digest('hex');
+        if(hash.match(/^00000/)) return true;
+        return false;
     }
 }
 
