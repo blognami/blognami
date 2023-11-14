@@ -3,14 +3,56 @@ import { Class } from "./class.js";
 import { Singleton } from "./singleton.js";
 
 export const Inflector = Class.extend().include({
-
     meta(){
         this.include(Singleton);
-    },
+        
+        this.assignProps({
+            pluralizeRules: [],
 
-    initialize(){
-        this.pluralizeRules = [];
-        this.singularizeRules = [];
+            singularizeRules: [],
+
+            definePlural(...args){
+                this.pluralizeRules.unshift(args);
+            },
+            
+            defineSingular(...args){
+                this.singularizeRules.unshift(args);
+            },
+            
+            defineIrregular(singular, plural){
+                const s0 = singular[0];
+                const srest = singular.substr(1);
+            
+                const p0 = plural[0]
+                const prest = plural.substr(1);
+            
+                if (s0.toUpperCase() == p0.toUpperCase()){
+                    this.definePlural(new RegExp(`(${s0})${srest}$`, 'i'), `$1${prest}`);
+                    this.definePlural(new RegExp(`(${p0})${prest}$`, 'i'), `$1${prest}`);
+            
+                    this.defineSingular(new RegExp(`(${s0})${srest}$`, 'i'), `$1${srest}`);
+                    this.defineSingular(new RegExp(`(${p0})${prest}$`, 'i'), `$1${srest}`);
+                } else {
+                    this.definePlural(new RegExp(`${s0.toUpperCase()}${caseInsensitive(srest)}$`), `${p0.toUpperCase()}${prest}`);
+                    this.definePlural(new RegExp(`${s0.toLowerCase()}${caseInsensitive(srest)}$`), `${p0.toLowerCase()}${prest}`);
+                    this.definePlural(new RegExp(`${p0.toUpperCase()}${caseInsensitive(prest)}$`), `${p0.toUpperCase()}${prest}`);
+                    this.definePlural(new RegExp(`${p0.toLowerCase()}${caseInsensitive(prest)}$`), `${p0.toLowerCase()}${prest}`);
+            
+                    this.defineSingular(new RegExp(`${s0.toUpperCase()}${caseInsensitive(srest)}$`), `${s0.toUpperCase()}${srest}`);
+                    this.defineSingular(new RegExp(`${s0.toLowerCase()}${caseInsensitive(srest)}$`), `${s0.toLowerCase()}${srest}`);
+                    this.defineSingular(new RegExp(`${p0.toUpperCase()}${caseInsensitive(prest)}$`), `${s0.toUpperCase()}${srest}`);
+                    this.defineSingular(new RegExp(`${p0.toLowerCase()}${caseInsensitive(prest)}$`), `${s0.toLowerCase()}${srest}`);
+                }
+            },
+            
+            defineUncountable(singularAndPlural){
+                this.defineIrregular(singularAndPlural, singularAndPlural);
+            },
+
+            inflect(...args){
+                return this.singleton.inflect(...args);
+            }
+        });
 
         this.definePlural(/$/, 's');
         this.definePlural(/s$/i, 's');
@@ -80,49 +122,19 @@ export const Inflector = Class.extend().include({
         this.defineUncountable('jeans');
         this.defineUncountable('police');
     },
-    
-    definePlural(...args){
-        this.pluralizeRules.unshift(args);
-    },
-    
-    defineSingular(...args){
-        this.singularizeRules.unshift(args);
-    },
-    
-    defineIrregular(singular, plural){
-        const s0 = singular[0];
-        const srest = singular.substr(1);
-    
-        const p0 = plural[0]
-        const prest = plural.substr(1);
-    
-        if (s0.toUpperCase() == p0.toUpperCase()){
-            this.definePlural(new RegExp(`(${s0})${srest}$`, 'i'), `$1${prest}`);
-            this.definePlural(new RegExp(`(${p0})${prest}$`, 'i'), `$1${prest}`);
-    
-            this.defineSingular(new RegExp(`(${s0})${srest}$`, 'i'), `$1${srest}`);
-            this.defineSingular(new RegExp(`(${p0})${prest}$`, 'i'), `$1${srest}`);
-        } else {
-            this.definePlural(new RegExp(`${s0.toUpperCase()}${caseInsensitive(srest)}$`), `${p0.toUpperCase()}${prest}`);
-            this.definePlural(new RegExp(`${s0.toLowerCase()}${caseInsensitive(srest)}$`), `${p0.toLowerCase()}${prest}`);
-            this.definePlural(new RegExp(`${p0.toUpperCase()}${caseInsensitive(prest)}$`), `${p0.toUpperCase()}${prest}`);
-            this.definePlural(new RegExp(`${p0.toLowerCase()}${caseInsensitive(prest)}$`), `${p0.toLowerCase()}${prest}`);
-    
-            this.defineSingular(new RegExp(`${s0.toUpperCase()}${caseInsensitive(srest)}$`), `${s0.toUpperCase()}${srest}`);
-            this.defineSingular(new RegExp(`${s0.toLowerCase()}${caseInsensitive(srest)}$`), `${s0.toLowerCase()}${srest}`);
-            this.defineSingular(new RegExp(`${p0.toUpperCase()}${caseInsensitive(prest)}$`), `${s0.toUpperCase()}${srest}`);
-            this.defineSingular(new RegExp(`${p0.toLowerCase()}${caseInsensitive(prest)}$`), `${s0.toLowerCase()}${srest}`);
-        }
-    },
-    
-    defineUncountable(singularAndPlural){
-        this.defineIrregular(singularAndPlural, singularAndPlural);
+
+    inflect(value, ...steps){
+        return steps.reduce((previousValue, currentValue) => {
+            const normalizedCurrentValue = Array.isArray(currentValue) ? currentValue : [ currentValue ];
+            const [ methodName, ...args ] = normalizedCurrentValue;
+            return this[methodName](previousValue, ...args);
+        }, value);
     },
     
     pluralize(word){
         word = `${word}`;
-        for(let i in this.pluralizeRules){
-            const [pattern, replacement] = this.pluralizeRules[i];
+        for(let i in this.constructor.pluralizeRules){
+            const [pattern, replacement] = this.constructor.pluralizeRules[i];
             if(word.match(pattern)){
                 return word.replace(pattern, replacement);
             }
@@ -131,8 +143,8 @@ export const Inflector = Class.extend().include({
     
     singularize(word){
         word = `${word}`;
-        for(let i in this.singularizeRules){
-            const [pattern, replacement] = this.singularizeRules[i];
+        for(let i in this.constructor.singularizeRules){
+            const [pattern, replacement] = this.constructor.singularizeRules[i];
             if(word.match(pattern)){
                 return word.replace(pattern, replacement);
             }
