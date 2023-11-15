@@ -9,9 +9,9 @@
     "watch": "yarn watch:demo",
     "start:demo": "lerna run start --scope demo --stream",
     "watch:demo": "nodemon -e js,jsx,md,css,html --exec 'yarn start:demo'",
-    "start:@blognami/docs": "lerna run start --scope @blognami/docs --stream",
-    "watch:@blognami/docs": "nodemon -e js,jsx,md,css,html --exec 'yarn start:@blognami/docs'",
-    "build:@blognami/docs": "lerna run build --scope @blognami/docs --stream",
+    "start:@pinstripe/docs": "lerna run start --scope @pinstripe/docs --stream",
+    "watch:@pinstripe/docs": "nodemon -e js,jsx,md,css,html --exec 'yarn start:@pinstripe/docs'",
+    "build:@pinstripe/docs": "lerna run build --scope @pinstripe/docs --stream",
     "test": "yarn test:unit && yarn test:models && yarn test:e2e",
     "test:unit": "lerna run test:unit --stream",
     "test:models": "lerna run test:models --stream",
@@ -26,6 +26,6 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/@blognami/*"
+    "packages/@pinstripe/*"
   ]
 }

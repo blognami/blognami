@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "name": "@pinstripe/docs",
+  "version": "0.28.0",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "scripts": {
+    "clean": "rm -rf ./node_modules",
+    "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server --app docs",
+    "build": "IS_LOCAL_PINSTRIPE=true pinstripe generate-static-site --app docs"
+  },
+  "dependencies": {
+    "pinstripe": "^0.28.0"
+  }
+}

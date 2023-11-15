@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "name": "@pinstripe/multi-tenant",
+  "version": "0.28.0",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "dependencies": {
+    "pinstripe": "^0.28.0"
+  }
+}

@@ -1,9 +1,9 @@
 
+import 'pinstripe';
 import 'blognami';
-import '@blognami/main';
 
-import { importAll } from 'blognami';
+import { importAll } from 'pinstripe';
 
-if(process.env.TENANCY == 'multi') import('@blognami/multi-tenant');
+if(process.env.TENANCY == 'multi') import('@pinstripe/multi-tenant');
 
 importAll(import.meta.url);

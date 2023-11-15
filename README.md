@@ -2,10 +2,10 @@
 
 ## Package index
 
-- [@blognami/docs](https://github.com/blognami/blognami/tree/main/packages/@blognami/docs)
-- [@blognami/main](https://github.com/blognami/blognami/tree/main/packages/@blognami/main)
-- [@blognami/multi-tenant](https://github.com/blognami/blognami/tree/main/packages/@blognami/multi-tenant)
+- [@pinstripe/docs](https://github.com/blognami/blognami/tree/main/packages/@pinstripe/docs)
+- [@pinstripe/multi-tenant](https://github.com/blognami/blognami/tree/main/packages/@pinstripe/multi-tenant)
 - [blognami](https://github.com/blognami/blognami/tree/main/packages/blognami)
+- [pinstripe](https://github.com/blognami/blognami/tree/main/packages/pinstripe)
 - [demo](https://github.com/blognami/blognami/tree/main/packages/demo)
 
 ## License
