@@ -6,7 +6,7 @@ export default {
         const { adapter, ...databaseConfig } = await this.config.database;
         const { rootPath } = await this.project;
 
-        execSync(`blognami reset-database`);
+        execSync(`pinstripe reset-database`);
 
         if(adapter == 'mysql'){
             execSync(`mysqldump ${databaseConfig.database} -h 127.0.0.1 -u root > ${rootPath}/dump.sql`);

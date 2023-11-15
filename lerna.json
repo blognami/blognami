@@ -1,7 +1,7 @@
 {
   "packages": [
     "packages/*",
-    "packages/@blognami/*"
+    "packages/@pinstripe/*"
   ],
   "version": "0.28.0"
 }
