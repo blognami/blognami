@@ -7,7 +7,7 @@
     "clean": "lerna run clean && rm -rf ./node_modules",
     "start": "yarn start:demo",
     "watch": "yarn watch:demo",
-    "start:demo": "lerna run start --scope demo --stream",
+    "start:demo": "lerna run start --scope @blognami/demo --stream",
     "watch:demo": "nodemon -e js,jsx,md,css,html --exec 'yarn start:demo'",
     "start:@pinstripe/docs": "lerna run start --scope @pinstripe/docs --stream",
     "watch:@pinstripe/docs": "nodemon -e js,jsx,md,css,html --exec 'yarn start:@pinstripe/docs'",
@@ -16,7 +16,7 @@
     "test:unit": "lerna run test:unit --stream",
     "test:models": "lerna run test:models --stream",
     "test:e2e": "lerna run test:e2e --stream",
-    "cypress:open": "lerna run cypress:open --scope demo --stream",
+    "cypress:open": "lerna run cypress:open --scope @blognami/demo --stream",
     "publish-all": "lerna publish from-package --yes",
     "version-all": "lerna version"
   },
@@ -25,7 +25,6 @@
     "nodemon": "^2.0.12"
   },
   "workspaces": [
-    "packages/*",
-    "packages/@pinstripe/*"
+    "packages/*"
   ]
 }
