@@ -1,13 +1,14 @@
 {
   "type": "module",
   "name": "pinstripe",
-  "description": "An MV* web framework for Node.js.",
+  "description": "A slick web framework for Node.js.",
   "version": "0.29.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js",
     "./database": "./lib/database/index.js",
+    "./multi-tenant": "./lib/extensions/multi-tenant/index.js",
     "./util": "./lib/util.js"
   },
   "bin": {
