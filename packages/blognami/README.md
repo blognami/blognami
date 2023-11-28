@@ -1,9 +1,7 @@
 
 # Welcome to Blognami
 
-## What is Blognami?
-
-Blognami is a slick [content management system (CMS)](https://en.wikipedia.org/wiki/Content_management_system) for Node.js.
+A slick [CMS](https://en.wikipedia.org/wiki/Content_management_system) for Node.js.
 
 ## License
 

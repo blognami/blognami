@@ -108,31 +108,3 @@ export default {
         `;
     }
 };
-
-
-// <div class="navbar" data-test-id="navbar">
-//     <div class="inner">
-//         <div class="brand">
-//             <a class="item" href="/" data-test-id="title">${site.title}</a>
-//         </div>
-//         <div class="menu">
-//             ${() => {
-//                 if(isSignedIn) return this.renderHtml`
-//                     ${isAdmin && this.renderHtml`
-//                         <div class="item has-dropdown">
-//                             Add
-//                             <div class="dropdown">
-//                                 <a class="item" href="/admin/add_page?userId=${user.id}" target="_overlay">Page</a>
-//                                 <a class="item" href="/admin/add_post?userId=${user.id}" target="_overlay">Post</a>
-//                             </div>
-//                         </div>
-//                     `}
-//                     <a class="item" href="/sign_out" target="_overlay" data-test-id="sign-out">Sign out</a>
-//                 `;
-//                 return this.renderHtml`
-//                     <a class="item" href="/sign_in" target="_overlay" data-preload data-test-id="sign-in">Sign in</a>
-//                 `;
-//             }}
-//         </div>
-//     </div>
-// </div>
