@@ -10,7 +10,7 @@ export default {
     
         while(tableNames.length){
             const tableName = tableNames.shift();
-            if(tableName.match(/^pinstripe[A-Z]/)) continue;
+            if(tableName == 'appliedMigrations') continue;
             if(tableName == 'tenants') continue;
             
             if(this.database[tableName].constructor.columns.tenantId) continue;

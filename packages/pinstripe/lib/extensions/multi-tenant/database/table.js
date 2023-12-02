@@ -9,7 +9,7 @@ Table.include({
             async create(...args){
                 if(this.exists) return;
                 await create.call(this, ...args);
-                if(this.constructor.name.match(/^pinstripe[A-Z]/)) return;
+                if(this.constructor.name == 'appliedMigrations') return;
                 if(this.constructor.name == 'tenants') return;
                 await this.addColumn('tenantId', 'foreign_key');
             },
