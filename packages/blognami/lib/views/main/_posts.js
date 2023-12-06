@@ -111,7 +111,7 @@ export default {
             <div class="${compact ? this.cssClasses.compact :  ''}">
                 ${this.params.posts.all().map(({ slug, title, excerptFromBody, readingMinutes, publishedAt } ) => this.renderHtml`
                     <article class="${this.cssClasses.post}">
-                        <a class="${this.cssClasses.postLink}" href="/${slug}" data-placeholder="/placeholders/post">
+                        <a class="${this.cssClasses.postLink}" href="/${slug}" data-placeholder="/_placeholders/post">
                             <header class="${this.cssClasses.postHeader}">
                                 <h2 class="${this.cssClasses.postTitle}">${title}</h2>
                             </header>

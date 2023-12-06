@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('resetDatabaseFromSql', async () => {
-    await fetch(`/test/reset-database-from-sql`);
+    await fetch(`/_test/reset_database_from_sql`);
 });
 
 Cypress.Commands.add('signIn', (email) => {
@@ -70,7 +70,7 @@ Cypress.Commands.add('submitForm', { prevSubject: true }, (subject, values = {})
 });
 
 Cypress.Commands.add('typeOtpFor', { prevSubject: true }, async (subject, email) => {
-    const response = await fetch(`/test/generate-otp?email=${encodeURIComponent(email)}`);
+    const response = await fetch(`/_test/generate_otp?email=${encodeURIComponent(email)}`);
     const { otp } = await response.json();
     cy.get(subject).type(otp);
     return subject;

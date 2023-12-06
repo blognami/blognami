@@ -7,7 +7,7 @@ export default {
 
         if(!this.user){
             return this.renderHtml`
-                <span data-component="pinstripe-anchor" data-href="/sign_in?title=${encodeURIComponent('Add comment')}&redirectUrl=${encodeURIComponent(`/add_comment?commentableId=${this.params.commentableId}`)}">
+                <span data-component="pinstripe-anchor" data-href="/_actions/sign_in?title=${encodeURIComponent('Add comment')}&redirectUrl=${encodeURIComponent(`/_actions/add_comment?commentableId=${this.params.commentableId}`)}">
                     <script type="pinstripe">
                         this.parent.trigger('click');
                     </script>
@@ -16,7 +16,7 @@ export default {
         }
 
         return this.renderForm(this.database.comments, {
-            fields: ['commentableId', { name: 'userId', value: this.user.id}, { name: 'body', type: 'markdown/_input'}],
+            fields: ['commentableId', { name: 'userId', value: this.user.id}, { name: 'body', type: '_markdown_editor'}],
             success: this.success.bind(this)
         });
     },

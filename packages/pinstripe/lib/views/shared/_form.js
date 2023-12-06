@@ -172,7 +172,7 @@ export default {
                                         <label class="${this.cssClasses.label}">${label}</label>
                                         ${() => {
                                             const input = (() => {
-                                                if(type.match(/(^|\/)_/)){
+                                                if(type.match(/(^|\/)_[^\/]+(|\/index)$/)){
                                                     return this.renderView(type, { label, name, type, value, component, placeholder, error, cssClasses: this.cssClasses, ...rest });
                                                 }
                                                 if(type == 'textarea'){

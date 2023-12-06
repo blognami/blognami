@@ -60,7 +60,7 @@ export default {
                             
                             ${() => {
                                 if(isAdmin) return this.renderView('_editable_area', {
-                                    url: `/admin/edit_page_title?id=${page.id}`,
+                                    url: `/_actions/admin/edit_page_title?id=${page.id}`,
                                     body: this.renderHtml`<h1 class="${this.cssClasses.title}" data-test-id="page-title">${page.title}</h1>`,
                                     testId: "edit-page-title"
                                 });
@@ -73,7 +73,7 @@ export default {
                         
                         ${() => {
                             if(isAdmin) return this.renderView('_editable_area', {
-                                url: `/admin/edit_page_body?id=${page.id}`,
+                                url: `/_actions/admin/edit_page_body?id=${page.id}`,
                                 body: this.renderView('_content', {
                                     body: this.renderMarkdown(page.body),
                                     testId: 'page-body'
@@ -90,7 +90,7 @@ export default {
                             if(isAdmin) return this.renderHtml`
                                 ${
                                     this.renderView('_editable_area', {
-                                        url: `/admin/edit_page_meta?id=${page.id}`,
+                                        url: `/_actions/admin/edit_page_meta?id=${page.id}`,
                                         body: this.renderView('_section', {
                                             title: 'Meta',
                                             level: 3,
@@ -114,7 +114,7 @@ export default {
                                                 class="button is-primary"
                                                 data-component="pinstripe-anchor"
                                                 data-method="post"
-                                                data-href="/admin/delete_page?id=${page.id}"
+                                                data-href="/_actions/admin/delete_page?id=${page.id}"
                                                 data-target="_overlay"
                                                 data-confirm="Are you really sure you want to delete this page?"
                                                 data-test-id="delete-page"

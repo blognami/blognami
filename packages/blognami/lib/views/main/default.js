@@ -6,7 +6,7 @@ export default {
         const pageable = await this.database.pageables.where({ slug }).first();
         if(pageable) {
             const pageableName = pageable.constructor.name;
-            const out = await this.renderView(`pageables/_${pageable.constructor.name}`, {
+            const out = await this.renderView(`_pageables/_${pageable.constructor.name}`, {
                 ...otherParams,
                 [pageableName]: pageable,
             });
