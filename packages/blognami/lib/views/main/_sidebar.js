@@ -60,7 +60,7 @@ export default {
                 testId: 'about-section',
                 body: async () => {
                     if(isAdmin) return this.renderView('_editable_area', {
-                        url: "/admin/edit_site_description",
+                        url: "/_actions/admin/edit_site_description",
                         body: this.renderMarkdown(await site.description)
                     });
                     return this.renderMarkdown(await site.description)

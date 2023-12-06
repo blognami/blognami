@@ -22,12 +22,13 @@ export default {
             return out;
         }
 
-        if(!viewName.match(/(^|\/)_/)){
-            out = this.normalizeResponse(await this.renderView(viewName != '' ? `${viewName}/index`: 'index', normalizedParams));
+        if(!viewName.match(/(^|\/)_[^\/]+(|\/index)$/)){
+            out = this.normalizeResponse(await this.app.renderView(viewName != '' ? `${viewName}/index`: 'index', normalizedParams));
             if(out){
                 return out;
             }
-            out = this.normalizeResponse(await this.renderView(viewName, normalizedParams));
+        
+            out = this.normalizeResponse(await this.app.renderView(viewName, normalizedParams));
             if(out){
                 return out;
             }
@@ -53,7 +54,7 @@ export default {
 
         const prefixSegments = [];
         while(true){
-            const out = this.normalizeResponse(await this.renderView(prefixSegments.length ? [...prefixSegments, 'guard'].join('/') : 'guard', params));
+            const out = this.normalizeResponse(await this.app.renderView(prefixSegments.length ? [...prefixSegments, 'guard'].join('/') : 'guard', params));
             if(out){
                 return out;
             }
@@ -67,7 +68,7 @@ export default {
     async renderDefaultViews(viewName, params){
         const prefixSegments = viewName != '' ? viewName.split(/\//) : [];
         while(true){
-            const out = this.normalizeResponse(await this.renderView(prefixSegments.length ? [...prefixSegments, 'default'].join('/') : 'default', params));
+            const out = this.normalizeResponse(await this.app.renderView(prefixSegments.length ? [...prefixSegments, 'default'].join('/') : 'default', params));
             if(out){
                 return out;
             }

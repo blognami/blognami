@@ -14,11 +14,11 @@ export default {
     render(){
         const { params } = this;
         const path = params._url.pathname;
-        const prefix = path.replace(/^\/markdown\/slash_blocks\//, '');
+        const prefix = path.replace(/^\/_markdown_slash_blocks\//, '');
     
         const names = this.app.viewNames
-            .filter(name => name.match(/^markdown\/slash_blocks\/.+/) && name != 'markdown/slash_blocks/default')
-            .map(name => name.replace(/^markdown\/slash_blocks\//, ''))
+            .filter(name => name.match(/^_markdown_slash_blocks\/.+/) && name != '_markdown_slash_blocks/default')
+            .map(name => name.replace(/^_markdown_slash_blocks\//, ''))
             .filter(name => name.startsWith(prefix))
             .sort()
     
@@ -27,7 +27,7 @@ export default {
                 <p>Insert block:</p>
                 <ul>
                     ${names.map(name => this.renderHtml`
-                        <li class="${this.cssClassesFor('main/markdown/editor').lineInserter}" data-line-content="/${name}">${name}</li>
+                        <li class="${this.cssClassesFor('main/_markdown_editor/modal').lineInserter}" data-line-content="/${name}">${name}</li>
                     `)}
                 </ul>
             </div>

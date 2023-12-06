@@ -157,7 +157,7 @@ export default {
                             
                             ${() => {
                                 if(isAdmin) return this.renderView('_editable_area', {
-                                    url: `/admin/edit_post_title?id=${post.id}`,
+                                    url: `/_actions/admin/edit_post_title?id=${post.id}`,
                                     body: this.renderHtml`<h1 class="${this.cssClasses.title}" data-test-id="post-title">${post.title}</h1>`,
                                     testId: "edit-post-title"
                                 });
@@ -170,7 +170,7 @@ export default {
 
                         ${() => {
                             if(isAdmin) return this.renderView('_editable_area', {
-                                url: `/admin/edit_post_body?id=${post.id}`,
+                                url: `/_actions/admin/edit_post_body?id=${post.id}`,
                                 body: this.renderView('_content', {
                                     body: this.renderMarkdown(post.body),
                                     testId: 'post-body'
@@ -186,7 +186,7 @@ export default {
                         ${() => {
                             if(isAdmin) return this.renderHtml`
                                 ${this.renderView('_editable_area', {
-                                    url: `/admin/edit_post_meta?id=${post.id}`,
+                                    url: `/_actions/admin/edit_post_meta?id=${post.id}`,
                                     body: this.renderView('_section', {
                                         title: 'Meta',
                                         level: 3,
@@ -216,7 +216,7 @@ export default {
                                                 class="button is-primary"
                                                 data-component="pinstripe-anchor"
                                                 data-method="post"
-                                                data-href="/admin/delete_post?id=${post.id}"
+                                                data-href="/_actions/admin/delete_post?id=${post.id}"
                                                 data-target="_overlay"
                                                 data-confirm="Are you really sure you want to delete this post?"
                                                 data-test-id="delete-post"

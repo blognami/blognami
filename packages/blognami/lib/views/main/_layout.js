@@ -75,40 +75,28 @@ export default {
         const { params } = this;
         const { title, body } = params;
         const site = (await this.database.site) || {};
-        
-        return this.renderHtml`
-            <!DOCTYPE html>
-            <html lang="${site.language || 'en'}">
-                <head>
-                    <meta charset="utf-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1">
-                    <title>${title || site.title}</title>
-                    <link rel="preconnect" href="https://fonts.googleapis.com">
-                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-                    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&display=swap">
-                    <link rel="stylesheet" href="/assets/stylesheets/all.css">
-                    <script src="/assets/javascripts/all.js"></script>
-                </head>
-                
-                <body>
-                    ${this.renderView('_header')}
-                    <div class="${this.cssClasses.site}">
-                        <main id="main" class="${this.cssClasses.main} ${this.cssClasses.outer}">
-                            <div class="${this.cssClasses.inner}">
-                                <div class="${this.cssClasses.wrapper}">
-                                    <div data-test-id="main">
-                                        ${body}
-                                    </div>
-                                    <aside class="${this.cssClasses.sidebar}" data-test-id="sidebar">
-                                        ${this.renderView('_sidebar')}
-                                    </aside>
+
+        return this.renderView('_shell', {
+            language: site.language,
+            title: title || site.title,
+            body: this.renderHtml`
+                ${this.renderView('_header')}
+                <div class="${this.cssClasses.site}">
+                    <main id="main" class="${this.cssClasses.main} ${this.cssClasses.outer}">
+                        <div class="${this.cssClasses.inner}">
+                            <div class="${this.cssClasses.wrapper}">
+                                <div data-test-id="main">
+                                    ${body}
                                 </div>
+                                <aside class="${this.cssClasses.sidebar}" data-test-id="sidebar">
+                                    ${this.renderView('_sidebar')}
+                                </aside>
                             </div>
-                        </main>
-                        ${this.renderView('_footer')}
-                    </div>
-                </body>
-            </html>
-        `;
+                        </div>
+                    </main>
+                    ${this.renderView('_footer')}
+                </div>
+            `
+        });
     }
 };

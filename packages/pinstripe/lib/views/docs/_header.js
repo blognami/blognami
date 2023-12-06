@@ -5,7 +5,7 @@ export default {
         const path = this.initialParams._url.pathname;
 
         return this.renderView('_navbar', {
-            logoUrl: '/assets/images/logo.svg',
+            logoUrl: '/images/logo.svg',
             title: 'Pinstripe',
             links: [
                 { href: '/', body: 'Home', selected: path == '/' },

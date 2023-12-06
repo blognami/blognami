@@ -1,6 +1,12 @@
 
 export default {
     create(){
-        return (...args) => this.app.renderView(...args);
+        return async (name, params = {}) => {
+            const out = await this.app.renderView(name != '' ? `${name}/index`: 'index', params);
+            if(out){
+                return out;
+            }
+            return this.app.renderView(name, params);
+        }
     }
 };
