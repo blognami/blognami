@@ -55,7 +55,7 @@ export function describeApp(role){
                     cy.getByTestId('main').contains('Similique fuga consequatur');
                 });
     
-                it(`should have an interface to allow the user to add comments`, () => {
+                it(`should have an interface to allow the user to add/delete comments`, () => {
                     cy.getByTestId('main').contains("Hello world!").should('not.exist');
                     cy.getByTestId('main', 'comment-created-at').should('not.exist');
                     cy.getByTestId('main', 'add-comment').contains("Add comment").click();
@@ -70,6 +70,9 @@ export function describeApp(role){
                     cy.topModal().submitForm({ body: 'Hello world!' });
                     cy.getByTestId('main').contains("Hello world!").should('exist');
                     cy.getByTestId('main', 'comment-created-at').should('not.contain', 'Invalid DateTime');
+                    cy.getByTestId('main', 'delete-comment').contains("Delete").click();
+                    cy.getByTestId('main').contains("Hello world!").should('not.exist');
+                    cy.getByTestId('main', 'comment-created-at').should('not.exist');
                 });
 
                 it(`should have an interface to allow the user to navigate to the previous/next posts`, () => {
