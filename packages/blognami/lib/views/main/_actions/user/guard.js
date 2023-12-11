@@ -6,29 +6,8 @@ export default {
             user = await this.session.user;
         }
     
-        if(!user){
-            const [ status, headers, body ] = await this.renderHtml`
-                <pinstripe-modal>
-                    ${
-                        this.renderView('_panel', {
-                            title: 'Access denied',
-                            body: this.renderHtml`
-                                <p>You need to be signed in to do this.</p>
-                            `,
-                            footer: this.renderView('_button', {
-                                body: this.renderHtml`
-                                    OK
-                                    <script type="pinstripe">
-                                        this.parent.on('click', () => this.trigger('close'));
-                                    </script>
-                                `
-                            })
-                        })
-                    }
-                </pinstripe-modal>
-            `.toResponseArray();
-    
-            return [403, headers, body];
-        }
+        if(!user) return this.renderView('_403', {
+            message: 'You need to be signed in to do this.'
+        });
     }
 }

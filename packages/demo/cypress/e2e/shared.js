@@ -55,8 +55,9 @@ export function describeApp(role){
                     cy.getByTestId('main').contains('Similique fuga consequatur');
                 });
     
-                it(`should have an interface to allow the user to add/delete comments`, () => {
-                    cy.getByTestId('main').contains("Hello world!").should('not.exist');
+                it(`should have an interface to allow the user to add/edit/delete comments`, () => {
+                    cy.getByTestId('main').contains("Apple").should('not.exist');
+                    cy.getByTestId('main').contains("Pear").should('not.exist');
                     cy.getByTestId('main', 'comment-created-at').should('not.exist');
                     cy.getByTestId('main', 'add-comment').contains("Add comment").click();
                     cy.topModal().contains("Cancel").click();
@@ -67,11 +68,17 @@ export function describeApp(role){
                         cy.topModal().submitForm({ password: 'bob@example.com' });
                         cy.topModal().submitForm({ name: 'Bob' });
                     }
-                    cy.topModal().submitForm({ body: 'Hello world!' });
-                    cy.getByTestId('main').contains("Hello world!").should('exist');
+                    cy.topModal().submitForm({ body: 'Apple' });
+                    cy.getByTestId('main').contains("Apple").should('exist');
+                    cy.getByTestId('main').contains("Pear").should('not.exist');
                     cy.getByTestId('main', 'comment-created-at').should('not.contain', 'Invalid DateTime');
+                    cy.getByTestId('main', 'edit-comment').contains("Edit").click();
+                    cy.topModal().submitForm({ body: 'Pear' });
+                    cy.getByTestId('main').contains("Apple").should('not.exist');
+                    cy.getByTestId('main').contains("Pear").should('exist');
                     cy.getByTestId('main', 'delete-comment').contains("Delete").click();
-                    cy.getByTestId('main').contains("Hello world!").should('not.exist');
+                    cy.getByTestId('main').contains("Apple").should('not.exist');
+                    cy.getByTestId('main').contains("Pear").should('not.exist');
                     cy.getByTestId('main', 'comment-created-at').should('not.exist');
                 });
 

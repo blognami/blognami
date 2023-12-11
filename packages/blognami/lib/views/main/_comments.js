@@ -88,6 +88,11 @@ export default {
                                     return this.renderHtml`
                                         <div class="${this.cssClasses.commentActions}">
                                             <a 
+                                                href="/_actions/user/edit_comment?id=${comment.id}"
+                                                target="_overlay"
+                                                data-test-id="edit-comment"
+                                            >Edit</a>
+                                            <a 
                                                 href="/_actions/user/delete_comment?id=${comment.id}"
                                                 target="_overlay"
                                                 data-test-id="delete-comment"
