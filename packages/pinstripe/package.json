@@ -35,7 +35,6 @@
     "cron-parser": "^4.3.0",
     "css": "^3.0.0",
     "esbuild": "^0.15.12",
-    "generate-avatar": "^1.4.10",
     "html-entities": "^2.3.2",
     "js-yaml": "^4.1.0",
     "luxon": "^2.3.1",

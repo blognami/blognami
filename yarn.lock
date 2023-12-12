@@ -2388,11 +2388,6 @@
   dependencies:
     undici-types "~5.25.1"
 
-"@types/node@^13.13.1":
-  version "13.13.52"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.52.tgz#03c13be70b9031baaed79481c0c0cfb0045e53f7"
-  integrity sha512-s3nugnZumCC//n4moGGe6tkNMyYEdaDBitVjwPxXmR5lnMG5dHePinH2EdxkG3Rh1ghFHHixAG4NJhpJW1rthQ==
-
 "@types/node@^16.18.39":
   version "16.18.58"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.58.tgz#bf66f63983104ed57c754f4e84ccaf16f8235adb"
@@ -4635,13 +4630,6 @@ gauge@~2.7.3:
     string-width "^1.0.1"
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
-
-generate-avatar@^1.4.10:
-  version "1.4.10"
-  resolved "https://registry.yarnpkg.com/generate-avatar/-/generate-avatar-1.4.10.tgz#2d06b112419a835da7bf6cdc4fe6200b69b5c2de"
-  integrity sha512-HlVz3ZXTqz7F0sb3OoW8591SojdVtyyuqX6kCi/AnmEXH16MLmPRiChv2680E9WF39zl5nlHMrgZxlmqnTrzkQ==
-  dependencies:
-    "@types/node" "^13.13.1"
 
 generate-function@^2.3.1:
   version "2.3.1"
