@@ -12,7 +12,6 @@
     "clean": "rm -rf ./node_modules"
   },
   "dependencies": {
-    "generate-avatar": "^1.4.10",
     "pinstripe": "^0.29.0"
   },
   "repository": {

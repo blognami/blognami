@@ -1,9 +1,5 @@
 
-export const styles = `        
-    .root {
-        margin-top: 4rem;
-    }
-
+export const styles = `
     .root > * + * {
         margin-top: 2.8rem;
         margin-bottom: 0;

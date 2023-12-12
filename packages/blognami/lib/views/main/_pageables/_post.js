@@ -5,6 +5,10 @@ export const styles = `
         margin: 0 auto 0 auto;
     }
 
+    .header {
+        margin-bottom: 4rem;
+    }
+
     .tag {
         color: var(--accent-color);
     }
