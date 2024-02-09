@@ -35,6 +35,7 @@ export const View = Class.extend().include({
                 if(!this.cache.mappers) this.cache.mappers = {};
                 if(!this.cache.mappers[cacheKey]){
                     const map = {};
+
                     namespaces.forEach(namespace => {
                         this.names.forEach(name => {
                             const pattern = new RegExp(`^${namespace}/(.*)$`);
@@ -42,6 +43,11 @@ export const View = Class.extend().include({
                             if(!matches) return;
                             map[matches[1]] = name;
                         })
+                    });
+
+                    Object.keys(map).forEach(name => {
+                        const matches = name.match(/^(.*)\/index$/);
+                        if(matches && !map[matches[1]]) map[matches[1]] = map[name];
                     });
                     
                     this.cache.mappers[cacheKey] = Class.extend().include({

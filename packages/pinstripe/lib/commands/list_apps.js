@@ -8,7 +8,7 @@ export default {
         console.log('The following apps are available:');
         console.log('');
         App.names.forEach(appName => {
-            console.log(`  * ${chalk.green(appName)} (composed of ${JSON.stringify(App.create(appName, this.context).compose())} views)`);
+            console.log(`  * ${chalk.green(appName)}`);
         });
         console.log('');
     }
