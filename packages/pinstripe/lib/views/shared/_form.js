@@ -91,34 +91,24 @@ export const styles = `
         font-size: 12px;
     }
 
-    @keyframes form-spinner {
-        to {transform: rotate(360deg);}
-    }
-
-    .spinner {
-        position: relative;
+    .proof-of-work-progress {
         display: inline-block;
-        width: 1em;
-        height: 1em;
-        margin-right: 1em;
-    }
-       
-    .spinner:before {
-        content: '';
-        box-sizing: border-box;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 1em;
-        height: 1em;
-        margin-top: -0.5em;
-        margin-left: -0.5em;
-        border-radius: 50%;
-        border: 2px solid #ccc;
-        border-top-color: #000;
-        animation: form-spinner .6s linear infinite;
+        margin-left: 0.5em;
     }
 `;
+
+export const decorators = {
+    proofOfWorkProgress(){
+        this.frame.on('proofOfWorkProgress', e => {
+            const progress = e.detail;
+            this.patch({
+                ...this.attributes,
+                value: progress
+            });
+            this.patch(`${progress} %`);
+        });
+    }
+};
 
 export default {
     render(){
@@ -224,8 +214,7 @@ export default {
                                 ${() => {
                                     if(isPlaceholder && requiresProofOfWork) return this.renderHtml`
                                         <span class="${this.cssClasses.loadingIndicator}">
-                                            <span class="${this.cssClasses.spinner}"></span>
-                                            Generating anti-spam code - please be patient...
+                                            Generating anti-spam code <progress class="${this.cssClasses.proofOfWorkProgress}" max="100">0.0 %</progress>
                                         </span>
                                     `;
                                 }}

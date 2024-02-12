@@ -2,6 +2,7 @@ import * as crypto from 'crypto';
 
 import { ValidationError } from '../validation_error.js';
 import { Inflector } from '../inflector.js';
+import { verifyProofOfWork } from '../proof_of_work.js';
 
 export default {
     create(){
@@ -24,7 +25,7 @@ export default {
             try {
                 if(requiresProofOfWork){
                     if(!this.params._proofOfWork) throw new ValidationError({ _proofOfWork: 'Must not be blank' });
-                    if(!this.verifyProofOfWork(this.params._proofOfWork, values)) throw new ValidationError({ _proofOfWork: 'Must be a valid stamp' });
+                    if(!verifyProofOfWork(values, this.params._proofOfWork)) throw new ValidationError({ _proofOfWork: 'Must be a valid stamp' });
                 }
                 return await formAdapter.submit(values, success) || this.renderHtml`
                     <span data-component="pinstripe-anchor" data-target="_parent">
@@ -74,12 +75,6 @@ export default {
             submitTitle,
             cancelTitle
         });
-    },
-
-    verifyProofOfWork(proofOfWork, values){
-        const hash = crypto.createHash('sha1').update(proofOfWork.replace(/\?/, JSON.stringify(values)), 'binary').digest('hex');
-        if(hash.match(/^00000/)) return true;
-        return false;
     }
 }
 
