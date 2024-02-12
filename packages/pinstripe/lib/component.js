@@ -2,12 +2,13 @@
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 
 import { Class } from './class.js';
-import { TEXT_ONLY_TAGS, IS_SERVER } from './constants.js';
+import { TEXT_ONLY_TAGS } from './constants.js';
 import { Inflector } from './inflector.js';
 import { VirtualNode } from './virtual_node.js';
 import { Registry } from './registry.js';
 import { ComponentEvent } from './component_event.js';
 import { Client } from './client.js'; // pinstripe-if-client: const Client = undefined;
+import { generateProofOfWork } from './proof_of_work.js';
 
 export const Component = Class.extend().include({
     meta(){
@@ -462,7 +463,10 @@ export const Component = Class.extend().include({
                 if(!(otherOptions.body instanceof FormData)) throw new Error(`Proof of work requires form data to be present`);
                 const values = {};
                 otherOptions.body.forEach((value, key) => values[key] = value);
-                otherOptions.body.append('_proofOfWork', await generateProofOfWork(values, abortController.signal))
+                otherOptions.body.append('_proofOfWork', await generateProofOfWork(values, { 
+                    abortSignal: abortController.signal,
+                    onProgress: progress => this.trigger('proofOfWorkProgress', { data: progress, bubbles: false })
+                }))
             }
             const promises = [
                 fetch(normalizedUrl, { signal: abortController.signal, ...otherOptions }), 
@@ -710,40 +714,6 @@ function normalizeVirtualNode(){
             this.attributes['data-component'] = 'pinstripe-script';
         }
     }
-}
-
-async function generateProofOfWork(values, abortSignal){
-    const stringifiedValues = JSON.stringify(values);
-    const timestamp = getUTCTimestamp();
-    const random = btoa(`${Math.random()}`);
-    let counter = 0;
-    while(!abortSignal.aborted){
-        const candidateSolution = `1:20:${timestamp}:?::${random}:${btoa(`${counter}`)}`;
-        const hash = await createSha1Hash(candidateSolution.replace(/\?/, stringifiedValues));
-        if(hash.match(/^00000/)) return candidateSolution;
-        counter++;
-    }
-    return '';
-}
-
-function getUTCTimestamp() {
-    const now = new Date();
-  
-    const year = now.getUTCFullYear() % 100;
-    const month = String(now.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(now.getUTCDate()).padStart(2, '0');
-    const hours = String(now.getUTCHours()).padStart(2, '0');
-    const minutes = String(now.getUTCMinutes()).padStart(2, '0');
-    const seconds = String(now.getUTCSeconds()).padStart(2, '0');
-  
-    return `${year}${month}${day}${hours}${minutes}${seconds}`;
-  }
-  
-
-async function createSha1Hash(input) {
-    const buffer = new TextEncoder().encode(input);
-    const hashArray = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-1', buffer)));
-    return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
 }
 
 ComponentEvent.Component = Component;
