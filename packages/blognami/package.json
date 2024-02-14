@@ -2,7 +2,7 @@
   "type": "module",
   "name": "blognami",
   "description": "A slick CMS for Node.js.",
-  "version": "0.30.0",
+  "version": "0.31.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -12,7 +12,7 @@
     "clean": "rm -rf ./node_modules"
   },
   "dependencies": {
-    "pinstripe": "^0.30.0"
+    "pinstripe": "^0.31.0"
   },
   "repository": {
     "type": "git",
