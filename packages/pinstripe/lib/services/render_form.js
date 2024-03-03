@@ -1,4 +1,3 @@
-import * as crypto from 'crypto';
 
 import { ValidationError } from '../validation_error.js';
 import { Inflector } from '../inflector.js';
@@ -25,13 +24,16 @@ export default {
             try {
                 if(requiresProofOfWork){
                     if(!this.params._proofOfWork) throw new ValidationError({ _proofOfWork: 'Must not be blank' });
-                    if(!verifyProofOfWork(values, this.params._proofOfWork)) throw new ValidationError({ _proofOfWork: 'Must be a valid stamp' });
+                    if(!await verifyProofOfWork(values, this.params._proofOfWork)) throw new ValidationError({ _proofOfWork: 'Must be a valid' });
+                    if(await this.onlyOnce.hasBeenUsed({ proofOfWork: this.params._proofOfWork })) throw new ValidationError({ _proofOfWork: 'Must be unused' });
                 }
-                return await formAdapter.submit(values, success) || this.renderHtml`
+                const out = await formAdapter.submit(values, success) || this.renderHtml`
                     <span data-component="pinstripe-anchor" data-target="_parent">
                         <script type="pinstripe">this.parent.trigger('click');</script>
                     </span>
                 `;
+                if(requiresProofOfWork) await this.onlyOnce.markAsUsed({ proofOfWork: this.params._proofOfWork });
+                return out;
             } catch(e){
                 if(!(e instanceof ValidationError)){
                     throw e;
