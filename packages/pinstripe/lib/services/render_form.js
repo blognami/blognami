@@ -12,8 +12,12 @@ export default {
         const formAdapter = await formAdaptable.toFormAdapter();
         
         const values = {};
-        normalizeFields(options.fields || formAdapter.fields).forEach(({ name }) => {
-            values[name] = this.params[name];
+        normalizeFields(options.fields || formAdapter.fields).forEach(({ type, name, value }) => {
+            if(type == 'forced'){
+                values[name] = value;
+            } else {
+                values[name] = this.params[name];
+            }
         });
         
         const requiresProofOfWork = (options.requiresProofOfWork || formAdapter.requiresProofOfWork || false) && process.env.NODE_ENV != 'test';
