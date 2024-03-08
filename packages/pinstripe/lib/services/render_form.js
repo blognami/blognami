@@ -15,6 +15,16 @@ export default {
         normalizeFields(options.fields || formAdapter.fields).forEach(({ name }) => {
             values[name] = this.params[name];
         });
+
+        const { createdByUserId, updatedByUserId } = indexFieldsByName(normalizeFields(formAdapter.fields));
+        if(createdByUserId && !createdByUserId.value && await this.session){
+            const user = await this.session.user;
+            if(user) values.createdByUserId = user.id;
+        }
+        if(updatedByUserId && await this.session){
+            const user = await this.session.user;
+            if(user) values.updatedByUserId = user.id;
+        }
         
         const requiresProofOfWork = (options.requiresProofOfWork || formAdapter.requiresProofOfWork || false) && process.env.NODE_ENV != 'test';
         const success = options.success || (() => {});
