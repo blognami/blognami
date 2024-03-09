@@ -15,6 +15,7 @@ export default {
         });
 
         this.beforeInsertOrUpdate(async function(){
+            if(!this.revisionUserId) return;
             this._revisedFields = {};
             this.constructor.revisableFields.forEach(name => {
                 if(this[name] != this._initialFields[name]){

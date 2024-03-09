@@ -6,7 +6,6 @@ export default {
         return this.renderForm(this.database.pages, {
             fields: [
                 { name: 'userId', type: 'forced', value: this.session.user.id },
-                { name: 'revisionUserId', type: 'forced', value: this.session.user.id },
                 'title'
             ],
             success({ slug }){
