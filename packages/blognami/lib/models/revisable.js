@@ -1,6 +1,8 @@
 
 export default {
     meta(){
+        this.hasMany('revisions',  { fromKey: 'id', toKey: 'revisableId' });
+
         this.assignProps({
             get revisableFields(){
                 if(!this._revisableFields){
