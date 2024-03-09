@@ -14,31 +14,33 @@ export default {
             }
         });
 
-        // this.afterInsert(async function(){
-        //     console.log(`----------- createdByUserId: ${this.createdByUserId}`);
-        // });
-
-        // this.afterUpdate(async function(){
-        //     console.log(`----------- updatedByUserId: ${this.updatedByUserId}`);
-        // });
-
-        this.beforeUpdate(async function(){
+        this.beforeInsertOrUpdate(async function(){
             this._revisedFields = {};
             this.constructor.revisableFields.forEach(name => {
                 if(this[name] != this._initialFields[name]){
-                    this._revisedFields[name] = this._initialFields[name];
+                    this._revisedFields[name] = this[name];
                 }
             });
         });
 
-        this.afterUpdate(async function(){
+        this.afterInsertOrUpdate(async function(){
+            if(!this.revisionUserId) return;
             for(let name in this._revisedFields){
                 await this.database.revisions.insert({
                     revisableId: this.id,
+                    userId: this.revisionUserId,
                     name,
                     value: this._revisedFields[name],
                 });
             }
         });
+    },
+
+    set revisionUserId(value){
+        this._revisionUserId = value;
+    },
+
+    get revisionUserId(){
+        return this._revisionUserId;
     }
 };

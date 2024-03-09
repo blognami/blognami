@@ -6,7 +6,7 @@ export default {
         return this.renderForm(this.database.posts, {
             fields: [
                 { name: 'userId', type: 'forced', value: this.session.user.id },
-                { name: 'createdByUserId', type: 'forced', value: this.session.user.id },
+                { name: 'revisionUserId', type: 'forced', value: this.session.user.id },
                 'title'
             ],
             success({ slug }){
