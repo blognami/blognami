@@ -151,7 +151,7 @@ export default {
                                     `
                                 }
                             }}
-                            ${fields.map(({ label, name, type, value, component, placeholder, error, ...rest }) => {
+                            ${fields.map(({ label, name, type, value, component, placeholder, overlayLinks, error, ...rest }) => {
                                 if(type == 'hidden'){
                                     return this.renderHtml`
                                         <input type="hidden" name="${name}" value="${value}">
@@ -159,7 +159,19 @@ export default {
                                 }
                                 return this.renderHtml`
                                     <div class="${this.cssClasses.row}">
-                                        <label class="${this.cssClasses.label}">${label}</label>
+                                        <label class="${this.cssClasses.label}">
+                                            ${label}
+                                            ${() => {
+                                                if(!overlayLinks) return;
+                                                return this.renderHtml`
+                                                    <div class="${this.cssClasses.overlayLinks}">
+                                                        ${overlayLinks.map(({ href, body }) => this.renderHtml`
+                                                            <a href="${href}" target="_overlay" class="${this.cssClasses.overlayLink}">${body}</a>
+                                                        `)}
+                                                    </div>
+                                                `;
+                                            }}
+                                        </label>
                                         ${() => {
                                             const input = (() => {
                                                 if(type.match(/(^|\/)_[^\/]+(|\/index)$/)){
