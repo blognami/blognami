@@ -14,6 +14,14 @@ export default {
             }
         });
 
+        // this.afterInsert(async function(){
+        //     console.log(`----------- createdByUserId: ${this.createdByUserId}`);
+        // });
+
+        // this.afterUpdate(async function(){
+        //     console.log(`----------- updatedByUserId: ${this.updatedByUserId}`);
+        // });
+
         this.beforeUpdate(async function(){
             this._revisedFields = {};
             this.constructor.revisableFields.forEach(name => {
