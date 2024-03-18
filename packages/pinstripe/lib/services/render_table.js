@@ -6,24 +6,33 @@ export default {
     async render(tableAdaptable, options = {}){
         const tableAdapter = await tableAdaptable.toTableAdapter();
 
-        const columns = [
-            { name: 'foo', title: 'Foo' },
-            { name: 'bar', title: 'Bar' },
-            { name: 'baz', title: 'Baz' },
-            { name: 'buttons', title: '', cell: (row) => this.renderHtml`
-                <a>Edit</a>
-            `}
-        ];
+        const { title, rows, pageCount, page } = tableAdapter;
 
-        const rows = [
-            { foo: 'a', bar: 'b', baz: 'c' },
-            { foo: 'd', bar: 'e', baz: 'f' },
-            { foo: 'g', bar: 'h', baz: 'i' }
-        ];
+        const columns = extractColumns(tableAdapter, options);
 
         return this.renderView('_table', {
+            title,
             columns,
-            rows
+            rows,
+            pageCount,
+            page,
         })
     }
 };
+
+const extractColumns = (tableAdapter, options) => {
+    const normalizedTableAdapterColumns = normalizeColumns(tableAdapter.columns);
+    const normalizedOptionsColumns = options.columns ? normalizeColumns(options.columns) : normalizedTableAdapterColumns;
+    
+    return normalizedOptionsColumns.map(column => {
+        const out = {};
+        if(column.name) out.name = column.name;
+        if(column.title) out.title = column.title;
+        return out;
+    });
+};
+
+const normalizeColumns = columns => columns.map(column => {
+    if(typeof column === 'string') return { name: column, title: column };
+    return column;
+});

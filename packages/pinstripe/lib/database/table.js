@@ -488,6 +488,22 @@ export const Table = Class.extend().include({
                 return success(await this.insert(values));
             }
         };
+    },
+
+    async toTableAdapter(){
+        const title = inflector.capitalize(this.constructor.name);
+        const columns = Object.keys(this.constructor.columns).map(name => ({ name, title: inflector.capitalize(name) }));
+        const rows = await this.all();
+        const page = this.page;
+        const pageCount = Math.ceil(await this.count() / this.pageSize);
+        
+        return {
+            title,
+            columns,
+            rows,
+            page,
+            pageCount,
+        };
     }
 });
 
