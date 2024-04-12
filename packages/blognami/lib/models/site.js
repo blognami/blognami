@@ -6,11 +6,14 @@ const passwordTimeToLiveInMinutes = 3;
 export default {
     meta(){
         this.include('singleton');
+        this.include('revisable');
 
         this.beforeInsert(function(){
             if(this.salt) return;
             this.salt = crypto.randomUUID();
         });
+
+        this.trackRevisionsFor('description');
     },
 
     async generatePassword(salt){

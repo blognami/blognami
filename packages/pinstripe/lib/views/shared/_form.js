@@ -4,8 +4,26 @@ export const styles = `
         display: block;
     }
 
-    .row:not(:first-of-type) {
+    .field:not(:first-of-type) {
         margin-top: 1em;
+    }
+
+    .field-header {
+        display: flex;
+        gap: 1em;
+        margin-bottom: 0.5em;
+    }
+
+    .overlay-links {
+        flex-grow: 1;
+        display: flex;
+        align-items: end;
+        justify-content: end;
+        font-size: 0.8em;
+    }
+
+    .overlay-link:not(:first-of-type) {
+        margin-left: 1em;
     }
 
     .label {
@@ -13,10 +31,6 @@ export const styles = `
         display: block;
         font-size: 1.6rem;
         font-weight: 700;
-    }
-
-    .label:not(:last-child) {
-        margin-bottom: 0.5em;
     }
 
     .input:not([type='checkbox']) {
@@ -151,15 +165,36 @@ export default {
                                     `
                                 }
                             }}
-                            ${fields.map(({ label, name, type, value, component, placeholder, error, ...rest }) => {
+                            ${fields.map(({ label, name, type, value, component, placeholder, overlayLinks, error, ...rest }) => {
                                 if(type == 'hidden'){
                                     return this.renderHtml`
                                         <input type="hidden" name="${name}" value="${value}">
                                     `;
                                 }
                                 return this.renderHtml`
-                                    <div class="${this.cssClasses.row}">
-                                        <label class="${this.cssClasses.label}">${label}</label>
+                                    <div class="${this.cssClasses.field}">
+                                        <div class="${this.cssClasses.fieldHeader}">
+                                            <label class="${this.cssClasses.label}">${label}</label>
+                                            ${() => {
+                                                if(!overlayLinks) return;
+                                                return this.renderHtml`
+                                                    <div class="${this.cssClasses.overlayLinks}">
+                                                        ${overlayLinks.map(({ body, ...attributes }) => this.renderHtml`
+                                                            <a ${() => {
+                                                                attributes.target ??= '_overlay';
+                                                                attributes.class ??= this.cssClasses.overlayLink;
+
+                                                                const out = [];
+                                                                for(let [key, value] of Object.entries(attributes)){
+                                                                    out.push(this.renderHtml`${key}="${value}"`);
+                                                                }
+                                                                return out;
+                                                            }}>${body}</a>
+                                                        `)}
+                                                    </div>
+                                                `;
+                                            }}
+                                        </div>
                                         ${() => {
                                             const input = (() => {
                                                 if(type.match(/(^|\/)_[^\/]+(|\/index)$/)){

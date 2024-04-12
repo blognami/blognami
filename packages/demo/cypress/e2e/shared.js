@@ -110,6 +110,19 @@ export function describeApp(role){
                         cy.getByTestId('main', 'edit-post-body').click();
                         cy.topModal().submitForm({ body: 'Pear plum' });
                         cy.getByTestId('main', 'post-body').should('contain', 'Pear plum');
+                        
+                        cy.getByTestId('main', 'post-body').should('not.contain', 'Peach plum');
+                        cy.getByTestId('main', 'edit-post-body').click();
+                        cy.topModal().submitForm({ body: 'Peach plum' });
+                        cy.getByTestId('main', 'post-body').should('contain', 'Peach plum');
+
+                        cy.getByTestId('main', 'post-body').should('not.contain', 'Pear plum');
+                        cy.getByTestId('main', 'edit-post-body').click();
+                        cy.topModal().getByTestId('revisions').click();
+                        cy.topModal().find('tbody > tr').should('have.length', 2);
+                        cy.topModal().find('tbody > tr:last-child a').click();
+                        cy.topModal().submitForm({});
+                        cy.getByTestId('main', 'post-body').should('contain', 'Pear plum');
                     });
 
                     describe('meta', () => {
@@ -221,6 +234,19 @@ export function describeApp(role){
                         cy.getByTestId('main', 'page-body').should('not.contain', 'Pear plum');
                         cy.getByTestId('main', 'edit-page-body').click();
                         cy.topModal().submitForm({ body: 'Pear plum' });
+                        cy.getByTestId('main', 'page-body').should('contain', 'Pear plum');
+
+                        cy.getByTestId('main', 'page-body').should('not.contain', 'Peach plum');
+                        cy.getByTestId('main', 'edit-page-body').click();
+                        cy.topModal().submitForm({ body: 'Peach plum' });
+                        cy.getByTestId('main', 'page-body').should('contain', 'Peach plum');
+
+                        cy.getByTestId('main', 'page-body').should('not.contain', 'Pear plum');
+                        cy.getByTestId('main', 'edit-page-body').click();
+                        cy.topModal().getByTestId('revisions').click();
+                        cy.topModal().find('tbody > tr').should('have.length', 2);
+                        cy.topModal().find('tbody > tr:last-child a').click();
+                        cy.topModal().submitForm({});
                         cy.getByTestId('main', 'page-body').should('contain', 'Pear plum');
                     });
 

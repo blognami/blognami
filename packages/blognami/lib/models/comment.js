@@ -2,6 +2,7 @@
 export default {
     meta(){
         this.include('commentable');
+        this.include('revisable');
         
         this.belongsTo('commentable');
         this.belongsTo('user');
@@ -23,5 +24,7 @@ export default {
                 this.createdAt = new Date();
             }
         });
+
+        this.trackRevisionsFor('body');
     }
 };

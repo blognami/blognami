@@ -51,11 +51,23 @@ export function normalizeUrl(url, referenceUrl = window.location){
     const matches = `${url}`.match(/^&(.*)$/);
     const out = matches ? new URL(referenceUrl) : new URL(url, referenceUrl);
     if(matches){
-        if(out.search){
-            out.search = `${out.search}&${matches[1]}`;
-        } else {
-            out.search = `?${matches[1]}`;
-        }
+        out.search = `?${stringifyUrlSearch({
+            ...parseUrlSearch(out.search),
+            ...parseUrlSearch(`${matches[1]}`)
+        })}`;
     }
     return out;
+}
+
+function parseUrlSearch(search){
+    const out = {};
+    search.replace(/^\?/, '').split('&').forEach(pair => {
+        const [key, value] = pair.split('=');
+        out[decodeURIComponent(key)] = decodeURIComponent(value);
+    });
+    return out;
+}
+
+function stringifyUrlSearch(search){
+    return Object.keys(search).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(search[key])}`).join('&');
 }

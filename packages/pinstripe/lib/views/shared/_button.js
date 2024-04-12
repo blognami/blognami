@@ -1,8 +1,7 @@
 
 export const styles = `
     .root {
-        -moz-appearance: none;
-        -webkit-appearance: none;
+        appearance: none;
         display: inline-flex;
         align-items: center;
         vertical-align: top;
@@ -19,10 +18,7 @@ export const styles = `
         border-width: 0.1rem;
         color: #363636;
         cursor: pointer;
-        padding-bottom: calc(0.5em - 0.1rem);
-        padding-left: 1em;
-        padding-right: 1em;
-        padding-top: calc(0.5em - 0.1rem);
+        padding: calc(0.5em - 0.1rem) 1em;
         text-align: center;
         white-space: nowrap;
     }
@@ -43,17 +39,35 @@ export const styles = `
         border-color: transparent;
         color: #fff;
     }
+    .is-small {
+        font-size: 1.2rem;
+        height: 1.5em;
+        padding-bottom: 0.5em;
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+        padding-top: 0.5em;
+    }
 `;
 
 export default {
     render(){
-        const { body, type = 'button' } = this.params;
-        const { isPrimary = type == 'submit' } = this.params;
+        let { nodeName = 'button', body, isPrimary, size = 'medium', ...attributes } = this.params;
+
+        nodeName = nodeName.toLowerCase();
+        
+        if(nodeName === 'button'){
+            attributes.type ??= 'button';
+            if(attributes.type == 'submit') isPrimary ??= true;
+        }
         
         return this.renderHtml`
-            <button class="${this.cssClasses.root} ${isPrimary ? this.cssClasses.isPrimary : ''}" type="${type}">
-                ${body}
-            </button>
+            <${nodeName} class="${this.cssClasses.root} ${this.cssClasses[`is-${size}`]} ${isPrimary ? this.cssClasses.isPrimary : ''}" ${() => {
+                const out = [];
+                for(let [key, value] of Object.entries(attributes)){
+                    out.push(this.renderHtml`${key}="${value}"`);
+                }
+                return out;
+            }}>${body}</${nodeName}>
         `;
     }
 };
