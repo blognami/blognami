@@ -8,7 +8,14 @@ export default {
             message: 'You cannot edit this comment.'
         });
         return this.renderForm(comment, {
-            fields: [{ name: 'body', type: '_markdown_editor'}],
+            fields: [
+                { name: 'revisionUserId', type: 'forced', value: this.session.user.id },
+                {
+                    name: 'body',
+                    type: '_markdown_editor',
+                    overlayLinks: user.role == 'admin' ? [ { href: `/_actions/admin/revisions?revisableId=${comment.id}&name=body`, 'data-test-id': 'revisions', body: 'Revisions' } ] : undefined,
+                }
+            ],
             success: this.success.bind(this)
         });
     },

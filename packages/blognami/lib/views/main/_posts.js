@@ -136,7 +136,7 @@ export default {
             </div>
 
             ${async () => {
-                if(loadMoreUrl && await posts.all().length < await posts.count()) return this.renderHtml`
+                if(loadMoreUrl && await posts.all().length < await posts.withoutPagination().count()) return this.renderHtml`
                     <button class="${this.cssClasses.loadMoreButton}" data-component="pinstripe-anchor" data-method="post" data-href="${loadMoreUrl}" data-test-id="load-more">Load more posts</button>
                 `;
             }}

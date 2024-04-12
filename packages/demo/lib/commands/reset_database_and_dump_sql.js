@@ -6,7 +6,12 @@ export default {
         const { adapter, ...databaseConfig } = await this.config.database;
         const { rootPath } = await this.project;
 
-        execSync(`pinstripe reset-database`);
+        execSync(`pinstripe reset-database`, {
+            env: {
+                ...process.env,
+                IS_LOCAL_PINSTRIPE: 'false' 
+            }
+        });
 
         if(adapter == 'mysql'){
             execSync(`mysqldump ${databaseConfig.database} -h 127.0.0.1 -u root > ${rootPath}/dump.sql`);

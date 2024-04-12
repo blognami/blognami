@@ -6,6 +6,7 @@ export default {
         this.include('pageable');
         this.include('tagable');
         this.include('commentable');
+        this.include('revisable');
         
         this.belongsTo('user');
 
@@ -17,6 +18,8 @@ export default {
                 this.publishedAt = new Date();
             }
         });
+
+        this.trackRevisionsFor('body');
     },
 
     get readingMinutes(){

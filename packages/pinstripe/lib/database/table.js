@@ -143,12 +143,15 @@ export const Table = Class.extend().include({
         });
     },
 
-    initialize(database, tableReference = TableReference.new(this.constructor.name), expressions = [], joins = [], orderedBy = []){
+    initialize(database, tableReference = TableReference.new(this.constructor.name), expressions = [], joins = [], orderedBy = [], page, pageSize, skipCount){
         this.database = database;
         this.tableReference = tableReference;
         this.expressions = expressions;
         this.joins = joins;
         this.orderedBy = orderedBy;
+        this.page = page;
+        this.pageSize = pageSize;
+        this.skipCount = skipCount;
         this.exists = Object.keys(this.constructor.columns).length > 0;
     },
 
@@ -158,7 +161,10 @@ export const Table = Class.extend().include({
             this.tableReference.clone(),
             [ ...this.expressions],
             [ ...this.joins],
-            [ ...this.orderedBy ]
+            [ ...this.orderedBy ],
+            this.page,
+            this.pageSize,
+            this.skipCount,
         );
     },
 
@@ -197,9 +203,16 @@ export const Table = Class.extend().include({
     },
 
     paginate(page = 1, pageSize = 10, skipCount = 0){
-        this.page = page;
-        this.pageSize = pageSize;
-        this.skipCount = skipCount;
+        this.page = parseInt(page, 10);
+        this.pageSize = parseInt(pageSize, 10);
+        this.skipCount = parseInt(skipCount, 10);
+        return this;
+    },
+
+    withoutPagination(){
+        delete this.page;
+        delete this.pageSize;
+        delete this.skipCount;
         return this;
     },
 
@@ -208,11 +221,12 @@ export const Table = Class.extend().include({
     },
 
     async count(){
+        if(typeof this.pageSize == 'number') return (await this.all()).length;
         return Object.values(
             (await this.database.run(this.toSql({ select: ['count(distinct ?) ', this.tableReference.createColumnReference('id')]}))).pop()
         ).pop();
     },
-
+    
     async first(){
         return (await this.paginate(1, 1).all()).shift();
     },
@@ -487,6 +501,22 @@ export const Table = Class.extend().include({
             submit: async (values, success) => {
                 return success(await this.insert(values));
             }
+        };
+    },
+
+    async toTableAdapter(){
+        const title = inflector.capitalize(this.constructor.name);
+        const columns = Object.keys(this.constructor.columns).map(name => ({ name }));
+        const rows = await this.all();
+        const page = this.page;
+        const pageCount = Math.ceil(await this.clone().withoutPagination().count() / this.pageSize);
+
+        return {
+            title,
+            columns,
+            rows,
+            page,
+            pageCount,
         };
     }
 });

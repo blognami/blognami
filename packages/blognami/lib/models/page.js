@@ -2,6 +2,7 @@
 export default {
     meta(){
         this.include('pageable');
+        this.include('revisable');
         
         this.belongsTo('user');
 
@@ -12,6 +13,8 @@ export default {
             if(this.published && !this.publishedAt){
                 this.publishedAt = new Date();
             }
-        })
+        });
+
+        this.trackRevisionsFor('body');
     }
 };

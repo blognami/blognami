@@ -12,9 +12,13 @@ export default {
         const formAdapter = await formAdaptable.toFormAdapter();
         
         const values = {};
-        normalizeFields(options.fields || formAdapter.fields).forEach(({ name }) => {
-            values[name] = this.params[name];
-        });
+        for(let { name, type, value } of normalizeFields(options.fields || formAdapter.fields)){
+            if(type == 'forced'){
+                values[name] = await value;
+            } else {
+                values[name] = this.params[name];
+            }
+        }
         
         const requiresProofOfWork = (options.requiresProofOfWork || formAdapter.requiresProofOfWork || false) && process.env.NODE_ENV != 'test';
         const success = options.success || (() => {});
@@ -109,7 +113,8 @@ const extractFields = (formAdapter, options) => {
         out.component = optionsField.component || formAdapterField.component;
         out.placeholder = optionsField.placeholder || formAdapterField.placeholder;
         out.value = optionsField.value || formAdapterField.value;
+        out.overlayLinks = optionsField.overlayLinks || formAdapterField.overlayLinks || [];
         return out;
-    });
+    }).filter(field => field.type != 'forced');
 };
 

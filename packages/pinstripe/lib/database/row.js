@@ -153,13 +153,15 @@ export const Row = Model.extend().include({
                     modifiedFields[name] = this[name];
                 }
             });
+
+            const exists =  this._exists;
             
             if(Object.keys(modifiedFields).length) {
                 const query = [];
 
                 const tableReference = TableReference.new(this.constructor.collectionName);
 
-                if(this._exists){
+                if(exists){
                     query.push('update ? set ', tableReference);
                     Object.keys(modifiedFields).forEach((name, i) => {
                         if(name == 'id') return;
@@ -186,7 +188,6 @@ export const Row = Model.extend().include({
                             query.push(' where ? = ?', tableReference.createColumnReference('id'), this._initialFields.id);
                         }
                     });
-                    
                 } else {
                     query.push('insert into ?(', tableReference);
                     Object.keys(modifiedFields).forEach((name, i) => {
@@ -227,10 +228,9 @@ export const Row = Model.extend().include({
                 });
 
                 this._exists = true;
-
             }
 
-            await (this._exists ? this._runAfterUpdateCallbacks() : this._runAfterInsertCallbacks());
+            await (exists ? this._runAfterUpdateCallbacks() : this._runAfterInsertCallbacks());
 
             return this;
         });
