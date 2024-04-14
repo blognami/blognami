@@ -5,9 +5,8 @@ export const styles = `
     .root {
         display: flex;
         flex-direction: row;
-        width: 100vw;
+        width: 120.0rem;
         height: calc(100vh - 4rem);
-        max-width: 120.0rem;
         background: #fff;
         z-index: 1;
     }
