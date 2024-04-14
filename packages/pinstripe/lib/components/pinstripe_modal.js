@@ -61,8 +61,12 @@ export default {
                 .body {
                     max-height: calc(100vh - 4.0rem);
                     max-width: calc(100vw - 16.0rem);
-                    min-width: 64.0rem;
                     margin: 0 auto;
+                }
+                ::slotted(*) {
+                    width: 64.0rem;
+                    max-width: 100%;
+                    max-height: 100%;
                 }
             </style>
             <div class="root">
