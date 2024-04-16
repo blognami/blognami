@@ -47,6 +47,10 @@ export default {
         return this.body.progressBar;
     },
 
+    get loadCacheNamespace(){
+        return this.head.find('meta[name="pinstripe-load-cache-namespace"]')?.params.content ?? 'default';
+    },
+
     async load(url = this.url.toString(), options = {}){
         const { replace, method = 'GET' } = options;
         const previousUrl = this.url.toString();
@@ -65,12 +69,12 @@ export default {
     },
 
     async preload(url){
-        if(loadCache.get(url.toString())) return;
+        if(loadCache.get(`${this.document.loadCacheNamespace}:${url}`)) return;
         if(preloading[url.toString()]) return;
         preloading[url.toString()] = true;
         const response = await fetch(url);
         const html = await response.text();
-        loadCache.put(url.toString(), html);
+        loadCache.put(`${this.document.loadCacheNamespace}:${url}`, html);
         delete preloading[url.toString()];
     }
 };

@@ -47,11 +47,11 @@ export default {
         this.loading = true;
         this.abort();
         const { method = 'GET', placeholderUrl } = options;
-        const cachedHtml = method == 'GET' ? loadCache.get(url.toString()) : undefined;
+        const cachedHtml = method == 'GET' ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
         if(cachedHtml) this.patch(cachedHtml);
         let minimumDelay = 0;
         if(!cachedHtml && placeholderUrl){
-            const placeholderHtml = loadCache.get(placeholderUrl.toString());
+            const placeholderHtml = loadCache.get(`${this.document.loadCacheNamespace}:${placeholderUrl}`);
             if(placeholderHtml) {
                 this.patch(placeholderHtml);
                 minimumDelay = 300;
@@ -62,7 +62,7 @@ export default {
         this.loading = false;
         if(html == cachedHtml && !this.loadWasBlocked) return;
         this.loadWasBlocked = false;
-        if(method == 'GET') loadCache.put(this.url.toString(), html);
         this.patch(html);
+        if(method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
     }
 };
