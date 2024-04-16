@@ -1,7 +1,7 @@
 
 export default {
     render(){
-        const { language = 'en', title = '', body } = this.params;
+        const { language = 'en', title = '', body, loadCacheNamespace = 'default' } = this.params;
 
         return this.renderHtml`
             <!DOCTYPE html>
@@ -9,6 +9,7 @@ export default {
                 <head>
                     <meta charset="utf-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <meta name="pinstripe-load-cache-namespace" content="${loadCacheNamespace}">
                     <title>${title}</title>
                     <link rel="preconnect" href="https://fonts.googleapis.com">
                     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

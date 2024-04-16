@@ -76,9 +76,15 @@ export default {
         const { title, body } = params;
         const site = (await this.database.site) || {};
 
+        let user;
+        if(await this.session){
+            user = await this.session.user;
+        }
+
         return this.renderView('_shell', {
             language: site.language,
             title: title || site.title,
+            loadCacheNamespace: user ? 'signed-in' : 'signed-out',
             body: this.renderHtml`
                 ${this.renderView('_header')}
                 <div class="${this.cssClasses.site}">
