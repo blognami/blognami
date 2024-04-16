@@ -163,7 +163,7 @@ export default {
                                 if(isAdmin) return this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_post_title?id=${post.id}`,
                                     body: this.renderHtml`<h1 class="${this.cssClasses.title}" data-test-id="post-title">${post.title}</h1>`,
-                                    testId: "edit-post-title"
+                                    linkTestId: "edit-post-title"
                                 });
                                 return this.renderHtml`
                                     <h1 class="${this.cssClasses.title}" data-test-id="post-title">${post.title}</h1>
@@ -179,7 +179,7 @@ export default {
                                     body: this.renderMarkdown(post.body),
                                     testId: 'post-body'
                                 }),
-                                testId: "edit-post-body"
+                                linkTestId: "edit-post-body"
                             });
                             return this.renderView('_content', {
                                 body: this.renderMarkdown(post.body),
@@ -191,42 +191,33 @@ export default {
                             if(isAdmin) return this.renderHtml`
                                 ${this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_post_meta?id=${post.id}`,
-                                    body: this.renderView('_section', {
-                                        title: 'Meta',
-                                        level: 3,
-                                        testId: 'post-meta',
-                                        body: this.renderHtml`
-                                            <p><b>Slug:</b> ${post.slug}</p>
-                                            <p><b>Tags:</b> ${async () => {
-                                                const tags = await post.tags.all().map(({ name }) => `"${name}"`).join(', ');
-                                                if(tags) return tags;
-                                                return 'none';
-                                            }}</p>
-                                            <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
-                                            <p><b>Published:</b> ${post.published ? 'true' : 'false'}</p>
-                                            <p><b>enableComments:</b> ${post.enableComments ? 'true' : 'false'}</p>
-                                        `
-                                    }),
-                                    testId: "edit-post-meta"
+                                    body: this.renderHtml`
+                                        <p><b>Slug:</b> ${post.slug}</p>
+                                        <p><b>Tags:</b> ${async () => {
+                                            const tags = await post.tags.all().map(({ name }) => `"${name}"`).join(', ');
+                                            if(tags) return tags;
+                                            return 'none';
+                                        }}</p>
+                                        <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
+                                        <p><b>Published:</b> ${post.published ? 'true' : 'false'}</p>
+                                        <p><b>enableComments:</b> ${post.enableComments ? 'true' : 'false'}</p>
+                                    `,
+                                    linkTestId: "edit-post-meta",
+                                    bodyTestId: "post-meta"
                                 })}
 
-                                ${this.renderView('_section', {
-                                    title: 'Danger area',
-                                    level: 3,
-                                    testId: 'danger-area',
-                                    body: this.renderHtml`
-                                        <p>
-                                            <button
-                                                class="button is-primary"
-                                                data-component="pinstripe-anchor"
-                                                data-method="post"
-                                                data-href="/_actions/admin/delete_post?id=${post.id}"
-                                                data-target="_overlay"
-                                                data-confirm="Are you really sure you want to delete this post?"
-                                                data-test-id="delete-post"
-                                            >Delete this Post</button>
-                                        </p>
-                                    `
+                                ${this.renderView('_danger_area', {
+                                    body: this.renderView('_button', {
+                                        nodeName: 'a',
+                                        href: `/_actions/admin/delete_post?id=${post.id}`,
+                                        target: '_overlay',
+                                        isDangerous: true,
+                                        isFullWidth: true,
+                                        ['data-method']: 'post',
+                                        ['data-confirm']: 'Are you really sure you want to delete this post?',
+                                        ['data-test-id']: 'delete-post',
+                                        body: 'Delete this Post!'
+                                    })
                                 })}
                             `;
                         }}

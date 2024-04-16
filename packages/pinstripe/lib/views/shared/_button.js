@@ -39,7 +39,20 @@ export const styles = `
         border-color: transparent;
         color: #fff;
     }
-    .is-small {
+    .root.is-dangerous {
+        background-color: #c70000;
+        border-color: transparent;
+        color: #fff;
+    }
+    .root.is-dangerous:hover {
+        background-color: #c40000;
+        border-color: transparent;
+        color: #fff;
+    }
+    .root.is-full-width {
+        width: 100%;
+    }
+    root.is-small {
         font-size: 1.2rem;
         height: 1.5em;
         padding-bottom: 0.5em;
@@ -51,7 +64,7 @@ export const styles = `
 
 export default {
     render(){
-        let { nodeName = 'button', body, isPrimary, size = 'medium', ...attributes } = this.params;
+        let { nodeName = 'button', body, isPrimary, isDangerous, isFullWidth, size = 'medium', ...attributes } = this.params;
 
         nodeName = nodeName.toLowerCase();
         
@@ -61,7 +74,20 @@ export default {
         }
         
         return this.renderHtml`
-            <${nodeName} class="${this.cssClasses.root} ${this.cssClasses[`is-${size}`]} ${isPrimary ? this.cssClasses.isPrimary : ''}" ${() => {
+            <${nodeName} class="${() =>{
+                const out = [
+                    this.cssClasses.root,
+                    this.renderHtml` ${this.cssClasses[`is-${size}`]}`,
+                ];
+
+                if(isPrimary) out.push(this.renderHtml` ${this.cssClasses.isPrimary}`);
+
+                if(isDangerous) out.push(this.renderHtml` ${this.cssClasses.isDangerous}`);
+
+                if(isFullWidth) out.push(this.renderHtml` ${this.cssClasses.isFullWidth}`);
+
+                return out;
+            }}" ${() => {
                 const out = [];
                 for(let [key, value] of Object.entries(attributes)){
                     out.push(this.renderHtml`${key}="${value}"`);

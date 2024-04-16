@@ -66,7 +66,7 @@ export default {
                                 if(isAdmin) return this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_page_title?id=${page.id}`,
                                     body: this.renderHtml`<h1 class="${this.cssClasses.title}" data-test-id="page-title">${page.title}</h1>`,
-                                    testId: "edit-page-title"
+                                    linkTestId: "edit-page-title"
                                 });
                                 return this.renderHtml`
                                     <h1 class="${this.cssClasses.title}" data-test-id="page-title">${page.title}</h1>
@@ -82,7 +82,7 @@ export default {
                                     body: this.renderMarkdown(page.body),
                                     testId: 'page-body'
                                 }),
-                                testId: "edit-page-body"
+                                linkTestId: "edit-page-body"
                             });
                             return this.renderView('_content', {
                                 body: this.renderMarkdown(page.body),
@@ -92,39 +92,28 @@ export default {
     
                         ${() => {
                             if(isAdmin) return this.renderHtml`
-                                ${
-                                    this.renderView('_editable_area', {
-                                        url: `/_actions/admin/edit_page_meta?id=${page.id}`,
-                                        body: this.renderView('_section', {
-                                            title: 'Meta',
-                                            level: 3,
-                                            testId: 'page-meta',
-                                            body: this.renderHtml`
-                                                <p><b>Slug:</b> ${page.slug}</p>
-                                                <p><b>Published:</b> ${page.published ? 'true' : 'false'}</p>
-                                            `
-                                        }),
-                                        testId: "edit-page-meta"
-                                    })
-                                }
-
-                                ${this.renderView('_section', {
-                                    title: 'Danger area',
-                                    level: 3,
-                                    testId: 'danger-area',
+                                ${this.renderView('_editable_area', {
+                                    url: `/_actions/admin/edit_page_meta?id=${page.id}`,
                                     body: this.renderHtml`
-                                        <p>
-                                            <button
-                                                class="button is-primary"
-                                                data-component="pinstripe-anchor"
-                                                data-method="post"
-                                                data-href="/_actions/admin/delete_page?id=${page.id}"
-                                                data-target="_overlay"
-                                                data-confirm="Are you really sure you want to delete this page?"
-                                                data-test-id="delete-page"
-                                            >Delete this Page</button>
-                                        </p>
-                                    `
+                                        <p><b>Slug:</b> ${page.slug}</p>
+                                        <p><b>Published:</b> ${page.published ? 'true' : 'false'}</p>
+                                    `,
+                                    linkTestId: "edit-page-meta",
+                                    bodyTestId: "page-meta"
+                                })}
+
+                                ${this.renderView('_danger_area', {
+                                    body: this.renderView('_button', {
+                                        nodeName: 'a',
+                                        href: `/_actions/admin/delete_page?id=${page.id}`,
+                                        target: '_overlay',
+                                        isDangerous: true,
+                                        isFullWidth: true,
+                                        ['data-method']: 'post',
+                                        ['data-confirm']: 'Are you really sure you want to delete this page?',
+                                        ['data-test-id']: 'delete-page',
+                                        body: 'Delete this Page!'
+                                    })
                                 })}
                             `;
                         }}

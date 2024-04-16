@@ -198,6 +198,7 @@ export function describeApp(role){
                 
                     it(`should have an interface to allow the user to delete the current post`, () => {
                         cy.getByTestId('main', 'post-title').should('exist');
+                        cy.getByTestId('main', 'toggle-danger-area').click();
                         cy.getByTestId('main', 'delete-post').click();
                         cy.getByTestId('main', 'post-title').should('not.exist');
                     });
@@ -280,6 +281,7 @@ export function describeApp(role){
                 
                     it(`should have an interface to allow the user to delete the current page`, () => {
                         cy.getByTestId('main', 'page-title').should('exist');
+                        cy.getByTestId('main', 'toggle-danger-area').click();
                         cy.getByTestId('main', 'delete-page').click();
                         cy.getByTestId('main', 'page-title').should('not.exist');
                     });

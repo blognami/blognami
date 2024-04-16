@@ -5,7 +5,7 @@ export const styles = `
         border-style: dashed;
         border-color: var(--color-dark-gray);
     }
-    .root:not(:last-child){
+    .root:not(:first-child){
         margin-top: 2em;
     }
     .header {
@@ -21,14 +21,14 @@ export const styles = `
 
 export default {
     render(){
-        const { body, url, testId } = this.params;
+        const { body, url, linkTestId, bodyTestId } = this.params;
 
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
                 <div class="${this.cssClasses.header}">
-                    <a href="${url}" target="_overlay" ${testId ? this.renderHtml`data-test-id="${testId}"` : ''}>Edit</a>
+                    <a href="${url}" target="_overlay" ${linkTestId ? this.renderHtml`data-test-id="${linkTestId}"` : ''}>Edit</a>
                 </div>
-                <div class="${this.cssClasses.body}">
+                <div class="${this.cssClasses.body}" ${bodyTestId ? this.renderHtml`data-test-id="${bodyTestId}"` : ''}>
                     ${body}
                 </div>
             </div>
