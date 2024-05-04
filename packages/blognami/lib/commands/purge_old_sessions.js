@@ -7,7 +7,7 @@ export default {
     minutesUntilExpiry: 30,
 
     async run(){
-        await this.database.withoutTenantScope.sessions.where({
+        await this.database.sessions.where({
             lastAccessedAtLt: Date.now() - (1000 * 60 * this.minutesUntilExpiry)
         }).delete();
     }

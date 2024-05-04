@@ -17,8 +17,11 @@ export default {
                 const host = (headers['host'] || hostname).replace(/\:\d+$/, '').toLowerCase();
                 const { primaryDomain = '' } = await this.config;
                 const domainSuffix = `\.${primaryDomain}`.toLowerCase();
+                const tenantId = headers['x-tenant-id'];
 
-                if(host.endsWith(domainSuffix)){
+                if(tenantId){
+                    out.tenant = await out.tenants.where({ id: tenantId }).first();
+                } else if(host.endsWith(domainSuffix)){
                     const name = host.substr(0, host.length - domainSuffix.length);
                     out.tenant = await out.tenants.where({ name }).first();
                 } else {

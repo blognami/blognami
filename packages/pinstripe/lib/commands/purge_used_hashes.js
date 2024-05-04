@@ -4,10 +4,8 @@ export default {
         this.schedule('*/5 * * * *');
     },
 
-    minutesUntilExpiry: 30,
-
     async run(){
-        await this.database.withoutTenantScope.usedHashes.where({
+        await this.database.usedHashes.where({
             expiresAtLt: new Date()
         }).delete();
     }

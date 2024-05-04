@@ -1,5 +1,7 @@
 
 import { defer } from './defer.js';
+import { Project } from './project.js';
+
 
 test('defer (1)', async () => {
     const hello = defer(() => (name = 'world') => `hello ${name}`);
@@ -33,5 +35,14 @@ test('defer (3)', async () => {
     }));
     
     expect(await foo.toString()).toBe("hello world");
+});
+
+test.only('defer (4)', async () => {
+
+    const { foo } = defer(() => ({}));
+    
+    expect(typeof await foo).toBe("undefined");
+
+    expect(typeof await foo).toBe("undefined");
 });
 

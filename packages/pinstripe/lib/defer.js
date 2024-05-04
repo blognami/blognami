@@ -4,20 +4,20 @@ export const defer = (fn, path = []) => new Proxy(() => {}, {
         if (name == 'then'){
             const out = (async () => {
                 let out = await fn();
-                let originalPath = [ ...path ];
-                while(path.length){
+                const uncompletedPath = [ ...path ];
+                while(uncompletedPath.length){
                     if(out == undefined){
-                        const completedPath = originalPath.slice(0, originalPath.length - path.length);
-                        throw new Error(`Can't unwrap deferred object${formatPath(originalPath)} (object${formatPath(completedPath)} is undefined).`);
+                        const completedPath = path.slice(0, path.length - uncompletedPath.length);
+                        throw new Error(`Can't unwrap deferred object${formatPath(path)} (object${formatPath(completedPath)} is undefined).`);
                     }
-                    if(typeof path[0] == 'string' && Array.isArray(path[1])){
-                        const name = path.shift();
-                        const args = path.shift();
+                    if(typeof uncompletedPath[0] == 'string' && Array.isArray(uncompletedPath[1])){
+                        const name = uncompletedPath.shift();
+                        const args = uncompletedPath.shift();
                         out = await out[name].call(out, ...args);
-                    } else if(typeof path[0] == 'string'){
-                        out = await out[path.shift()];
+                    } else if(typeof uncompletedPath[0] == 'string'){
+                        out = await out[uncompletedPath.shift()];
                     } else {
-                        out = await out(...path.shift());
+                        out = await out(...uncompletedPath.shift());
                     }
                 }
                 return out;

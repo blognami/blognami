@@ -53,12 +53,18 @@ export default {
                 }); 
                 
                 if(interval.hasNext()){
-                    await Workspace.run(async function(){
-                        await this.runCommand(command.name, ...args);
-                    });
+                    await this.runCommand(command.name, ...args);
                 }
             }
         }
+    },
+
+    async runCommand(name, ...args){
+        if(typeof args[args.length - 1]) args.pop();
+
+        await Workspace.run(async function(){
+            await this.runCommand(name, ...args);
+        });
     },
 
     destroy(){
