@@ -4,6 +4,8 @@ import { existsSync, unlinkSync } from 'fs';
 
 import { Class } from '../class.js';
 
+import { MYSQL_COLUMN_TYPE_TO_TYPE_MAP, SQLITE_COLUMN_TYPE_TO_TYPE_MAP } from './constants.js';
+
 let sqliteConnectionCounters = {};
 let sqliteConnections = {};
 
@@ -143,6 +145,69 @@ export const Client = Class.extend().include({
         const fn = alternatives[adapter];
         if(!fn) throw new Error(`"${adapter}" adapter not supported.`);
         return fn.call(that);
+    },
+
+    async extractSchema(){
+        const out = {};
+
+        const tableNames = await this.adapt(this, {
+            async mysql(){
+                const rows = await this.run('show tables');
+                return rows.map(row => Object.values(row)[0]);
+            },
+
+            async sqlite(){
+                const rows = await this.run(`select name from sqlite_schema where type ='table' and name not like 'sqlite_%'`);
+                return rows.map(({ name }) => name);
+            }
+        });
+    
+        while(tableNames.length){
+            const tableName = tableNames.shift();
+            const columns = await this.adapt(this, {
+                async mysql(){
+                    const out = {};
+                    const rows = await this.run(`describe \`${tableName}\``);
+                    rows.forEach(row => {
+                        const name = row['Field'];
+                        let type;
+                        if(name == '_id'){
+                            type = 'primary_key';
+                        } else if(name == 'id'){
+                            type = 'alternate_key';
+                        } else {
+                            type = MYSQL_COLUMN_TYPE_TO_TYPE_MAP[row['Type']] || 'string';
+                        }
+                        
+                        out[name] = type;
+                    });
+                    return out;
+                },
+
+                async sqlite(){
+                    const out = {};
+                    const rows = await this.run(`pragma table_info(\`${tableName}\`)`);
+                    rows.forEach(row => {
+                        const { name } = row;
+                        let type;
+                        if(name == '_id'){
+                            type = 'primary_key';
+                        } else if(name == 'id'){
+                            type = 'alternate_key';
+                        } else if(name.match(/.+Id$/)){
+                            type = 'foreign_key';
+                        } else {
+                            type = SQLITE_COLUMN_TYPE_TO_TYPE_MAP[row.type] || 'string';
+                        }
+                        out[name] = type;
+                    });
+                    return out;
+                }
+            });
+            out[tableName] = columns;
+        }
+
+        return out;
     }
 });
 

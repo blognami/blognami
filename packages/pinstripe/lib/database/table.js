@@ -4,9 +4,7 @@ import { inflector } from '../inflector.js';
 import { Registry } from '../registry.js';
 import { TableReference } from "./table_reference.js";
 import {
-    MYSQL_COLUMN_TYPE_TO_TYPE_MAP,
     TYPE_TO_MYSQL_COLUMN_TYPE_MAP,
-    SQLITE_COLUMN_TYPE_TO_TYPE_MAP,
     TYPE_TO_SQLITE_COLUMN_TYPE_MAP,
     COMPARISON_OPERATORS,
     MYSQL_KEY_COMPARISON_OPERATORS,
@@ -21,7 +19,48 @@ export const Table = Class.extend().include({
 
         this.include(Registry);
 
+        const { warmCache } = this;
+
         this.assignProps({
+            schema: {},
+
+            warmCache(){
+                warmCache.call(this);
+
+                this.mixins = {};
+
+                Object.keys(this.schema).forEach(tableName => {
+                    this.register(tableName);
+                });
+
+                Object.keys(this.schema).forEach(tableName => {
+                    const columns = this.schema[tableName];
+                    this.for(tableName).include({
+                        meta(){
+                            Object.keys(columns).forEach(name => {        
+                                Object.keys(COMPARISON_OPERATORS).forEach(suffix => {
+                                    this.scope(`${name}${suffix}`, function(value){
+                                        return this.database.client.adapt(this, {
+                                            mysql(){
+                                                let operator = COMPARISON_OPERATORS[suffix];
+                                                if(name.match(/(^id|Id$)/)){
+                                                    operator = MYSQL_KEY_COMPARISON_OPERATORS[suffix] || operator;
+                                                }
+                                                this.where(operator, this.tableReference.createColumnReference(name), value);
+                                            },
+        
+                                            sqlite(){
+                                                this.where(COMPARISON_OPERATORS[suffix], this.tableReference.createColumnReference(name), value);
+                                            }
+                                        });
+                                    });
+                                });
+                            });
+                        }
+                    });
+                });
+            },
+
             get rowName(){
                 if(!this.hasOwnProperty('_rowName')){
                     this._rowName = inflector.singularize(this.name);
@@ -30,10 +69,7 @@ export const Table = Class.extend().include({
             },
 
             get columns(){
-                if(!this.hasOwnProperty('_columns')){
-                    this._columns = {};
-                }
-                return this._columns;
+                return this.schema[this.name] || {};
             },
 
             get scopes(){
@@ -45,100 +81,6 @@ export const Table = Class.extend().include({
 
             scope(name, fn){
                 this.scopes[name] = fn;
-            },
-
-            async loadSchema(client){
-                this.mixins = {};
-                
-                const tableNames = await client.adapt({
-                    async mysql(){
-                        const rows = await client.run('show tables');
-                        return rows.map(row => Object.values(row)[0]);
-                    },
-
-                    async sqlite(){
-                        const rows = await client.run(`select name from sqlite_schema where type ='table' and name not like 'sqlite_%'`);
-                        return rows.map(({ name }) => name);
-                    }
-                });
-            
-                while(tableNames.length){
-                    const tableName = tableNames.shift();
-                    const columns = await client.adapt({
-                        async mysql(){
-                            const out = {};
-                            const rows = await client.run(`describe \`${tableName}\``);
-                            rows.forEach(row => {
-                                const name = row['Field'];
-                                let type;
-                                if(name == '_id'){
-                                    type = 'primary_key';
-                                } else if(name == 'id'){
-                                    type = 'alternate_key';
-                                } else {
-                                    type = MYSQL_COLUMN_TYPE_TO_TYPE_MAP[row['Type']] || 'string';
-                                }
-                                
-                                out[name] = type;
-                            });
-                            return out;
-                        },
-
-                        async sqlite(){
-                            const out = {};
-                            const rows = await client.run(`pragma table_info(\`${tableName}\`)`);
-                            rows.forEach(row => {
-                                const { name } = row;
-                                let type;
-                                if(name == '_id'){
-                                    type = 'primary_key';
-                                } else if(name == 'id'){
-                                    type = 'alternate_key';
-                                } else if(name.match(/.+Id$/)){
-                                    type = 'foreign_key';
-                                } else {
-                                    type = SQLITE_COLUMN_TYPE_TO_TYPE_MAP[row.type] || 'string';
-                                }
-                                out[name] = type;
-                            });
-                            return out;
-                        }
-                    });
-            
-                    this.register(tableName, {
-                        meta(){
-                            Object.keys(columns).forEach(name => {
-                                const type = columns[name];
-
-                                this.columns[name] = type;
-            
-                                Object.keys(COMPARISON_OPERATORS).forEach(suffix => {
-                                    const operator = COMPARISON_OPERATORS[suffix];
-                                    this.scope(`${name}${suffix}`, function(value){
-                                        this.where(operator, this.tableReference.createColumnReference(name), value);
-                                    });
-                                });
-                                client.adapt(this, {
-                                    mysql(){
-                                        if(name.match(/(^id|Id$)/)){
-                                            Object.keys(MYSQL_KEY_COMPARISON_OPERATORS).forEach(suffix => {
-                                                const operator = MYSQL_KEY_COMPARISON_OPERATORS[suffix];
-                                                this.scope(`${name}${suffix}`, function(value){
-                                                    this.where(operator, this.tableReference.createColumnReference(name), value);
-                                                });
-                                            });
-                                        }
-                                    },
-
-                                    sqlite(){
-                                        // do nothing
-                                    }
-                                })
-                                
-                            });
-                        }
-                    });
-                }
             }
         });
     },

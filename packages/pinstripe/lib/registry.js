@@ -58,8 +58,8 @@ export const Registry = {
                 this.registry.cache = {};
             },
 
-            createInitialMixin(name){
-                return {};
+            warmCache(){
+                this.names.forEach(name => this.for(name));
             },
 
             for(name){
@@ -70,7 +70,6 @@ export const Registry = {
                     classes[normalizedName] = this.registry.extend().include({
                         meta(){
                             this.assignProps({ name: normalizedName, includes: [], filePaths: [] });
-                            this.include(this.createInitialMixin(normalizedName));
                             this.include(this.mixins[normalizedName] || {});
                         }
                     });

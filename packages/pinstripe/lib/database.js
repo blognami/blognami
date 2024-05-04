@@ -13,7 +13,7 @@ export const Database = Class.extend().include({
 
     async initialize(client){
         this.client = client;
-        if(!loadSchemaPromise) loadSchemaPromise = Row.loadSchema(client);
+        if(!loadSchemaPromise) loadSchemaPromise = loadSchema.call(this, client);
         await loadSchemaPromise;
         return trapify(this);
     },
@@ -56,7 +56,7 @@ export const Database = Class.extend().include({
 
     async reset(){
         await this.destroy();
-        loadSchemaPromise = Row.loadSchema(this.client);
+        loadSchemaPromise = loadSchema.call(this, this.client);
         await loadSchemaPromise;
     },
 
@@ -123,6 +123,14 @@ export const Database = Class.extend().include({
         return `database ${JSON.stringify(this.info, null, 2)}`;
     }
 });
+
+async function loadSchema(client){
+    Table.schema = await client.extractSchema();
+    Table.clearCache();
+    Table.warmCache();
+    Row.clearCache();
+    Row.warmCache();
+}
 
 function mapRows(rows){
     const out = [];

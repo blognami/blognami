@@ -18,15 +18,6 @@ export const Row = Model.extend().include({
         defineCallbacks.call(this, 'beforeInsert', 'afterInsert', 'beforeUpdate', 'afterUpdate', 'beforeDelete', 'afterDelete')
 
         this.assignProps({
-
-            async loadSchema(client){
-                await Table.loadSchema(client);
-                this.clearCache();
-                this.names.forEach(name => this.for(name));
-                Table.clearCache();
-                Table.names.forEach(name => Table.for(name));
-            },
-
             normalizeName(name){
                 return inflector.camelize(name);
             },
@@ -61,11 +52,7 @@ export const Row = Model.extend().include({
             includeInTable(...args){
                 if(this.abstract) return;
 
-                Table.register(this.collectionName, {
-                    meta(){
-                        this.include(...args);
-                    }
-                });
+                Table.for(this.collectionName).include(...args);
             },
 
             scope(...args){
@@ -300,7 +287,8 @@ export const Row = Model.extend().include({
 
 function defineRelationship({ name, type, collectionName, fromKey, toKey, cascadeDelete, through }){
     if(this.abstract) return;
-    Table.register(this.collectionName, {
+
+    this.includeInTable({
         meta(){
             this.prototype.assignProps({
                 get [name](){
