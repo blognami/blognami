@@ -2,7 +2,7 @@
 
 import cronParser from 'cron-parser';
 
-import { Command } from '../command.js';
+import { BackgroundJob } from '../background_job.js';
 import { Workspace } from '../workspace.js';
 
 export default {
@@ -19,7 +19,7 @@ export default {
                 const target = getUnixTime();
                 while(current < target){
                     current++;
-                    await this.runCommands(current);
+                    await this.runBackgroundJobs(current);
                 }
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -38,13 +38,13 @@ export default {
         await loop;
     },
 
-    async runCommands(unixTime){
+    async runBackgroundJobs(unixTime){
         const currentDate = new Date(unixTime * 1000);
         const endDate = new Date((unixTime + 1) * 1000);
-        const commands = Command.names.map(name => Command.for(name));
-        while(commands.length){
-            const command = commands.shift();
-            const schedules = [ ...command.schedules ];
+        const backgroundJobs = BackgroundJob.names.map(name => BackgroundJob.for(name));
+        while(backgroundJobs.length){
+            const backgroundJob = backgroundJobs.shift();
+            const schedules = [ ...backgroundJob.schedules ];
             while(schedules.length){
                 const [ crontab, ...args ] = schedules.shift();
                 const interval = cronParser.parseExpression(crontab, {
@@ -53,20 +53,14 @@ export default {
                 }); 
                 
                 if(interval.hasNext()){
-                    await this.runCommand(command.name, ...args);
+                    await Workspace.run(async function(){
+                        await this.runBackgroundJob(backgroundJob.name, ...args);
+                    });
                 }
             }
         }
     },
-
-    async runCommand(name, ...args){
-        if(typeof args[args.length - 1]) args.pop();
-
-        await Workspace.run(async function(){
-            await this.runCommand(name, ...args);
-        });
-    },
-
+    
     destroy(){
         return this.stop();
     }

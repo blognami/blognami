@@ -4,9 +4,9 @@ import { inflector } from './inflector.js';
 import { Registry } from './registry.js';
 import { ServiceConsumer } from './service_consumer.js';
 
-export const Command = Class.extend().include({
+export const BackgroundJob = Class.extend().include({
     meta(){
-        this.assignProps({ name: 'Command' });
+        this.assignProps({ name: 'BackgroundJob' });
 
         this.include(Registry);
         this.include(ServiceConsumer);
@@ -16,9 +16,20 @@ export const Command = Class.extend().include({
                 return inflector.dasherize(name);
             },
 
-            async run(context, name = 'list-commands', ...args){
+            get schedules(){
+                if(!this.hasOwnProperty('_schedules')){
+                    this._schedules = [];
+                }
+                return this._schedules;
+            },
+
+            schedule(...args){
+                this.schedules.push(args);
+                return this;
+            },
+
+            async run(context, name){
                 await context.fork().run(async context => {
-                    context.args = [ ...args ];
                     await this.create(name, context).run();
                 });
             },
@@ -26,6 +37,6 @@ export const Command = Class.extend().include({
     },
 
     run(){
-        console.error(`No such command "${this.constructor.name}" exists.`);
+        console.error(`No such background job "${this.constructor.name}" exists.`);
     }
 });
