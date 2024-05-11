@@ -17,7 +17,8 @@ export default {
                 links.push({
                     body: 'Add', dropdown: [
                         { href: `/_actions/admin/add_page`, target: '_overlay', body: 'Page' },
-                        { href: `/_actions/admin/add_post`, target: '_overlay', body: 'Post' }
+                        { href: `/_actions/admin/add_post`, target: '_overlay', body: 'Post' },
+                        { href: `/_actions/admin/add_user`, target: '_overlay', body: 'User' }
                     ]
                 });
             }
