@@ -2,7 +2,8 @@
 title: Goldner Walks
 published: true
 publishedAt: 2023-07-01 13:12
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Quasi sint est aliquam voluptatem. Ex doloremque totam. Velit harum nostrum adipisci cumque ut. Est qui nobis dignissimos aut.

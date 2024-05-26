@@ -12,6 +12,7 @@ export default {
         this.mustNotBeBlank('name');
         this.mustNotBeBlank('email');
         this.mustBeAValidEmail('email');
+        this.mustBeUnique('email');
         this.mustNotBeBlank('role');
 
         this.beforeInsert(function(){

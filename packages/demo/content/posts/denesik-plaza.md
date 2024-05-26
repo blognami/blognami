@@ -2,7 +2,8 @@
 title: Denesik Plaza
 published: true
 publishedAt: 2023-07-01 13:26
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Fugiat exercitationem cum quae qui laudantium ut officia sed quis. Suscipit et non cumque iure qui optio veniam. Qui tenetur aperiam facere. Officia ea atque.

@@ -2,7 +2,8 @@
 title: Rosalee Keys
 published: true
 publishedAt: 2023-07-01 12:24
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Vitae facere qui animi repellendus. Placeat dicta ad mollitia explicabo. Enim dolorem vitae autem qui dignissimos ea sit quo rerum.

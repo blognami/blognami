@@ -105,7 +105,7 @@ const extractFields = (formAdapter, options) => {
     const normalizedOptionsFields = options.fields ? normalizeFields(options.fields) : normalizedFormAdapterFields;
     const indexedNormalizedFormAdapterFields = indexFieldsByName(normalizedFormAdapterFields);
     return normalizedOptionsFields.map(optionsField => {
-        const out = {};
+        const out = { ...optionsField };
         const formAdapterField = indexedNormalizedFormAdapterFields[optionsField.name] || {};
         out.name = optionsField.name;
         out.label = optionsField.label || formAdapterField.label || Inflector.instance.capitalize(out.name);

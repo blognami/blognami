@@ -4,6 +4,10 @@ export const styles = `
         max-width: 720px;
     }
 
+    .root:not(:first-child){
+        margin-top: 2em;
+    }
+
     .title {
         display: flex;
         align-items: center;

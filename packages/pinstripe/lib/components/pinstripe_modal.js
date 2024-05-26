@@ -3,6 +3,8 @@ export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
+        const { width = 'medium', height = 'auto' } = this.params;
+
         this.shadow.patch(`
             <style>
                 .root {
@@ -58,24 +60,37 @@ export default {
                     height: 50%;
                     width: 0.2rem;
                 }
-                .body {
-                    max-height: calc(100vh - 4.0rem);
-                    max-width: calc(100vw - 16.0rem);
-                    margin: 0 auto;
+                .container {
+                    min-height: calc(100vh - 4.0rem);
+                    width: calc(100vw - 16.0rem);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
-                ::slotted(*) {
-                    width: 64.0rem;
+                .body {
                     max-width: 100%;
-                    max-height: 100%;
+                }
+                .root.is-medium-width .body {
+                    width: 800px;
+                }
+                .root.is-full-width .body {
+                    width: 100%;
+                }
+                .root.is-full-height .body {
+                    height: 100%;
                 }
             </style>
-            <div class="root">
+            <div class="root is-${width}-width is-${height}-height">
                 <button class="close-button"></button>
-                <div class="body"><slot></div>
+                <div class="container">
+                    <div class="body">
+                        <slot>
+                    </div>
+                </div>
             </div>
         `);
 
-        this.shadow.on('click', '.root, .close-button', () => this.trigger('close'));
+        this.shadow.on('click', '.root, .container, .body, .close-button', () => this.trigger('close'));
     },
 
     isModal: true

@@ -2,7 +2,8 @@
 title: Toni Pine
 published: true
 publishedAt: 2023-07-01 12:09
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Architecto possimus officia reprehenderit aut enim ipsam. Odit voluptatum sunt dolorum ex molestiae dolorem maxime natus. Sit in unde itaque. Impedit enim et voluptas ullam id et.

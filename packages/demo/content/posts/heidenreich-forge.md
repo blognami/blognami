@@ -2,7 +2,8 @@
 title: Heidenreich Forge
 published: true
 publishedAt: 2023-07-01 13:07
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Earum quo corrupti dicta fugit nesciunt eveniet odio debitis quo. Omnis quasi et quia dolores ad adipisci dolorem non est. Ipsa nihil qui. Aspernatur minus cum cumque corporis veniam explicabo et necessitatibus.

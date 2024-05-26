@@ -2,7 +2,8 @@
 title: Jenkins Mills
 published: true
 publishedAt: 2023-07-01 12:58
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Et occaecati voluptatem. Autem quia earum ea non qui deserunt doloribus rerum ut. Architecto dolores quis et dolor ipsum excepturi et natus aut. Eos quis consequatur consequatur tempora.

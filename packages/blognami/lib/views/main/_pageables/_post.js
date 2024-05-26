@@ -189,15 +189,12 @@ export default {
     
                         ${() => {
                             if(isAdmin) return this.renderHtml`
+                                ${this.renderView('_edit_tagable_tags', { tagable: post })}
+
                                 ${this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_post_meta?id=${post.id}`,
                                     body: this.renderHtml`
                                         <p><b>Slug:</b> ${post.slug}</p>
-                                        <p><b>Tags:</b> ${async () => {
-                                            const tags = await post.tags.all().map(({ name }) => `"${name}"`).join(', ');
-                                            if(tags) return tags;
-                                            return 'none';
-                                        }}</p>
                                         <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
                                         <p><b>Published:</b> ${post.published ? 'true' : 'false'}</p>
                                         <p><b>enableComments:</b> ${post.enableComments ? 'true' : 'false'}</p>

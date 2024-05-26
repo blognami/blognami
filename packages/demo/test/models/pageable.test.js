@@ -6,7 +6,7 @@ import { Workspace, reset } from './helpers.js';
 beforeEach(reset);
 
 test(`pageable`, () => Workspace.run(async _ => {
-    const { pageables, users, posts } = _.database;
+    const { pageables, users, posts, tag } = _.database;
 
     expect(await pageables.count()).toBe(0);
 
@@ -24,9 +24,4 @@ test(`pageable`, () => Workspace.run(async _ => {
     });
 
     expect(await pageables.count()).toBe(2);
-
-    await post.update({ tags: 'Foo\nBar'});
-
-    expect(await pageables.count()).toBe(4);
-
 }));

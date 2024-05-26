@@ -26,7 +26,9 @@ export const styles = `
 
 export default {
     render(){
-        const { pageCount, page } = this.params;
+        const { pageCount, page, ...otherParams } = this.params
+
+        const normalizedOtherParams = Object.fromEntries(Object.entries(otherParams).filter(([key, value]) => value));
 
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
@@ -34,7 +36,7 @@ export default {
                     const out = [];
                     for (let i = 1; i <= pageCount; i++) {
                         out.push(this.renderHtml`
-                            <a href="&page=${i}" class="${this.cssClasses.page} ${i == page ? this.cssClasses.active : ''}">${i}</a>
+                            <a href="&${new URLSearchParams({ ...normalizedOtherParams, page: i })}" class="${this.cssClasses.page} ${i == page ? this.cssClasses.active : ''}">${i}</a>
                         `);
                     }
                     return out;

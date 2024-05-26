@@ -2,7 +2,8 @@
 title: Randi Pine
 published: true
 publishedAt: 2023-07-01 12:28
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Animi laborum reiciendis voluptas quia. Magnam non accusantium aut adipisci est cupiditate praesentium. Rerum modi at numquam soluta quia voluptatibus delectus qui molestiae. Ab consequatur aspernatur consequatur exercitationem laudantium aspernatur ea dolores.

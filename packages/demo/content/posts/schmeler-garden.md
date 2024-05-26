@@ -2,7 +2,8 @@
 title: Schmeler Garden
 published: true
 publishedAt: 2023-07-01 12:21
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Ea vel repellat accusamus alias minus voluptatem et accusantium dolor. Libero optio doloribus explicabo et mollitia aut. Consectetur vel consequuntur officiis et harum. Vel rerum ipsum quia aut et rerum soluta id iste.

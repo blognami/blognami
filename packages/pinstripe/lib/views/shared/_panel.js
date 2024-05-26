@@ -2,6 +2,9 @@
 export const styles = `
     .root {
         width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
     .header, .body, .footer {
         display: block;
@@ -22,6 +25,7 @@ export const styles = `
     }
     .body {
         background-color: white;
+        flex-grow: 1;
     }
     .footer {
         background-color: whitesmoke;

@@ -2,7 +2,8 @@
 title: Jazlyn Street
 published: true
 publishedAt: 2023-07-01 12:59
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Sunt inventore cupiditate ex nemo modi libero qui natus. Pariatur est ipsum numquam id. Asperiores sapiente hic. A magnam et quae magnam. Rerum doloribus quasi quis non in consequatur consequatur.

@@ -2,7 +2,8 @@
 title: Dawn Freeway
 published: true
 publishedAt: 2023-07-01 13:27
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Accusantium explicabo ad architecto et tempora quia non. Ducimus est accusantium. Occaecati velit nihil facilis accusamus ut. Molestiae veritatis exercitationem minima quis cupiditate.

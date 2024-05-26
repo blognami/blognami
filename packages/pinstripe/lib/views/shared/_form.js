@@ -200,6 +200,16 @@ export default {
                                                 if(type.match(/(^|\/)_[^\/]+(|\/index)$/)){
                                                     return this.renderView(type, { label, name, type, value, component, placeholder, error, cssClasses: this.cssClasses, ...rest });
                                                 }
+                                                if(type == 'select'){
+                                                    const { options = {} } = rest;
+                                                    return this.renderHtml`
+                                                        <select class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" name="${name}">
+                                                            ${Object.entries(options).map(([optionValue, optionLabel]) => this.renderHtml`
+                                                                <option value="${optionValue}"${optionValue == value ? this.renderHtml` selected="selected"` : ''}>${optionLabel}</option>
+                                                            `)}
+                                                        </select>
+                                                    `;
+                                                }
                                                 if(type == 'textarea'){
                                                     return this.renderHtml`
                                                         <textarea class="${this.cssClasses.textarea}${error ? ` ${this.cssClasses.isError}` : ''}" name="${name}"${component ? this.renderHtml` data-component="${component}"` : undefined}${placeholder ? this.renderHtml` placeholder="${placeholder}"` : undefined}>${value}</textarea>

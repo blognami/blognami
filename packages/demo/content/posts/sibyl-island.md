@@ -2,7 +2,8 @@
 title: Sibyl Island
 published: true
 publishedAt: 2023-07-01 12:17
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Vero numquam distinctio ut. Enim non eum ullam iure. Et ex sunt ullam qui quia ipsam ut. Incidunt dolor neque pariatur totam hic odit aliquam sed. Aut consequuntur modi aut illo et vel saepe.

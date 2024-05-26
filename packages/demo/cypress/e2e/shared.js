@@ -125,6 +125,32 @@ export function describeApp(role){
                         cy.getByTestId('main', 'post-body').should('contain', 'Pear plum');
                     });
 
+                    describe('tags', () => {
+                        it(`should have an interface to allow the user to edit the tags`, () => {
+                            ['Apple', 'Pear', 'Plum'].forEach((name) => {
+                                cy.getByTestId('navbar', 'add-tag').click({ force: true });
+                                cy.topModal().contains('Add tag');
+                                cy.topModal().submitForm({ name });
+                                cy.url().should('contain', name.toLowerCase());
+                                cy.go('back');
+                            });
+                            ['Apple', 'Pear', 'Plum'].forEach((title) => {
+                                cy.getByTestId('sidebar', 'tags-section').should('not.contain', title);
+                            });
+                            cy.getByTestId('main', 'tagable-tags').should('contain', 'Tags: none');
+                            cy.getByTestId('main', 'edit-tagable-tags').click();
+                            ['Apple', 'Pear', 'Plum'].forEach((name) => {
+                                cy.topModal().contains(name).click();
+                                cy.waitForLoadingToFinish();
+                            });
+                            cy.closeTopModal();
+                            cy.getByTestId('main', 'tagable-tags').should('contain', 'Tags: "Apple", "Pear", "Plum"');
+                            ['Apple', 'Pear', 'Plum'].forEach((title) => {
+                                cy.getByTestId('sidebar', 'tags-section').should('contain', title);
+                            });
+                        });
+                    });
+
                     describe('meta', () => {
                         it(`should have an interface to allow the user to edit the slug`, () => {
                             cy.getByTestId('main', 'post-meta').should('contain', 'Slug: alexandra-burgs');
@@ -137,19 +163,6 @@ export function describeApp(role){
                             cy.url().should('not.contain', '/alexandra-burgs');
                             cy.getByTestId('main', 'post-meta').should('contain', 'Slug: foo-bar');
                             cy.url().should('contain', '/foo-bar');
-                        });
-
-                        it(`should have an interface to allow the user to edit the tags`, () => {
-                            ['Apple', 'Pear', 'Plum'].forEach((title) => {
-                                cy.getByTestId('sidebar', 'tags-section').should('not.contain', title);
-                            });
-                            cy.getByTestId('main', 'post-meta').should('contain', 'Tags: none');
-                            cy.getByTestId('main', 'edit-post-meta').click();
-                            cy.topModal().submitForm({ tags: ['Apple', 'Pear', 'Plum'].join('\n') });
-                            cy.getByTestId('main', 'post-meta').should('contain', 'Tags: "Apple", "Pear", "Plum"');
-                            ['Apple', 'Pear', 'Plum'].forEach((title) => {
-                                cy.getByTestId('sidebar', 'tags-section').should('contain', title);
-                            });
                         });
 
                         it(`should have an interface to allow the user to edit the featured flag`, () => {
@@ -361,8 +374,8 @@ export function describeApp(role){
                 if(role == 'admin'){
                     cy.getByTestId('navbar', 'sign-out').contains('Sign out');
                     cy.getByTestId('navbar').contains('Add');
-                    cy.getByTestId('navbar').contains('Page');
-                    cy.getByTestId('navbar').contains('Post');
+                    cy.getByTestId('navbar', 'add-page').contains('Page');
+                    cy.getByTestId('navbar', 'add-post').contains('Post');
                 } else {
                     cy.getByTestId('navbar', 'sign-in').contains('Sign in');
                 }
@@ -370,13 +383,13 @@ export function describeApp(role){
 
             if(role == 'admin'){
                 it(`should have an interface to allow the user to add a post`, () => {
-                    cy.getByTestId('navbar').contains('Post').click({ force: true });
+                    cy.getByTestId('navbar', 'add-post').click({ force: true });
                     cy.topModal().contains('Add post');
                     cy.topModal().submitForm({ title: 'Apple pear' });
                     cy.url().should('contain', 'apple-pear');
                 });
                 it(`should have an interface to allow the user to add a page`, () => {
-                    cy.getByTestId('navbar').contains('Page').click({ force: true });
+                    cy.getByTestId('navbar', 'add-page').click({ force: true });
                     cy.topModal().contains('Add page');
                     cy.topModal().submitForm({ title: 'Apple plum' });
                     cy.url().should('contain', 'apple-plum');

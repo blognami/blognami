@@ -6,9 +6,11 @@ export const styles = `
         display: flex;
         flex-direction: row;
         width: 120.0rem;
-        height: calc(100vh - 4rem);
+        max-width: 100%;
+        height: 100%;
         background: #fff;
         z-index: 1;
+        margin: 0 auto;
     }
     .text-pane, .preview-pane {
         flex: 1 1 0;
@@ -29,12 +31,10 @@ export const styles = `
         outline: none;
         padding: 1em;
     }
-
     .text-pane > textarea, .preview-pane > p {
         font-size: 1.6rem;
         font-family: monospace;
     }
-
     .preview-pane {
         overflow-y: auto;
         padding: 1em;
@@ -106,7 +106,7 @@ export const decorators = {
 export default {
     render(){
         return this.renderHtml`
-            <pinstripe-modal class="${this.cssClasses.modal}">
+            <pinstripe-modal class="${this.cssClasses.modal}" width="full" height="full">
                 <div class="${this.cssClasses.root}">
                     <div class="${this.cssClasses.textPane}">
                         <textarea name="value" data-part="editor-textarea">${this.params.value}</textarea>

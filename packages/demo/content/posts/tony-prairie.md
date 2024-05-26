@@ -2,7 +2,8 @@
 title: Tony Prairie
 published: true
 publishedAt: 2023-07-01 12:08
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Assumenda veniam nesciunt culpa. Sit quia mollitia. Aut consectetur fugit ut sint labore aut maxime.

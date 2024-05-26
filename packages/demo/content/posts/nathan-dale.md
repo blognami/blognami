@@ -2,7 +2,8 @@
 title: Nathan Dale
 published: true
 publishedAt: 2023-07-01 12:33
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Repellat aliquid sequi consequatur ea consequatur. Occaecati fuga enim est impedit. Quia omnis quia quia et. Veniam omnis nulla cum veniam autem neque vitae. Temporibus amet tempore.
