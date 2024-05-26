@@ -2,7 +2,8 @@
 title: Vita Estates
 published: true
 publishedAt: 2023-07-01 12:04
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Ut aut aperiam voluptates nobis illum. Nihil est sunt error hic repellendus et aperiam unde. Ut libero enim aut. Ducimus accusantium explicabo aut molestias enim natus tempore. Blanditiis voluptas sequi provident pariatur. Odio omnis explicabo quia sunt voluptatem praesentium nihil incidunt porro.

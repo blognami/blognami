@@ -2,7 +2,8 @@
 title: Reese Points
 published: true
 publishedAt: 2023-07-01 12:26
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Esse magni et optio sed quo aut alias nobis. Nulla esse sequi mollitia. Quaerat voluptas recusandae. Molestiae doloremque asperiores voluptatem ut facilis omnis sint earum.

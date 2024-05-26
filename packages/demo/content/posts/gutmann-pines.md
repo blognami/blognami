@@ -2,7 +2,8 @@
 title: Gutmann Pines
 published: true
 publishedAt: 2023-07-01 13:09
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Est sequi aut maiores. Blanditiis quae fuga blanditiis id laudantium repellendus possimus ea. Consequuntur id omnis sed possimus libero sed velit nostrum.

@@ -4,11 +4,11 @@ import { Workspace, reset } from './helpers.js';
 beforeEach(reset);
 
 test(`user`, () => Workspace.run(async _ => {
-    const { users, posts, tagableTags } = _.database;
+    const { users, posts, tags, tagableTags } = _.database;
 
     expect(await users.count()).toBe(0);
 
-    const { id } = await users.insert({
+    const { id: userId } = await users.insert({
         name: 'Admin',
         email: 'admin@example.com',
         role: 'admin'
@@ -16,7 +16,7 @@ test(`user`, () => Workspace.run(async _ => {
 
     expect(await users.count()).toBe(1);
 
-    const user = await users.where({ id }).first();
+    const user = await users.where({ id: userId }).first();
 
     expect(user.name).toBe('Admin');
 
@@ -24,19 +24,30 @@ test(`user`, () => Workspace.run(async _ => {
 
     expect(await user.posts.tags.count()).toBe(0);
 
-    await posts.insert({ userId: id, title: 'Foo' });
+    await posts.insert({ userId, title: 'Foo' });
 
     expect(await user.posts.count()).toBe(1);
 
     expect(await user.posts.tags.count()).toBe(0);
 
-    await posts.insert({ userId: id, title: 'Foo', tags: 'Apple' });
+    const { id: postId } = await posts.insert({ userId, title: 'Foo' });
 
     expect(await user.posts.count()).toBe(2);
 
+    const appleTag = await tags.insert({ name: 'Apple' });
+    const pearTag = await tags.insert({ name: 'Pear' });
+    const peachTag = await tags.insert({ name: 'Peach' });
+
+    await tagableTags.insert({ tagId: appleTag.id, tagableId: postId });
+
     expect(await user.posts.tags.count()).toBe(1);
 
-    await posts.insert({ userId: id, title: 'Foo', tags: 'Apple\nPear\nPeach' });
+    const { id: postId2 } = await posts.insert({ userId, title: 'Foo' });
+
+
+    await tagableTags.insert({ tagId: appleTag.id, tagableId: postId2 });
+    await tagableTags.insert({ tagId: pearTag.id, tagableId: postId2 });
+    await tagableTags.insert({ tagId: peachTag.id, tagableId: postId2 });
 
     expect(await user.posts.count()).toBe(3);
 

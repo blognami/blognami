@@ -2,7 +2,8 @@
 title: Ruecker Fort
 published: true
 publishedAt: 2023-07-01 12:22
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Est ducimus sint dicta minima aperiam quo. Quibusdam at molestiae est porro sed. Voluptatem enim amet ut cumque et et laboriosam. Rerum illo distinctio molestiae repudiandae. Sed eligendi inventore voluptas commodi praesentium occaecati quia eius.

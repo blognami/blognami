@@ -2,7 +2,8 @@
 title: Tyra Groves
 published: true
 publishedAt: 2023-07-01 12:06
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Ipsa ipsam eaque. Laudantium modi deserunt exercitationem nesciunt a facere. Dolorem atque quo aspernatur illum ut. Fugit exercitationem sint atque voluptas sint qui ad expedita fugit. Qui officia voluptatum inventore quis ut laborum odit voluptatem dolorum.

@@ -2,7 +2,8 @@
 title: Teagan Square
 published: true
 publishedAt: 2023-07-01 12:13
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Non non modi eius. Qui explicabo aut voluptatum facere omnis. Asperiores dolor sunt eos in. Assumenda magni ut provident omnis nemo. Sapiente et velit sed.

@@ -2,7 +2,8 @@
 title: Thompson Expressway
 published: true
 publishedAt: 2023-07-01 12:12
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Alias explicabo dolore maiores omnis earum sed delectus nulla. Vel amet suscipit iusto error ratione ut numquam. Id nihil sunt est. Voluptates aut maiores impedit. Autem ea assumenda vitae et et ab maxime voluptas et. Eos esse quae blanditiis optio.

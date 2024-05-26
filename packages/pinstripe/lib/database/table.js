@@ -6,7 +6,8 @@ import { TableReference } from "./table_reference.js";
 import {
     TYPE_TO_MYSQL_COLUMN_TYPE_MAP,
     TYPE_TO_SQLITE_COLUMN_TYPE_MAP,
-    COMPARISON_OPERATORS,
+    MYSQL_COMPARISON_OPERATORS,
+    SQLITE_COMPARISON_OPERATORS,
     MYSQL_KEY_COMPARISON_OPERATORS,
     TYPE_TO_DEFAULT_VALUE_MAP,
     COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP
@@ -38,11 +39,11 @@ export const Table = Class.extend().include({
                     this.for(tableName).include({
                         meta(){
                             Object.keys(columns).forEach(name => {        
-                                Object.keys(COMPARISON_OPERATORS).forEach(suffix => {
+                                Object.keys(MYSQL_COMPARISON_OPERATORS).forEach(suffix => {
                                     this.scope(`${name}${suffix}`, function(value){
                                         return this.database.client.adapt(this, {
                                             mysql(){
-                                                let operator = COMPARISON_OPERATORS[suffix];
+                                                let operator = MYSQL_COMPARISON_OPERATORS[suffix];
                                                 if(name.match(/(^id|Id$)/)){
                                                     operator = MYSQL_KEY_COMPARISON_OPERATORS[suffix] || operator;
                                                 }
@@ -50,7 +51,7 @@ export const Table = Class.extend().include({
                                             },
         
                                             sqlite(){
-                                                this.where(COMPARISON_OPERATORS[suffix], this.tableReference.createColumnReference(name), value);
+                                                this.where(SQLITE_COMPARISON_OPERATORS[suffix], this.tableReference.createColumnReference(name), value);
                                             }
                                         });
                                     });
@@ -446,19 +447,46 @@ export const Table = Class.extend().include({
         };
     },
 
-    async toTableAdapter(){
+    async toTableAdapter(options = {}){
+        const { q, search = [] } = options;
+
         const title = inflector.capitalize(this.constructor.name);
         const columns = Object.keys(this.constructor.columns).map(name => ({ name }));
-        const rows = await this.all();
+        const rows = this;
+        if(q && search.length){
+            this.database.client.adapt(this, {
+                mysql(){
+                    const query = [];
+                    query.push('(');
+                    search.forEach((column, i) => {
+                        query.push(`? like concat('%', ?, '%')`, this.tableReference.createColumnReference(column), q);
+                        if(i < search.length - 1) query.push(' or ');
+                    });
+                    query.push(')');
+                    this.where(query);
+                },
+                    
+                sqlite(){
+                    const query = [];
+                    query.push('(');
+                    search.forEach((column, i) => {
+                        query.push(`? like '%' || ? || '%'`, this.tableReference.createColumnReference(column), q);
+                        if(i < search.length - 1) query.push(' or ');
+                    });
+                    query.push(')');
+                    this.where(query);
+                }
+            });
+        }
         const page = this.page;
-        const pageCount = Math.ceil(await this.clone().withoutPagination().count() / this.pageSize);
+        const pageCount = Math.ceil(await rows.clone().withoutPagination().count() / this.pageSize);
 
         return {
             title,
             columns,
-            rows,
+            rows: await rows.all(),
             page,
-            pageCount,
+            pageCount
         };
     }
 });

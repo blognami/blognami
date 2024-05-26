@@ -2,7 +2,8 @@
 title: Parker Landing
 published: true
 publishedAt: 2023-07-01 12:30
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Ab consequatur dolorum. Aliquam est adipisci harum enim. Unde et sit nihil harum et est aperiam. Mollitia neque numquam quo et omnis.

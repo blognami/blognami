@@ -3,7 +3,8 @@ title: Gregg Locks
 featured: true
 published: true
 publishedAt: 2023-07-01 13:10
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Eaque eos sed autem. Ad dolore eum molestiae placeat consequuntur. Sit officiis quia. Vitae et quasi animi autem aut ullam voluptatem.

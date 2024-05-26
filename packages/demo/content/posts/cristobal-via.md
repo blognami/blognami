@@ -2,7 +2,8 @@
 title: Cristobal Via
 published: true
 publishedAt: 2023-07-01 13:28
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Non sunt non delectus tempora. Totam consequatur minus eius. Qui laudantium velit.

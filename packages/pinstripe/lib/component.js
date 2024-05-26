@@ -203,7 +203,7 @@ export const Component = Class.extend().include({
     },
 
     get isInput(){
-        return this.is('input, textarea');
+        return this.is('input, textarea, select');
     },
 
     get name(){
@@ -219,6 +219,9 @@ export const Component = Class.extend().include({
         }
         if(this.is('input[type="checkbox"]')){
             return this.is(':checked') ? true : false;
+        }
+        if(this.is('select')){
+            return this.findAll('option').map(option => option.value)[this.node.selectedIndex];
         }
         return this.node.value;
     },
@@ -597,14 +600,14 @@ function patchAttributes(attributes){
             if(attributes[key] === undefined){
                 Element.prototype.removeAttribute.call(this.node, key); // work around for https://github.com/cypress-io/cypress/issues/26206
                 // this.node.removeAttribute(key);
+                if(key == 'checked') this.node.checked = false;
             }
         })
         Object.keys(attributes).forEach((key) => {
             if(!currentAttributes.hasOwnProperty(key) || currentAttributes[key] != attributes[key]){
                 this.node.setAttribute(key, attributes[key]);
-                if(key == 'value'){
-                    this.node.value = attributes[key];
-                }
+                if(key == 'value') this.node.value = attributes[key];
+                if(key == 'checked') this.node.checked = true;
             }
         })
     }

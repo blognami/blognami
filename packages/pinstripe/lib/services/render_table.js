@@ -4,18 +4,27 @@ export default {
     },
 
     async render(tableAdaptable, options = {}){
-        const tableAdapter = await tableAdaptable.toTableAdapter();
+        let { title, search } = options;
 
-        const { title, rows, pageCount, page } = tableAdapter;
+        const tableAdapter = await tableAdaptable.toTableAdapter({
+            q: this.params.q,
+            search,
+        });
+
+        title ??= tableAdapter.title;
+
+        const { rows, pageCount, page } = tableAdapter;
 
         const columns = extractColumns(tableAdapter, options, this.inflector);
 
         return this.renderView('_table', {
             title,
+            search,
             columns,
             rows,
             pageCount,
             page,
+            q: this.params.q,
         })
     }
 };

@@ -2,7 +2,8 @@
 title: Nicola Circle
 published: true
 publishedAt: 2023-07-01 12:31
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Ea aut voluptas. Assumenda id sed hic minima. Sed odit explicabo minima iure facilis possimus et est. Aut deserunt sint voluptas libero minima. Et laudantium inventore repellendus harum quisquam. Nesciunt dolorum quia aperiam id ad voluptatem eligendi perferendis laudantium.

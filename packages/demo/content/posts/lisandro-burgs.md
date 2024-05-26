@@ -2,7 +2,8 @@
 title: Lisandro Burgs
 published: true
 publishedAt: 2023-07-01 12:44
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Quis eaque et voluptatum iure omnis ex labore. Quia voluptatem debitis nisi sit. Veniam quis alias aut vero aut.

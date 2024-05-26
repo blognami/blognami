@@ -2,7 +2,8 @@
 title: Brianne Falls
 published: true
 publishedAt: 2023-07-01 13:35
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Quia ipsa voluptatem incidunt porro est. Alias aut in optio. Eum et exercitationem nobis quis voluptatibus. Consequatur veniam enim autem sit in aliquid.

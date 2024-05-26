@@ -58,10 +58,23 @@ export default {
     async loadMarkdownFile(dirPath, filePath){
         const data = await promisify(readFile)(filePath, 'utf8');
         const [ frontMatter, body ] = this.extractFrontMatterAndBody(data);
+        const { tags, ...otherFrontMatter } = frontMatter;
+        const tagIds = [];
+        if(tags){
+            for(let tagName of tags){
+                const tag = await this.database.tags.where({ name: tagName }).first();
+                if(tag){
+                    tagIds.push(tag.id);
+                    continue;
+                }
+                const { id } = await this.database.tags.insert({ name: tagName });
+                tagIds.push(id);
+            }
+        }
 
         const entity = {
             userId: this.user.id,
-            ...frontMatter,
+            ...otherFrontMatter,
             body
         };
 
@@ -78,7 +91,11 @@ export default {
 
         const { type = 'post', ...values } = entity;
 
-        await this.database[this.inflector.pluralize(type)].insert(values);
+        const { id } = await this.database[this.inflector.pluralize(type)].insert(values);
+        
+        for(let tagId of tagIds){
+            await this.database.tagableTags.insert({ tagableId: id, tagId });
+        }
     },
 
     extractFrontMatterAndBody(data){

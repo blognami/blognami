@@ -25,15 +25,45 @@ export default {
             title: tag.name,
             body: this.renderView('_section', {
                 title: `Latest posts tagged "${tag.name}"`,
-                body: async () => {
-                    if(await posts.count() > 0) return this.renderView('_posts', {
-                        posts,
-                        loadMoreUrl: `?pageSize=${pageSize + 10}`
-                    });
-                    return this.renderHtml`
-                        Additional posts will be published soon.
-                    `;
-                }
+                body: this.renderHtml`
+                    ${async () => {
+                        if(await posts.count() > 0) return this.renderView('_posts', {
+                            posts,
+                            loadMoreUrl: `?pageSize=${pageSize + 10}`
+                        });
+                        return this.renderHtml`
+                            Additional posts will be published soon.
+                        `;
+                    }}
+
+                    ${() => {
+                        if(isAdmin) return this.renderHtml`
+                            ${this.renderView('_editable_area', {
+                                url: `/_actions/admin/edit_tag_meta?id=${tag.id}`,
+                                body: this.renderHtml`
+                                    <p><b>Name:</b> ${tag.name}</p>
+                                    <p><b>Slug:</b> ${tag.slug}</p>
+                                `,
+                                linkTestId: "edit-tag-meta",
+                                bodyTestId: "tag-meta"
+                            })}
+    
+                            ${this.renderView('_danger_area', {
+                                body: this.renderView('_button', {
+                                    nodeName: 'a',
+                                    href: `/_actions/admin/delete_tag?id=${tag.id}`,
+                                    target: '_overlay',
+                                    isDangerous: true,
+                                    isFullWidth: true,
+                                    ['data-method']: 'post',
+                                    ['data-confirm']: 'Are you really sure you want to delete this tag?',
+                                    ['data-test-id']: 'delete-tag',
+                                    body: 'Delete this Tag!'
+                                })
+                            })}
+                        `;
+                    }}
+                `
             })
         });
     }

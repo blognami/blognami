@@ -2,7 +2,8 @@
 title: Jesus Junction
 published: true
 publishedAt: 2023-07-01 12:57
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Ipsam accusamus doloribus animi et atque atque. Voluptatem nesciunt minima ratione minus exercitationem. Deserunt recusandae ducimus accusamus dolorem. Labore eos ducimus ullam consequatur voluptatem mollitia deserunt reiciendis animi. Placeat qui maxime occaecati non vel quasi odio quaerat.

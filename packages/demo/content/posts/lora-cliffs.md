@@ -2,7 +2,8 @@
 title: Lora Cliffs
 published: true
 publishedAt: 2023-07-01 12:42
-tags: Excepturi Corporis
+tags:
+    - Excepturi Corporis
 ---
 
 Consequatur quia incidunt expedita accusamus impedit expedita voluptates veritatis et. Iusto voluptas perspiciatis sequi corrupti laboriosam laboriosam laudantium minima odio. Necessitatibus sint provident voluptas fugiat eos ipsum aut. Animi dolorum itaque et quia iusto. Voluptate enim dolores laudantium est numquam inventore et. Voluptatum facilis illo voluptatum architecto.

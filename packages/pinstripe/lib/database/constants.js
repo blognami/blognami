@@ -46,7 +46,7 @@ export const SQLITE_COLUMN_TYPE_TO_TYPE_MAP = (() => {
     return out;
 })();
 
-export const COMPARISON_OPERATORS = {
+export const MYSQL_COMPARISON_OPERATORS = {
     '': '? = ?',
     Ne: '? != ?',
     Lt: '? < ?',
@@ -56,6 +56,18 @@ export const COMPARISON_OPERATORS = {
     BeginsWith: `? like concat(?, '%')`,
     EndsWith: `? like concat('%', ?)`,
     Contains: `? like concat('%', ?, '%')`
+};
+
+export const SQLITE_COMPARISON_OPERATORS = {
+    '': '? = ?',
+    Ne: '? != ?',
+    Lt: '? < ?',
+    Gt: '? > ?',
+    Le: '? <= ?',
+    Ge: '? >= ?',
+    BeginsWith: `? like (? || '%')`,
+    EndsWith: `? like ('%' || ?)`,
+    Contains: `? like ('%' || ? || '%')`
 };
 
 export const MYSQL_KEY_COMPARISON_OPERATORS = {

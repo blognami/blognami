@@ -97,6 +97,16 @@ export const Row = Model.extend().include({
                     cascadeDelete: false,
                     ...options
                 });
+            },
+
+            mustBeUnique(name, options = {}){
+                const { message = 'Must be unique', collection = this.collectionName } = options;
+                return this.validateWith(async row => {
+                    if(row.isValidationError(name)) return;
+                    const value = row[name];
+                    const alreadyExists = await row.database[collection].where({ [name]: value, idNe: row.id }).count() > 0;
+                    if(alreadyExists) row.setValidationError(name, message);
+                });
             }
         });
     },
@@ -259,10 +269,7 @@ export const Row = Model.extend().include({
         const names = [...new Set([ ...Object.keys(columns), ...extractSettableProps(this) ])];
         while(names.length){
             const name = names.shift();
-            let value = await this[name];
-            if(typeof value?.toFieldValue == 'function'){
-                value = await value.toFieldValue();
-            }
+            const value = await this[name];
             const type = columns[name] ? columns[name] : typeof value;
             fields.push({
                 name,
