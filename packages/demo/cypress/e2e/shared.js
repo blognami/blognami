@@ -325,6 +325,43 @@ export function describeApp(role){
                         'Zulauf Roads'
                     ]);
                 });
+
+                if(role == 'admin'){
+                    describe('meta', () => {
+                        it(`should have an interface to allow the user to edit the name`, () => {
+                            cy.getByTestId('main', 'tag-meta').should('contain', 'Name: Excepturi Corporis');
+
+                            cy.getByTestId('main', 'edit-tag-meta').click();
+                            cy.topModal().submitForm({ name: 'Foo bar' });
+                            cy.getByTestId('main', 'tag-meta').should('contain', 'Name: Foo bar');
+
+                            cy.getByTestId('main', 'edit-tag-meta').click();
+                            cy.topModal().submitForm({ name: 'Excepturi Corporis' });
+                            cy.getByTestId('main', 'tag-meta').should('contain', 'Name: Excepturi Corporis');
+                        });
+                        
+                        it(`should have an interface to allow the user to edit the slug`, () => {
+                            cy.getByTestId('main', 'tag-meta').should('contain', 'Slug: excepturi-corporis');
+                            cy.url().should('contain', '/excepturi-corporis');
+                            cy.getByTestId('main', 'tag-meta').should('not.contain', 'Slug: foo-bar');
+                            cy.url().should('not.contain', '/foo-bar');
+                            cy.getByTestId('main', 'edit-tag-meta').click();
+                            cy.topModal().submitForm({ slug: 'foo-bar' });
+                            cy.getByTestId('main', 'tag-meta').should('not.contain', 'Slug: excepturi-corporis');
+                            cy.url().should('not.contain', '/excepturi-corporis');
+                            cy.getByTestId('main', 'tag-meta').should('contain', 'Slug: foo-bar');
+                            cy.url().should('contain', '/foo-bar');
+                        });
+                    });
+    
+                
+                    it(`should have an interface to allow the user to delete the current tag`, () => {
+                        cy.getByTestId('main', 'tag-meta').should('exist');
+                        cy.getByTestId('main', 'toggle-danger-area').click();
+                        cy.getByTestId('main', 'delete-tag').click();
+                        cy.getByTestId('main', 'tag-meta').should('not.exist');
+                    });
+                }
             });
 
             describeSidebar();
@@ -359,6 +396,55 @@ export function describeApp(role){
                         'Zulauf Roads'
                     ]);
                 });
+
+                if(role == 'admin'){
+                    describe('meta', () => {
+                        it(`should have an interface to allow the user to edit the name`, () => {
+                            cy.getByTestId('main', 'user-meta').should('contain', 'Name: Admin');
+
+                            cy.getByTestId('main', 'edit-user-meta').click();
+                            cy.topModal().submitForm({ name: 'Foo bar' });
+                            cy.getByTestId('main', 'user-meta').should('contain', 'Name: Foo bar');
+
+                            cy.getByTestId('main', 'edit-user-meta').click();
+                            cy.topModal().submitForm({ name: 'Admin' });
+                            cy.getByTestId('main', 'user-meta').should('contain', 'Name: Admin');
+                        });
+                        
+                        it(`should have an interface to allow the user to edit the slug`, () => {
+                            cy.getByTestId('main', 'user-meta').should('contain', 'Slug: admin');
+                            cy.url().should('contain', '/admin');
+                            cy.getByTestId('main', 'user-meta').should('not.contain', 'Slug: foo-bar');
+                            cy.url().should('not.contain', '/foo-bar');
+                            cy.getByTestId('main', 'edit-user-meta').click();
+                            cy.topModal().submitForm({ slug: 'foo-bar' });
+                            cy.getByTestId('main', 'user-meta').should('not.contain', 'Slug: admin');
+                            cy.url().should('not.contain', '/admin');
+                            cy.getByTestId('main', 'user-meta').should('contain', 'Slug: foo-bar');
+                            cy.url().should('contain', '/foo-bar');
+                        });
+                    });
+    
+                
+                    it(`should have an interface to allow the user to delete the current user - but a user can't delete themself`, () => {
+                        cy.getByTestId('main', 'user-meta').should('exist');
+                        cy.getByTestId('main', 'toggle-danger-area').click();
+                        cy.getByTestId('main', 'delete-user').click();
+                        cy.topModal().contains('Access denied');
+                        cy.topModal().contains(`You can't delete your own account - another admin must do this for you.`);
+                        cy.topModal().contains('OK').click();
+                        cy.getByTestId('main', 'user-meta').should('exist');
+
+                        cy.getByTestId('navbar', 'add-user').click({ force: true });
+                        cy.topModal().contains('Add user');
+                        cy.topModal().submitForm({ name: 'Apple Orange', email: 'apple.orange@example.com' });
+                        cy.url().should('contain', 'apple-orange');
+                        cy.getByTestId('main', 'user-meta').should('exist');
+                        cy.getByTestId('main', 'toggle-danger-area').click();
+                        cy.getByTestId('main', 'delete-user').click();
+                        cy.getByTestId('main', 'user-meta').should('not.exist');
+                    });
+                }
             });
 
             describeSidebar();
@@ -382,17 +468,38 @@ export function describeApp(role){
             });
 
             if(role == 'admin'){
+                it(`should have an interface to allow the user to add a page`, () => {
+                    cy.getByTestId('navbar', 'add-page').click({ force: true });
+                    cy.topModal().contains('Add page');
+                    cy.topModal().submitForm({ title: 'Apple plum' });
+                    cy.url().should('contain', 'apple-plum');
+                });
                 it(`should have an interface to allow the user to add a post`, () => {
                     cy.getByTestId('navbar', 'add-post').click({ force: true });
                     cy.topModal().contains('Add post');
                     cy.topModal().submitForm({ title: 'Apple pear' });
                     cy.url().should('contain', 'apple-pear');
                 });
-                it(`should have an interface to allow the user to add a page`, () => {
-                    cy.getByTestId('navbar', 'add-page').click({ force: true });
-                    cy.topModal().contains('Add page');
-                    cy.topModal().submitForm({ title: 'Apple plum' });
-                    cy.url().should('contain', 'apple-plum');
+                it(`should have an interface to allow the user to add a tag`, () => {
+                    cy.getByTestId('navbar', 'add-tag').click({ force: true });
+                    cy.topModal().contains('Add tag');
+                    cy.topModal().submitForm({ name: 'Apple peach' });
+                    cy.url().should('contain', 'apple-peach');
+                });
+                it(`should have an interface to allow the user to add a user`, () => {
+                    cy.getByTestId('navbar', 'add-user').click({ force: true });
+                    cy.topModal().contains('Add user');
+                    cy.topModal().submitForm({ name: 'Apple Orange', email: 'apple.orange@example.com' });
+                    cy.url().should('contain', 'apple-orange');
+                });
+
+                it(`should have an interface to allow the user to find a post`, () => {
+                    cy.getByTestId('navbar', 'find-post').click({ force: true });
+                    cy.topModal().contains('Posts');
+                    cy.topModal().should('not.contain', 'Graham Place');
+                    cy.topModal().find('input').type('Graham Place');
+                    cy.topModal().contains('Graham Place').click();
+                    cy.url().should('contain', 'graham-place');
                 });
             }
         })

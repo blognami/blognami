@@ -46,7 +46,7 @@ export default {
                                 <p><b>Role:</b> ${user.role}</p>
                                 <p><b>Slug:</b> ${user.slug}</p>
                             `,
-                            linkTestId: "edit-page-meta",
+                            linkTestId: "edit-user-meta",
                             bodyTestId: "user-meta"
                         })}
 
@@ -59,7 +59,7 @@ export default {
                                 isFullWidth: true,
                                 ['data-method']: 'post',
                                 ['data-confirm']: 'Are you really sure you want to delete this user?',
-                                ['data-test-id']: 'delete-page',
+                                ['data-test-id']: 'delete-user',
                                 body: 'Delete this User!'
                             })
                         })}

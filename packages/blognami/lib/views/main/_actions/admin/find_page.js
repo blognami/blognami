@@ -9,7 +9,7 @@ export default {
                     {
                         name: 'title',
                         cell: ({ slug, title}) => this.renderHtml`
-                            <a href="/${slug}" target="_top">${title}</a>
+                            <a href="/${slug}" data-target="_top">${title}</a>
                         `
                     }
                 ],
