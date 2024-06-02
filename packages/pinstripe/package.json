@@ -17,7 +17,7 @@
   "scripts": {
     "clean": "rm -rf ./node_modules",
     "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
-    "test": "yarn test:unit",
+    "test": "npm run test:unit",
     "test:unit": "jest lib"
   },
   "devDependencies": {

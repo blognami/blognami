@@ -8,7 +8,7 @@ Pinstripe is a Node.js based CMS, that can be stripped back to a general purpose
 To see it in action run the following:
 
 ```bash
-    yarn global add pinstripe
+    npm install -g pinstripe
     pinstripe generate-project foo
     cd foo
     pinstripe init-database

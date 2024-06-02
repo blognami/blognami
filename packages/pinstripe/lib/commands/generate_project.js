@@ -134,7 +134,7 @@ export default {
             line();
          });
    
-         spawnSync('yarn', [ 'add', ...dependencies ], {
+         spawnSync('npm', [ 'install', ...dependencies ], {
             stdio: 'inherit'
          });
       });
