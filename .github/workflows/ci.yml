@@ -20,13 +20,13 @@ jobs:
         database-adapter: [mysql, sqlite]
         tenancy: [single, multi]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
-      - run: yarn install
-      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} yarn test
+      - run: npm install
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} npm run test
         env:
           CI: true
   # deploy:
@@ -42,8 +42,8 @@ jobs:
   #       with:
   #         node-version: 18.x
   #     - run: |
-  #         yarn install
-  #         yarn build:docs
+  #         npm install
+  #         npm run build:docs
   #         cd packages/blognami/build/static
   #         touch .nojekyll
   #         echo "blognami.com" > CNAME

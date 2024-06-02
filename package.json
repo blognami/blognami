@@ -4,24 +4,21 @@
   "author": "Jody Salt",
   "license": "MIT",
   "scripts": {
-    "clean": "lerna run clean && rm -rf ./node_modules",
-    "start": "yarn start:main",
-    "watch": "yarn watch:main",
-    "start:main": "lerna run start:main --scope demo --stream",
-    "watch:main": "nodemon -e js,jsx,md,css,html --exec 'yarn start:main'",
-    "start:docs": "lerna run start:docs --scope demo --stream",
-    "watch:docs": "nodemon -e js,jsx,md,css,html --exec 'yarn start:docs'",
-    "build:docs": "lerna run build:docs --scope demo --stream",
-    "test": "yarn test:unit && yarn test:models && yarn test:e2e",
-    "test:unit": "lerna run test:unit --stream",
-    "test:models": "lerna run test:models --stream",
-    "test:e2e": "lerna run test:e2e --stream",
-    "cypress:open": "lerna run cypress:open --scope demo --stream",
-    "publish-all": "lerna publish from-package --yes",
-    "version-all": "lerna version"
+    "clean": "npm run clean && rm -rf ./node_modules",
+    "start": "npm run start:main",
+    "watch": "npm run watch:main",
+    "start:main": "npm run start:main --workspace demo",
+    "watch:main": "nodemon -e js,jsx,md,css,html --exec 'npm run start:main'",
+    "start:docs": "npm run start:docs --workspace demo",
+    "watch:docs": "nodemon -e js,jsx,md,css,html --exec 'npm run start:docs'",
+    "build:docs": "npm run build:docs --workspace demo",
+    "test": "npm run test:unit && npm run test:models && npm run test:e2e",
+    "test:unit": "npm run test:unit --workspace pinstripe",
+    "test:models": "npm run test:models --workspace demo",
+    "test:e2e": "npm run test:e2e --workspace demo",
+    "cypress:open": "npm run cypress:open --workspace demo"
   },
   "dependencies": {
-    "lerna": "^4.0.0",
     "nodemon": "^2.0.12"
   },
   "workspaces": [
