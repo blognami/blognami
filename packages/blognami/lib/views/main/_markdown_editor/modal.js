@@ -65,7 +65,7 @@ export const decorators = {
 
         const updatePreview = () => {
             const { value } = this.values;
-            previewFrame.patch(Markdown.render(value).toString());
+            previewFrame.patch(Markdown.render(value, { mode: 'edit' }).toString());
             anchorTextarea.value = value;
         };
 

@@ -9,14 +9,16 @@ import { Html } from './html.js';
 export const Markdown = Class.extend().include({
     meta(){
         this.assignProps({
-            render(value){
-                return this.new(value).render();
+            render(value, options = {}){
+                return this.new(value, options).render();
             }
         });
     },
 
-    initialize(value){
+    initialize(value, options = {}){
+        const { mode = 'view' } = options;
         this.value = value;
+        this.mode = mode;
     },
 
     render(){
@@ -31,7 +33,13 @@ export const Markdown = Class.extend().include({
             if(!matches){
                 delete paragraph.attributes['data-line-number'];
                 return
-            };
+            }
+            if(this.mode == 'view'){
+                paragraph.type = '#text';
+                paragraph.attributes = { value: '' };
+                paragraph.children = [];
+                return;
+            }
             const name = matches[1];
             const args = matches[2].trim();
 
@@ -39,7 +47,7 @@ export const Markdown = Class.extend().include({
             paragraph.attributes = {
                 ...paragraph.attributes,
                 'data-component': 'pinstripe-frame',
-                'data-url': `/_markdown_slash_blocks/${name}?args=${encodeURIComponent(args)}`,
+                'data-url': `/_markdown_slash_blocks/${name}?args=${new URLSearchParams({ args })}`,
             };
             paragraph.children = [];
         });
