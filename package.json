@@ -16,7 +16,9 @@
     "test:unit": "npm run test:unit --workspace pinstripe",
     "test:models": "npm run test:models --workspace demo",
     "test:e2e": "npm run test:e2e --workspace demo",
-    "cypress:open": "npm run cypress:open --workspace demo"
+    "cypress:open": "npm run cypress:open --workspace demo",
+    "version-all": "npm version minor --workspaces",
+    "publish-all": "npm publish --workspaces"
   },
   "dependencies": {
     "nodemon": "^2.0.12"
