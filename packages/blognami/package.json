@@ -12,7 +12,7 @@
     "clean": "rm -rf ./node_modules"
   },
   "dependencies": {
-    "pinstripe": "^0.31.1"
+    "pinstripe": "^0.32.0"
   },
   "repository": {
     "type": "git",
