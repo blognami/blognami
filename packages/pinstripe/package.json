@@ -2,7 +2,7 @@
   "type": "module",
   "name": "pinstripe",
   "description": "A slick web framework for Node.js.",
-  "version": "0.31.1",
+  "version": "0.32.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
