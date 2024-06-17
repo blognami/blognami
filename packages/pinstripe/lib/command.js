@@ -4,6 +4,8 @@ import { inflector } from './inflector.js';
 import { Registry } from './registry.js';
 import { ServiceConsumer } from './service_consumer.js';
 
+const optionPattern = /^-([a-z]|-[a-z\-]+)$/;
+
 export const Command = Class.extend().include({
     meta(){
         this.assignProps({ name: 'Command' });
@@ -18,10 +20,41 @@ export const Command = Class.extend().include({
 
             async run(context, name = 'list-commands', ...args){
                 await context.fork().run(async context => {
-                    context.args = [ ...args ];
+                    context.params = this.extractParams(args);
                     await this.create(name, context).run();
                 });
             },
+
+            extractParams(_args = []){
+                const args = [ ..._args ];
+                const out = {};
+                let currentName;
+                while(args.length){
+                    const arg = args.shift();
+                    const matches = arg.match(optionPattern);
+                    if(matches){
+                        currentName = inflector.camelize(matches[1]);
+                        if(out[currentName] === undefined){
+                            out[currentName] = [];
+                        }
+                    } else {
+                        if(currentName === undefined){
+                            currentName = 'args';
+                            out[currentName] = [];
+                        }
+                        out[currentName].push(arg);
+                    }
+                }
+                Object.keys(out).forEach(name => {
+                    const value = out[name];
+                    if(!value.length){
+                        out[name] = true;
+                    } else {
+                        out[name] = value.join(' ');
+                    }
+                });
+                return out;
+            }
         });
     },
 

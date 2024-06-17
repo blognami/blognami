@@ -1,9 +1,9 @@
 
 export default {
     async run(){
-        const [ name = '' ] = this.args;
+        const { name = '' } = this.params;
         if(name == ''){
-            console.error('A service name must be given.');
+            console.error('A service --name must be given.');
             process.exit();
         }
     

@@ -2,10 +2,10 @@
 
 export default {
     async run(){
-        const [ name = '' ] = this.args;
+        const { name = '' } = this.params;
         const normalizedName = this.inflector.snakeify(name);
         if(normalizedName == ''){
-            console.error('A command name must be given.');
+            console.error('A command --name must be given.');
             process.exit();
         }
 

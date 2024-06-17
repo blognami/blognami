@@ -8,17 +8,15 @@ const defaultDependencies = [
 
 export default {
    async run(){
-
-      const { extractArg, extractOptions } = this.cliUtils;
-      const name = extractArg('');
+      const name = this.params.name || '';
       if(name == ''){
-         console.error('A project name must be given.');
+         console.error('A project --name must be given.');
          process.exit();
       }
-      const { with: dependencies, core } = extractOptions({
-         with: [],
-         core: false
-      });
+
+      let { with: dependencies = '', core = false } = this.params;
+
+      dependencies = dependencies.split(/\s+/).map(dependency => dependency.trim());
 
       if(!core) defaultDependencies.forEach(dependency => {
          if(!dependencies.includes(dependency)) dependencies.unshift(dependency);

@@ -1,13 +1,10 @@
 
 export default {
     run(){
-        const { extractOptions } = this.cliUtils;
-
-        const { app, withoutBot } = extractOptions({
-            app: `main:${process.env.HOST || '127.0.0.1'}:${parseInt(process.env.PORT || '3000')}`,
-            withoutBot: false
-        });
-
+        const {
+            app = `main:${process.env.HOST || '127.0.0.1'}:${parseInt(process.env.PORT || '3000')}`, 
+            withoutBot = false
+        } = this.params;
         
         const apps = [];
         let currentPort = 3000;
