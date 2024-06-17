@@ -2,10 +2,10 @@
 
 export default {
     async run(){
-        const [ name = '' ] = this.args;
+        const { name = '' } = this.params;
         const normalizedName = this.inflector.snakeify(name);
         if(normalizedName == ''){
-            console.error('A background_job name must be given.');
+            console.error('A background job --name must be given.');
             process.exit();
         }
 

@@ -6,9 +6,7 @@ import { App, View } from 'pinstripe';
 export default {
     async run(){
 
-        const { extractOptions } = this.cliUtils;
-
-        const { app = 'main' } = extractOptions();
+        const { app = 'main' } = this.params;
 
         const { viewNames } = View.mapperFor(App.create(app, this.context).compose());
 

@@ -4,10 +4,10 @@ import { readFile } from 'fs/promises';
 
 export default {
     async run(){
-        const [ name = '' ] = this.args;
+        const { name = '' } = this.params;
         let normalizedName = name.replace(/^\//, '');
         if(name == ''){
-            console.error('A view name must be given.');
+            console.error('A view --name must be given.');
             process.exit();
         }
 

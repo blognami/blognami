@@ -1,18 +1,28 @@
 
 export default {
     async run(){
-        const { extractArg, extractFields, extractOptions } = this.cliUtils;
 
-        const suffix = this.inflector.snakeify(extractArg('migration'));
-        const fields = extractFields();
-        const { table } = extractOptions({
-            table: (() => {
-                const matches = suffix.match(/_to_(.+)$/);
-                if(matches){
-                    return matches[1];
-                }
-            })()
+        const suffix = this.inflector.snakeify(this.params.suffix || 'migration');
+
+        let { fields = '' } = this.params;
+        fields = fields.split(/\s+/).map(field => field.trim()).filter(field => field).map(arg => {
+            const matches = arg.match(/^(\^|)([^:]*)(:|)(.*)$/);
+            const mandatory = matches[1] == '^';
+            const name = this.inflector.camelize(matches[2]);
+            const type =  matches[4] || 'string';
+            return {
+                mandatory,
+                name,
+                type
+            };
         });
+        
+        const table = this.params.table || (() => {
+            const matches = suffix.match(/_to_(.+)$/);
+            if(matches){
+                return matches[1];
+            }
+        })();
 
         const unixTime = Math.floor(new Date().getTime() / 1000);
         const name = `${unixTime}_${suffix}`;

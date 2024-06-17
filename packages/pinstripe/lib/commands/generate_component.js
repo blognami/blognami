@@ -1,10 +1,9 @@
 
 export default {
     async run(){
-        const { extractArg } = this.cliUtils;
-        const name = this.inflector.snakeify(extractArg(''));
+        const name = this.inflector.snakeify(this.params.name || '');
         if(name == ''){
-            console.error('A component name must be given.');
+            console.error('A component --name must be given.');
             process.exit();
         }
     

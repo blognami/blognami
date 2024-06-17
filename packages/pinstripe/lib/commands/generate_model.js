@@ -2,13 +2,25 @@
 export default {
     async run(){
 
-        const { extractArg, extractFields } = this.cliUtils;
-        const name = this.inflector.snakeify(extractArg(''));
+        const name = this.inflector.snakeify(this.params.name || '');
         if(name == ''){
-            console.error('A model name must be given.');
+            console.error('A model --name must be given.');
             process.exit();
         }
-        const fields = extractFields();
+
+        let { fields = '' } = this.params;
+
+        fields = fields.split(/\s+/).map(field => field.trim()).filter(field => field).map(arg => {
+            const matches = arg.match(/^(\^|)([^:]*)(:|)(.*)$/);
+            const mandatory = matches[1] == '^';
+            const name = this.inflector.camelize(matches[2]);
+            const type =  matches[4] || 'string';
+            return {
+                mandatory,
+                name,
+                type
+            };
+        });
     
         const collectionName = this.inflector.camelize(this.inflector.pluralize(name));
         if(!await this.database[collectionName]){
