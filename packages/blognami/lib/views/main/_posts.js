@@ -70,34 +70,8 @@ export const styles = `
         margin-top: 1.6rem;
     }
 
-    .load-more-button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.6rem;
-        line-height: 1;
-        cursor: pointer;
-        padding: 1.4rem 1.6rem 1.4rem 1.6rem;
-        border-radius: 6px;
-        width: 100%;
-        margin-top: 8rem;
-        font-weight: 600;
-        color: var(--color-black);
-        letter-spacing: -0.02em;
-        background-color: transparent;
-        border: 1px solid var(--color-light-gray);
-    }
-
-    .load-more-button:hover {
-        border-color: var(--color-mid-gray);
-    }
-
     @media (max-width: 767px) {
         .post + .post {
-            margin-top: 6.4rem;
-        }
-
-        .load-more-button {
             margin-top: 6.4rem;
         }
     }
@@ -136,9 +110,14 @@ export default {
             </div>
 
             ${async () => {
-                if(loadMoreUrl && await posts.all().length < await posts.withoutPagination().count()) return this.renderHtml`
-                    <button class="${this.cssClasses.loadMoreButton}" data-component="pinstripe-anchor" data-method="post" data-href="${loadMoreUrl}" data-test-id="load-more">Load more posts</button>
-                `;
+                if(loadMoreUrl && await posts.all().length < await posts.withoutPagination().count()) return this.renderView('_button', {
+                    nodeName: 'a',
+                    isFullWidth: true,
+                    href: loadMoreUrl,
+                    'data-method': 'post',
+                    'data-test-id': 'load-more',
+                    body: 'Load more posts',
+                });
             }}
         `;
     }

@@ -17,31 +17,12 @@ export const styles = `
         min-height: 150px;
     }
 
-    .comment-avatar {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        flex: 0 0 auto;
-    }
-
-    .comment-avatar img {
-        height: 2.5em;
-        width: 2.5em;
-        border-radius: 50%;
-        border-style: solid;
-        border-width: 2px;
-        border-color: var(--color-light-gray);
-    }
-
-    .comment-avatar::after {
-        content: ' ';
-        background: var(--color-light-gray);
-        width: 2px;
-        height: 100%;
-    }
-
     .comment-main {
         flex: 1 1 0;
+        border-style: solid;
+        border-width: 0 0 0 2px;
+        border-color: var(--color-light-gray);
+        padding-left: 1em;
     }
 
     .comment-meta {
@@ -76,19 +57,6 @@ export const styles = `
         font-weight: 500;
         color: var(--accent-color);
     }
-
-    .avatar {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: 2.5em;
-        width: 2.5em;
-        border-radius: 50%;
-        background: var(--color-light-gray);
-        color: var(--color-gray);
-        font-weight: 500;
-        line-height: 0;
-    }
 `;
 
 export default {
@@ -105,15 +73,8 @@ export default {
                 ${commentable.comments.orderBy('createdAt').all().map(async comment => {
                     const commentUser = await comment.user;
 
-                    let initials = commentUser.name.trim().split(/\s+/).map(name => name[0]).join('');
-                    if(initials.length > 2) initials = initials[0] + initials[initials.length - 1];
-                    if(initials.length == 1) initials = initials + commentUser.name[1];
-
                     return this.renderHtml`
                         <div class="${this.cssClasses.comment}">
-                            <div class="${this.cssClasses.commentAvatar}">
-                                <div class="${this.cssClasses.avatar}">${initials}</div>
-                            </div>
                             <div class="${this.cssClasses.commentMain}">
                                 <div class="${this.cssClasses.commentMeta}">
                                     <div class="${this.cssClasses.commentName}">${commentUser.name}</div>
@@ -162,7 +123,19 @@ export default {
                     `;
                 })}
                 <div class="${this.cssClasses.commentsFooter}">
-                    <a class="${this.cssClasses.action}" href="/_actions/add_comment?commentableId=${commentable.id}" target="_overlay" data-test-id="add-comment">${commentable.constructor.name == 'comment' ? 'Reply' : 'Add comment'}</a>
+                    ${() => {
+                        if(commentable.constructor.name == 'comment') return this.renderHtml`
+                            <a class="${this.cssClasses.action}" href="/_actions/add_comment?commentableId=${commentable.id}" target="_overlay" data-test-id="add-comment">Reply</a>
+                        `;
+                        return this.renderView('_button', {
+                            nodeName: 'a',
+                            isFullWidth: true,
+                            href: `/_actions/add_comment?commentableId=${commentable.id}`,
+                            target: '_overlay',
+                            'data-test-id': 'add-comment',
+                            body: 'Add comment',
+                        });
+                    }}
                 </div>
             </div>
         `;
