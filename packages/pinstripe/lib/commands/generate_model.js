@@ -10,24 +10,9 @@ export default {
 
         let { fields = '' } = this.params;
 
-        fields = fields.split(/\s+/).map(field => field.trim()).filter(field => field).map(arg => {
-            const matches = arg.match(/^(\^|)([^:]*)(:|)(.*)$/);
-            const mandatory = matches[1] == '^';
-            const name = this.inflector.camelize(matches[2]);
-            const type =  matches[4] || 'string';
-            return {
-                mandatory,
-                name,
-                type
-            };
-        });
-    
         const collectionName = this.inflector.camelize(this.inflector.pluralize(name));
         if(!await this.database[collectionName]){
-            const denormalizedFields = fields.map(({ mandatory, name, type }) => {
-                return `${ mandatory ? '^' : '' }${name}:${type}`
-            });
-            await this.runCommand('generate-migration', `create_${name}`, ...denormalizedFields, '--table', collectionName)
+            await this.runCommand('generate-migration', { name: `create_${name}`, fields, table: collectionName});
         }
     
         const { inProjectRootDir, generateFile, line, indent } = this.fsBuilder;

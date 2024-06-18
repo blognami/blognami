@@ -7,6 +7,13 @@ const defaultDependencies = [
 ];
 
 export default {
+   meta(){
+      this.assignProps({
+          external: true,
+          internal: false
+      });
+  },
+
    async run(){
       const name = this.params.name || '';
       if(name == ''){

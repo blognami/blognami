@@ -16,7 +16,7 @@
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
-    "start": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
+    "start": "pinstripe start-server",
     "test": "npm run test:unit",
     "test:unit": "jest lib"
   },
