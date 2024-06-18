@@ -40,8 +40,6 @@ export const Project = Class.extend().include({
         }
 
         this.entryPath = this.exports['.'] || this.main;
-
-        this.localPinstripePath = (await findInPath('node_modules/.bin/pinstripe', process.cwd())).shift();
         
         this.nodePaths = await findInPath('node_modules/', process.cwd());
     },

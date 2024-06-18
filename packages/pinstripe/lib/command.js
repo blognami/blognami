@@ -8,7 +8,11 @@ const optionPattern = /^-([a-z]|-[a-z\-]+)$/;
 
 export const Command = Class.extend().include({
     meta(){
-        this.assignProps({ name: 'Command' });
+        this.assignProps({ 
+            name: 'Command',
+            internal: true,
+            external: false
+        });
 
         this.include(Registry);
         this.include(ServiceConsumer);
@@ -18,9 +22,9 @@ export const Command = Class.extend().include({
                 return inflector.dasherize(name);
             },
 
-            async run(context, name = 'list-commands', ...args){
+            async run(context, name = 'list-commands', params = {}){
                 await context.fork().run(async context => {
-                    context.params = this.extractParams(args);
+                    context.params = Array.isArray(params) ? this.extractParams(params) : params;
                     await this.create(name, context).run();
                 });
             },

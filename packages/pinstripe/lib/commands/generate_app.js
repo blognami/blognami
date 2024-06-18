@@ -35,7 +35,9 @@ export default {
     
         });
 
-        await this.runCommand('generate-view', `${normalizedName}/index`);
+        await this.runCommand('generate-view', {
+            name: `${normalizedName}/index`
+        });
     }
 }
 

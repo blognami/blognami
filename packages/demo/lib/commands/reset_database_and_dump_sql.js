@@ -7,10 +7,7 @@ export default {
         const { rootPath } = await this.project;
 
         execSync(`pinstripe reset-database`, {
-            env: {
-                ...process.env,
-                IS_LOCAL_PINSTRIPE: 'false' 
-            }
+            env: process.env
         });
 
         if(adapter == 'mysql'){

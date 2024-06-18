@@ -10,8 +10,8 @@
   "scripts": {
     "clean": "rm -rf ./node_modules",
     "start": "npm run start:main",
-    "start:main": "IS_LOCAL_PINSTRIPE=true pinstripe start-server",
-    "start:docs": "IS_LOCAL_PINSTRIPE=true pinstripe start-server --app docs",
+    "start:main": "pinstripe start-server",
+    "start:docs": "pinstripe start-server --app docs",
     "test:models": "npm run test:models:$(echo ${DATABASE_ADAPTER:-sqlite})",
     "test:models:mysql": "DATABASE_ADAPTER=mysql SKIP_FIXTURES=true NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
     "test:models:sqlite": "DATABASE_ADAPTER=sqlite SKIP_FIXTURES=true NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
@@ -19,7 +19,8 @@
     "test:e2e:mysql": "NODE_ENV=test DATABASE_ADAPTER=mysql start-server-and-test 'pinstripe reset-database-and-dump-sql && npm run start' http://127.0.0.1:3000 'npm run cypress:run'",
     "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'pinstripe reset-database-and-dump-sql && npm run start' http://127.0.0.1:3000 'npm run cypress:run'",
     "cypress:run": "cypress run",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "test:services": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/services"
   },
   "dependencies": {
     "blognami": "^0.32.0"

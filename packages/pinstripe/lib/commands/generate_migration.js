@@ -4,18 +4,8 @@ export default {
 
         const suffix = this.inflector.snakeify(this.params.suffix || 'migration');
 
-        let { fields = '' } = this.params;
-        fields = fields.split(/\s+/).map(field => field.trim()).filter(field => field).map(arg => {
-            const matches = arg.match(/^(\^|)([^:]*)(:|)(.*)$/);
-            const mandatory = matches[1] == '^';
-            const name = this.inflector.camelize(matches[2]);
-            const type =  matches[4] || 'string';
-            return {
-                mandatory,
-                name,
-                type
-            };
-        });
+        const { fields = '' } = this.params;
+        const normalizedFields = this.cliUtils.normalizeFields(fields);
         
         const table = this.params.table || (() => {
             const matches = suffix.match(/_to_(.+)$/);
@@ -43,10 +33,10 @@ export default {
                 indent(() => {
                     line(`async migrate(){`);
                     indent(() => {
-                        if(table && fields.length){
+                        if(table && normalizedFields.length){
                             line(`await this.database.table('${table}', async ${table} => {`);
                             indent(() => {
-                                fields.forEach(({ name, type }) => {
+                                normalizedFields.forEach(({ name, type }) => {
                                     line(`await ${table}.addColumn('${name}', '${type}');`);
                                 });
                             })

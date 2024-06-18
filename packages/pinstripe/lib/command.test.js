@@ -28,3 +28,5 @@ import { Command } from "./command.js";
         expect(Command.extractParams(args)).toStrictEqual(expectedParams);
     });
 });
+
+

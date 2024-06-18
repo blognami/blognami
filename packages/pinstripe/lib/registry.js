@@ -52,6 +52,7 @@ export const Registry = {
             unregister(name){
                 const normalizedName = this.normalizeName(name);
                 delete this.mixins[normalizedName];
+                this.clearCache();
             },
 
             clearCache(){
