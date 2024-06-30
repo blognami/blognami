@@ -70,7 +70,7 @@ export default {
     parseBody(request){
         return new Promise((resolve) => {
             const out = {};
-            const busboy = new Busboy({ headers: request.headers });
+            const busboy = Busboy({ headers: request.headers });
         
             busboy.on('file', function(fieldname, file, filename, encoding, mimeType) {
                 const chunks = [];

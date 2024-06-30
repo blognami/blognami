@@ -22,7 +22,7 @@
     "publish-all": "npm publish --workspaces"
   },
   "dependencies": {
-    "nodemon": "^2.0.12"
+    "nodemon": "^3.1.4"
   },
   "workspaces": [
     "packages/*"
