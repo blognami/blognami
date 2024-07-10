@@ -10,7 +10,6 @@ export const styles = `
         border-radius: 0.4rem;
         box-shadow: none;
         font-size: 1.6rem;
-        font-weight: 600;
         height: 2.5em;
         line-height: 1.5;
         position: relative;

@@ -116,6 +116,7 @@ export default {
                     href: loadMoreUrl,
                     'data-method': 'post',
                     'data-test-id': 'load-more',
+                    style: 'font-weight: 600;',
                     body: 'Load more posts',
                 });
             }}
