@@ -45,7 +45,7 @@ export default {
                         filePath = `${filePath}.${mimeTypes.extension(contentType)}`
                     }
                     
-                    const data = (await this.fetch({ _url: new URL(path, 'http://127.0.0.1/'), _headers: { 'x-app': app } }))[2];
+                    const data = (await this.callHandler.handleCall({ _url: new URL(path, 'http://127.0.0.1/'), _headers: { 'x-app': app } }))[2];
 
                     if(!isGenerated[filePath]){
                         isGenerated[filePath] = true;
@@ -63,7 +63,7 @@ export default {
         if(this.pages[hash]) return;
         const page = { params };
         this.pages[hash] = page;
-        const [ status, headers, data ] = await this.fetch(params);
+        const [ status, headers, data ] = await this.callHandler.handleCall(params);
         page.status = status;
         page.headers = headers;
         if(status != 200 || headers['content-type'] != 'text/html') return;
