@@ -17,7 +17,7 @@ export default {
                     const params = await this.extractParams(request);
                     if(!params._headers['x-app']) params._headers['x-app'] = name;
 
-                    const [ status, headers, body ] = await this.fetch(params);
+                    const [ status, headers, body ] = await this.callHandler.handleCall(params);
 
                     const etag = this.createHash(body);
 

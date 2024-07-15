@@ -3,15 +3,14 @@ import { Workspace } from "../workspace.js";
 
 export default {
     create(){
-        return (params, useContext = false) => {
-            if(useContext) return this.handleCall(params);
-            return Workspace.run(function(){
-                return this.fetch(params, true);
-            });
-        };
+        return this;
     },
     
-    async handleCall(params = {}){
+    async handleCall(params = {}, useContext = false){
+        if(!useContext) return Workspace.run(function(){
+            return this.callHandler.handleCall(params, true);
+        });
+
         const normalizedParams = this.normalizeParams(params);
         this.context.params = normalizedParams;
 
