@@ -1,7 +1,7 @@
 
 export default {
     async render(){
-        const { map } = await this.clientBuilder.build();
+        const { map } = await this.bundler.build();
         return [200, { 'content-type': 'application/json'}, [ map ]];
     }
 };

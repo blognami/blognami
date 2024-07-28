@@ -4,19 +4,31 @@ import { promisify } from 'util';
 import { writeFile, readFile } from 'fs';
 import { dirSync } from 'tmp';
 
-import { Client } from '../client.js';
+import { Client } from './client.js';
+import { Registry } from './registry.js';
 
-let buildPromise;
+export const Bundle = Client.extend().include({
+    meta(){
+        this.include(Registry);
 
-export default {
-    create(){
-        return this.defer(() => this);
+        this.assignProps({
+            get modules(){
+                if(!this.hasOwnProperty('_modules')){
+                    this._modules = [];
+                }
+                return this._modules;
+            },
+
+            addModule(...modules){
+                this.modules.push(...modules);
+            },
+        });
     },
 
     async build(options = {}){
         const { force = false } = options;
-        if(!buildPromise || force){
-            buildPromise = this._build();
+        if(!this.constructor.buildPromise || force){
+            this.constructor.buildPromise = this._build();
         }
         return buildPromise;
     },
@@ -67,4 +79,4 @@ export default {
             }
         };
     }
-};
+});
