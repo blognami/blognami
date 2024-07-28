@@ -4,10 +4,10 @@ import { promisify } from 'util';
 import { writeFile, readFile } from 'fs';
 import { dirSync } from 'tmp';
 
-import { Client } from './client.js';
+import { Class } from './class.js';
 import { Registry } from './registry.js';
 
-export const Bundle = Client.extend().include({
+export const Bundle = Class.extend().include({
     meta(){
         this.include(Registry);
 
