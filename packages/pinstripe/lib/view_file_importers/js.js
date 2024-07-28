@@ -1,6 +1,6 @@
 
 import { View, createHash } from '../view.js';
-import { Client } from '../client.js'; // pinstripe-if-client: const Client = undefined;
+import { Bundle } from '../bundle.js'; // pinstripe-if-client: const Bundle = undefined;
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 import { inflector } from '../inflector.js';
 
@@ -18,7 +18,7 @@ View.FileImporter.register('js', {
         });;
 
         if(decorators){
-            Client.instance.addModule(`
+            Bundle.addModule('window', `
                 import { Component } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
                 import { createDecoratorsInclude } from ${JSON.stringify(fileURLToPath(import.meta.url))};
                 import { decorators } from ${JSON.stringify(filePath)};

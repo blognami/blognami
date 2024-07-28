@@ -6,6 +6,7 @@ import { dirSync } from 'tmp';
 
 import { Class } from './class.js';
 import { Registry } from './registry.js';
+import { Project } from './project.js';
 
 export const Bundle = Class.extend().include({
     meta(){
@@ -19,8 +20,12 @@ export const Bundle = Class.extend().include({
                 return this._modules;
             },
 
-            addModule(...modules){
-                this.modules.push(...modules);
+            addModule(environment, module){
+                this.register(environment, {
+                    meta(){
+                        this.modules.push(module);
+                    }
+                });
             },
         });
     },
@@ -30,7 +35,7 @@ export const Bundle = Class.extend().include({
         if(!this.constructor.buildPromise || force){
             this.constructor.buildPromise = this._build();
         }
-        return buildPromise;
+        return this.constructor.buildPromise;
     },
 
     async _build(){
@@ -38,10 +43,10 @@ export const Bundle = Class.extend().include({
         const inFile = `${tmpDir}/in.js`;
         const outFile = `${tmpDir}/out.js`;
 
-        await promisify(writeFile)(inFile, Client.instance.modules.map((_, i) => `import ${JSON.stringify(`${tmpDir}/module-${i}.js`)};`).join('\n'));
+        await promisify(writeFile)(inFile, this.constructor.modules.map((_, i) => `import ${JSON.stringify(`${tmpDir}/module-${i}.js`)};`).join('\n'));
 
-        for(let i = 0; i < Client.instance.modules.length; i++){
-            await promisify(writeFile)(`${tmpDir}/module-${i}.js`, Client.instance.modules[i]);
+        for(let i = 0; i < this.constructor.modules.length; i++){
+            await promisify(writeFile)(`${tmpDir}/module-${i}.js`, this.constructor.modules[i]);
         }
         
         await build({
@@ -50,7 +55,7 @@ export const Bundle = Class.extend().include({
             sourcemap: true,
             outfile: outFile,
             plugins: [this.plugin],
-            nodePaths: await this.project.nodePaths,
+            nodePaths: await Project.instance.nodePaths,
             minify: process.env.NODE_ENV == 'production'
         });
 
