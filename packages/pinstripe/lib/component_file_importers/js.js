@@ -16,10 +16,6 @@ Component.FileImporter.register('js', {
                         import include from ${JSON.stringify(filePath)};
                         Component.register(${JSON.stringify(relativeFilePathWithoutExtension)}, include);
                     `);
-                } else {
-                    Bundle.addModule('window', `
-                        import ${JSON.stringify(filePath)};
-                    `);
                 }
                 return importFile.call(this, params);
             }

@@ -15,7 +15,7 @@ View.FileImporter.register('js', {
                 this.filePaths.push(filePath);
                 this.include(include);
             }
-        });;
+        });
 
         if(decorators){
             Bundle.addModule('window', `
