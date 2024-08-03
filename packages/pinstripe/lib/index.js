@@ -11,6 +11,6 @@ export * from './html.js'; // pinstripe-if-client: export const Html = undefined
 export * from './import_all.js'; // pinstripe-if-client: export const importAll = undefined;
 export * from './markdown.js';
 export * from './project.js'; // pinstripe-if-client: export const project = undefined;
-export * from './service_factory.js';  // pinstripe-if-client: export const ServiceFactory = undefined;
+export * from './service_factory.js';
 export * from './view.js';
 export * from './workspace.js'; // pinstripe-if-client: export const Workspace = undefined;
