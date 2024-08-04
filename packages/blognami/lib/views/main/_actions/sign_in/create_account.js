@@ -1,7 +1,7 @@
 
 import * as crypto from 'crypto';
 
-export default {
+export const server = {
     render(){
         const { name, email, title, redirectUrl } = this.params;
         
