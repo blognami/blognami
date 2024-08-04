@@ -1,5 +1,7 @@
 
 
+const LOGO_PNG = 'cypress/e2e/logo.png';
+
 export function describeApp(role){
     context(`When a ${role} user`, () => {
         beforeEach(() => {
@@ -123,6 +125,20 @@ export function describeApp(role){
                         cy.topModal().find('tbody > tr:last-child a').click();
                         cy.topModal().submitForm({});
                         cy.getByTestId('main', 'post-body').should('contain', 'Pear plum');
+
+                        cy.getByTestId('main', 'post-body').find('img[src="/logo-png"]').should('not.exist');
+                        cy.getByTestId('main', 'edit-post-body').click();
+                        cy.topModal().find('textarea[name="body"]').click();
+                        cy.topModal().find('textarea[name="value"]');
+                        cy.focused().clear().type(`/image`);
+                        cy.topModal().find('button').contains('Add Image').click();
+                        cy.topModal().find('input[type="file"][name="file"]').selectFile(LOGO_PNG);
+                        cy.topModal().find('button[type="submit"]').click();
+                        cy.waitForLoadingToFinish();
+                        cy.closeTopModal();
+                        cy.topModal().find('button[type="submit"]').click();
+                        cy.waitForLoadingToFinish();
+                        cy.getByTestId('main', 'post-body').find('img[src="/logo-png"]').should('exist');
                     });
 
                     describe('tags', () => {
@@ -262,6 +278,20 @@ export function describeApp(role){
                         cy.topModal().find('tbody > tr:last-child a').click();
                         cy.topModal().submitForm({});
                         cy.getByTestId('main', 'page-body').should('contain', 'Pear plum');
+
+                        cy.getByTestId('main', 'page-body').find('img[src="/logo-png"]').should('not.exist');
+                        cy.getByTestId('main', 'edit-page-body').click();
+                        cy.topModal().find('textarea[name="body"]').click();
+                        cy.topModal().find('textarea[name="value"]');
+                        cy.focused().clear().type(`/image`);
+                        cy.topModal().find('button').contains('Add Image').click();
+                        cy.topModal().find('input[type="file"][name="file"]').selectFile(LOGO_PNG);
+                        cy.topModal().find('button[type="submit"]').click();
+                        cy.waitForLoadingToFinish();
+                        cy.closeTopModal();
+                        cy.topModal().find('button[type="submit"]').click();
+                        cy.waitForLoadingToFinish();
+                        cy.getByTestId('main', 'page-body').find('img[src="/logo-png"]').should('exist');
                     });
 
                     describe('meta', () => {

@@ -72,7 +72,9 @@ export default {
             const out = {};
             const busboy = Busboy({ headers: request.headers });
         
-            busboy.on('file', function(fieldname, file, filename, encoding, mimeType) {
+            busboy.on('file', function(fieldname, file, info) {
+                const { filename, mimeType, encoding } = info;
+                
                 const chunks = [];
         
                 file.on('data', chunk => {
