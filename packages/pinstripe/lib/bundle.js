@@ -3,6 +3,7 @@ import { build } from 'esbuild';
 import { promisify } from 'util';
 import { writeFile, readFile } from 'fs';
 import { dirSync } from 'tmp';
+import { fileURLToPath } from 'url';
 
 import { Class } from './class.js';
 import { Registry } from './registry.js';
@@ -84,4 +85,8 @@ export const Bundle = Class.extend().include({
             }
         };
     }
+});
+
+['window', 'worker'].forEach(environment => {
+    Bundle.addModule(environment, `import ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};`);
 });
