@@ -17,18 +17,32 @@ ServiceFactory.FileImporter.register('js', {
             }
         });
 
-        if(client) Bundle.addModule('worker', `
-            import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
-            import { client } from ${JSON.stringify(filePath)};
-            ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
-                meta(){
-                    this.filePaths.push(${JSON.stringify(filePath)});
-                    this.include(client);
-                }
-            });
-        `);
+        if(client) {
+            Bundle.addModule('worker', `
+                import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                import { client } from ${JSON.stringify(filePath)};
+                ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
+                    meta(){
+                        this.filePaths.push(${JSON.stringify(filePath)});
+                        this.include(client);
+                    }
+                });
+            `);
+        } else {
+            Bundle.addModule('worker', `
+                import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                import { notAvailableOnClientServiceFactory } from ${JSON.stringify(fileURLToPath(import.meta.url))};
+                ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, notAvailableOnClientServiceFactory);
+            `);
+        }
     }
 });
+
+export const notAvailableOnClientServiceFactory =  {
+    create(){
+        throw new MissingResourceError(`"${this.constructor.name}" service factory is not available on the client`);
+    }
+};
 
 export function createDecoratorsInclude(hash, decorators){
     const out = {};
