@@ -18,7 +18,8 @@ export const client = {
                 
                 try {
                     const params = await this.extractParams(request1);
-                    console.log('------- params', params);
+                    const [ status, headers, body ] = await this.callHandler.handleCall(params);
+                    console.log('------- [ status, headers, body ]', [ status, headers, body ]);
 
                     return fetch(request2);
                 } catch (error) {

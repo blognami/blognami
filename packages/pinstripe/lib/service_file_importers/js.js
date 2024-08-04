@@ -3,6 +3,7 @@ import { ServiceFactory } from '../service_factory.js';
 import { Bundle } from '../bundle.js'; // pinstripe-if-client: const Bundle = undefined;
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 import { inflector } from '../inflector.js';
+import { MissingResourceError } from '../missing_resource_error.js';
 
 ServiceFactory.FileImporter.register('js', {
     async importFile({ filePath, relativeFilePathWithoutExtension }){
