@@ -5,7 +5,7 @@ export default {
         return this.defer(() => this);
     },
     
-    build(options = {}){
-        return Bundle.create('window').build(options);
+    build(name = 'window', options = {}){
+        return Bundle.create(name).build(options);
     }
 };
