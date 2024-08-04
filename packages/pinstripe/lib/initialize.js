@@ -11,3 +11,25 @@ if(typeof window != 'undefined'){
     });
 }
 
+if (typeof navigator != 'undefined' && "serviceWorker" in navigator) {
+    (async () => {
+        try {
+            const registration = await navigator.serviceWorker.register("/_shell/javascripts/all.js?bundle=worker", {
+                scope: "./",
+            });
+            if (registration.installing) {
+            console.log("Service worker installing");
+            } else if (registration.waiting) {
+            console.log("Service worker installed");
+            } else if (registration.active) {
+            console.log("Service worker active");
+            }
+        } catch (error) {
+            console.error(`Registration failed with ${error}`);
+        }
+    })();
+}
+
+if(typeof self != 'undefined' && typeof window == 'undefined'){
+    console.log('------------- self', self);
+}
