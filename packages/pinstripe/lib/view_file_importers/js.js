@@ -8,24 +8,22 @@ View.FileImporter.register('js', {
     async importFile({ filePath, relativeFilePathWithoutExtension }){
         if(relativeFilePathWithoutExtension == '_file_importer') return;
 
-        const { default: _default, server, client, decorators } = (await import(filePath));
+        const { default: _default, client, decorators } = (await import(filePath));
 
-        if(_default || client || server) View.register(relativeFilePathWithoutExtension, {
+        if(_default || client) View.register(relativeFilePathWithoutExtension, {
             meta(){
                 this.filePaths.push(filePath);
                 if(_default) this.include(_default);
-                if(server) this.include(server);
             }
         });
 
-        if(_default || client) Bundle.addModule('worker', `
+        if(client) Bundle.addModule('worker', `
             import { View } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
-            import { default as _default, client } from ${JSON.stringify(filePath)};
+            import { client } from ${JSON.stringify(filePath)};
             View.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
                 meta(){
                     this.filePaths.push(${JSON.stringify(filePath)});
-                    if(_default) this.include(_default);
-                    if(client) this.include(client);
+                    this.include(client);
                 }
             });
         `);
