@@ -3,6 +3,7 @@ import { View, createHash } from '../view.js';
 import { Bundle } from '../bundle.js'; // pinstripe-if-client: const Bundle = undefined;
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 import { inflector } from '../inflector.js';
+import { MissingResourceError } from '../missing_resource_error.js';
 
 View.FileImporter.register('js', {
     async importFile({ filePath, relativeFilePathWithoutExtension }){
@@ -17,16 +18,24 @@ View.FileImporter.register('js', {
             }
         });
 
-        if(client) Bundle.addModule('worker', `
-            import { View } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
-            import { client } from ${JSON.stringify(filePath)};
-            View.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
-                meta(){
-                    this.filePaths.push(${JSON.stringify(filePath)});
-                    this.include(client);
-                }
-            });
-        `);
+        if(client) {
+            Bundle.addModule('worker', `
+                import { View } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                import { client } from ${JSON.stringify(filePath)};
+                View.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
+                    meta(){
+                        this.filePaths.push(${JSON.stringify(filePath)});
+                        this.include(client);
+                    }
+                });
+            `);
+        } else {
+            Bundle.addModule('worker', `
+                import { View } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                import { notAvailableOnClientView } from ${JSON.stringify(fileURLToPath(import.meta.url))};
+                View.register(${JSON.stringify(relativeFilePathWithoutExtension)}, notAvailableOnClientView);
+            `);
+        }
 
         if(decorators){
             Bundle.addModule('window', `
@@ -39,6 +48,12 @@ View.FileImporter.register('js', {
         }
     }
 });
+
+export const notAvailableOnClientView =  {
+    render(){
+        throw new MissingResourceError(`"${this.constructor.name}" view is not available on the client`);
+    }
+};
 
 export function createDecoratorsInclude(hash, decorators){
     const out = {};
