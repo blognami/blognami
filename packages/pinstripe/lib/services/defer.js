@@ -1,8 +1,10 @@
 
 import { defer } from '../defer.js';
 
-export default {
+const client = {
     create(){
         return defer;
     }
 };
+
+export default client;
