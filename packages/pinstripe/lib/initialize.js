@@ -26,6 +26,12 @@ if (typeof navigator != 'undefined' && "serviceWorker" in navigator) {
 
 if(typeof window == 'undefined' && typeof addEventListener == 'function'){
     console.log('------- worker!');
+
+    addEventListener("install", (event) => {
+        console.log('------- install');
+        event.waitUntil(skipWaiting());
+    });
+
     addEventListener("fetch", (event) => {
         console.log('------- fetch', event.request.url);
         event.respondWith(fetch(event.request));
