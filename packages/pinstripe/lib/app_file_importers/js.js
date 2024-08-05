@@ -1,16 +1,16 @@
 
-import { ServiceFactory } from '../service_factory.js';
+import { App } from '../app.js';
 import { Bundle } from '../bundle.js'; // pinstripe-if-client: const Bundle = undefined;
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 import { MissingResourceError } from '../missing_resource_error.js';
 
-ServiceFactory.FileImporter.register('js', {
+App.FileImporter.register('js', {
     async importFile({ filePath, relativeFilePathWithoutExtension }){
         if(relativeFilePathWithoutExtension == '_file_importer') return;
 
         const { default: _default, client } = (await import(filePath));
 
-        if(_default || client) ServiceFactory.register(relativeFilePathWithoutExtension, {
+        if(_default || client) App.register(relativeFilePathWithoutExtension, {
             meta(){
                 this.filePaths.push(filePath);
                 if(_default) this.include(_default);
@@ -19,9 +19,9 @@ ServiceFactory.FileImporter.register('js', {
 
         if(client) {
             Bundle.addModule('worker', `
-                import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                import { App } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
                 import { ${typeof client == 'boolean' ? `default as client` : `client`} } from ${JSON.stringify(filePath)};
-                ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
+                App.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
                     meta(){
                         this.filePaths.push(${JSON.stringify(filePath)});
                         this.include(client);
@@ -30,16 +30,17 @@ ServiceFactory.FileImporter.register('js', {
             `);
         } else {
             Bundle.addModule('worker', `
-                import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
-                import { notAvailableOnClientServiceFactory } from ${JSON.stringify(fileURLToPath(import.meta.url))};
-                ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, notAvailableOnClientServiceFactory);
+                import { App } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                import { notAvailableOnClientApp } from ${JSON.stringify(fileURLToPath(import.meta.url))};
+                App.register(${JSON.stringify(relativeFilePathWithoutExtension)}, notAvailableOnClientApp);
             `);
         }
     }
 });
 
-export const notAvailableOnClientServiceFactory =  {
+export const notAvailableOnClientApp =  {
     create(){
-        throw new MissingResourceError(`"${this.constructor.name}" service factory is not available on the client`);
+        throw new MissingResourceError(`"${this.constructor.name}" app is not available on the client`);
     }
 };
+

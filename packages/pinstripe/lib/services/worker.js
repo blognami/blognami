@@ -1,7 +1,9 @@
 
 import { MissingResourceError } from '../missing_resource_error.js';
 
-export const client = {
+export const client = true;
+
+export default {
     create(){
         return this;
     },
@@ -75,5 +77,3 @@ export const client = {
         return out;
     }
 };
-
-export default client;

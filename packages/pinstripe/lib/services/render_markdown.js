@@ -1,10 +1,10 @@
 
 import { Markdown } from '../markdown.js';
 
-const client = {
+export const client = true;
+
+export default{
     create(){
         return markdown => Markdown.render(markdown);
     }
 };
-
-export default client;

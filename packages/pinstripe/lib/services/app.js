@@ -1,6 +1,8 @@
 
 import { App } from '../app.js';
 
+export const client = true;
+
 export default {
     create(){
         if(!this.context.root.hasOwnProperty('app')){

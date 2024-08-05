@@ -1,7 +1,9 @@
 
 import { Workspace } from "../workspace.js";
 
-export const client = {
+export const client = true;
+
+export default {
     create(){
         return this;
     },
@@ -84,4 +86,4 @@ export const client = {
     }
 };
 
-export default client;
+
