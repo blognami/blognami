@@ -18,6 +18,7 @@ if (typeof navigator != 'undefined' && "serviceWorker" in navigator) {
             await navigator.serviceWorker.register("/_shell/javascripts/all.js?bundle=worker", {
                 scope: "./",
             });
+            console.log("Service worker registered");
         } catch (error) {
             console.error(`Service worker registration failed with ${error}`);
         }

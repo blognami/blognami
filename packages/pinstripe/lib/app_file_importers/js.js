@@ -39,7 +39,7 @@ App.FileImporter.register('js', {
 });
 
 export const notAvailableOnClientApp =  {
-    create(){
+    renderView(){
         throw new MissingResourceError(`"${this.constructor.name}" app is not available on the client`);
     }
 };

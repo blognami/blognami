@@ -18,6 +18,7 @@ export default {
 
         const viewName = normalizedParams._url.pathname.replace(/^\/|\/$/g, '') || 'index';
         
+        console.log('Rendering view:', viewName, normalizedParams);
         let out = await this.renderGuardViews(viewName, normalizedParams);
         if(out) return out;
 
