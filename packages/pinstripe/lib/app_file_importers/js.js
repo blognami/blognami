@@ -20,7 +20,7 @@ App.FileImporter.register('js', {
 
             Bundle.addModule('worker', `
                 import { App } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
-                import { ${typeof client == 'boolean' ? `default as client` : `client`} } from ${JSON.stringify(filePath)};
+                import { default as client } from ${JSON.stringify(filePath)};
                 App.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
                     meta(){
                         this.filePaths.push(${JSON.stringify(filePath)});

@@ -21,12 +21,12 @@ export default {
                 try {
                     const params = await this.extractParams(request1);
                     const [ status, headers, body ] = await this.callHandler.handleCall(params);
-                    console.log('------- [ status, headers, body ]', [ status, headers, body ]);
-
+                    console.log('[ status, headers, body ]', status, headers, body);
+                    if(status >= 200 && status < 300) return new Response(body, { status, headers });
                     return fetch(request2);
                 } catch (error) {
-                    console.error('------- error', error);
                     if(!(error instanceof MissingResourceError)) throw error;
+                    console.log(error);
                     return fetch(request2);
                 }
             })());
