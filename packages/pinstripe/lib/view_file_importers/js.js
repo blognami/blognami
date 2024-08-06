@@ -29,12 +29,6 @@ View.FileImporter.register('js', {
                     }
                 });
             `);
-        } else {
-            Bundle.addModule('worker', `
-                import { View } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
-                import { notAvailableOnClientView } from ${JSON.stringify(fileURLToPath(import.meta.url))};
-                View.register(${JSON.stringify(relativeFilePathWithoutExtension)}, notAvailableOnClientView);
-            `);
         }
 
         if(decorators){
@@ -48,12 +42,6 @@ View.FileImporter.register('js', {
         }
     }
 });
-
-export const notAvailableOnClientView =  {
-    render(){
-        throw new MissingResourceError(`"${this.constructor.name}" view is not available on the client`);
-    }
-};
 
 export function createDecoratorsInclude(hash, decorators){
     const out = {};
