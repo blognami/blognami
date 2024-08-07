@@ -37,7 +37,7 @@ test('defer (3)', async () => {
     expect(await foo.toString()).toBe("hello world");
 });
 
-test.only('defer (4)', async () => {
+test('defer (4)', async () => {
 
     const { foo } = defer(() => ({}));
     

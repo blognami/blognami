@@ -20,6 +20,7 @@ export default {
                 
                 try {
                     const params = await this.extractParams(request1);
+                    console.log('params', params);
                     const [ status, headers, body ] = await this.callHandler.handleCall(params);
                     console.log('[ status, headers, body ]', status, headers, body);
                     if(status >= 200 && status < 300) return new Response(body, { status, headers });
@@ -68,12 +69,14 @@ export default {
         const contentType = request.headers.get('content-type') ?? '';
         if(contentType == 'application/json') return request.json();
         const out = {};
-        if(contentType.match(/^multipart\/form-data/)){
-            const formData = await request.formData();
-            for(let [key, value] of formData){
-                out[key] = value;
+        try {
+            if(contentType.match(/^multipart\/form-data/)){
+                const formData = await request.formData();
+                for(let [key, value] of formData){
+                    out[key] = value;
+                }
             }
-        }
+        } catch (error){}
         return out;
     }
 };
