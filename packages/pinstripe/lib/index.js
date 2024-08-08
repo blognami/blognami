@@ -11,4 +11,4 @@ export * from './import_all.js'; // pinstripe-if-client: export const importAll 
 export * from './project.js'; // pinstripe-if-client: export const project = undefined;
 export * from './service_factory.js';
 export * from './view.js';
-export * from './workspace.js'; // pinstripe-if-client: export const Workspace = undefined;
+export * from './workspace.js';
