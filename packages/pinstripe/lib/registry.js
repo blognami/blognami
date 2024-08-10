@@ -116,12 +116,12 @@ export const Registry = {
                     this.registry._FileImporter.register('js', {
                         async importFile({ filePath, relativeFilePathWithoutExtension }){
                             if(relativeFilePathWithoutExtension == '_file_importer') return;
-                            const include = (await import(filePath)).default;
-                            if(!include) return;
+                            const { default: _default } = (await import(filePath));
+                            if(!_default) return;
                             that.register(relativeFilePathWithoutExtension, {
                                 meta(){
                                     this.filePaths.push(filePath);
-                                    this.include(include);
+                                    this.include(_default);
                                 }
                             });
                         }

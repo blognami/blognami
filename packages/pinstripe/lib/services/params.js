@@ -1,4 +1,6 @@
 
+export const client = true;
+
 export default {
     create(){
         if(!this.context.hasOwnProperty('params')){
