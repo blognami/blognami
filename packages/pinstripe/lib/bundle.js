@@ -3,22 +3,40 @@ import { build } from 'esbuild';
 import { promisify } from 'util';
 import { writeFile, readFile } from 'fs';
 import { dirSync } from 'tmp';
+import { fileURLToPath } from 'url';
 
-import { Client } from '../client.js';
+import { Class } from './class.js';
+import { Registry } from './registry.js';
+import { Project } from './project.js';
 
-let buildPromise;
+export const Bundle = Class.extend().include({
+    meta(){
+        this.include(Registry);
 
-export default {
-    create(){
-        return this.defer(() => this);
+        this.assignProps({
+            get modules(){
+                if(!this.hasOwnProperty('_modules')){
+                    this._modules = [];
+                }
+                return this._modules;
+            },
+
+            addModule(environment, module){
+                this.register(environment, {
+                    meta(){
+                        this.modules.push(module);
+                    }
+                });
+            },
+        });
     },
 
     async build(options = {}){
         const { force = false } = options;
-        if(!buildPromise || force){
-            buildPromise = this._build();
+        if(!this.constructor.buildPromise || force){
+            this.constructor.buildPromise = this._build();
         }
-        return buildPromise;
+        return this.constructor.buildPromise;
     },
 
     async _build(){
@@ -26,10 +44,10 @@ export default {
         const inFile = `${tmpDir}/in.js`;
         const outFile = `${tmpDir}/out.js`;
 
-        await promisify(writeFile)(inFile, Client.instance.modules.map((_, i) => `import ${JSON.stringify(`${tmpDir}/module-${i}.js`)};`).join('\n'));
+        await promisify(writeFile)(inFile, this.constructor.modules.map((_, i) => `import ${JSON.stringify(`${tmpDir}/module-${i}.js`)};`).join('\n'));
 
-        for(let i = 0; i < Client.instance.modules.length; i++){
-            await promisify(writeFile)(`${tmpDir}/module-${i}.js`, Client.instance.modules[i]);
+        for(let i = 0; i < this.constructor.modules.length; i++){
+            await promisify(writeFile)(`${tmpDir}/module-${i}.js`, this.constructor.modules[i]);
         }
         
         await build({
@@ -38,7 +56,7 @@ export default {
             sourcemap: true,
             outfile: outFile,
             plugins: [this.plugin],
-            nodePaths: await this.project.nodePaths,
+            nodePaths: await Project.instance.nodePaths,
             minify: process.env.NODE_ENV == 'production'
         });
 
@@ -67,4 +85,8 @@ export default {
             }
         };
     }
-};
+});
+
+['window', 'worker'].forEach(environment => {
+    Bundle.addModule(environment, `import ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};`);
+});

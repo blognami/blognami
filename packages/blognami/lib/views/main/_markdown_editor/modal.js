@@ -1,6 +1,4 @@
 
-import { Markdown } from 'pinstripe';
-
 export const styles = `
     .root {
         display: flex;
@@ -65,10 +63,14 @@ export const decorators = {
 
         const updatePreview = () => {
             const { value } = this.values;
-            previewFrame.patch(Markdown.render(value, { mode: 'edit' }).toString());
+            const formData = new FormData();
+            formData.append('value', value);
+            console.log('previewFrame.url', previewFrame.url);
+            previewFrame.load(previewFrame.url, { method: 'POST', body: formData });
             anchorTextarea.value = value;
         };
 
+        console.log(this.values);
         updatePreview();
 
         let previousValue = editorTextarea.value;
@@ -111,7 +113,7 @@ export default {
                     <div class="${this.cssClasses.textPane}">
                         <textarea name="value" data-part="editor-textarea">${this.params.value}</textarea>
                     </div>
-                    <div class="${this.cssClasses.previewPane}" data-part="editor-preview-pane"></div>
+                    <div class="${this.cssClasses.previewPane}" data-part="editor-preview-pane" data-url="/_markdown_editor/preview" data-component="pinstripe-frame" load-on-init="false"></div>
                 </div>
             </pinstripe-modal>
         `;

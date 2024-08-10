@@ -1,13 +1,10 @@
 
-import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
-
 import { Class } from './class.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
 import { Inflector } from './inflector.js';
 import { VirtualNode } from './virtual_node.js';
 import { Registry } from './registry.js';
 import { ComponentEvent } from './component_event.js';
-import { Client } from './client.js'; // pinstripe-if-client: const Client = undefined;
 import { generateProofOfWork } from './proof_of_work.js';
 
 export const Component = Class.extend().include({
@@ -37,30 +34,6 @@ export const Component = Class.extend().include({
 
             normalizeName(name){
                 return Inflector.instance.dasherize(name);
-            }
-        });
-
-        this.FileImporter.register('js', {
-            meta(){
-                const { importFile } = this.prototype;
-
-                this.include({
-                    async importFile(params){
-                        const { filePath, relativeFilePathWithoutExtension } = params;
-                        if((await import(filePath)).default){
-                            Client.instance.addModule(`
-                                import { Component } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};
-                                import include from ${JSON.stringify(filePath)};
-                                Component.register(${JSON.stringify(relativeFilePathWithoutExtension)}, include);
-                            `);
-                        } else {
-                            Client.instance.addModule(`
-                                import ${JSON.stringify(filePath)};
-                            `);
-                        }
-                        return importFile.call(this, params);
-                    }
-                });
             }
         });
     },

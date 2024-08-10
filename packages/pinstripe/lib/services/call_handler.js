@@ -1,6 +1,8 @@
 
 import { Workspace } from "../workspace.js";
 
+export const client = true;
+
 export default {
     create(){
         return this;
@@ -83,3 +85,5 @@ export default {
         return [ status, normalizedHeaders, body ];
     }
 };
+
+

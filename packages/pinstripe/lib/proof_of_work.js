@@ -1,5 +1,5 @@
 
-import crypto from 'crypto' // pinstripe-if-client: const crypto = window.crypto;
+import crypto from 'crypto' // pinstripe-if-client: const crypto = typeof window != 'undefined' ? window.crypto : undefined;
 
 import { Class } from './class.js';
 import { Singleton } from './singleton.js';
