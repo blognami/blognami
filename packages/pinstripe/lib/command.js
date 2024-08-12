@@ -19,7 +19,7 @@ export const Command = Class.extend().include({
 
         this.assignProps({
             normalizeName(name){
-                return inflector.dasherize(name).replace(/\//g, ':');
+                return name.split(/[:\/]/).map(part => inflector.dasherize(part)).join(':');
             },
 
             async run(context, name = 'list-commands', params = {}){

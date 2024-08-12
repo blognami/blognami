@@ -9,7 +9,8 @@
     ".": "./lib/index.js",
     "./database": "./lib/database/index.js",
     "./multi-tenant": "./lib/extensions/multi-tenant/index.js",
-    "./util": "./lib/util.js"
+    "./util": "./lib/util.js",
+    "./static": "./lib/extensions/static/index.js"
   },
   "bin": {
     "pinstripe": "./cli.js"

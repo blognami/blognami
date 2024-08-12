@@ -1,5 +1,6 @@
 
 import 'pinstripe';
+import 'pinstripe/static';
 import 'blognami';
 
 import { importAll } from 'pinstripe';
