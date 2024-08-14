@@ -1,6 +1,6 @@
 
-import { Class } from '../class.js';
-import { inflector } from '../inflector.js';
+import { Class } from '../../class.js';
+import { inflector } from '../../inflector.js';
 import { Row } from './row.js';
 
 export const Union = Class.extend().include({

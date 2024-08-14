@@ -2,12 +2,9 @@ import mysql from 'mysql2';
 import sqlite from 'sqlite3';
 import { existsSync, unlinkSync } from 'fs';
 
-import { Class } from '../class.js';
+import { Class } from '../../class.js';
 
 import { MYSQL_COLUMN_TYPE_TO_TYPE_MAP, SQLITE_COLUMN_TYPE_TO_TYPE_MAP } from './constants.js';
-
-let sqliteConnectionCounters = {};
-let sqliteConnections = {};
 
 export const Client = Class.extend().include({
     initialize(config){
@@ -33,13 +30,7 @@ export const Client = Class.extend().include({
 
                 sqlite(){
                     const { filename } = this.config;
-                    if(sqliteConnectionCounters[filename]){
-                        sqliteConnectionCounters[filename]++;
-                    } else {
-                        sqliteConnectionCounters[filename] = 1;
-                        sqliteConnections[filename] = new sqlite.Database(filename);
-                    }
-                    this.connection = sqliteConnections[filename];
+                    this.connection = new sqlite.Database(filename);
                 }
             });   
         }
@@ -92,14 +83,32 @@ export const Client = Class.extend().include({
         try {
             out = await fn();
         } catch(e){
-            if(this.transactionLevel > 0) await this.run('rollback');
+            if(this.transactionLevel > 0) await this.adapt(this, {
+                async mysql(){
+                    await this.run('rollback');
+                },
+
+                async sqlite(){
+                    await this.run('rollback');
+                    await this.run('pragma locking_mode = normal');
+                }
+            });
+
+
             this.transactionLevel = 0;
             throw e;
         }
         this.transactionLevel--;
-        if(this.transactionLevel == 0){
-            await this.run('commit');
-        }
+        if(this.transactionLevel == 0)await this.adapt(this, {
+            async mysql(){
+                await this.run('commit');
+            },
+
+            async sqlite(){
+                await this.run('commit');
+                await this.run('pragma locking_mode = normal');
+            }
+        });
         return out;
     },
 
@@ -124,16 +133,9 @@ export const Client = Class.extend().include({
             },
 
             async sqlite(){
-                const { filename } = this.config;
-
-                sqliteConnectionCounters[filename]--;
-                if(sqliteConnectionCounters[filename] == 0){
-                    await new Promise((resolve, reject) => {
-                        this.connection.close(error => error ? reject(error) : resolve());
-                    });
-                    delete sqliteConnections[filename];
-                    delete sqliteConnectionCounters[filename];
-                }
+                await new Promise((resolve, reject) => {
+                    this.connection.close(error => error ? reject(error) : resolve());
+                });
             }
         })
         delete this.connection;

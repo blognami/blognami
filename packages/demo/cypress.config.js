@@ -7,8 +7,8 @@ export default defineConfig({
 
     setupNodeEvents(on, config) {
       on('task', {
-        'reset-database-from-sql': () => {
-          execSync(`pinstripe reset-database-from-sql`, {
+        'database:reset-from-sql': () => {
+          execSync(`pinstripe database:reset-from-sql`, {
             stdio: 'inherit'
           });
           return null;

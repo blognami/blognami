@@ -1,5 +1,5 @@
 
-import { Class } from '../class.js';
+import { Class } from '../../class.js';
 
 export const ColumnReference = Class.extend().include({
     initialize(tableReference, name){

@@ -132,7 +132,7 @@ export default {
             line();
             line('```bash');
             indent(() => {
-               line('pinstripe init-database');
+               line('pinstripe database:init');
                line('pinstripe start-server');
             });
             line('```');

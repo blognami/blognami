@@ -7,10 +7,11 @@
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js",
-    "./database": "./lib/database/index.js",
+    "./database": "./lib/extensions/database/index.js",
     "./multi-tenant": "./lib/extensions/multi-tenant/index.js",
     "./util": "./lib/util.js",
-    "./static": "./lib/extensions/static/index.js"
+    "./static": "./lib/extensions/static/index.js",
+    "./only-once": "./lib/extensions/only-once/index.js"
   },
   "bin": {
     "pinstripe": "./cli.js"

@@ -1,12 +1,12 @@
 
 import crypto from 'crypto';
 
-import { Registry } from '../registry.js';
-import { Model, defineCallbacks } from "../model.js";
+import { Registry } from '../../registry.js';
+import { Model, defineCallbacks } from "../../model.js";
 import { Table } from "./table.js";
 import { TableReference } from './table_reference.js';
-import { defer } from '../defer.js';
-import { inflector } from '../inflector.js';
+import { defer } from '../../defer.js';
+import { inflector } from '../../inflector.js';
 import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP } from './constants.js';
 
 export const Row = Model.extend().include({

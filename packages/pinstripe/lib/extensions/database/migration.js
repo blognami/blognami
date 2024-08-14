@@ -1,6 +1,6 @@
 
-import { Class } from '../class.js';
-import { Registry } from '../registry.js';
+import { Class } from '../../class.js';
+import { Registry } from '../../registry.js';
 
 export const Migration = Class.extend().include({
     meta(){

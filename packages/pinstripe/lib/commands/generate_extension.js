@@ -1,7 +1,7 @@
 
 export default {
     async run(){
-        const name = this.inflector.snakeify(this.params.name || '');
+        const name = this.inflector.dasherize(this.params.name || '');
         if(name == ''){
             console.error('An extension --name must be given.');
             process.exit();

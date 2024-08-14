@@ -1,6 +1,5 @@
 
-import { Database } from "../database.js";
-import { Client } from "../database/client.js";
+import { Database, Client } from "pinstripe/database";
 
 export default {
     create(){

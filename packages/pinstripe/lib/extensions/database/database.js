@@ -1,7 +1,10 @@
-import { Class } from './class.js';
-import { trapify } from './trapify.js';
-import { defer } from './defer.js';
-import { Table, Union, Row, Migrator } from './database/index.js';
+import { Class } from '../../class.js';
+import { trapify } from '../../trapify.js';
+import { defer } from '../../defer.js';
+import { Table } from './table.js';
+import { Union } from './union.js';
+import { Row } from './row.js';
+import { Migrator } from './migrator.js';
 
 let loadSchemaPromise;
 

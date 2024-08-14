@@ -1,6 +1,5 @@
 
-import { Database } from 'pinstripe';
-import { Client } from "pinstripe/database";
+import { Database, Client } from "pinstripe/database";
 
 export default {
     create(){
