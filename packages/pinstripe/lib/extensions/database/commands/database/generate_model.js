@@ -12,7 +12,7 @@ export default {
 
         const collectionName = this.inflector.camelize(this.inflector.pluralize(name));
         if(!await this.database[collectionName]){
-            await this.runCommand('generate-migration', { name: `create_${name}`, fields, table: collectionName});
+            await this.runCommand('database:generate-migration', { name: `create_${name}`, fields, table: collectionName});
         }
     
         const { inProjectRootDir, generateFile, line, indent } = this.fsBuilder;

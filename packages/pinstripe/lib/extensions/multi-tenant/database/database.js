@@ -1,5 +1,5 @@
 
-import { Database } from 'pinstripe';
+import { Database } from 'pinstripe/database';
 
 Database.include({
     meta(){

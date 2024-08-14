@@ -1,5 +1,5 @@
 
-import { Class } from '../class.js';
+import { Class } from '../../class.js';
 import { Migration } from "./migration.js";
 
 export const Migrator = Class.extend().include({

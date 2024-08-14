@@ -1,7 +1,7 @@
 
-import { Class } from '../class.js';
-import { inflector } from '../inflector.js';
-import { Registry } from '../registry.js';
+import { Class } from '../../class.js';
+import { inflector } from '../../inflector.js';
+import { Registry } from '../../registry.js';
 import { TableReference } from "./table_reference.js";
 import {
     TYPE_TO_MYSQL_COLUMN_TYPE_MAP,

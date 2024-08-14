@@ -3,6 +3,10 @@ import { MissingResourceError } from '../missing_resource_error.js';
 
 export const client = true;
 
+const URL_BLACKLIST = [
+    /\/__/ // Cypress
+];
+
 export default {
     create(){
         return this;
@@ -14,15 +18,16 @@ export default {
         });
     
         addEventListener("fetch", (event) => {
+
+            if(URL_BLACKLIST.some((regex) => event.request.url.match(regex))) return false;
+
             event.respondWith((async () => {
                 const request1 = event.request.clone();
                 const request2 = event.request.clone();
                 
                 try {
                     const params = await this.extractParams(request1);
-                    console.log('params', params);
                     const [ status, headers, body ] = await this.callHandler.handleCall(params);
-                    console.log('[ status, headers, body ]', status, headers, body);
                     if(status >= 200 && status < 300) return new Response(body, { status, headers });
                     return fetch(request2);
                 } catch (error) {

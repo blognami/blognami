@@ -11,7 +11,7 @@ To see it in action run the following:
     npm install -g pinstripe
     pinstripe generate-project foo
     cd foo
-    pinstripe init-database
+    pinstripe database:init
     pinstripe start-server
 ```
 
