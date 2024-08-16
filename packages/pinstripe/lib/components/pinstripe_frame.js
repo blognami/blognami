@@ -36,33 +36,30 @@ export default {
 
     loading: false,
 
-    loadWasBlocked: false,
-
     async load(url = this.url, options = {}){
-        if(this.loading) {
-            this.loadWasBlocked = true;
-            return;
-        };
-        this.url = url;
-        this.loading = true;
-        this.abort();
-        const { method = 'GET', placeholderUrl } = options;
-        const cachedHtml = method == 'GET' ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
-        if(cachedHtml) this.patch(cachedHtml);
-        let minimumDelay = 0;
-        if(!cachedHtml && placeholderUrl){
-            const placeholderHtml = loadCache.get(`${this.document.loadCacheNamespace}:${placeholderUrl}`);
-            if(placeholderHtml) {
-                this.patch(placeholderHtml);
-                minimumDelay = 300;
+        try {
+            this.url = url;
+            this.loading = true;
+            this.abort();
+            const { method = 'GET', placeholderUrl } = options;
+            const cachedHtml = method == 'GET' ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
+            if(cachedHtml) this.patch(cachedHtml);
+            let minimumDelay = 0;
+            if(!cachedHtml && placeholderUrl){
+                const placeholderHtml = loadCache.get(`${this.document.loadCacheNamespace}:${placeholderUrl}`);
+                if(placeholderHtml) {
+                    this.patch(placeholderHtml);
+                    minimumDelay = 300;
+                }
             }
+            const response = await this.fetch(this.url, { minimumDelay, ...options });
+            const html = await response.text();
+            this.loading = false;
+            if(html == cachedHtml) return;
+            this.patch(html);
+            if(method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
+        } catch(e) {
+            // do nothing
         }
-        const response = await this.fetch(this.url, { minimumDelay, ...options });
-        const html = await response.text();
-        this.loading = false;
-        if(html == cachedHtml && !this.loadWasBlocked) return;
-        this.loadWasBlocked = false;
-        this.patch(html);
-        if(method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
     }
 };

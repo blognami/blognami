@@ -8,7 +8,7 @@ export default {
         }
         
         const isAdmin = user?.role == 'admin';
-        let posts = this.database.posts.where({ taggedWith: tag.name });
+        let posts = this.database.posts.where({ tags: { name: tag.name } });
         if(isAdmin){
             posts = posts.orderBy('published', 'asc')
         } else {

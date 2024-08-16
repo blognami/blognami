@@ -65,12 +65,10 @@ export const decorators = {
             const { value } = this.values;
             const formData = new FormData();
             formData.append('value', value);
-            console.log('previewFrame.url', previewFrame.url);
             previewFrame.load(previewFrame.url, { method: 'POST', body: formData });
             anchorTextarea.value = value;
         };
 
-        console.log(this.values);
         updatePreview();
 
         let previousValue = editorTextarea.value;
