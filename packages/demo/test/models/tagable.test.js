@@ -29,11 +29,11 @@ test(`tagable`, () => Workspace.run(async _ => {
     await tagableTags.insert({ tagId: pearTag.id, tagableId: post.id });
 
     expect(await tagables.count()).toBe(1);
-    expect(await tagables.where({ taggedWith: 'Apple' }).count()).toBe(1);
-    expect(await tagables.where({ taggedWith: 'Pear' }).count()).toBe(1);
-    expect(await tagables.where({ taggedWith: 'Peach' }).count()).toBe(0);
-    expect(await tagables.where({ taggedWith: ['Apple', 'Pear'] }).count()).toBe(1);
-    expect(await tagables.where({ taggedWith: ['Apple', 'Peach'] }).count()).toBe(0);
+    expect(await tagables.where({ tags: { name:  'Apple' } }).count()).toBe(1);
+    expect(await tagables.where({ tags: { name:  'Pear' } }).count()).toBe(1);
+    expect(await tagables.where({ tags: { name:  'Peach' } }).count()).toBe(0);
+    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Pear' } }).count()).toBe(1);
+    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Peach' } }).count()).toBe(0);
 
     let tagable = await tagables.where({ id: post.id }).first();
 
@@ -45,17 +45,17 @@ test(`tagable`, () => Workspace.run(async _ => {
     await tagableTags.insert({ tagId: peachTag.id, tagableId: tagable.id });
     
     expect(await tagable.tags.count()).toBe(2);
-    expect(await tagables.where({ taggedWith: 'Apple' }).count()).toBe(1);
-    expect(await tagables.where({ taggedWith: 'Pear' }).count()).toBe(0);
-    expect(await tagables.where({ taggedWith: 'Peach' }).count()).toBe(1);
-    expect(await tagables.where({ taggedWith: ['Apple', 'Pear'] }).count()).toBe(0);
-    expect(await tagables.where({ taggedWith: ['Apple', 'Peach'] }).count()).toBe(1);
+    expect(await tagables.where({ tags: { name:  'Apple' } }).count()).toBe(1);
+    expect(await tagables.where({ tags: { name:  'Pear' } }).count()).toBe(0);
+    expect(await tagables.where({ tags: { name:  'Peach' } }).count()).toBe(1);
+    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Pear' } }).count()).toBe(0);
+    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Peach' } }).count()).toBe(1);
 
     await tagable.tagableTags.delete();
     expect(await tagable.tags.count()).toBe(0);
-    expect(await tagables.where({ taggedWith: 'Apple' }).count()).toBe(0);
-    expect(await tagables.where({ taggedWith: 'Pear' }).count()).toBe(0);
-    expect(await tagables.where({ taggedWith: 'Peach' }).count()).toBe(0);
-    expect(await tagables.where({ taggedWith: ['Apple', 'Pear'] }).count()).toBe(0);
-    expect(await tagables.where({ taggedWith: ['Apple', 'Peach'] }).count()).toBe(0);
+    expect(await tagables.where({ tags: { name:  'Apple' } }).count()).toBe(0);
+    expect(await tagables.where({ tags: { name:  'Pear' } }).count()).toBe(0);
+    expect(await tagables.where({ tags: { name:  'Peach' } }).count()).toBe(0);
+    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Pear' } }).count()).toBe(0);
+    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Peach' } }).count()).toBe(0);
 }));

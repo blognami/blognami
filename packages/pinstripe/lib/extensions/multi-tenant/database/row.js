@@ -1,30 +1,8 @@
 
 import { Table, Row } from 'pinstripe/database';
 
-let initializedTenantModel = false; // We shouldn't need this.
-
 Row.include({
     meta(){
-        const { loadSchema } = this;
-
-        // this.assignProps({
-        //     async loadSchema(...args){
-        //         await loadSchema.call(this, ...args);
-
-        //         if(initializedTenantModel) return;
-        //         initializedTenantModel = true;
-                
-        //         this.register('tenant', {
-        //             meta(){
-        //                 Table.names.forEach(name => {
-        //                     if(name == 'tenants') return;
-        //                     this.hasMany(name);
-        //                 });
-        //             }
-        //         });
-        //     }
-        // });
-
         const { initialize, update } = this.prototype;
 
         this.include({

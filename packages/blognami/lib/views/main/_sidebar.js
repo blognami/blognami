@@ -86,7 +86,7 @@ export default {
                             <h4 class="${this.cssClasses.tagsName}">${name}</h4>
                             <span class="${this.cssClasses.tagsCount}">
                                 ${async () => {
-                                    const count = await this.database.posts.where({ taggedWith: name }).count();
+                                    const count = await this.database.posts.where({ tags: { name } }).count();
                                     if(count == 1) return this.renderHtml`
                                         ${count} post
                                     `;

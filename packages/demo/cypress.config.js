@@ -1,5 +1,6 @@
 import { defineConfig } from "cypress";
 import { execSync } from 'child_process';
+import fs from 'fs';
 
 export default defineConfig({
   e2e: {
@@ -13,8 +14,20 @@ export default defineConfig({
           });
           return null;
         }
-      })
+      });
+
+      on('after:spec', (spec, results) => {
+        if (results && results.video) {
+          const failures = results.tests.some((test) =>
+            test.attempts.some((attempt) => attempt.state === 'failed')
+          )
+          if (!failures) {
+            fs.unlinkSync(results.video)
+          }
+        }
+      });
     },
   },
-  video: false
+  
+  video: process.env.CI == 'true'
 });

@@ -29,6 +29,12 @@ jobs:
       - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} npm run test
         env:
           CI: true
+      - name: Archive videos of failed cypress tests
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-videos
+          path: packages/demo/cypress/videos
   # deploy:
   #   name: Deploy to github pages
   #   runs-on: ubuntu-latest
