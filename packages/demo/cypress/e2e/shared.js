@@ -144,7 +144,8 @@ export function describeApp(role){
                     describe('tags', () => {
                         it(`should have an interface to allow the user to edit the tags`, () => {
                             ['Apple', 'Pear', 'Plum'].forEach((name) => {
-                                cy.getByTestId('navbar', 'add-tag').click({ force: true });
+                                cy.getByTestId('navbar', 'add-content').click();
+                                cy.topPopover().getByTestId('add-tag').click();
                                 cy.topModal().contains('Add tag');
                                 cy.topModal().submitForm({ name });
                                 cy.url().should('contain', name.toLowerCase());
@@ -465,7 +466,8 @@ export function describeApp(role){
                         cy.topModal().contains('OK').click();
                         cy.getByTestId('main', 'user-meta').should('exist');
 
-                        cy.getByTestId('navbar', 'add-user').click({ force: true });
+                        cy.getByTestId('navbar', 'add-content').click();
+                        cy.topPopover().getByTestId('add-user').click();
                         cy.topModal().contains('Add user');
                         cy.topModal().submitForm({ name: 'Apple Orange', email: 'apple.orange@example.com' });
                         cy.url().should('contain', 'apple-orange');
@@ -489,9 +491,8 @@ export function describeApp(role){
                 cy.getByTestId('navbar', 'title').contains('Lorem ipsum');
                 if(role == 'admin'){
                     cy.getByTestId('navbar', 'sign-out').contains('Sign out');
-                    cy.getByTestId('navbar').contains('Add');
-                    cy.getByTestId('navbar', 'add-page').contains('Page');
-                    cy.getByTestId('navbar', 'add-post').contains('Post');
+                    cy.getByTestId('navbar', 'find-content').contains('Find');
+                    cy.getByTestId('navbar', 'add-content').contains('Add');
                 } else {
                     cy.getByTestId('navbar', 'sign-in').contains('Sign in');
                 }
@@ -499,32 +500,37 @@ export function describeApp(role){
 
             if(role == 'admin'){
                 it(`should have an interface to allow the user to add a page`, () => {
-                    cy.getByTestId('navbar', 'add-page').click({ force: true });
+                    cy.getByTestId('navbar', 'add-content').click();
+                    cy.topPopover().getByTestId('add-page').click();
                     cy.topModal().contains('Add page');
                     cy.topModal().submitForm({ title: 'Apple plum' });
                     cy.url().should('contain', 'apple-plum');
                 });
                 it(`should have an interface to allow the user to add a post`, () => {
-                    cy.getByTestId('navbar', 'add-post').click({ force: true });
+                    cy.getByTestId('navbar', 'add-content').click();
+                    cy.topPopover().getByTestId('add-post').click();
                     cy.topModal().contains('Add post');
                     cy.topModal().submitForm({ title: 'Apple pear' });
                     cy.url().should('contain', 'apple-pear');
                 });
                 it(`should have an interface to allow the user to add a tag`, () => {
-                    cy.getByTestId('navbar', 'add-tag').click({ force: true });
+                    cy.getByTestId('navbar', 'add-content').click();
+                    cy.topPopover().getByTestId('add-tag').click();
                     cy.topModal().contains('Add tag');
                     cy.topModal().submitForm({ name: 'Apple peach' });
                     cy.url().should('contain', 'apple-peach');
                 });
                 it(`should have an interface to allow the user to add a user`, () => {
-                    cy.getByTestId('navbar', 'add-user').click({ force: true });
+                    cy.getByTestId('navbar', 'add-content').click();
+                    cy.topPopover().getByTestId('add-user').click();
                     cy.topModal().contains('Add user');
                     cy.topModal().submitForm({ name: 'Apple Orange', email: 'apple.orange@example.com' });
                     cy.url().should('contain', 'apple-orange');
                 });
 
                 it(`should have an interface to allow the user to find a post`, () => {
-                    cy.getByTestId('navbar', 'find-post').click({ force: true });
+                    cy.getByTestId('navbar', 'find-content').click();
+                    cy.topPopover().getByTestId('find-post').click();
                     cy.topModal().contains('Posts');
                     cy.topModal().should('not.contain', 'Graham Place');
                     cy.topModal().find('input').type('Graham Place');

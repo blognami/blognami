@@ -3,6 +3,10 @@ export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
+        if(!this.overlay) return;
+
+        this.document.body.clip();
+
         const { width = 'medium', height = 'auto' } = this.params;
 
         this.shadow.patch(`
@@ -15,10 +19,10 @@ export default {
                     overflow: auto;
                     z-index: 40;
                     position: absolute;
-                    bottom: 0;
                     left: 0;
-                    right: 0;
                     top: 0;
+                    width: 100vw;
+                    height: 100vh;
                     background-color: rgba(10, 10, 10, 0.86);
                 }
                 .close-button {
@@ -91,6 +95,22 @@ export default {
         `);
 
         this.shadow.on('click', '.root, .container, .body, .close-button', () => this.trigger('close'));
+
+        this.on('clean', () => this.document.body.unclip());
+
+        const popoverOverlays = [];
+        let currentAnchor = this.overlay.parent;
+        while(currentAnchor.is('pinstripe-popover *')){
+            popoverOverlays.push(currentAnchor.overlay);
+            currentAnchor = currentAnchor.overlay.parent;
+        }
+        delete this.overlay.parent._overlayChild;
+        this.overlay._parent = currentAnchor;
+        currentAnchor._overlayChild = this.overlay;
+        while(popoverOverlays.length){
+            popoverOverlays.shift().remove();
+        }
+        
     },
 
     isModal: true

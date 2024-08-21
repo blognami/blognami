@@ -8,7 +8,6 @@ export default {
             const { confirm, target = '_self', method = 'GET', href, placeholder } = this.params;
             if(normalizeUrl(href, window.location.href).host != window.location.host) return;
             event.preventDefault();
-            event.stopPropagation();
             loadFrame.call(this, confirm, target, method, href, placeholder);
         });
 

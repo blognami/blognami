@@ -13,8 +13,8 @@ export default {
                     position: fixed;
                     top: 0;
                     left: 0;
-                    height: 100%;
                     width: 100%;
+                    height: 0;
                     z-index: 1000000;
                 }
             </style>
@@ -45,9 +45,5 @@ export default {
         this.constructor.parent.prototype.remove.call(this, ...args);
 
         delete this.parent._overlayChild;
-        
-        if(!this.document.find('pinstripe-overlay')){
-            this.document.body.unclip();
-        }
     }
 };

@@ -8,6 +8,8 @@ export default {
             <slot>
             <div class="styles"></div>
         `);
+
+        this.clipCounter = 0;
     },
 
     get progressBar(){
@@ -18,7 +20,8 @@ export default {
     },
     
     clip(){
-        this.shadow.find('.styles').patch(`
+        this.clipCounter++;
+        if(this.clipCounter == 1) this.shadow.find('.styles').patch(`
             <style>
                 :host {
                     overflow: hidden !important;
@@ -28,6 +31,10 @@ export default {
     },
 
     unclip(){
-        this.shadow.find('.styles').patch('');
+        this.clipCounter--;
+        if(this.clipCounter <= 0){
+            this.clipCounter = 0;
+            this.shadow.find('.styles').patch('');
+        }
     }
 };
