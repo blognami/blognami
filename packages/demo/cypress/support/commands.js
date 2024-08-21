@@ -78,6 +78,8 @@ Cypress.Commands.add('typeOtpFor', { prevSubject: true }, async (subject, email)
 
 Cypress.Commands.add('topModal',() => cy.waitForLoadingToFinish().then(() => cy.get('pinstripe-modal').last()));
 
+Cypress.Commands.add('topPopover',() => cy.waitForLoadingToFinish().then(() => cy.get('pinstripe-popover').last()));
+
 Cypress.Commands.add('closeTopModal', () => cy.topModal().shadow().find('button').click());
 
 Cypress.Commands.add('waitForLoadingToFinish', () => {
