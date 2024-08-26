@@ -6,6 +6,7 @@ export function describeApp(role){
     context(`When a ${role} user`, () => {
         beforeEach(() => {
             cy.visit('http://127.0.0.1:3000');
+            cy.waitForLoadingToFinish();
             cy.window().then((window) => {
                 window.isPersistentContext = true;
             });
@@ -13,6 +14,7 @@ export function describeApp(role){
         });
 
         afterEach(() => {
+            cy.waitForLoadingToFinish();
             cy.window().its('isPersistentContext').should('equal', true);
             cy.resetDatabaseFromSql();
         });
@@ -37,6 +39,31 @@ export function describeApp(role){
                         'Zulauf Roads'
                     ]);
                 });
+
+                if(role == 'admin'){
+                    describe('meta', () => {
+                        it(`should have an interface to allow the user to edit the meta title`, () => {
+                            cy.title().should('contain', 'Lorem ipsum');
+                            cy.getByTestId('main', 'home-meta').should('not.contain', 'Meta title: Lorem ipsum');
+                            cy.title().should('not.contain', 'Apple pear');
+                            cy.getByTestId('main', 'home-meta').should('not.contain', 'Meta title: Apple pear');
+                            cy.getByTestId('main', 'edit-home-meta').click();
+                            cy.topModal().submitForm({ metaTitle: 'Apple pear' });
+                            cy.title().should('contain', 'Apple pear');
+                            cy.getByTestId('main', 'home-meta').should('contain', 'Meta title: Apple pear');
+                            cy.title().should('not.contain', 'Lorem ipsum');
+                        });
+
+                        it(`should have an interface to allow the user to edit the meta description`, () => {
+                            cy.get('head meta[name=description]').should('not.exist');
+                            cy.getByTestId('main', 'home-meta').should('not.contain', 'Meta description: Apple plum');
+                            cy.getByTestId('main', 'edit-home-meta').click();
+                            cy.topModal().submitForm({ metaDescription: 'Apple plum' });
+                            cy.get('head meta[name=description]').should('have.attr', 'content', 'Apple plum');
+                            cy.getByTestId('main', 'home-meta').should('contain', 'Meta description: Apple plum');
+                        });
+                    });
+                }
             });
 
             describeSidebar();
@@ -169,6 +196,27 @@ export function describeApp(role){
                     });
 
                     describe('meta', () => {
+                        it(`should have an interface to allow the user to edit the meta title`, () => {
+                            cy.title().should('contain', 'Alexandra Burgs');
+                            cy.getByTestId('main', 'post-meta').should('not.contain', 'Meta title: Alexandra Burgs');
+                            cy.title().should('not.contain', 'Apple pear');
+                            cy.getByTestId('main', 'post-meta').should('not.contain', 'Meta title: Apple pear');
+                            cy.getByTestId('main', 'edit-post-meta').click();
+                            cy.topModal().submitForm({ metaTitle: 'Apple pear' });
+                            cy.title().should('contain', 'Apple pear');
+                            cy.getByTestId('main', 'post-meta').should('contain', 'Meta title: Apple pear');
+                            cy.title().should('not.contain', 'Alexandra Burgs');
+                        });
+
+                        it(`should have an interface to allow the user to edit the meta description`, () => {
+                            cy.get('head meta[name=description]').should('not.exist');
+                            cy.getByTestId('main', 'post-meta').should('not.contain', 'Meta description: Apple plum');
+                            cy.getByTestId('main', 'edit-post-meta').click();
+                            cy.topModal().submitForm({ metaDescription: 'Apple plum' });
+                            cy.get('head meta[name=description]').should('have.attr', 'content', 'Apple plum');
+                            cy.getByTestId('main', 'post-meta').should('contain', 'Meta description: Apple plum');
+                        });
+
                         it(`should have an interface to allow the user to edit the slug`, () => {
                             cy.getByTestId('main', 'post-meta').should('contain', 'Slug: alexandra-burgs');
                             cy.url().should('contain', '/alexandra-burgs');
@@ -210,17 +258,17 @@ export function describeApp(role){
                         });
 
                         it(`should have an interface to allow the user to edit the enableComments flag`, () => {
-                            cy.getByTestId('main', 'post-meta').should('contain', 'enableComments: true');
+                            cy.getByTestId('main', 'post-meta').should('contain', 'Enable comments: true');
                             cy.getByTestId('main', 'add-comment').should('exist');
 
                             cy.getByTestId('main', 'edit-post-meta').click();
                             cy.topModal().submitForm({ enableComments: false });
-                            cy.getByTestId('main', 'post-meta').should('contain', 'enableComments: false');
+                            cy.getByTestId('main', 'post-meta').should('contain', 'Enable comments: false');
                             cy.getByTestId('main', 'add-comment').should('not.exist');
 
                             cy.getByTestId('main', 'edit-post-meta').click();
                             cy.topModal().submitForm({ enableComments: true });
-                            cy.getByTestId('main', 'post-meta').should('contain', 'enableComments: true');
+                            cy.getByTestId('main', 'post-meta').should('contain', 'Enable comments: true');
                             cy.getByTestId('main', 'add-comment').should('exist');
                         });
                     });
@@ -296,6 +344,27 @@ export function describeApp(role){
                     });
 
                     describe('meta', () => {
+                        it(`should have an interface to allow the user to edit the meta title`, () => {
+                            cy.title().should('contain', 'Osinski Extensions');
+                            cy.getByTestId('main', 'page-meta').should('not.contain', 'Meta title: Osinski Extensions');
+                            cy.title().should('not.contain', 'Apple pear');
+                            cy.getByTestId('main', 'page-meta').should('not.contain', 'Meta title: Apple pear');
+                            cy.getByTestId('main', 'edit-page-meta').click();
+                            cy.topModal().submitForm({ metaTitle: 'Apple pear' });
+                            cy.title().should('contain', 'Apple pear');
+                            cy.getByTestId('main', 'page-meta').should('contain', 'Meta title: Apple pear');
+                            cy.title().should('not.contain', 'Osinski Extensions');
+                        });
+
+                        it(`should have an interface to allow the user to edit the meta description`, () => {
+                            cy.get('head meta[name=description]').should('not.exist');
+                            cy.getByTestId('main', 'page-meta').should('not.contain', 'Meta description: Apple plum');
+                            cy.getByTestId('main', 'edit-page-meta').click();
+                            cy.topModal().submitForm({ metaDescription: 'Apple plum' });
+                            cy.get('head meta[name=description]').should('have.attr', 'content', 'Apple plum');
+                            cy.getByTestId('main', 'page-meta').should('contain', 'Meta description: Apple plum');
+                        });
+
                         it(`should have an interface to allow the user to edit the slug`, () => {
                             cy.getByTestId('main', 'page-meta').should('contain', 'Slug: osinski-extensions');
                             cy.url().should('contain', '/osinski-extensions');
@@ -359,6 +428,27 @@ export function describeApp(role){
 
                 if(role == 'admin'){
                     describe('meta', () => {
+                        it(`should have an interface to allow the user to edit the meta title`, () => {
+                            cy.title().should('contain', 'Excepturi Corporis');
+                            cy.getByTestId('main', 'tag-meta').should('not.contain', 'Meta title: Excepturi Corporis');
+                            cy.title().should('not.contain', 'Apple pear');
+                            cy.getByTestId('main', 'tag-meta').should('not.contain', 'Meta title: Apple pear');
+                            cy.getByTestId('main', 'edit-tag-meta').click();
+                            cy.topModal().submitForm({ metaTitle: 'Apple pear' });
+                            cy.title().should('contain', 'Apple pear');
+                            cy.getByTestId('main', 'tag-meta').should('contain', 'Meta title: Apple pear');
+                            cy.title().should('not.contain', 'Excepturi Corporis');
+                        });
+
+                        it(`should have an interface to allow the user to edit the meta description`, () => {
+                            cy.get('head meta[name=description]').should('not.exist');
+                            cy.getByTestId('main', 'tag-meta').should('not.contain', 'Meta description: Apple plum');
+                            cy.getByTestId('main', 'edit-tag-meta').click();
+                            cy.topModal().submitForm({ metaDescription: 'Apple plum' });
+                            cy.get('head meta[name=description]').should('have.attr', 'content', 'Apple plum');
+                            cy.getByTestId('main', 'tag-meta').should('contain', 'Meta description: Apple plum');
+                        });
+
                         it(`should have an interface to allow the user to edit the name`, () => {
                             cy.getByTestId('main', 'tag-meta').should('contain', 'Name: Excepturi Corporis');
 
@@ -441,6 +531,27 @@ export function describeApp(role){
                             cy.topModal().submitForm({ name: 'Admin' });
                             cy.getByTestId('main', 'user-meta').should('contain', 'Name: Admin');
                         });
+
+                        it(`should have an interface to allow the user to edit the meta title`, () => {
+                            cy.title().should('contain', 'Admin');
+                            cy.getByTestId('main', 'user-meta').should('not.contain', 'Meta title: Admin');
+                            cy.title().should('not.contain', 'Apple pear');
+                            cy.getByTestId('main', 'user-meta').should('not.contain', 'Meta title: Apple pear');
+                            cy.getByTestId('main', 'edit-user-meta').click();
+                            cy.topModal().submitForm({ metaTitle: 'Apple pear' });
+                            cy.title().should('contain', 'Apple pear');
+                            cy.getByTestId('main', 'user-meta').should('contain', 'Meta title: Apple pear');
+                            cy.title().should('not.contain', 'Admin');
+                        });
+
+                        it(`should have an interface to allow the user to edit the meta description`, () => {
+                            cy.get('head meta[name=description]').should('not.exist');
+                            cy.getByTestId('main', 'user-meta').should('not.contain', 'Meta description: Apple plum');
+                            cy.getByTestId('main', 'edit-user-meta').click();
+                            cy.topModal().submitForm({ metaDescription: 'Apple plum' });
+                            cy.get('head meta[name=description]').should('have.attr', 'content', 'Apple plum');
+                            cy.getByTestId('main', 'user-meta').should('contain', 'Meta description: Apple plum');
+                        });
                         
                         it(`should have an interface to allow the user to edit the slug`, () => {
                             cy.getByTestId('main', 'user-meta').should('contain', 'Slug: admin');
@@ -493,6 +604,7 @@ export function describeApp(role){
                     cy.getByTestId('navbar', 'sign-out').contains('Sign out');
                     cy.getByTestId('navbar', 'find-content').contains('Find');
                     cy.getByTestId('navbar', 'add-content').contains('Add');
+                    cy.getByTestId('navbar', 'edit-settings').contains('Settings');
                 } else {
                     cy.getByTestId('navbar', 'sign-in').contains('Sign in');
                 }
@@ -536,6 +648,17 @@ export function describeApp(role){
                     cy.topModal().find('input').type('Graham Place');
                     cy.topModal().contains('Graham Place').click();
                     cy.url().should('contain', 'graham-place');
+                });
+
+                it(`should have an interface to allow the user to edit the site settings`, () => {
+                    cy.getByTestId('navbar').should('contain', 'Lorem ipsum');
+                    cy.getByTestId('navbar').should('not.contain', 'Apple peach');
+                    cy.getByTestId('navbar', 'edit-settings').click();
+                    cy.topPopover().getByTestId('edit-site-meta').click();
+                    cy.topModal().contains('Edit site');
+                    cy.topModal().submitForm({ title: 'Apple peach' });
+                    cy.getByTestId('navbar').should('contain', 'Apple peach');
+                    cy.getByTestId('navbar').should('not.contain', 'Lorem ipsum');
                 });
             }
         })

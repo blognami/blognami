@@ -86,7 +86,7 @@ Cypress.Commands.add('waitForLoadingToFinish', () => {
     cy.window().then(async (window) => {
         while(true){
             await new Promise(resolve => setTimeout(resolve, 100));
-            if(window.document._component.progressBar.startCount == 0) break;
+            if(window.document._component?.progressBar.startCount == 0) break;
         }
     });
 });

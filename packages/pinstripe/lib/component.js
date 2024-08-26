@@ -584,6 +584,8 @@ function patchAttributes(attributes){
 }
 
 function patchChildren(virtualChildren){
+    if(this.type == 'head') return patchHeadChildren.call(this, virtualChildren);
+
     const children = [...this.node.childNodes].map(
         node => new Component(node, true)
     );
@@ -613,6 +615,40 @@ function patchChildren(virtualChildren){
 
     while(children.length > 0){
         remove.call(children.shift());
+    }
+}
+
+function patchHeadChildren(virtualChildren){
+    const children = [...this.node.childNodes].map(
+        node => new Component(node, true)
+    );
+
+    const stylesheets = {};
+    for(let i = 0; i < virtualChildren.length; i++){
+        const virtualChild = virtualChildren[i];
+        if(virtualChild.type != 'link') continue;
+        if(virtualChild.attributes.rel != 'stylesheet') continue;
+        const href = virtualChild.attributes.href;
+        stylesheets[href] = virtualChild;
+    }
+    while(children.length > 0){
+        const child = children.shift();
+        if(child.type == 'link' && child.attributes.rel == 'stylesheet'){
+            const { href } = child.attributes;
+            const stylesheet = stylesheets[href];
+            if(stylesheet){
+                patch.call(child, stylesheet.attributes, stylesheet.children);
+                continue;
+            }
+        }
+        remove.call(child);
+    }
+
+    for(let i = 0; i < virtualChildren.length; i++){
+        const virtualChild = virtualChildren[i];
+        if(virtualChild.type == 'script') continue;
+        if(virtualChild.type == 'link' && virtualChild.attributes.rel == 'stylesheet' && stylesheets[virtualChild.attributes.href]) continue;
+        insert.call(this, virtualChild, null, false);
     }
 }
 

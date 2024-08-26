@@ -111,7 +111,7 @@ export default {
 
             ${async () => {
                 if(loadMoreUrl && await posts.all().length < await posts.withoutPagination().count()) return this.renderView('_button', {
-                    nodeName: 'a',
+                    tagName: 'a',
                     isFullWidth: true,
                     href: loadMoreUrl,
                     'data-method': 'post',

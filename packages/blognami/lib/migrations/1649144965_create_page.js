@@ -6,6 +6,8 @@ export default {
             await pages.addColumn('title', 'string');
             await pages.addColumn('slug', 'string', { index: true });
             await pages.addColumn('body', 'text');
+            await pages.addColumn('metaTitle', 'string');
+            await pages.addColumn('metaDescription', 'text');
             await pages.addColumn('published', 'boolean',  { index: true });
             await pages.addColumn('publishedAt', 'datetime');
         });

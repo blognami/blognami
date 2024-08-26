@@ -19,10 +19,13 @@ export default {
         const pageSize = params.pageSize ? parseInt(params.pageSize) : 10;
         
         posts = posts.paginate(1, pageSize);
-    
+        
+        const meta = [];
+        meta.push({ title: tag.metaTitle || tag.name });
+        if(tag.metaDescription) meta.push({ name: 'description', content: tag.metaDescription });
     
         return this.renderView('_layout', {
-            title: tag.name,
+            meta,
             body: this.renderView('_section', {
                 title: `Latest posts tagged "${tag.name}"`,
                 body: this.renderHtml`
@@ -42,6 +45,8 @@ export default {
                                 url: `/_actions/admin/edit_tag_meta?id=${tag.id}`,
                                 body: this.renderHtml`
                                     <p><b>Name:</b> ${tag.name}</p>
+                                    <p><b>Meta title:</b> ${tag.metaTitle}</p>
+                                    <p><b>Meta description:</b> ${tag.metaDescription}</p>
                                     <p><b>Slug:</b> ${tag.slug}</p>
                                 `,
                                 linkTestId: "edit-tag-meta",
@@ -50,7 +55,7 @@ export default {
     
                             ${this.renderView('_danger_area', {
                                 body: this.renderView('_button', {
-                                    nodeName: 'a',
+                                    tagName: 'a',
                                     href: `/_actions/admin/delete_tag?id=${tag.id}`,
                                     target: '_overlay',
                                     isDangerous: true,

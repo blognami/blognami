@@ -49,9 +49,13 @@ export default {
         const isAdmin = user?.role == 'admin';
 
         if(!page.published && !isAdmin) return;
+
+        const meta = [];
+        meta.push({ title: page.metaTitle || page.title });
+        if(page.metaDescription) meta.push({ name: 'description', content: page.metaDescription });
     
         return this.renderView('_layout', {
-            title: page.title,
+            meta,
             body: this.renderHtml`
                 <section>
                     <article class="${this.cssClasses.article}">
@@ -95,6 +99,8 @@ export default {
                                 ${this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_page_meta?id=${page.id}`,
                                     body: this.renderHtml`
+                                        <p><b>Meta title:</b> ${page.metaTitle}</p>
+                                        <p><b>Meta description:</b> ${page.metaDescription}</p>
                                         <p><b>Slug:</b> ${page.slug}</p>
                                         <p><b>Published:</b> ${page.published ? 'true' : 'false'}</p>
                                     `,
@@ -104,7 +110,7 @@ export default {
 
                                 ${this.renderView('_danger_area', {
                                     body: this.renderView('_button', {
-                                        nodeName: 'a',
+                                        tagName: 'a',
                                         href: `/_actions/admin/delete_page?id=${page.id}`,
                                         target: '_overlay',
                                         isDangerous: true,

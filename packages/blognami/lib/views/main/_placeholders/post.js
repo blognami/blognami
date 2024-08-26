@@ -16,7 +16,7 @@ export const styles = `
 export default {
     render(){
         return this.renderView('_layout', {
-            title: "Loading post...",
+            meta: [{ title: "Loading post..." }],
             body: this.renderHtml`
                 <section class="section">
                     <article class="article">
