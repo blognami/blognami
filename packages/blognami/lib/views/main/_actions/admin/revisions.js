@@ -25,7 +25,7 @@ export default {
                         name: 'actions',
                         title: '',
                         cell: row => this.renderView('_button', {
-                            nodeName: 'a',
+                            tagName: 'a',
                             body: 'Restore',
                             isPrimary: true,
                             size: 'small',

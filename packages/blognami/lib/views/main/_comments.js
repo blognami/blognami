@@ -128,7 +128,7 @@ export default {
                             <a class="${this.cssClasses.action}" href="/_actions/add_comment?commentableId=${commentable.id}" target="_overlay" data-test-id="add-comment">Reply</a>
                         `;
                         return this.renderView('_button', {
-                            nodeName: 'a',
+                            tagName: 'a',
                             isFullWidth: true,
                             href: `/_actions/add_comment?commentableId=${commentable.id}`,
                             target: '_overlay',

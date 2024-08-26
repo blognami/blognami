@@ -16,6 +16,7 @@ export default {
             if(isAdmin){
                 links.push({ href: '/_actions/admin/find_content', target: '_overlay', testId: 'find-content', body: 'Find' });
                 links.push({ href: '/_actions/admin/add_content', target: '_overlay', testId: 'add-content', body: 'Add' });
+                links.push({ href: '/_actions/admin/edit_settings', target: '_overlay', testId: 'edit-settings', body: 'Settings' });
             }
             links.push({ href: '/_actions/sign_out', target: '_overlay', testId: 'sign-out', body: 'Sign out' });
         } else {

@@ -135,9 +135,13 @@ export default {
         const isAdmin = user?.role == 'admin';
 
         if(!post.published && !isAdmin) return;
+
+        const meta = [];
+        meta.push({ title: post.metaTitle || post.title });
+        if(post.metaDescription) meta.push({ name: 'description', content: post.metaDescription });
     
         return this.renderView('_layout', {
-            title: post.title,
+            meta,
             body: this.renderHtml`
                 <section>
                     <article class="${this.cssClasses.article}">
@@ -194,10 +198,12 @@ export default {
                                 ${this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_post_meta?id=${post.id}`,
                                     body: this.renderHtml`
+                                        <p><b>Meta title:</b> ${post.metaTitle}</p>
+                                        <p><b>Meta description:</b> ${post.metaDescription}</p>
                                         <p><b>Slug:</b> ${post.slug}</p>
                                         <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
                                         <p><b>Published:</b> ${post.published ? 'true' : 'false'}</p>
-                                        <p><b>enableComments:</b> ${post.enableComments ? 'true' : 'false'}</p>
+                                        <p><b>Enable comments:</b> ${post.enableComments ? 'true' : 'false'}</p>
                                     `,
                                     linkTestId: "edit-post-meta",
                                     bodyTestId: "post-meta"
@@ -205,7 +211,7 @@ export default {
 
                                 ${this.renderView('_danger_area', {
                                     body: this.renderView('_button', {
-                                        nodeName: 'a',
+                                        tagName: 'a',
                                         href: `/_actions/admin/delete_post?id=${post.id}`,
                                         target: '_overlay',
                                         isDangerous: true,
