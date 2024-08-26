@@ -4,15 +4,12 @@ export const styles = `
         appearance: none;
         display: inline-flex;
         align-items: center;
-        vertical-align: top;
         justify-content: center;
         border: 0.1rem solid transparent;
         border-radius: 0.4rem;
-        box-shadow: none;
         font-size: 1.6rem;
         height: 2.5em;
         line-height: 1.5;
-        position: relative;
         background-color: white;
         border-color: #dbdbdb;
         border-width: 0.1rem;
@@ -64,36 +61,26 @@ export const styles = `
 
 export default {
     render(){
-        let { nodeName = 'button', body, isPrimary, isDangerous, isFullWidth, size = 'medium', ...attributes } = this.params;
+        let { tagName = 'button', isPrimary, isDangerous, isFullWidth, size = 'medium', ...attributes } = this.params;
 
-        nodeName = nodeName.toLowerCase();
+        tagName = tagName.toLowerCase();
         
-        if(nodeName === 'button'){
+        if(tagName === 'button'){
             attributes.type ??= 'button';
             if(attributes.type == 'submit') isPrimary ??= true;
         }
+
+        const classes = [
+            this.cssClasses.root,
+            `is-${size}`,
+        ];
+
+        if(isPrimary) classes.push(this.cssClasses.isPrimary);
+
+        if(isDangerous) classes.push(this.cssClasses.isDangerous);
+
+        if(isFullWidth) classes.push(this.cssClasses.isFullWidth);
         
-        return this.renderHtml`
-            <${nodeName} class="${() =>{
-                const out = [
-                    this.cssClasses.root,
-                    this.renderHtml` ${this.cssClasses[`is-${size}`]}`,
-                ];
-
-                if(isPrimary) out.push(this.renderHtml` ${this.cssClasses.isPrimary}`);
-
-                if(isDangerous) out.push(this.renderHtml` ${this.cssClasses.isDangerous}`);
-
-                if(isFullWidth) out.push(this.renderHtml` ${this.cssClasses.isFullWidth}`);
-
-                return out;
-            }}" ${() => {
-                const out = [];
-                for(let [key, value] of Object.entries(attributes)){
-                    out.push(this.renderHtml`${key}="${value}"`);
-                }
-                return out;
-            }}>${body}</${nodeName}>
-        `;
+        return this.renderTag(tagName, { ...attributes, class: classes.join(' ') });
     }
 };

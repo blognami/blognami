@@ -19,9 +19,13 @@ export default {
         const pageSize = params.pageSize ? parseInt(params.pageSize) : 10;
         
         posts = posts.paginate(1, pageSize);
+
+        const meta = [];
+        meta.push({ title: user.metaTitle || user.name });
+        if(user.metaDescription) meta.push({ name: 'description', content: user.metaDescription });
     
         return this.renderView('_layout', {
-            title: user.name,
+            meta,
             body: this.renderHtml`
                 ${this.renderView('_section', {
                     title: `Latest posts by "${user.name}"`,
@@ -44,6 +48,8 @@ export default {
                                 <p><b>Name:</b> ${user.name}</p>
                                 <p><b>Email:</b> ${user.email}</p>
                                 <p><b>Role:</b> ${user.role}</p>
+                                <p><b>Meta title:</b> ${user.metaTitle}</p>
+                                <p><b>Meta description:</b> ${user.metaDescription}</p>
                                 <p><b>Slug:</b> ${user.slug}</p>
                             `,
                             linkTestId: "edit-user-meta",
@@ -52,7 +58,7 @@ export default {
 
                         ${this.renderView('_danger_area', {
                             body: this.renderView('_button', {
-                                nodeName: 'a',
+                                tagName: 'a',
                                 href: `/_actions/admin/delete_user?id=${user.id}`,
                                 target: '_overlay',
                                 isDangerous: true,

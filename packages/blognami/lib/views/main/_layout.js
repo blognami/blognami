@@ -73,8 +73,7 @@ export const styles = `
 export default {
     async render(){
         const { params } = this;
-        const { title, body } = params;
-        const site = (await this.database.site) || {};
+        const { meta = [], body } = params;
 
         let user;
         if(await this.session){
@@ -82,9 +81,10 @@ export default {
         }
 
         return this.renderView('_shell', {
-            language: site.language,
-            title: title || site.title,
-            loadCacheNamespace: user ? 'signed-in' : 'signed-out',
+            meta: [
+                { name: 'pinstripe-load-cache-namespace', content: user ? 'signed-in' : 'signed-out' },
+                ...meta
+            ],
             body: this.renderHtml`
                 ${this.renderView('_header')}
                 <div class="${this.cssClasses.site}">
