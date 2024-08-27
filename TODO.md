@@ -1,0 +1,14 @@
+
+- Implement membershipTier model
+    - Be able to edit via settings
+- Implement payment settings
+    - connect up to stripe
+- Implement memberRestrictable model
+    - Add to pages and posts
+- Implement memberSubscription
+    - Be able to manually subscribe a user
+- Implement subscription CTA
+- Implement signup form
+    - Be able to set notification preferences
+- Be able able to alter notification preferences
+- Be able to unsubscribe
