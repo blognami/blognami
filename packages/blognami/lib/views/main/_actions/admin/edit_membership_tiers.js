@@ -4,10 +4,29 @@ export const styles = `
         text-align: right;
         margin-bottom: 1em;
     }
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-spacing: 7px;
+    }
+    
+    .table th, .table td {
+        border: 1px solid #ccc;
+        padding: 7px;
+        min-width: 100px;
+        white-space: nowrap;
+    }
 `;
 
 export default {
-    render(){
+    async render(){
+
+        const membershipTiers = await this.database.membershipTiers.orderBy('monthlyPrice').all();
+
         return this.renderHtml`
             <pinstripe-modal>
                 ${this.renderView('_panel', {
@@ -21,6 +40,26 @@ export default {
                             })}
                         </div>
                         ${() => {
+                            if(membershipTiers.length > 0) return this.renderHtml`
+                                <div class="${this.cssClasses.tableWrapper}">
+                                    <table class="${this.cssClasses.table}">
+                                        <tbody>
+                                            <tr>
+                                                <th>&nbsp;</th>
+                                                ${membershipTiers.map(({ name }) => this.renderHtml`
+                                                    <th>${name}</th>
+                                                `)}
+                                            </tr>
+                                            <tr>
+                                                <th>Monthly price</th>
+                                                ${membershipTiers.map(({ monthlyPrice }) => this.renderHtml`
+                                                    <td>${monthlyPrice}</td>
+                                                `)}
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            `;
                             return this.renderHtml`
                                 <p>No membership tiers have been added yet.</p>
                             `;
