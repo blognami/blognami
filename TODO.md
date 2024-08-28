@@ -1,12 +1,10 @@
 
-- Implement membershipTier model
-    - Be able to edit via settings
+- Be able to edit monthly / yearly price via settings
 - Implement payment settings
     - connect up to stripe
-- Implement memberRestrictable model
+- Implement restrictable model
     - Add to pages and posts
-- Implement memberSubscription
-    - Be able to manually subscribe a user
+- Be able to manually subscribe a user
 - Implement subscription CTA
 - Implement signup form
     - Be able to set notification preferences
