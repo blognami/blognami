@@ -51,6 +51,7 @@ export default {
         const submitTitle = options.submitTitle || formAdapter.submitTitle;
         const cancelTitle = options.cancelTitle || formAdapter.cancelTitle;
         const unsavedChangesConfirm = options.unsavedChangesConfirm || formAdapter.unsavedChangesConfirm;
+        const _class = options.class || formAdapter.class;
 
         const indexedFields = indexFieldsByName(fields);
         const otherErrors = [];
@@ -71,7 +72,6 @@ export default {
         });
 
         return this.renderView('_form', {
-            unsavedChangesConfirm,
             requiresProofOfWork,
             isPlaceholder: this.params._placeholder == 'true',
             method: this.params._method,
@@ -79,7 +79,9 @@ export default {
             otherErrors,
             fields,
             submitTitle,
-            cancelTitle
+            cancelTitle,
+            unsavedChangesConfirm,
+            class: _class
         });
     }
 }
