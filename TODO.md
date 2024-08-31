@@ -1,9 +1,7 @@
 
-- Be able to edit monthly / yearly price via settings
+- ~~Be able to edit monthly / yearly price via settings~~
 - Implement payment settings
     - connect up to stripe
-- Implement restrictable model
-    - Add to pages and posts
 - Be able to manually subscribe a user
 - Implement subscription CTA
 - Implement signup form
