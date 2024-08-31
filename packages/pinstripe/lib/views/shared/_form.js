@@ -135,13 +135,14 @@ export default {
             otherErrors,
             fields,
             submitTitle,
-            cancelTitle
+            cancelTitle,
+            class: _class
         } = this.params;
 
         return this.renderHtml`
             <pinstripe-modal>
                 <form
-                    class="${this.cssClasses.form}"
+                    class="${this.cssClasses.form}${_class ? ` ${_class}` : ''}"
                     method="post"
                     enctype="multipart/form-data"
                     autocomplete="off"
