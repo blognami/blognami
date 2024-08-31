@@ -8,3 +8,7 @@
     - adapt edit_tagable_tags
 - implement product payment plan model
     - abstract?
+        - product one off payment plan
+        - product monthly payment plan
+        - product yearly payment plan
+    - or have frequency field?
