@@ -8,7 +8,6 @@ export default {
             await sites.addColumn('monthlyPaidSubscriptionPrice', 'decimal');    
             await sites.addColumn('enableYearlyPaidSubscriptions', 'boolean');   
             await sites.addColumn('yearlyPaidSubscriptionPrice', 'decimal');
-            await sites.addColumn('subscriptionFreeTrialDays', 'integer');
             await sites.addColumn('enableFreeSubscriptions', 'boolean');
             await sites.addColumn('salt', 'string');
         });
