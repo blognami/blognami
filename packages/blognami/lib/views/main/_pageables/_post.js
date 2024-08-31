@@ -198,6 +198,7 @@ export default {
                                 ${this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_post_meta?id=${post.id}`,
                                     body: this.renderHtml`
+                                        <p><b>Access:</b> ${post.access}</p>
                                         <p><b>Meta title:</b> ${post.metaTitle}</p>
                                         <p><b>Meta description:</b> ${post.metaDescription}</p>
                                         <p><b>Slug:</b> ${post.slug}</p>
