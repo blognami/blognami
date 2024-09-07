@@ -1,36 +1,80 @@
-
 export const decorators = {
-  root(){
-    const enableMonthlyPaidSubscriptions = this.find('input[name="enableMonthlyPaidSubscriptions"]');
-    const monthlyPaidSubscriptionPrice = this.find('input[name="monthlyPaidSubscriptionPrice"]');
-    const enableYearlyPaidSubscriptions = this.find('input[name="enableYearlyPaidSubscriptions"]');
-    const yearlyPaidSubscriptionPrice = this.find('input[name="yearlyPaidSubscriptionPrice"]');
+  root() {
+    const enableMonthly = this.find('input[name="enableMonthly"]');
+    const monthlyPrice = this.find('input[name="monthlyPrice"]');
+    const enableYearly = this.find('input[name="enableYearly"]');
+    const yearlyPrice = this.find('input[name="yearlyPrice"]');
+    const stripeSecretKey = this.find('input[name="stripeSecretKey"]');
 
     const updateVisibility = () => {
-      monthlyPaidSubscriptionPrice.parent.patch({ style: enableMonthlyPaidSubscriptions.value ? '' : 'display: none;'});
-      yearlyPaidSubscriptionPrice.parent.patch({ style: enableYearlyPaidSubscriptions.value ? '' : 'display: none;'});
+      monthlyPrice.parent.patch({
+        style: enableMonthly.value ? "" : "display: none;",
+      });
+      yearlyPrice.parent.patch({
+        style: enableYearly.value ? "" : "display: none;",
+      });
+      stripeSecretKey.parent.patch({
+        style: enableMonthly.value || enableYearly.value ? "" : "display: none;",
+      });
     };
 
-    enableMonthlyPaidSubscriptions.on('change', updateVisibility);
-    enableYearlyPaidSubscriptions.on('change', updateVisibility);
+    enableMonthly.on("change", updateVisibility);
+    enableYearly.on("change", updateVisibility);
 
     updateVisibility();
-  }
+  },
 };
 
 export default {
   async render() {
-    const site = await this.database.site;
+    const {
+      enableMonthly,
+      monthlyPrice,
+      enableYearly,
+      yearlyPrice,
+      enableFree,
+    } = await this.database.membershipTiers;
+    const { secretKey: stripeSecretKey } = await this.database.stripe;
 
-    return this.renderForm(site, {
+    const model = this.createModel({
+      meta() {
+        this.mustNotBeBlank("monthlyPrice", {
+          when: ({ enableMonthly }) => enableMonthly,
+        });
+        this.mustNotBeBlank("yearlyPrice", {
+          when: ({ enableYearly }) => enableYearly,
+        });
+        this.mustNotBeBlank("stripeSecretKey", {
+          when: ({ enableMonthly, enableYearly }) =>
+            enableMonthly || enableYearly,
+        });
+      },
+
+      enableMonthly,
+
+      monthlyPrice,
+
+      enableYearly,
+
+      yearlyPrice,
+
+      enableFree,
+
+      stripeSecretKey,
+    });
+
+    return this.renderForm(model, {
       class: this.cssClasses.root,
 
+      title: "Edit membership",
+
       fields: [
-        "enableMonthlyPaidSubscriptions",
-        "monthlyPaidSubscriptionPrice",
-        "enableYearlyPaidSubscriptions",
-        "yearlyPaidSubscriptionPrice",
-        "enableFreeSubscriptions",
+        { name: "enableMonthly", type: "checkbox" },
+        "monthlyPrice",
+        { name: "enableYearly", type: "checkbox" },
+        "yearlyPrice",
+        { name: "enableFree", type: "checkbox" },
+        "stripeSecretKey",
       ],
     });
   },
