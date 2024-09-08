@@ -60,11 +60,15 @@ export const Model = Class.extend().include({
         await this._runBeforeValidationCallbacks();
         this._validationErrors = {};
         await this._runValidateWithCallbacks();
+        this.throwValidationErrors();
+        await this._runAfterValidationCallbacks();
+        return this;
+    },
+
+    throwValidationErrors(){
         if(this.isValidationError()){
             throw new ValidationError(this.validationErrors);
         }
-        await this._runAfterValidationCallbacks();
-        return this;
     },
 
     toFormAdapter(){

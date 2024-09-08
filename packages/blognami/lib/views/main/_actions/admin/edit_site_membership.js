@@ -1,3 +1,4 @@
+
 export const decorators = {
   root() {
     const enableMonthly = this.find('input[name="enableMonthly"]');
@@ -79,7 +80,9 @@ export default {
         { name: "stripeSecretKey", type: "password", value: stripeSecretKey },
       ],
 
-      async success({ enableMonthly, monthlyPrice, enableYearly, yearlyPrice, enableFree, stripeSecretKey }) {
+      async success(model) {
+        const { enableMonthly, monthlyPrice, enableYearly, yearlyPrice, enableFree, stripeSecretKey } = model;
+
         await that.database.transaction(async () => {
           await that.database.membershipTiers.update({
             enableMonthly,
@@ -89,9 +92,33 @@ export default {
             enableFree,
           });
 
+          if(!stripeSecretKey) return;
+
           await that.database.stripe.update({
             secretKey: stripeSecretKey,
           });
+
+          try {
+            const { data } = await that.stripe.products.search({
+              query: 'metadata[\'blognamiType\']:\'membership\'',
+            });
+
+            let product = data[0];
+
+            if(!product){
+              product = await that.stripe.products.create({
+                name: 'Membership',
+                metadata: {
+                  blognamiType: 'membership',
+                },
+              });
+            }
+
+            console.log(JSON.stringify(product, null, 2));
+          } catch(e){
+            model.setValidationError('stripeSecretKey', 'Invalid secret key');
+            model.throwValidationErrors();
+          }
         });
       }
     });
