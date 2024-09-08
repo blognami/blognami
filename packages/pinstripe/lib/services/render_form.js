@@ -110,7 +110,7 @@ const extractFields = (formAdapter, options) => {
         const out = { ...optionsField };
         const formAdapterField = indexedNormalizedFormAdapterFields[optionsField.name] || {};
         out.name = optionsField.name;
-        out.label = optionsField.label || formAdapterField.label || Inflector.instance.capitalize(out.name);
+        out.label = optionsField.label || formAdapterField.label || Inflector.instance.humanize(out.name);
         out.type = optionsField.type || formAdapterField.type || 'text';
         out.component = optionsField.component || formAdapterField.component;
         out.placeholder = optionsField.placeholder || formAdapterField.placeholder;

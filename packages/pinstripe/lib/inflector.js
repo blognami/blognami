@@ -181,6 +181,10 @@ export const Inflector = Class.extend().include({
 
     titleize(stringable){
         return this.snakeify(stringable).split(/_/).map(word => this.capitalize(word)).join(' ');
+    },
+
+    humanize(stringable){
+        return this.capitalize(this.snakeify(stringable).split(/_/).join(' '));
     }
 });
 
