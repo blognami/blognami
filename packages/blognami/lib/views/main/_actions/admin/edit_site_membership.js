@@ -34,6 +34,7 @@ export default {
       yearlyPrice,
       enableFree,
     } = await this.database.membershipTiers;
+
     const { secretKey: stripeSecretKey } = await this.database.stripe;
 
     const model = this.createModel({
@@ -62,19 +63,37 @@ export default {
       stripeSecretKey,
     });
 
+    const that = this;
+
     return this.renderForm(model, {
       class: this.cssClasses.root,
 
       title: "Edit membership",
 
       fields: [
-        { name: "enableMonthly", type: "checkbox" },
-        "monthlyPrice",
-        { name: "enableYearly", type: "checkbox" },
-        "yearlyPrice",
-        { name: "enableFree", type: "checkbox" },
-        { name: "stripeSecretKey", type: "password" },
+        { name: "enableMonthly", type: "checkbox", value: enableMonthly },
+        { name: "monthlyPrice", type: "number", value: monthlyPrice },
+        { name: "enableYearly", type: "checkbox", value: enableYearly },
+        { name: "yearlyPrice", type: "number", value: yearlyPrice },
+        { name: "enableFree", type: "checkbox", value: enableFree },
+        { name: "stripeSecretKey", type: "password", value: stripeSecretKey },
       ],
+
+      async success({ enableMonthly, monthlyPrice, enableYearly, yearlyPrice, enableFree, stripeSecretKey }) {
+        await that.database.transaction(async () => {
+          await that.database.membershipTiers.update({
+            enableMonthly,
+            monthlyPrice,
+            enableYearly,
+            yearlyPrice,
+            enableFree,
+          });
+
+          await that.database.stripe.update({
+            secretKey: stripeSecretKey,
+          });
+        });
+      }
     });
   },
 };
