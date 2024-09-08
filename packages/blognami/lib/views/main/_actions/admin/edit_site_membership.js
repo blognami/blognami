@@ -39,14 +39,13 @@ export default {
     const model = this.createModel({
       meta() {
         this.mustNotBeBlank("monthlyPrice", {
-          when: ({ enableMonthly }) => enableMonthly,
+          when: ({ enableMonthly }) => enableMonthly == 'true',
         });
         this.mustNotBeBlank("yearlyPrice", {
-          when: ({ enableYearly }) => enableYearly,
+          when: ({ enableYearly }) => enableYearly == 'true',
         });
         this.mustNotBeBlank("stripeSecretKey", {
-          when: ({ enableMonthly, enableYearly }) =>
-            enableMonthly || enableYearly,
+          when: ({ enableMonthly, enableYearly }) => enableMonthly == 'true' || enableYearly == 'true',
         });
       },
 

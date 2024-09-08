@@ -9,7 +9,7 @@ export const Model = Class.extend().include({
             mustNotBeBlank(name, options = {}){
                 const { message = 'Must not be blank', when = () => true } = options;
                 return this.validateWith(async validateable => {
-                    if(!validateable.isValidationError(name)) return;
+                    if(validateable.isValidationError(name)) return;
                     if(! await when.call(validateable, validateable)) return;
                     const value = `${validateable[name] || ''}`.trim();
                     if(value == ''){
@@ -21,7 +21,7 @@ export const Model = Class.extend().include({
             mustMatchPattern(name, pattern, options = {}){
                 const { message = 'Must match pattern', when = () => true } = options;
                 return this.validateWith(async validateable => {
-                    if(!validateable.isValidationError(name)) return;
+                    if(validateable.isValidationError(name)) return;
                     if(! await when.call(validateable, validateable)) return;
                     const value = `${validateable[name] || ''}`.trim();
                     if(!value.match(pattern)){
