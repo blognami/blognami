@@ -73,7 +73,7 @@ export default {
         { name: "enableYearly", type: "checkbox" },
         "yearlyPrice",
         { name: "enableFree", type: "checkbox" },
-        "stripeSecretKey",
+        { name: "stripeSecretKey", type: "password" },
       ],
     });
   },
