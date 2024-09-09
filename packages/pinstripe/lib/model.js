@@ -56,10 +56,12 @@ export const Model = Class.extend().include({
         return Object.keys(this.validationErrors).length > 0;
     },
 
-    async validate(){
+    async validate(options = {}){
+        const { validateWith = () => {} } = options;
         await this._runBeforeValidationCallbacks();
         this._validationErrors = {};
         await this._runValidateWithCallbacks();
+        await validateWith.call(this, this);
         this.throwValidationErrors();
         await this._runAfterValidationCallbacks();
         return this;
@@ -77,10 +79,11 @@ export const Model = Class.extend().include({
             fields: [],
             submitTitle: 'Submit',
             cancelTitle: 'Cancel',
-            submit: async (values, fn) => {
+            submit: async (values, options = {}) => {
+                const { success = () => {}, validateWith } = options;
                 Object.assign(this, values);
-                await this.validate();
-                return fn(this);
+                await this.validate({ validateWith });
+                return success(this);
             }
         }
     }
