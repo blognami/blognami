@@ -64,6 +64,7 @@ export default {
             }
         } catch(e) {
             this.loading = false;
+            progressBar.stop();
             throw e;
         }
         progressBar.stop();
