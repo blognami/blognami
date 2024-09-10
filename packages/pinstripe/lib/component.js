@@ -456,7 +456,7 @@ export const Component = Class.extend().include({
 
     abort(){
         while(this._registeredAbortControllers.length){
-            this._registeredAbortControllers.pop().abort();
+            this._registeredAbortControllers.pop().abort(`Request aborted`);
         }
         return this;
     },

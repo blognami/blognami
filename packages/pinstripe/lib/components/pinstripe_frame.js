@@ -63,10 +63,9 @@ export default {
                 if(method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
             }
         } catch(e) {
-            this.loading = false;
-            progressBar.stop();
-            throw e;
+            if(e != 'Request aborted') console.log(e);
         }
+        this.loading = false;
         progressBar.stop();
     }
 };
