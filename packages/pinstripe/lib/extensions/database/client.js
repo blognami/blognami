@@ -21,7 +21,6 @@ export const Client = Class.extend().include({
                     const { adapter, database, ...connectionConfig } = this.config;
                     this.connection = mysql.createConnection(connectionConfig);
                     this.connection.connect();
-                    await this.run('pragma busy_timeout = 10000');
                     const databases = (await this.run('show databases')).map(row => row['Database']);
                     if(!databases.includes(database)){
                         await this.run(`create database ${database}`);
@@ -29,9 +28,10 @@ export const Client = Class.extend().include({
                     await this.run(`use ${database}`);
                 },
 
-                sqlite(){
+                async sqlite(){
                     const { filename } = this.config;
                     this.connection = new sqlite.Database(filename);
+                    await this.run('pragma busy_timeout = 10000');
                 }
             });   
         }
