@@ -21,6 +21,7 @@ export const Client = Class.extend().include({
                     const { adapter, database, ...connectionConfig } = this.config;
                     this.connection = mysql.createConnection(connectionConfig);
                     this.connection.connect();
+                    await this.run('pragma busy_timeout = 10000');
                     const databases = (await this.run('show databases')).map(row => row['Database']);
                     if(!databases.includes(database)){
                         await this.run(`create database ${database}`);
@@ -99,7 +100,7 @@ export const Client = Class.extend().include({
             throw e;
         }
         this.transactionLevel--;
-        if(this.transactionLevel == 0)await this.adapt(this, {
+        if(this.transactionLevel == 0) await this.adapt(this, {
             async mysql(){
                 await this.run('commit');
             },
