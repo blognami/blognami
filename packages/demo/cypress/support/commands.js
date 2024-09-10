@@ -81,8 +81,10 @@ Cypress.Commands.add('topModal',() => cy.waitForLoadingToFinish().then(() => cy.
 Cypress.Commands.add('topPopover',() => cy.waitForLoadingToFinish().then(() => cy.get('pinstripe-popover').last()));
 
 Cypress.Commands.add('closeTopModal', () => {
-    cy.wrap($modal).shadow().find('button').click();
-    cy.wrap($modal).should('not.exist');
+    cy.topModal().then(($modal) => {
+        cy.wrap($modal).shadow().find('button').click();
+        cy.wrap($modal).should('not.exist');
+    });
 });
 
 Cypress.Commands.add('waitForLoadingToFinish', () => {
