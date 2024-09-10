@@ -114,7 +114,7 @@ export const Table = Class.extend().include({
     join(fromKey, collectionName, toKey){
         const type = this.database.info[collectionName];
         if(type == 'union') return joinToUnion.call(this, fromKey, collectionName, toKey);
-        if(type == 'table') return joinToTable.call(this, fromKey, collectionName, toKey);
+        if(type == 'table' || type == 'singleton') return joinToTable.call(this, fromKey, collectionName, toKey);
         throw new Error(`Can't join to unknown collection "${collectionName}".`);
     },
 
