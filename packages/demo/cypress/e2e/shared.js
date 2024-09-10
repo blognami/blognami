@@ -640,14 +640,14 @@ export function describeApp(role){
                     cy.url().should('contain', 'apple-orange');
                 });
 
-                it.only(`should have an interface to allow the user to find a post`, () => {
+                it(`should have an interface to allow the user to find a post`, () => {
                     cy.getByTestId('navbar', 'find-content').click();
                     cy.topPopover().getByTestId('find-post').click();
                     cy.topModal().contains('Posts');
                     cy.topModal().should('not.contain', 'Graham Place');
                     cy.topModal().find('input').type('Graham Place');
-                    // cy.topModal().contains('Graham Place').click();
-                    // cy.url().should('contain', 'graham-place');
+                    cy.topModal().contains('Graham Place').click();
+                    cy.url().should('contain', 'graham-place');
                 });
 
                 it(`should have an interface to allow the user to edit the site settings`, () => {
