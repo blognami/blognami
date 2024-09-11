@@ -40,6 +40,7 @@ export const Component = Class.extend().include({
 
     initialize(node, skipInit = false){
         this.node = node;
+        this._managedResources = [];
         this._registeredEventListeners = [];
         this._registeredObservers = [];
         this._registeredTimers = [];
@@ -261,6 +262,20 @@ export const Component = Class.extend().include({
             this.shadow.patch(`<slot>`);
         }
         return Component.instanceFor(this.node.shadowRoot);
+    },
+
+    manage(resource){
+        const destroy = resource.destroy;
+        const that = this;
+        Object.assign(resource, {
+            destroy(){
+                const out = destroy.call(this);
+                that._managedResources = that._managedResources.filter(item => item !== this);
+                return out;
+            }
+        });
+        this._managedResources.push(resource);
+        return this;
     },
 
     focus(){
