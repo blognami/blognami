@@ -63,8 +63,8 @@ export default {
 
         this.startCount--;
         if(this.startCount == 0){
-            this._delayTimeout.destroy();
-            this._animationInterval.destroy();
+            if(this._delayTimeout) this._delayTimeout.destroy();
+            if(this._animationInterval) this._animationInterval.destroy();
             this.width = 0;
             const child = progressBar.children.pop();
             if(child){

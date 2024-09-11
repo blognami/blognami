@@ -288,7 +288,7 @@ export const Component = Class.extend().include({
             }
         });
         this._managedResources.push(resource);
-        return this;
+        return resource;
     },
 
     on(name, ...args){
