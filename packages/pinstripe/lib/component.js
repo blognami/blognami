@@ -511,6 +511,10 @@ function clean(){
 
     [...this.node.childNodes].forEach(node => node._component && clean.call(node._component));
 
+    while(this._managedResources.length){
+        this._managedResources.pop().destroy();
+    }
+
     while(this._registeredEventListeners.length){
         this.node.removeEventListener(...this._registeredEventListeners.pop());
     }
