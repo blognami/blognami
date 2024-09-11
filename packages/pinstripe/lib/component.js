@@ -41,7 +41,6 @@ export const Component = Class.extend().include({
     initialize(node, skipInit = false){
         this.node = node;
         this._managedResources = [];
-        this._registeredTimers = [];
         this._registeredAbortControllers = [];
         this._virtualNodeFilters = [];
 
@@ -332,15 +331,17 @@ export const Component = Class.extend().include({
     },
 
     setTimeout(...args){
-        const out = setTimeout(...args);
-        this._registeredTimers.push(out);
-        return out;
+        const timeout = setTimeout(...args);
+        return this.manage({
+            destroy: () => clearTimeout(timeout)
+        });
     },
 
     setInterval(...args){
-        const out = setInterval(...args);
-        this._registeredTimers.push(out);
-        return out;
+        const interval = setInterval(...args);
+        return this.manage({
+            destroy: () => clearInterval(interval)
+        });
     },
 
     remove(){
@@ -513,19 +514,11 @@ function clean(){
         this._managedResources.pop().destroy();
     }
 
-    clearTimers.call(this);
-
     this.abort();
 
     if(this._overlayChild) this._overlayChild.remove();
 
     delete this.node._component;
-}
-
-function clearTimers(){
-    while(this._registeredTimers.length){
-        clearTimeout(this._registeredTimers.pop());
-    }
 }
 
 function initChildren(){

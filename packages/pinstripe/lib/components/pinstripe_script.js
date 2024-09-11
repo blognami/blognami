@@ -6,7 +6,7 @@ export default {
         
         const interval = this.setInterval(() => {
             if(this.frame.loading) return;
-            clearInterval(interval);
+            interval.destroy();
             (new Function(this.text)).call(this);
         });
     }
