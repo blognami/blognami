@@ -41,7 +41,6 @@ export const Component = Class.extend().include({
     initialize(node, skipInit = false){
         this.node = node;
         this._managedResources = [];
-        this._registeredObservers = [];
         this._registeredTimers = [];
         this._registeredAbortControllers = [];
         this._virtualNodeFilters = [];
@@ -429,9 +428,9 @@ export const Component = Class.extend().include({
             subtree: true
         });
 
-        this._registeredObservers.push(observer);
-
-        return this;
+        return this.manage({
+            destroy: () => observer.disconnect()
+        });
     },
 
     async fetch(url, options = {}){
@@ -512,10 +511,6 @@ function clean(){
 
     while(this._managedResources.length){
         this._managedResources.pop().destroy();
-    }
-
-    while(this._registeredObservers.length){
-        this._registeredObservers.pop().disconnect();
     }
 
     clearTimers.call(this);
