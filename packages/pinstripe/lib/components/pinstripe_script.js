@@ -11,7 +11,7 @@ export default {
             clearInterval(interval);
             (new Function(this.text)).call(this);
             this.loading = false;
-            progressBar.stop();
+            this.document.progressBar.stop();
         });
     },
 
