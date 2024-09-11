@@ -41,7 +41,6 @@ export const Component = Class.extend().include({
     initialize(node, skipInit = false){
         this.node = node;
         this._managedResources = [];
-        this._registeredEventListeners = [];
         this._registeredObservers = [];
         this._registeredTimers = [];
         this._registeredAbortControllers = [];
@@ -264,20 +263,6 @@ export const Component = Class.extend().include({
         return Component.instanceFor(this.node.shadowRoot);
     },
 
-    manage(resource){
-        const destroy = resource.destroy;
-        const that = this;
-        Object.assign(resource, {
-            destroy(){
-                const out = destroy.call(this);
-                that._managedResources = that._managedResources.filter(item => item !== this);
-                return out;
-            }
-        });
-        this._managedResources.push(resource);
-        return this;
-    },
-
     focus(){
         this.node.focus();
         return this;
@@ -292,6 +277,20 @@ export const Component = Class.extend().include({
         } catch(e){
             return false;
         }
+    },
+
+    manage(resource){
+        const destroy = resource.destroy;
+        const that = this;
+        Object.assign(resource, {
+            destroy(){
+                const out = destroy.call(this);
+                that._managedResources = that._managedResources.filter(item => item !== this);
+                return out;
+            }
+        });
+        this._managedResources.push(resource);
+        return this;
     },
 
     on(name, ...args){
@@ -311,9 +310,9 @@ export const Component = Class.extend().include({
 
         this.node.addEventListener(name, wrapperFn);
 
-        this._registeredEventListeners.push([name, wrapperFn]);
-
-        return this;
+        return this.manage({
+            destroy: () => this.node.removeEventListener(name, wrapperFn)
+        });
     },
     
     trigger(name, options = {}){
@@ -513,10 +512,6 @@ function clean(){
 
     while(this._managedResources.length){
         this._managedResources.pop().destroy();
-    }
-
-    while(this._registeredEventListeners.length){
-        this.node.removeEventListener(...this._registeredEventListeners.pop());
     }
 
     while(this._registeredObservers.length){
