@@ -57,6 +57,7 @@ Cypress.Commands.add('submitForm', { prevSubject: true }, (subject, values = {})
                 }
             } else if($input.is('[data-test-id="markdown-input"]')){
                 cy.wrap($input).click();
+                cy.waitForLoadingToFinish();
                 cy.get('textarea[name="value"]');
                 cy.focused().clear().type(value);
                 cy.closeTopModal();

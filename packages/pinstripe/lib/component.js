@@ -21,7 +21,7 @@ export const Component = Class.extend().include({
                         node._component.attributes['data-component'] || (node._component.type == '#document' ? 'pinstripe-document' : node._component.type),
                         node
                     );
-                    (node._component.attributes.class || '').trim().split(/\s+/).forEach((className) => {
+                    if(!this.isCached) (node._component.attributes.class || '').trim().split(/\s+/).forEach((className) => {
                         const decoratorMethodName = `.${className}`;
                         if(typeof node._component[decoratorMethodName] == 'function'){
                             node._component[decoratorMethodName]();
@@ -41,7 +41,6 @@ export const Component = Class.extend().include({
     initialize(node, skipInit = false){
         this.node = node;
         this._managedResources = [];
-        this._registeredAbortControllers = [];
         this._virtualNodeFilters = [];
 
         this.addVirtualNodeFilter(function(){
@@ -261,6 +260,14 @@ export const Component = Class.extend().include({
         return Component.instanceFor(this.node.shadowRoot);
     },
 
+    get isPreview(){
+        return this.frame?.status == 'using-preview-html';
+    },
+
+    get isCached(){
+        return this.frame?.status == 'using-cached-html';
+    },
+
     focus(){
         this.node.focus();
         return this;
@@ -330,11 +337,15 @@ export const Component = Class.extend().include({
         return this;
     },
 
-    setTimeout(...args){
-        const timeout = setTimeout(...args);
-        return this.manage({
+    setTimeout(fn, ...args){
+        const timeout = setTimeout(() => {
+            fn();
+            out.destroy();
+        }, ...args);
+        const out = this.manage({
             destroy: () => clearTimeout(timeout)
         });
+        return out;
     },
 
     setInterval(...args){
@@ -434,45 +445,52 @@ export const Component = Class.extend().include({
         });
     },
 
-    async fetch(url, options = {}){
-        const { minimumDelay = 0, requiresProofOfWork = false, ...otherOptions } = options;
-        const frame = this.frame || this;
-        const normalizedUrl = new URL(url, frame.url);
+    fetch(url, options = {}){
         const abortController = new AbortController();
-        this._registeredAbortControllers.push(abortController);
         let minimumDelayTimeout;
-        const cleanUp = () => {
-            clearTimeout(minimumDelayTimeout);
-            this._registeredAbortControllers = this._registeredAbortControllers.filter(item => item !== abortController);
-        };
-        try {
-            if(requiresProofOfWork){
-                if(!(otherOptions.body instanceof FormData)) throw new Error(`Proof of work requires form data to be present`);
-                const values = {};
-                otherOptions.body.forEach((value, key) => values[key] = value);
-                otherOptions.body.append('_proofOfWork', await generateProofOfWork(values, { 
-                    abortSignal: abortController.signal,
-                    onProgress: progress => this.trigger('proofOfWorkProgress', { data: progress, bubbles: false })
-                }))
-            }
-            const promises = [
-                fetch(normalizedUrl, { signal: abortController.signal, ...otherOptions }), 
-                new Promise(resolve => minimumDelayTimeout = setTimeout(resolve, minimumDelay))
-            ];
-            const [ out ] = await Promise.all(promises);
-            cleanUp();
-            return out;
-        } catch(e){
-            cleanUp();
-            throw e;
-        }
-    },
+        let rejectMinimumDelay;
+        let isSuccess = false;
 
-    abort(){
-        while(this._registeredAbortControllers.length){
-            this._registeredAbortControllers.pop().abort(`Request aborted`);
-        }
-        return this;
+        const promise = (async () => {
+            const { minimumDelay = 0, requiresProofOfWork = false, ...otherOptions } = options;
+            const frame = this.frame || this;
+            const normalizedUrl = new URL(url, frame.url);
+            
+            try {
+                if(requiresProofOfWork){
+                    if(!(otherOptions.body instanceof FormData)) throw new Error(`Proof of work requires form data to be present`);
+                    const values = {};
+                    otherOptions.body.forEach((value, key) => values[key] = value);
+                    otherOptions.body.append('_proofOfWork', await generateProofOfWork(values, { 
+                        abortSignal: abortController.signal,
+                        onProgress: progress => this.trigger('proofOfWorkProgress', { data: progress, bubbles: false })
+                    }))
+                }
+                const promises = [
+                    fetch(normalizedUrl, { signal: abortController.signal, ...otherOptions }), 
+                    new Promise((resolve, reject) => {
+                        minimumDelayTimeout = setTimeout(resolve, minimumDelay);
+                        rejectMinimumDelay = reject;
+                    })
+                ];
+                const [ out ] = await Promise.all(promises);
+                isSuccess = true;
+                promise.destroy();
+                return out;
+            } catch(e){
+                promise.destroy();
+                throw e;
+            }
+        })();
+
+        return this.manage(Object.assign(promise, { 
+            destroy: () => {
+                if(isSuccess) return;
+                if(!abortController.signal.aborted) abortController.abort(`Request aborted`);
+                clearTimeout(minimumDelayTimeout);
+                if(rejectMinimumDelay) rejectMinimumDelay();
+            }
+        }));
     },
 
     find(...args){
@@ -513,8 +531,6 @@ function clean(){
     while(this._managedResources.length){
         this._managedResources.pop().destroy();
     }
-
-    this.abort();
 
     if(this._overlayChild) this._overlayChild.remove();
 
