@@ -21,7 +21,7 @@ export const Component = Class.extend().include({
                         node._component.attributes['data-component'] || (node._component.type == '#document' ? 'pinstripe-document' : node._component.type),
                         node
                     );
-                    if(!this.isCached) (node._component.attributes.class || '').trim().split(/\s+/).forEach((className) => {
+                    if(!this.isFromCachedHtml) (node._component.attributes.class || '').trim().split(/\s+/).forEach((className) => {
                         const decoratorMethodName = `.${className}`;
                         if(typeof node._component[decoratorMethodName] == 'function'){
                             node._component[decoratorMethodName]();
@@ -260,11 +260,11 @@ export const Component = Class.extend().include({
         return Component.instanceFor(this.node.shadowRoot);
     },
 
-    get isPreview(){
+    get isFromPreviewHtml(){
         return this.frame?.status == 'using-preview-html';
     },
 
-    get isCached(){
+    get isFromCachedHtml(){
         return this.frame?.status == 'using-cached-html';
     },
 
