@@ -32,4 +32,18 @@ export default {
 
         console.log(JSON.stringify(product, null, 2));
     },
+
+    async userHasAccessTo(access){
+        if(access == 'public') return true;
+
+        let user;
+        if(await this.session){
+            user = await this.session.user;
+        }
+
+        if(access == 'free' &&  ['free', 'monthly', 'yearly'].includes(user?.membershipTier)) return true;
+        if(access == 'paid' &&  ['monthly', 'yearly'].includes(user?.membershipTier)) return true;
+
+        return false;
+    }
 };

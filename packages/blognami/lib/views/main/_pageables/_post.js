@@ -139,6 +139,8 @@ export default {
         const meta = [];
         meta.push({ title: post.metaTitle || post.title });
         if(post.metaDescription) meta.push({ name: 'description', content: post.metaDescription });
+        
+        const userHasAccess = await this.membership.userHasAccessTo(post.access);
     
         return this.renderView('_layout', {
             meta,
@@ -185,6 +187,9 @@ export default {
                                 }),
                                 linkTestId: "edit-post-body"
                             });
+                            if(!userHasAccess) return this.renderView('_subscription_cta', {
+                                access: post.access,
+                            });
                             return this.renderView('_content', {
                                 body: this.renderMarkdown(post.body),
                                 testId: 'post-body'
@@ -227,7 +232,7 @@ export default {
                         }}
                         
                         ${() => {
-                            if(post.enableComments) return this.renderView('_comments', { commentable: post })
+                            if(userHasAccess && post.enableComments) return this.renderView('_comments', { commentable: post })
                         }}
     
                         <footer class="${this.cssClasses.footer}">

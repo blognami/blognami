@@ -53,6 +53,8 @@ export default {
         const meta = [];
         meta.push({ title: page.metaTitle || page.title });
         if(page.metaDescription) meta.push({ name: 'description', content: page.metaDescription });
+
+        const userHasAccess = await this.membership.userHasAccessTo(page.access);
     
         return this.renderView('_layout', {
             meta,
@@ -87,6 +89,9 @@ export default {
                                     testId: 'page-body'
                                 }),
                                 linkTestId: "edit-page-body"
+                            });
+                            if(!userHasAccess) return this.renderView('_subscription_cta', {
+                                access: page.access,
                             });
                             return this.renderView('_content', {
                                 body: this.renderMarkdown(page.body),
