@@ -17,7 +17,7 @@ export default {
                 [this.params.component ? 'data-loading' : 'loading']: 'true'
             });
             
-            loadFrame.call(this, confirm, target, method, action, placeholder, requiresProofOfWork == 'true');
+            loadFrame.call(this, { confirm, target, method, url: action, placeholderUrl: placeholder, requiresProofOfWork: requiresProofOfWork == 'true' });
         });
     
         this._initialHash = JSON.stringify(this.values);

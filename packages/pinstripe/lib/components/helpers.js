@@ -3,7 +3,7 @@ import { LruCache } from '../lru_cache.js';
 
 export const loadCache = LruCache.new();
 
-export function loadFrame(confirm, target, method, url, placeholderUrl, requiresProofOfWork = false){
+export function loadFrame({ confirm, target, method, url, placeholderUrl, requiresProofOfWork = false }){
     if(confirm && !window.confirm(confirm)){
         return;
     }
@@ -14,10 +14,13 @@ export function loadFrame(confirm, target, method, url, placeholderUrl, requires
         frame = this.document.descendants.find(node => node.is('body')).append(`<pinstripe-overlay load-on-init="false"></pinstripe-overlay>`).pop();
         frame._parent = this;
         this._overlayChild = frame;
-    } else {
+    } else if(target) {
         frame = getFrame.call(this, target);
-        if(!frame) return;
+    } else if(this.isFrame) {
+        frame = this;
     }
+
+    if(!frame) return;
 
     url = normalizeUrl(url || frame.url, this.frame.url);
     if(url.protocol != 'data:' && (url.host != frame.url.host || url.port != frame.url.port)){

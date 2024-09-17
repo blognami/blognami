@@ -8,7 +8,7 @@ export default {
             const { confirm, target = '_self', method = 'GET', href, placeholder } = this.params;
             if(normalizeUrl(href, window.location.href).host != window.location.host) return;
             event.preventDefault();
-            loadFrame.call(this, confirm, target, method, href, placeholder);
+            loadFrame.call(this, { confirm, target, method, url: href, placeholderUrl: placeholder });
         });
 
         const { target = '_self', method = 'GET', href, placeholder, preload } = this.params;
