@@ -3,7 +3,7 @@ import { LruCache } from '../lru_cache.js';
 
 export const loadCache = LruCache.new();
 
-export function loadFrame({ confirm, target, method, url, placeholderUrl, requiresProofOfWork = false }){
+export function loadFrame({ confirm, target, method, url, placeholderUrl, requiresProofOfWork = false, values = this.values }){
     if(confirm && !window.confirm(confirm)){
         return;
     }
@@ -31,7 +31,6 @@ export function loadFrame({ confirm, target, method, url, placeholderUrl, requir
 
     if(method.match(/POST|PUT|PATCH/i)){
         const formData = new FormData();
-        const values = this.values;
         Object.keys(values).forEach((name) => formData.append(name, values[name]));
         frame.load(url, { method, body: formData, placeholderUrl, requiresProofOfWork });
     } else {
