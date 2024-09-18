@@ -53,8 +53,8 @@ export default {
 function valuesToWatch(){
     const out = {}
     this.inputs.forEach(input => {
-        if(!input.params.watch == 'true') return
-        const value = input.value
+        if(input.params.watch != 'true') return;
+        const value = input.value;
         if(value !== undefined){
             out[input.name] = value
         }

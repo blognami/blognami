@@ -166,7 +166,7 @@ export default {
                                     `
                                 }
                             }}
-                            ${fields.map(({ label, name, type, value, component, placeholder, overlayLinks, error, ...rest }) => {
+                            ${fields.map(({ label, name, type, value, component, placeholder, overlayLinks, watch, error, ...rest }) => {
                                 if(type == 'hidden'){
                                     return this.renderHtml`
                                         <input type="hidden" name="${name}" value="${value}">
@@ -218,7 +218,7 @@ export default {
                                                 }
                                                 if(type == 'checkbox'){
                                                     return this.renderHtml`
-                                                        <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${component ? this.renderHtml` data-component="${component}"` : undefined}>
+                                                        <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${component ? this.renderHtml` data-component="${component}"` : undefined} data-watch="${watch}">
                                                     `;
                                                 }
                                                 return this.renderHtml`

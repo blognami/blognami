@@ -126,6 +126,7 @@ const extractFields = (formAdapter, options) => {
         out.filter = FIELD_FILTERS[out.type] || FIELD_FILTERS.default;
         out.value = out.filter(optionsField.value || formAdapterField.value);
         out.overlayLinks = optionsField.overlayLinks || formAdapterField.overlayLinks || [];
+        out.watch = optionsField.watch || false;
         return out;
     }).filter(field => field.type != 'forced');
 };
