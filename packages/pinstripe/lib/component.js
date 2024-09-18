@@ -260,8 +260,8 @@ export const Component = Class.extend().include({
         return Component.instanceFor(this.node.shadowRoot);
     },
 
-    get isFromPreviewHtml(){
-        return this.frame?.status == 'using-preview-html';
+    get isFromPlaceholderHtml(){
+        return this.frame?.status == 'using-placeholder-html';
     },
 
     get isFromCachedHtml(){

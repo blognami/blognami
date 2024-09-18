@@ -26,6 +26,8 @@ export default {
         });
     
         this._initialHash = JSON.stringify(this.values);
+
+        if(this.isFromPlaceholderHtml) return;
         
         if(placeholder != undefined) this.document.preload(normalizeUrl(placeholder, frame.url));
         
@@ -39,6 +41,7 @@ export default {
             const currentValuesToWatch = valuesToWatch.call(this);
             const currentHash = JSON.stringify(currentValuesToWatch);
             if(frame._previousHash == currentHash) return;
+            console.log(`${frame._previousHash} != ${currentHash}`)
             frame._previousHash = currentHash;
             loadFrame.call(this, { target, method: 'PATCH', url: action, values: { ...frame._initialValues, ...currentValuesToWatch } });
         }, 100);
