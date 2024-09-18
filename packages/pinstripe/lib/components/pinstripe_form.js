@@ -18,7 +18,6 @@ export default {
                 [this.params.component ? 'data-loading' : 'loading']: 'true'
             });
 
-            delete frame._initialValues;
             delete frame._previousHash;
             this._watchInterval?.destroy();
             
@@ -34,16 +33,14 @@ export default {
         const hasValuesToWatch = Object.keys(valuesToWatch.call(this)).length > 0;
         if(!hasValuesToWatch) return;
         
-        frame._initialValues ||= this.values;
         frame._previousHash ||= JSON.stringify(valuesToWatch.call(this));
 
         this._watchInterval = this.setInterval(() => {
-            const currentValuesToWatch = valuesToWatch.call(this);
-            const currentHash = JSON.stringify(currentValuesToWatch);
+            const currentHash = JSON.stringify(valuesToWatch.call(this));
             if(frame._previousHash == currentHash) return;
             console.log(`${frame._previousHash} != ${currentHash}`)
             frame._previousHash = currentHash;
-            loadFrame.call(this, { target, method: 'PATCH', url: action, values: { ...frame._initialValues, ...currentValuesToWatch } });
+            loadFrame.call(this, { target, method: 'PATCH', url: action });
         }, 100);
     },
 
