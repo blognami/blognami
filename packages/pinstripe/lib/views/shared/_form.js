@@ -218,7 +218,7 @@ export default {
                                                 }
                                                 if(type == 'checkbox'){
                                                     return this.renderHtml`
-                                                        <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${component ? this.renderHtml` data-component="${component}"` : undefined} data-watch="${watch}">
+                                                        <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${component ? this.renderHtml` data-component="${component}"` : undefined} data-watch="${watch ? 'true' : 'false'}">
                                                     `;
                                                 }
                                                 return this.renderHtml`

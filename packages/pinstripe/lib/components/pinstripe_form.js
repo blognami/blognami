@@ -20,6 +20,7 @@ export default {
 
             delete frame._initialValues;
             delete frame._previousHash;
+            this._watchInterval?.destroy();
             
             loadFrame.call(this, { confirm, target, method, url: action, placeholderUrl: placeholder, requiresProofOfWork: requiresProofOfWork == 'true' });
         });
@@ -34,7 +35,7 @@ export default {
         frame._initialValues ||= this.values;
         frame._previousHash ||= JSON.stringify(valuesToWatch.call(this));
 
-        this.setInterval(() => {
+        this._watchInterval = this.setInterval(() => {
             const currentValuesToWatch = valuesToWatch.call(this);
             const currentHash = JSON.stringify(currentValuesToWatch);
             if(frame._previousHash == currentHash) return;
