@@ -16,7 +16,41 @@ export default {
         }
 
         return this.renderHtml`
-            <p>Coming soon!</p>
+            <pinstripe-modal>
+                ${this.renderView('_panel', {
+                    title: 'Choose a subscription plan',
+                    body: this.renderView('_actions/_subscription_options', {
+                        options: [
+                            {
+                                title: 'Monthly',
+                                price: '$5',
+                                description: 'Access to all premium content',
+                                action: '/_actions/subscribe?plan=monthly'
+                            },
+                            {
+                                title: 'Yearly',
+                                price: '$50',
+                                description: 'Access to all premium content',
+                                action: '/_actions/subscribe?plan=yearly'
+                            },
+                            {
+                                title: 'None',
+                                price: '$0',
+                                description: 'Access to all free content',
+                                action: '/_actions/subscribe?plan=free'
+                            }
+                        ]
+                    }),
+                    footer: this.renderView('_button', {
+                        body: this.renderHtml`
+                            Cancel
+                            <script type="pinstripe">
+                                this.parent.on('click', () => this.trigger('close'));
+                            </script>
+                        `
+                    })
+                })}
+            </pinstripe-modal>
         `;
     },
 };
