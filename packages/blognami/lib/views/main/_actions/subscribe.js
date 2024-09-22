@@ -24,13 +24,13 @@ export default {
                             {
                                 title: 'Monthly',
                                 price: '$5',
-                                description: 'Access to all premium content',
+                                description: 'Access to all premium content billed monthly',
                                 action: '/_actions/subscribe?plan=monthly'
                             },
                             {
                                 title: 'Yearly',
                                 price: '$50',
-                                description: 'Access to all premium content',
+                                description: 'Access to all premium content billed yearly',
                                 action: '/_actions/subscribe?plan=yearly'
                             },
                             {
