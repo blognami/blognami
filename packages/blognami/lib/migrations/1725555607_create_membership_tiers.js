@@ -6,7 +6,8 @@ export default {
             await membershipTiers.addColumn('monthlyPrice', 'decimal');
             await membershipTiers.addColumn('enableYearly', 'boolean');
             await membershipTiers.addColumn('yearlyPrice', 'decimal');
-            await membershipTiers.addColumn('enableFree', 'boolean');
+            await membershipTiers.addColumn('currency', 'string', { default: 'USD' });
+            await membershipTiers.addColumn('enableFree', 'boolean', { default: true });
         });
     }
 };
