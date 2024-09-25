@@ -40,6 +40,8 @@ export default {
                         <div class="${this.cssClasses.description}">${description}</div>
                         <div class="${this.cssClasses.footer}">
                             ${this.renderView('_button', {
+                                tagName: 'a',
+                                href: action,
                                 isPrimary: true,
                                 isFullWidth: true,
                                 body: 'Select',

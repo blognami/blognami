@@ -8,5 +8,6 @@ export default {
         this.mustNotBeBlank('yearlyPrice', {
             when: ({ enableYearly }) => enableYearly
         });
+        this.mustNotBeBlank('currency');
     }
 };

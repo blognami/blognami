@@ -18,7 +18,7 @@ export default {
         const { id } = await this.database.membershipTiers;
 
         const { data: stripeProducts } = await this.stripe.products.search({
-            query: `metadata['blognamiMembershipTiersId']:'${id}'`,
+            query: `metadata['blognamiMembershipTiersId']:'${id}' AND active:'true'`,
         });
 
         let out = stripeProducts[0];
@@ -38,74 +38,113 @@ export default {
 
     async getStripePrices(){
         const { id: stripeProductId } = await this.getStripeProduct();
-
-        const { data: stripePrices } = await this.stripe.prices.search({
-            query: `product:'${stripeProductId}'`,
-        });
+        
+        const stripePrices = [];
+        let starting_after;
+        while(true){
+            const { data: currentStripePrices, has_more } = await this.stripe.prices.list({
+                product: stripeProductId,
+                limit: 100,
+                starting_after,
+            });
+            stripePrices.push(...currentStripePrices);
+            if(!has_more) break;
+            starting_after = currentStripePrices[currentStripePrices.length - 1].id;
+        }
 
         const { enableMonthly, monthlyPrice, enableYearly, yearlyPrice, currency } = await this.database.membershipTiers;
-        
-        const out = {};
 
-        const stripeMonthlyPrice = stripePrices.find(price => price.recurring.interval == 'month');
+        const out = {};
+        
+        const normalizedCurrency = currency.toLowerCase();
+        const stripeMonthlyPrices = stripePrices.filter(({ recurring }) => recurring.interval == 'month');
+        const normalizedMonthlyPrice = monthlyPrice * 100;
+
         if(enableMonthly){
-            if(stripeMonthlyPrice){
-                const updates = {};
-                if(!stripeMonthlyPrice.active) updates.active = true;
-                if(stripeMonthlyPrice.unit_amount != monthlyPrice) updates.unit_amount = monthlyPrice;
-                if(Object.keys(updates).length) {
-                    out.monthly = await this.stripe.prices.update(stripeMonthlyPrice.id, updates);
-                } else {
+            const stripeMonthlyPrice = stripeMonthlyPrices.find(({ unit_amount, currency }) => unit_amount == normalizedMonthlyPrice && currency == normalizedCurrency);
+            if(stripeMonthlyPrice) {
+                if(stripeMonthlyPrice.active) {
                     out.monthly = stripeMonthlyPrice;
+                } else {
+                    out.monthly = await this.stripe.prices.update(stripeMonthlyPrice.id, { active: true });
                 }
             } else {
                 out.monthly = await this.stripe.prices.create({
                     product: stripeProductId,
-                    currency,
-                    unit_amount: monthlyPrice,
+                    currency: normalizedCurrency,
+                    unit_amount: normalizedMonthlyPrice,
                     recurring: {
                         interval: 'month',
                     },
                 });
             }
-        } else if(stripeMonthlyPrice.active){
-            await this.stripe.prices.update(stripeMonthlyPrice.id, { active: false });
         }
 
-        const stripeYearlyPrice = stripePrices.find(price => price.recurring.interval == 'year');
+        for(const { active, unit_amount, currency, id } of stripeMonthlyPrices){
+            if(!active) continue;
+            if(enableMonthly && unit_amount == normalizedMonthlyPrice && currency == normalizedCurrency) continue;
+            await this.stripe.prices.update(id, { active: false });
+        }
+
+        const stripeYearlyPrices = stripePrices.filter(({ recurring }) => recurring.interval == 'year');
+        const normalizedYearlyPrice = yearlyPrice * 100;
+
         if(enableYearly){
-            if(stripeYearlyPrice){
-                const updates = {};
-                if(!stripeYearlyPrice.active) updates.active = true;
-                if(stripeYearlyPrice.unit_amount != yearlyPrice) updates.unit_amount = yearlyPrice;
-                if(Object.keys(updates).length) {
-                    out.yearly = await this.stripe.prices.update(stripeYearlyPrice.id, updates);
-                } else {
+            const stripeYearlyPrice = stripeYearlyPrices.find(({ unit_amount, currency }) => unit_amount == normalizedYearlyPrice && currency == normalizedCurrency);
+            if(stripeYearlyPrice) {
+                if(stripeYearlyPrice.active) {
                     out.yearly = stripeYearlyPrice;
+                } else {
+                    out.yearly = await this.stripe.prices.update(stripeYearlyPrice.id, { active: true });
                 }
             } else {
                 out.yearly = await this.stripe.prices.create({
                     product: stripeProductId,
-                    currency,
-                    unit_amount: yearlyPrice,
+                    currency: normalizedCurrency,
+                    unit_amount: normalizedYearlyPrice,
                     recurring: {
                         interval: 'year',
                     },
                 });
             }
-        } else if(stripeYearlyPrice.active){
-            await this.stripe.prices.update(stripeYearlyPrice.id, { active: false });
+        }
+
+        for(const { active, unit_amount, currency, id } of stripeYearlyPrices){
+            if(!active) continue;
+            if(enableYearly && unit_amount == normalizedYearlyPrice && currency == normalizedCurrency) continue;
+            await this.stripe.prices.update(id, { active: false });
         }
 
         return out;
     },
     
-    createStripePaymentLink({ interval, userId }){
+    async createStripePaymentLink({ interval, userId }){
+        const stripePrices = await this.getStripePrices();
+        const stripePrice = stripePrices[interval];
         
+        if(!stripePrice) return;
+
+        return await this.stripe.paymentLinks.create({
+            line_items: [
+              {
+                price: stripePrice.id,
+                quantity: 1,
+              },
+            ],
+            metadata: {
+                blognamiUserId: userId,
+            },
+        });
+    },
+
+    async createStripePaymentUrl({ interval, userId }){
+        const stripePaymentLink = await this.createStripePaymentLink({ interval, userId });
+
+        return stripePaymentLink?.url;
     },
 
     async syncWithStripe(){
-        console.log(JSON.stringify(await this.getStripePrices(), null, 2));
+        await this.getStripePrices();
     },
 
     async userHasAccessTo(access){

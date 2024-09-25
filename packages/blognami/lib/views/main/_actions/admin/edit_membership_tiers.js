@@ -4,20 +4,24 @@ export default {
     const that = this;
 
     const membershipTiers = await this.database.membershipTiers;
+    const wasPaid = membershipTiers.enableMonthly || membershipTiers.enableYearly;
+
+    const enableMonthly = this.params._method == 'GET' ? membershipTiers.enableMonthly : this.params.enableMonthly == 'true';
+    const enableYearly = this.params._method == 'GET' ? membershipTiers.enableYearly : this.params.enableYearly == 'true';
 
     const fields = [];
 
     fields.push({ name: 'enableMonthly', watch: true });
-    if (this.params.enableMonthly === 'true' || (this.params._method == 'GET' && membershipTiers.enableMonthly)) {
+    if (enableMonthly) {
       fields.push('monthlyPrice');
     }
 
     fields.push({ name: 'enableYearly', watch: true });
-    if (this.params.enableYearly === 'true' || (this.params._method == 'GET' && membershipTiers.enableYearly)) {
+    if (enableYearly) {
       fields.push('yearlyPrice');
     }
 
-    if (this.params.enableMonthly === 'true' || this.params.enableYearly === 'true') {
+    if (enableMonthly || enableYearly) {
       const options = this.currency.list.reduce(
         (out, { name, isoCode } ) => ({ ...out, [isoCode]: `${isoCode} - ${name}` }),
         {}
@@ -46,7 +50,7 @@ export default {
 
       async success({ enableMonthly, enableYearly }) {
         const isPaid = enableMonthly || enableYearly;
-        if (isPaid) {
+        if (isPaid || wasPaid) {
           await that.membership.syncWithStripe();
         }
       }
