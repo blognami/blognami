@@ -12,9 +12,11 @@ export default {
         apps.forEach(({ name, host, port }) => {
             const isTest = process.env.NODE_ENV == 'test';
 
+            const baseUrl = new URL(`http://${host}:${port}/`);
+
             http.createServer(async (request, response) => {
                 try {
-                    const params = await this.extractParams(request);
+                    const params = await this.extractParams(request, baseUrl);
                     if(!params._headers['x-app']) params._headers['x-app'] = name;
 
                     const [ status, headers, body ] = await this.callHandler.handleCall(params);
@@ -47,9 +49,9 @@ export default {
         });
     },
 
-    async extractParams(request){
+    async extractParams(request, baseUrl){
         const { method, url, headers } = request;
-        const _url = new URL(url, 'http://127.0.0.1');
+        const _url = new URL(url, baseUrl);
 
         const urlParams = {};
         _url.searchParams.forEach((value, key) => {
@@ -61,6 +63,7 @@ export default {
         return {
             ...urlParams,
             ...body,
+            _request: request,
             _method: method,
             _url,
             _headers: headers

@@ -1,7 +1,7 @@
 
 export default {
     async render(){
-        const { plan } = this.params;
+        let { plan, redirectUrl } = this.params;
 
         const membershipTiers = await this.database.membershipTiers;
 
@@ -10,25 +10,30 @@ export default {
         const currencySymbol = this.currency.index[membershipTiers.currency].symbol;
 
         if(membershipTiers.enableMonthly) options.push({
+            name: 'monthly',
             title: 'Monthly',
             price: `${currencySymbol}${membershipTiers.monthlyPrice} per month`,
-            description: 'Access to all premium content billed monthly.',
+            features: ['Access to all premium content', 'Billed monthly.'],
             action: '/_actions/subscribe?plan=monthly'
         });
 
         if(membershipTiers.enableYearly) options.push({
+            name: 'yearly',
             title: 'Yearly',
             price: `${currencySymbol}${membershipTiers.yearlyPrice} per year`,
-            description: 'Access to all premium content billed yearly.',
+            features: ['Access to all premium content', 'Billed yearly.'],
             action: '/_actions/subscribe?plan=yearly'
         });
 
         if(membershipTiers.enableFree) options.push({
+            name: 'free',
             title: 'None',
             price: 'Free',
-            description: 'Access to all free content.',
+            features: ['Access to all free content.'],
             action: '/_actions/subscribe?plan=free'
         });
+
+        if(options.length == 1) plan = options[0].name;
 
         if(!plan) return this.renderHtml`
             <pinstripe-modal>
@@ -76,7 +81,7 @@ export default {
 
         return this.renderHtml`
             <script type="pinstripe">
-                window.location.href = ${this.renderHtml(JSON.stringify(await this.membership.createStripePaymentUrl({ interval: plan, userId: user.id })))};
+                window.location.href = ${this.renderHtml(JSON.stringify(await this.membership.createStripePaymentUrl({ interval: plan, userId: user.id, redirectUrl })))};
             </script>
         `;
     },

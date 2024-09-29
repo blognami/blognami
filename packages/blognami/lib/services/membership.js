@@ -118,9 +118,11 @@ export default {
         return out;
     },
     
-    async createStripePaymentLink({ interval, userId }){
+    async createStripePaymentLink({ interval, userId, redirectUrl = new URL('/', this.initialParams._url).toString() }){
         const stripePrices = await this.getStripePrices();
         const stripePrice = stripePrices[interval];
+
+        console.log('----------------------- redirectUrl', redirectUrl);
         
         if(!stripePrice) return;
 
@@ -134,6 +136,12 @@ export default {
             metadata: {
                 blognamiUserId: userId,
             },
+            after_completion: {
+                type: 'redirect',
+                redirect: {
+                    url: redirectUrl
+                }
+            }
         });
     },
 
@@ -143,8 +151,48 @@ export default {
         return stripePaymentLink?.url;
     },
 
+    getWebhookUrl(){
+        const host = this.initialParams._headers.host;
+        const baseUrl = new URL('/', this.initialParams._url);
+        baseUrl.protocol = 'https:';
+        baseUrl.host = host;
+        return new URL('/_actions/stripe_webhook', baseUrl);
+    },
+
+    webhookUrlIsPublicallyAccessible(){
+        const { hostname } = this.getWebhookUrl();
+        return !['localhost', '127.0.0.1'].includes(hostname);
+    },
+
+    async getStripeWebhookEndpoint(){
+        const { id } = await this.database.membershipTiers;
+        const webhookUrl = this.getWebhookUrl();
+        const { data: stripeWebhookEndpoints } = await this.stripe.webhookEndpoints.list();
+        
+
+        let out = stripeWebhookEndpoints.find(({ url }) => url == webhookUrl.toString());
+
+        if(!out){
+            out = await this.stripe.webhookEndpoints.create({
+                url: webhookUrl.toString(),
+                enabled_events: [
+                    'customer.created',
+                    'customer.subscription.deleted',
+                    'customer.subscription.created',
+                ],
+                metadata: {
+                    blognamiMembershipTiersId: id,
+                    blognamiEnvironment: process.env.NODE_ENV,
+                },
+            });
+        }
+
+        return out;   
+    },
+
     async syncWithStripe(){
         await this.getStripePrices();
+        if(this.webhookUrlIsPublicallyAccessible()) await this.getStripeWebhookEndpoint();
     },
 
     async userHasAccessTo(access){

@@ -21,8 +21,25 @@ export const styles = `
         font-weight: bold;
     }
 
-    .description {
+    .price {
+        margin-bottom: 16px;
+        font-size: 0.8em;
+    }
+
+    .features {
         flex: 1 1 0;
+    }
+    
+    .features ul {
+        margin: 0;
+        padding: 0 0 0 1em; 
+        display: flex;
+        flex-direction: column;
+        gap: 0.2em;
+    }
+    
+    .features li {
+        font-size: 0.8em;
     }
     
 `;
@@ -33,11 +50,17 @@ export default {
         
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
-                ${options.map(({ title, price, description, action }) => this.renderHtml`
+                ${options.map(({ title, price, features, action }) => this.renderHtml`
                     <div class="${this.cssClasses.option}">
                         <div class="${this.cssClasses.title}">${title}</div>
                         <div class="${this.cssClasses.price}">${price}</div>
-                        <div class="${this.cssClasses.description}">${description}</div>
+                        <div class="${this.cssClasses.features}">
+                            <ul>
+                                ${features.map(feature => this.renderHtml`
+                                    <li>${feature}</li>
+                                `)}
+                            </ul>
+                        </div>
                         <div class="${this.cssClasses.footer}">
                             ${this.renderView('_button', {
                                 tagName: 'a',
