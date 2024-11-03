@@ -21,7 +21,7 @@ export default {
         }
         
         const requiresProofOfWork = (options.requiresProofOfWork || formAdapter.requiresProofOfWork || false) && process.env.NODE_ENV != 'test';
-        const success = options.success || (() => {});
+        const { validateWith, success } = options;
 
         const errors = {};
         if(this.params._method == 'POST'){
@@ -31,7 +31,8 @@ export default {
                     if(!await verifyProofOfWork(values, this.params._proofOfWork)) throw new ValidationError({ _proofOfWork: 'Must be a valid' });
                     if(await this.onlyOnce.hasBeenUsed({ proofOfWork: this.params._proofOfWork })) throw new ValidationError({ _proofOfWork: 'Must be unused' });
                 }
-                const out = await formAdapter.submit(values, success) || this.renderHtml`
+
+                const out = await formAdapter.submit(values, { validateWith, success }) || this.renderHtml`
                     <span data-component="pinstripe-anchor" data-target="_parent">
                         <script type="pinstripe">this.parent.trigger('click');</script>
                     </span>
@@ -51,6 +52,7 @@ export default {
         const submitTitle = options.submitTitle || formAdapter.submitTitle;
         const cancelTitle = options.cancelTitle || formAdapter.cancelTitle;
         const unsavedChangesConfirm = options.unsavedChangesConfirm || formAdapter.unsavedChangesConfirm;
+        const _class = options.class || formAdapter.class;
 
         const indexedFields = indexFieldsByName(fields);
         const otherErrors = [];
@@ -66,12 +68,11 @@ export default {
         fields.forEach(field => {
             const value = values[field.name];
             if(value !== undefined){
-                field.value = value;
+                field.value = field.filter(value);
             }
         });
 
         return this.renderView('_form', {
-            unsavedChangesConfirm,
             requiresProofOfWork,
             isPlaceholder: this.params._placeholder == 'true',
             method: this.params._method,
@@ -79,7 +80,9 @@ export default {
             otherErrors,
             fields,
             submitTitle,
-            cancelTitle
+            cancelTitle,
+            unsavedChangesConfirm,
+            class: _class
         });
     }
 }
@@ -100,6 +103,14 @@ const indexFieldsByName = (fields) => {
     return out;
 };
 
+const FIELD_FILTERS = {
+    checkbox: value => `${value}` == 'true',
+    number: value => parseFloat(`${value}`),
+    date: value => value != undefined ? new Date(value) : value,
+    'datetime-local': value => value != undefined ? new Date(value) : value,
+    default: value => value,
+};
+
 const extractFields = (formAdapter, options) => {
     const normalizedFormAdapterFields = normalizeFields(formAdapter.fields);
     const normalizedOptionsFields = options.fields ? normalizeFields(options.fields) : normalizedFormAdapterFields;
@@ -108,12 +119,14 @@ const extractFields = (formAdapter, options) => {
         const out = { ...optionsField };
         const formAdapterField = indexedNormalizedFormAdapterFields[optionsField.name] || {};
         out.name = optionsField.name;
-        out.label = optionsField.label || formAdapterField.label || Inflector.instance.capitalize(out.name);
+        out.label = optionsField.label || formAdapterField.label || Inflector.instance.humanize(out.name);
         out.type = optionsField.type || formAdapterField.type || 'text';
         out.component = optionsField.component || formAdapterField.component;
         out.placeholder = optionsField.placeholder || formAdapterField.placeholder;
-        out.value = optionsField.value || formAdapterField.value;
+        out.filter = FIELD_FILTERS[out.type] || FIELD_FILTERS.default;
+        out.value = out.filter(optionsField.value || formAdapterField.value);
         out.overlayLinks = optionsField.overlayLinks || formAdapterField.overlayLinks || [];
+        out.watch = optionsField.watch || false;
         return out;
     }).filter(field => field.type != 'forced');
 };

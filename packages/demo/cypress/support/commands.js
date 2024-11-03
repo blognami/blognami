@@ -57,7 +57,7 @@ Cypress.Commands.add('submitForm', { prevSubject: true }, (subject, values = {})
                 }
             } else if($input.is('[data-test-id="markdown-input"]')){
                 cy.wrap($input).click();
-                cy.get('textarea[name="value"]');
+                cy.waitForLoadingToFinish();
                 cy.focused().clear().type(value);
                 cy.closeTopModal();
             } else {
@@ -80,7 +80,12 @@ Cypress.Commands.add('topModal',() => cy.waitForLoadingToFinish().then(() => cy.
 
 Cypress.Commands.add('topPopover',() => cy.waitForLoadingToFinish().then(() => cy.get('pinstripe-popover').last()));
 
-Cypress.Commands.add('closeTopModal', () => cy.topModal().shadow().find('button').click());
+Cypress.Commands.add('closeTopModal', () => {
+    cy.topModal().then(($modal) => {
+        cy.wrap($modal).shadow().find('button').click();
+        cy.wrap($modal).should('not.exist');
+    });
+});
 
 Cypress.Commands.add('waitForLoadingToFinish', () => {
     cy.window().then(async (window) => {

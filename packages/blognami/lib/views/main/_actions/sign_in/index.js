@@ -1,14 +1,14 @@
 
 export default {
     async render(){
-        const { title = 'Sign In', redirectUrl } = this.params;
+        const { title = 'Sign In', returnUrl } = this.params;
         
         let optionalParams = '';
         if(title != 'Sign In'){
             optionalParams += `&title=${encodeURIComponent(title)}`;
         }
-        if(redirectUrl){
-            optionalParams += `&redirectUrl=${encodeURIComponent(redirectUrl)}`;
+        if(returnUrl){
+            optionalParams += `&returnUrl=${encodeURIComponent(returnUrl)}`;
         }
 
         return this.renderForm(

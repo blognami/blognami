@@ -48,6 +48,7 @@ export default {
                                 <p><b>Name:</b> ${user.name}</p>
                                 <p><b>Email:</b> ${user.email}</p>
                                 <p><b>Role:</b> ${user.role}</p>
+                                <p><b>Membership tier:</b> ${user.membershipTier}</p>
                                 <p><b>Meta title:</b> ${user.metaTitle}</p>
                                 <p><b>Meta description:</b> ${user.metaDescription}</p>
                                 <p><b>Slug:</b> ${user.slug}</p>

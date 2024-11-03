@@ -17,8 +17,10 @@ export default {
                 links.push({ href: '/_actions/admin/find_content', target: '_overlay', testId: 'find-content', body: 'Find' });
                 links.push({ href: '/_actions/admin/add_content', target: '_overlay', testId: 'add-content', body: 'Add' });
                 links.push({ href: '/_actions/admin/edit_settings', target: '_overlay', testId: 'edit-settings', body: 'Settings' });
+                links.push({ href: '/_actions/admin/your_account', target: '_overlay', testId: 'your-account', body: user.name });
+            } else {
+                links.push({ href: '/_actions/user/your_account', target: '_overlay', testId: 'your-account', body: user.name });
             }
-            links.push({ href: '/_actions/sign_out', target: '_overlay', testId: 'sign-out', body: 'Sign out' });
         } else {
             links.push({ href: '/_actions/sign_in', target: '_overlay', preload: true, testId: 'sign-in', body: 'Sign in' });
         }

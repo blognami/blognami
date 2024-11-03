@@ -26,8 +26,8 @@ export default {
         const { items = [] } = this.params;
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
-                ${items.map(({ body, href, target = '_top', preload, testId }) => this.renderHtml`
-                    <a class="${this.cssClasses.item}" href="${href}" target="${target}" ${preload ? 'data-preload' : ''} data-test-id="${testId}">${body}</a>
+                ${items.map(({ body, href, target = '_top', preload, testId, confirm }) => this.renderHtml`
+                    <a class="${this.cssClasses.item}" href="${href}" target="${target}" ${preload ? 'data-preload' : ''} data-test-id="${testId}" data-confirm="${confirm}">${body}</a>
                 `)}
             </div>
         `;

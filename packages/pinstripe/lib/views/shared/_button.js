@@ -49,7 +49,7 @@ export const styles = `
     .root.is-full-width {
         width: 100%;
     }
-    root.is-small {
+    .root.is-small {
         font-size: 1.2rem;
         height: 1.5em;
         padding-bottom: 0.5em;
@@ -72,7 +72,7 @@ export default {
 
         const classes = [
             this.cssClasses.root,
-            `is-${size}`,
+            this.cssClasses[`is-${size}`],
         ];
 
         if(isPrimary) classes.push(this.cssClasses.isPrimary);

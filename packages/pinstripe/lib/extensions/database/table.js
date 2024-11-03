@@ -114,7 +114,7 @@ export const Table = Class.extend().include({
     join(fromKey, collectionName, toKey){
         const type = this.database.info[collectionName];
         if(type == 'union') return joinToUnion.call(this, fromKey, collectionName, toKey);
-        if(type == 'table') return joinToTable.call(this, fromKey, collectionName, toKey);
+        if(type == 'table' || type == 'singleton') return joinToTable.call(this, fromKey, collectionName, toKey);
         throw new Error(`Can't join to unknown collection "${collectionName}".`);
     },
 
@@ -395,18 +395,20 @@ export const Table = Class.extend().include({
         await this.database.reset();
     },
 
-    async insert(fields = {}){
+    async insert(fields = {}, options = {}){
+        const { validateWith } = options;
         return this.database.transaction(async () => {
             const { Row } = await import('./row.js');
-            return Row.create(this.constructor.rowName, this.database, fields).update();
+            return Row.create(this.constructor.rowName, this.database, fields).update({}, { validateWith });
         });
     },
 
-    async update(fields = {}){
+    async update(fields = {}, options = {}){
+        const { validateWith } = options;
         return this.database.transaction(async () => {
             const rows = await this.all();
             while(rows.length){
-                await rows.shift().update(fields);
+                await rows.shift().update(fields, { validateWith });
             }
             return this;
         });
@@ -441,8 +443,9 @@ export const Table = Class.extend().include({
         return {
             title, fields, submitTitle, cancelTitle, unsavedChangesConfirm,
             
-            submit: async (values, success) => {
-                return success(await this.insert(values));
+            submit: async (values, options = {}) => {
+                const { success = () => {}, validateWith } = options;
+                return success(await this.insert(values, { validateWith }));
             }
         };
     },

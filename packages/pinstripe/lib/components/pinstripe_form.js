@@ -6,7 +6,8 @@ export default {
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
         const { confirm, target = '_self', method = 'GET', action, placeholder, requiresProofOfWork, disabled } = this.params;
-        
+        const frame = target == '_overlay' ? this.frame : getFrame.call(this, target);
+
         this.on('submit', (event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -16,14 +17,31 @@ export default {
                 ...this.attributes,
                 [this.params.component ? 'data-loading' : 'loading']: 'true'
             });
+
+            delete frame._previousHash;
+            this._watchInterval?.destroy();
             
-            loadFrame.call(this, confirm, target, method, action, placeholder, requiresProofOfWork == 'true');
+            loadFrame.call(this, { confirm, target, method, url: action, placeholderUrl: placeholder, requiresProofOfWork: requiresProofOfWork == 'true' });
         });
     
         this._initialHash = JSON.stringify(this.values);
 
-        const frame = target == '_overlay' ? this.frame : getFrame.call(this, target);
+        if(this.isFromPlaceholderHtml) return;
+        
         if(placeholder != undefined) this.document.preload(normalizeUrl(placeholder, frame.url));
+        
+        const hasValuesToWatch = Object.keys(valuesToWatch.call(this)).length > 0;
+        if(!hasValuesToWatch) return;
+        
+        frame._previousHash ||= JSON.stringify(valuesToWatch.call(this));
+
+        this._watchInterval = this.setInterval(() => {
+            const currentHash = JSON.stringify(valuesToWatch.call(this));
+            if(frame._previousHash == currentHash) return;
+            console.log(`${frame._previousHash} != ${currentHash}`)
+            frame._previousHash = currentHash;
+            loadFrame.call(this, { target, method: 'PATCH', url: action });
+        }, 100);
     },
 
     isForm: true,
@@ -32,3 +50,15 @@ export default {
         return this.params.hasUnsavedChanges == 'true' || JSON.stringify(this.values) != this._initialHash;
     }
 };
+
+function valuesToWatch(){
+    const out = {}
+    this.inputs.forEach(input => {
+        if(input.params.watch != 'true') return;
+        const value = input.value;
+        if(value !== undefined){
+            out[input.name] = value
+        }
+    })
+    return out;
+}

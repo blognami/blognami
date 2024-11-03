@@ -1,9 +1,7 @@
 
 export default {
     async render(){
-        const site = await this.database.site;
-
-        return this.renderForm(site, {
+        return this.renderForm(this.database.site, {
             fields: ['title']
         });
     }
