@@ -12,9 +12,11 @@ export default {
         apps.forEach(({ name, host, port }) => {
             const isTest = process.env.NODE_ENV == 'test';
 
+            const baseUrl = new URL(`http://${host}:${port}/`);
+
             http.createServer(async (request, response) => {
                 try {
-                    const params = await this.extractParams(request);
+                    const params = await this.extractParams(request, baseUrl);
                     if(!params._headers['x-app']) params._headers['x-app'] = name;
 
                     const [ status, headers, body ] = await this.callHandler.handleCall(params);
@@ -38,7 +40,9 @@ export default {
                 } catch (e){
                     response.statusCode = 500;
                     response.setHeader('content-type', 'text/plain');
-                    response.end((e.stack || e).toString());
+                    const error = (e.stack || e).toString();
+                    console.error(error);
+                    response.end(error);
                 }
                 if(!isTest) console.log(`${request.method}: ${request.url} (${response.statusCode})`);
             }).listen(port, host, () => {
@@ -47,9 +51,9 @@ export default {
         });
     },
 
-    async extractParams(request){
+    async extractParams(request, baseUrl){
         const { method, url, headers } = request;
-        const _url = new URL(url, 'http://127.0.0.1');
+        const _url = new URL(url, baseUrl);
 
         const urlParams = {};
         _url.searchParams.forEach((value, key) => {
@@ -61,14 +65,28 @@ export default {
         return {
             ...urlParams,
             ...body,
+            _request: request,
             _method: method,
             _url,
             _headers: headers
         };
     },
 
-    parseBody(request){
-        return new Promise((resolve) => {
+    async parseBody(request){
+        const contentType = request.headers['content-type'] || '';
+
+        const promises = [];
+        
+        promises.push(new Promise((resolve) => {
+            const chunks = [];
+            request.on('data', chunk => chunks.push(chunk));
+            request.on('end', () => {
+                const _body = Buffer.concat(chunks).toString();
+                resolve(contentType.match(/application\/json/) ? { _body, ...JSON.parse(_body)} : { _body });
+            });
+        }));
+
+        if(contentType.match(/multipart\/(form-data|x-www-form-urlencoded)/)) promises.push(new Promise((resolve) => {
             const out = {};
             const busboy = Busboy({ headers: request.headers });
         
@@ -98,7 +116,11 @@ export default {
             busboy.on('finish', () => resolve(out));
         
             request.pipe(busboy);
-        });
+        }));
+
+        const results = await Promise.all(promises);
+
+        return Object.assign({}, ...results);
     },
 
     createHash(data){

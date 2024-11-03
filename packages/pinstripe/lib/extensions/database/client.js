@@ -28,9 +28,10 @@ export const Client = Class.extend().include({
                     await this.run(`use ${database}`);
                 },
 
-                sqlite(){
+                async sqlite(){
                     const { filename } = this.config;
                     this.connection = new sqlite.Database(filename);
+                    this.connection.configure('busyTimeout', 10000);
                 }
             });   
         }
@@ -99,7 +100,7 @@ export const Client = Class.extend().include({
             throw e;
         }
         this.transactionLevel--;
-        if(this.transactionLevel == 0)await this.adapt(this, {
+        if(this.transactionLevel == 0) await this.adapt(this, {
             async mysql(){
                 await this.run('commit');
             },

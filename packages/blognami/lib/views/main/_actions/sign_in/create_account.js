@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 
 export default {
     render(){
-        const { name, email, title, redirectUrl } = this.params;
+        const { name, email, title, returnUrl } = this.params;
         
         const that = this;
 
@@ -39,9 +39,9 @@ export default {
                     
                     const [ status, headers, body ] = await that.renderHtml`
                         ${() => {
-                            if(redirectUrl){
+                            if(returnUrl){
                                 return that.renderHtml`
-                                    <span data-component="pinstripe-anchor" data-href="${redirectUrl}">
+                                    <span data-component="pinstripe-anchor" data-href="${returnUrl}">
                                         <script type="pinstripe">
                                             this.parent.trigger('click');
                                             

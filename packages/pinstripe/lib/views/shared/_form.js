@@ -135,13 +135,14 @@ export default {
             otherErrors,
             fields,
             submitTitle,
-            cancelTitle
+            cancelTitle,
+            class: _class
         } = this.params;
 
         return this.renderHtml`
             <pinstripe-modal>
                 <form
-                    class="${this.cssClasses.form}"
+                    class="${this.cssClasses.form}${_class ? ` ${_class}` : ''}"
                     method="post"
                     enctype="multipart/form-data"
                     autocomplete="off"
@@ -165,7 +166,7 @@ export default {
                                     `
                                 }
                             }}
-                            ${fields.map(({ label, name, type, value, component, placeholder, overlayLinks, error, ...rest }) => {
+                            ${fields.map(({ label, name, type, value, component, placeholder, overlayLinks, watch, error, ...rest }) => {
                                 if(type == 'hidden'){
                                     return this.renderHtml`
                                         <input type="hidden" name="${name}" value="${value}">
@@ -217,7 +218,7 @@ export default {
                                                 }
                                                 if(type == 'checkbox'){
                                                     return this.renderHtml`
-                                                        <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${component ? this.renderHtml` data-component="${component}"` : undefined}>
+                                                        <input class="${this.cssClasses.input}${error ? ` ${this.cssClasses.isError}` : ''}" type="checkbox" name="${name}" type="${type}" ${value ? 'checked' : ''}${component ? this.renderHtml` data-component="${component}"` : undefined} data-watch="${watch ? 'true' : 'false'}">
                                                     `;
                                                 }
                                                 return this.renderHtml`

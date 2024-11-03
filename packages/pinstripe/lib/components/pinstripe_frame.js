@@ -34,37 +34,45 @@ export default {
         );
     },
 
-    loading: false,
+    status: 'complete',
 
     async load(url = this.url, options = {}){
-        this.abort();
+        this._pendingResponse?.destroy();
         const { progressBar } = this.document;
         progressBar.start();
-        await new Promise(resolve => setTimeout(resolve, 0)); // make sure the event loop is clear
-        this.loading = true;
+        await clearEventLoop();
+        this.status = 'loading';
         this.url = url;
         const { method = 'GET', placeholderUrl } = options;
         const cachedHtml = method == 'GET' ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
-        if(cachedHtml) this.patch(cachedHtml);
+        if(cachedHtml) {
+            this.status = 'using-cached-html';
+            this.patch(cachedHtml);
+        }
         let minimumDelay = 0;
         if(!cachedHtml && placeholderUrl){
             const placeholderHtml = loadCache.get(`${this.document.loadCacheNamespace}:${placeholderUrl}`);
             if(placeholderHtml) {
+                this.status = 'using-placeholder-html';
                 this.patch(placeholderHtml);
                 minimumDelay = 300;
             }
         }
         try {
-            const response = await this.fetch(this.url, { minimumDelay, ...options });
+            this._pendingResponse = this.fetch(this.url, { minimumDelay, ...options });
+
+            const response = await this._pendingResponse;
+            
             const html = await response.text();
-            this.loading = false;
-            if(html != cachedHtml){
-                this.patch(html);
-                if(method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
-            }
+            this.status = 'complete';
+            this.patch(html);
+            if(html != cachedHtml && method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
         } catch(e) {
-            this.loading = false;
+            if(e != 'Request aborted') console.log(e);
         }
+        await clearEventLoop();
         progressBar.stop();
     }
 };
+
+const clearEventLoop = () => new Promise(resolve => setTimeout(resolve, 0));
