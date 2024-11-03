@@ -601,10 +601,10 @@ export function describeApp(role){
             it(`should have the correct contents`, () => {
                 cy.getByTestId('navbar', 'title').contains('Lorem ipsum');
                 if(role == 'admin'){
-                    cy.getByTestId('navbar', 'sign-out').contains('Sign out');
                     cy.getByTestId('navbar', 'find-content').contains('Find');
                     cy.getByTestId('navbar', 'add-content').contains('Add');
                     cy.getByTestId('navbar', 'edit-settings').contains('Settings');
+                    cy.getByTestId('navbar', 'your-account').contains('Admin');
                 } else {
                     cy.getByTestId('navbar', 'sign-in').contains('Sign in');
                 }

@@ -3,14 +3,14 @@ import * as crypto from 'crypto';
 
 export default {
     render(){
-        const { title = 'Sign In', redirectUrl, email } = this.params;
+        const { title = 'Sign In', returnUrl, email } = this.params;
         
         let optionalParams = '';
         if(title != 'Sign In'){
             optionalParams += `&title=${encodeURIComponent(title)}`;
         }
-        if(redirectUrl){
-            optionalParams += `&redirectUrl=${encodeURIComponent(redirectUrl)}`;
+        if(returnUrl){
+            optionalParams += `&returnUrl=${encodeURIComponent(returnUrl)}`;
         }
         
         const that = this;
@@ -50,9 +50,9 @@ export default {
                     
                     const [ status, headers, body ] = await that.renderHtml`
                         ${() => {
-                            if(redirectUrl){
+                            if(returnUrl){
                                 return that.renderHtml`
-                                    <span data-component="pinstripe-anchor" data-href="${redirectUrl}">
+                                    <span data-component="pinstripe-anchor" data-href="${returnUrl}">
                                         <script type="pinstripe">
                                             this.parent.trigger('click');
                                             

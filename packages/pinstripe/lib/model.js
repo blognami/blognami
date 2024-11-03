@@ -7,20 +7,24 @@ export const Model = Class.extend().include({
         defineCallbacks.call(this, 'validateWith', 'beforeValidation', 'afterValidation');
         this.assignProps({
             mustNotBeBlank(name, options = {}){
-                const { message = 'Must not be blank' } = options;
-                return this.validateWith(validateable => {
+                const { message = 'Must not be blank', when = () => true } = options;
+                return this.validateWith(async validateable => {
+                    if(validateable.isValidationError(name)) return;
+                    if(! await when.call(validateable, validateable)) return;
                     const value = `${validateable[name] || ''}`.trim();
-                    if(!validateable.isValidationError(name) && value == ''){
+                    if(value == ''){
                         validateable.setValidationError(name, message);
                     }
                 });
             },
 
             mustMatchPattern(name, pattern, options = {}){
-                const { message = 'Must match pattern' } = options;
-                return this.validateWith(validateable => {
+                const { message = 'Must match pattern', when = () => true } = options;
+                return this.validateWith(async validateable => {
+                    if(validateable.isValidationError(name)) return;
+                    if(! await when.call(validateable, validateable)) return;
                     const value = `${validateable[name] || ''}`.trim();
-                    if(!validateable.isValidationError(name) && !value.match(pattern)){
+                    if(!value.match(pattern)){
                         validateable.setValidationError(name, message);
                     }
                 });
@@ -52,15 +56,21 @@ export const Model = Class.extend().include({
         return Object.keys(this.validationErrors).length > 0;
     },
 
-    async validate(){
+    async validate(options = {}){
+        const { validateWith = () => {} } = options;
         await this._runBeforeValidationCallbacks();
         this._validationErrors = {};
         await this._runValidateWithCallbacks();
+        await validateWith.call(this, this);
+        this.throwValidationErrors();
+        await this._runAfterValidationCallbacks();
+        return this;
+    },
+
+    throwValidationErrors(){
         if(this.isValidationError()){
             throw new ValidationError(this.validationErrors);
         }
-        await this._runAfterValidationCallbacks();
-        return this;
     },
 
     toFormAdapter(){
@@ -69,10 +79,11 @@ export const Model = Class.extend().include({
             fields: [],
             submitTitle: 'Submit',
             cancelTitle: 'Cancel',
-            submit: async (values, fn) => {
+            submit: async (values, options = {}) => {
+                const { success = () => {}, validateWith } = options;
                 Object.assign(this, values);
-                await this.validate();
-                return fn(this);
+                await this.validate({ validateWith });
+                return success(this);
             }
         }
     }

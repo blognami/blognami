@@ -53,6 +53,8 @@ export default {
         const meta = [];
         meta.push({ title: page.metaTitle || page.title });
         if(page.metaDescription) meta.push({ name: 'description', content: page.metaDescription });
+
+        const userHasAccess = await this.membership.userHasAccessTo(page.access);
     
         return this.renderView('_layout', {
             meta,
@@ -88,6 +90,9 @@ export default {
                                 }),
                                 linkTestId: "edit-page-body"
                             });
+                            if(!userHasAccess) return this.renderView('_subscription_cta', {
+                                access: page.access,
+                            });
                             return this.renderView('_content', {
                                 body: this.renderMarkdown(page.body),
                                 testId: 'page-body'
@@ -99,6 +104,7 @@ export default {
                                 ${this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_page_meta?id=${page.id}`,
                                     body: this.renderHtml`
+                                        <p><b>Access:</b> ${page.access}</p>
                                         <p><b>Meta title:</b> ${page.metaTitle}</p>
                                         <p><b>Meta description:</b> ${page.metaDescription}</p>
                                         <p><b>Slug:</b> ${page.slug}</p>

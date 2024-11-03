@@ -127,7 +127,9 @@ export const Row = Model.extend().include({
         if(!exists) this.id = crypto.randomUUID();
     },
 
-    async update(fields = {}){
+    async update(fields = {}, options = {}){
+        const { validateWith } = options;
+
         return this.database.transaction(async () => {
             const columns = Table.for(this.constructor.collectionName).columns;
             
@@ -141,7 +143,7 @@ export const Row = Model.extend().include({
             
             await (this._exists ? this._runBeforeUpdateCallbacks() : this._runBeforeInsertCallbacks());
 
-            await this.validate();
+            await this.validate({ validateWith});
 
             const modifiedFields = {};
             Object.keys(this).forEach(name => {
@@ -262,7 +264,7 @@ export const Row = Model.extend().include({
     },
 
     async toFormAdapter(){
-        const title = `Edit ${this.constructor.name}`;
+        const title = inflector.humanize(`Edit ${this.constructor.name}`);
 
         const fields = [];
         const columns = Table.for(this.constructor.collectionName).columns;
@@ -285,8 +287,9 @@ export const Row = Model.extend().include({
         return {
             title, fields, submitTitle, cancelTitle, unsavedChangesConfirm,
             
-            submit: async (values, success) => {
-                return success(await this.update(values));
+            submit: async (values, options = {}) => {
+                const { success = () => {}, validateWith } = options;
+                return success(await this.update(values, { validateWith }));
             }
         };
     },
