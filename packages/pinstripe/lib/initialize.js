@@ -10,24 +10,6 @@ if(typeof window != 'undefined'){
     });
 }
 
-if (typeof navigator != 'undefined' && "serviceWorker" in navigator) {
-    (async () => {
-        try {
-            const scriptUrl = "/_shell/javascripts/all.js?bundle=worker";
-            
-            const registration = await navigator.serviceWorker.getRegistration(scriptUrl);
-
-            if(registration) await registration.unregister();
-
-            await navigator.serviceWorker.register(scriptUrl, {
-                scope: "./",
-            });          
-        } catch (error) {
-            console.error(`Service worker registration failed with ${error}`);
-        }
-    })();
-}
-
 if(typeof window == 'undefined' && typeof addEventListener == 'function'){
     Workspace.run(({ worker }) => worker.start());
 }
