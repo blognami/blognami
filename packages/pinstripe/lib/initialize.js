@@ -13,10 +13,15 @@ if(typeof window != 'undefined'){
 if (typeof navigator != 'undefined' && "serviceWorker" in navigator) {
     (async () => {
         try {
-            await navigator.serviceWorker.register("/_shell/javascripts/all.js?bundle=worker", {
+            const scriptUrl = "/_shell/javascripts/all.js?bundle=worker";
+            
+            const registration = await navigator.serviceWorker.getRegistration(scriptUrl);
+
+            if(registration) await registration.unregister();
+
+            await navigator.serviceWorker.register(scriptUrl, {
                 scope: "./",
-            });
-            console.log("Service worker registered");
+            });          
         } catch (error) {
             console.error(`Service worker registration failed with ${error}`);
         }
