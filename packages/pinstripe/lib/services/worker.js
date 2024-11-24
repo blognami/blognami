@@ -3,8 +3,8 @@ import { MissingResourceError } from '../missing_resource_error.js';
 
 export const client = true;
 
-const URL_BLACKLIST = [
-    /\/__/ // Cypress
+const URL_PATH_BLACKLIST = [
+    /^\/__/, // Cypress
 ];
 
 export default {
@@ -13,13 +13,16 @@ export default {
     },
 
     start(){
+        console.log('Worker started');
+
         addEventListener("install", (event) => {
             event.waitUntil(skipWaiting());
         });
     
         addEventListener("fetch", (event) => {
+            const url = new URL(event.request.url);
 
-            if(URL_BLACKLIST.some((regex) => event.request.url.match(regex))) return false;
+            if(URL_PATH_BLACKLIST.some((regex) => url.pathname.match(regex))) return false;
 
             event.respondWith((async () => {
                 const request1 = event.request.clone();
