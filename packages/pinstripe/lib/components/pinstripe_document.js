@@ -1,7 +1,7 @@
 
 import { loadCache, normalizeUrl } from "./helpers.js";
 
-import { WorkerProxy } from "../worker_proxy.js";
+import { HttpProxy } from "../http_proxy.js";
 
 const preloading = {};
 
@@ -31,11 +31,11 @@ export default {
 
     isDocument: true,
 
-    get workerProxy(){
-        if(!this._workerProxy){
-            this._workerProxy = WorkerProxy.new();
+    get httpProxy(){
+        if(!this._httpProxy){
+            this._httpProxy = HttpProxy.new();
         }
-        return this._workerProxy;
+        return this._httpProxy;
     },
 
     get head(){
