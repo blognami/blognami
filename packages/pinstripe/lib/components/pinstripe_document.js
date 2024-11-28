@@ -1,6 +1,8 @@
 
 import { loadCache, normalizeUrl } from "./helpers.js";
 
+import { HttpProxy } from "../http_proxy.js";
+
 const preloading = {};
 
 export default {
@@ -28,6 +30,13 @@ export default {
     },
 
     isDocument: true,
+
+    get httpProxy(){
+        if(!this._httpProxy){
+            this._httpProxy = HttpProxy.new();
+        }
+        return this._httpProxy;
+    },
 
     get head(){
         if(!this._head){

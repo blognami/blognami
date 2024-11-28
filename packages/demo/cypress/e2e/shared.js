@@ -1,16 +1,6 @@
 const LOGO_PNG = "cypress/e2e/logo.png";
 
 export function describeApp(role) {
-  beforeEach(() => {
-    if (window.navigator && navigator.serviceWorker) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => {
-        registrations.forEach((registration) => {
-          registration.unregister();
-        });
-      });
-    }
-  });
-
   context(`When a ${role} user`, () => {
     beforeEach(() => {
       cy.visit("http://127.0.0.1:3000");
