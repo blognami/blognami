@@ -59,7 +59,7 @@ export default {
     normalizeParams(params){
         const out = { ...params }
         if(!out._method) out._method = 'get';
-        if(!params._url) out._url = new URL('http://localhost');
+        out._url = new URL(out._url ?? '/', 'http://localhost');
         if(!params._headers) out._headers = {};
         return out;
     },
