@@ -8,46 +8,45 @@ export default {
         return this;
     },
 
-    start(apps = [{ name: 'main', host: '127.0.0.1', port: 3000 }]){
-        apps.forEach(({ name, host, port }) => {
-            const isTest = process.env.NODE_ENV == 'test';
+    start(options = {}){
+        const {  host = '127.0.0.1', port = 3000 } = options;
 
-            const baseUrl = new URL(`http://${host}:${port}/`);
+        const isTest = process.env.NODE_ENV == 'test';
 
-            http.createServer(async (request, response) => {
-                try {
-                    const params = await this.extractParams(request, baseUrl);
-                    if(!params._headers['x-app']) params._headers['x-app'] = name;
+        const baseUrl = new URL(`http://${host}:${port}/`);
 
-                    const [ status, headers, body ] = await this.callHandler.handleCall(params);
+        http.createServer(async (request, response) => {
+            try {
+                const params = await this.extractParams(request, baseUrl);
 
-                    const etag = this.createHash(body);
+                const [ status, headers, body ] = await this.callHandler.handleCall(params);
 
-                    if(params._headers['if-none-match'] == etag){
-                        response.statusCode = 304;
-                        response.end();
-                        return;
-                    }
-                    
-                    headers.etag = etag;
+                const etag = this.createHash(body);
 
-                    response.statusCode = status;
-                    Object.keys(headers).forEach(
-                        (name) => response.setHeader(name, headers[name])
-                    )
-                    body.forEach(chunk => response.write(chunk));
+                if(params._headers['if-none-match'] == etag){
+                    response.statusCode = 304;
                     response.end();
-                } catch (e){
-                    response.statusCode = 500;
-                    response.setHeader('content-type', 'text/plain');
-                    const error = (e.stack || e).toString();
-                    console.error(error);
-                    response.end(error);
+                    return;
                 }
-                if(!isTest) console.log(`${request.method}: ${request.url} (${response.statusCode})`);
-            }).listen(port, host, () => {
-                if(!isTest) console.log(`Pinstripe running "${name}" app at "http://${host}:${port}/"`)
-            });
+                
+                headers.etag = etag;
+
+                response.statusCode = status;
+                Object.keys(headers).forEach(
+                    (name) => response.setHeader(name, headers[name])
+                )
+                body.forEach(chunk => response.write(chunk));
+                response.end();
+            } catch (e){
+                response.statusCode = 500;
+                response.setHeader('content-type', 'text/plain');
+                const error = (e.stack || e).toString();
+                console.error(error);
+                response.end(error);
+            }
+            if(!isTest) console.log(`${request.method}: ${request.url} (${response.statusCode})`);
+        }).listen(port, host, () => {
+            if(!isTest) console.log(`Pinstripe running at "http://${host}:${port}/"`)
         });
     },
 
