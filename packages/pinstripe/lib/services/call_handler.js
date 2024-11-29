@@ -22,7 +22,7 @@ export default {
         if(out) return out;
 
         if(!viewName.match(/(^|\/)_[^\/]+(|\/index)$/)){
-            out = this.normalizeResponse(await this.app.renderView(viewName, normalizedParams));
+            out = this.normalizeResponse(await this.renderView(viewName, normalizedParams));
             if(out) return out;
         }
         
@@ -38,7 +38,7 @@ export default {
         const prefixSegments = [];
         while(true){
             const candidateGuardViewName = prefixSegments.length ? [...prefixSegments, 'guard'].join('/') : 'guard';
-            const out = this.normalizeResponse(await this.app.renderView(candidateGuardViewName, params));
+            const out = this.normalizeResponse(await this.renderView(candidateGuardViewName, params));
             if(out) return out;
             if(viewNameSegments.length == 0) break;
             prefixSegments.push(viewNameSegments.shift());
@@ -49,7 +49,7 @@ export default {
         const prefixSegments = viewName != '' ? viewName.split(/\//) : [];
         while(true){
             const candidateDefaultViewName = prefixSegments.length ? [...prefixSegments, 'default'].join('/') : 'default';
-            const out = this.normalizeResponse(await this.app.renderView(candidateDefaultViewName, params));
+            const out = this.normalizeResponse(await this.renderView(candidateDefaultViewName, params));
             if(out) return out;
             if(prefixSegments.length == 0) break;
             prefixSegments.pop();

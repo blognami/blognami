@@ -1,24 +1,19 @@
 
 import { default as mimeTypes } from 'mime-types';
 
-import { App, View } from 'pinstripe';
+import { View } from 'pinstripe';
 
 export default {
     async run(){
-
-        const { app = 'main' } = this.params;
-
-        const { viewNames } = View.mapperFor(App.create(app, this.context).compose());
-
         this.pages = {};
-        const urls = viewNames.filter(path => !path.match(/(^|\/)_/)).map(path => {
+        const urls = View.names.filter(path => !path.match(/(^|\/)_/)).map(path => {
             return new URL(path, 'http://127.0.0.1/');
         });
 
         urls.push(new URL('http://127.0.0.1/404'));
 
         while(urls.length){
-            await this.crawlPage({ _url: urls.shift(), _headers: { 'x-app': app } });
+            await this.crawlPage({ _url: urls.shift() });
         }
 
         const pages = Object.values(this.pages).filter(page => {
@@ -45,7 +40,7 @@ export default {
                         filePath = `${filePath}.${mimeTypes.extension(contentType)}`
                     }
                     
-                    const data = (await this.callHandler.handleCall({ _url: new URL(path, 'http://127.0.0.1/'), _headers: { 'x-app': app } }))[2];
+                    const data = (await this.callHandler.handleCall({ _url: new URL(path, 'http://127.0.0.1/') }))[2];
 
                     if(!isGenerated[filePath]){
                         isGenerated[filePath] = true;

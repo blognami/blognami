@@ -1,4 +1,6 @@
 
+import { View } from 'pinstripe';
+
 export const styles = `
     .root {
         border-width: 0.1rem;
@@ -16,7 +18,7 @@ export default {
         const path = params._url.pathname;
         const prefix = path.replace(/^\/_markdown_slash_blocks\//, '');
     
-        const names = this.app.viewNames
+        const names = View.names
             .filter(name => name.match(/^_markdown_slash_blocks\/.+/) && name != '_markdown_slash_blocks/default')
             .map(name => name.replace(/^_markdown_slash_blocks\//, ''))
             .filter(name => name.startsWith(prefix))
@@ -27,7 +29,7 @@ export default {
                 <p>Insert block:</p>
                 <ul>
                     ${names.map(name => this.renderHtml`
-                        <li class="${this.cssClassesFor('main/_markdown_editor/modal').lineInserter}" data-line-content="/${name}">${name}</li>
+                        <li class="${this.cssClassesFor('_markdown_editor/modal').lineInserter}" data-line-content="/${name}">${name}</li>
                     `)}
                 </ul>
             </div>

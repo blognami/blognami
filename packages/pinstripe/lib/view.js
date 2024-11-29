@@ -28,47 +28,6 @@ export const View = Class.extend().include({
                     view.context.params = params;
                     return view.render();
                 });
-            },
-
-            mapperFor(namespaces = []){
-                const cacheKey = JSON.stringify(namespaces);
-                if(!this.cache.mappers) this.cache.mappers = {};
-                if(!this.cache.mappers[cacheKey]){
-                    const map = {};
-
-                    namespaces.forEach(namespace => {
-                        this.names.forEach(name => {
-                            const pattern = new RegExp(`^${namespace}/(.*)$`);
-                            const matches = name.match(pattern);
-                            if(!matches) return;
-                            map[matches[1]] = name;
-                        })
-                    });
-
-                    Object.keys(map).forEach(name => {
-                        const matches = name.match(/^(.*)\/index$/);
-                        if(matches && !map[matches[1]]) map[matches[1]] = map[name];
-                    });
-                    
-                    this.cache.mappers[cacheKey] = Class.extend().include({
-                        isView(name){
-                            return !!map[name];
-                        },
-
-                        renderView(context, name, params = {}){
-                            return View.render(context, map[name], params);
-                        },
-
-                        resolveView(viewName){
-                            return map[viewName];
-                        },
-
-                        get viewNames(){
-                            return Object.keys(map).sort();
-                        }
-                    }).new();
-                }
-                return this.cache.mappers[cacheKey];
             }
         });
 
