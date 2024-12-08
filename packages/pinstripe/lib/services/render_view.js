@@ -7,7 +7,6 @@ export default {
     create(){
         return (name, params = {}) => {
             const viewMap = this.viewMapFor(['portal']);
-            console.log(`viewMap ${JSON.stringify(viewMap, null, 2)}`);
             const mappedName = viewMap[name];
             if(!mappedName) return;
             return View.render(this.context, mappedName, params);
