@@ -28,15 +28,16 @@ ServiceFactory.FileImporter.register('js', {
                     }
                 });
             `);
-        } else {
-            Bundle.addModule('worker', `
-                import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
-                import { notAvailableOnClientServiceFactory } from ${JSON.stringify(fileURLToPath(import.meta.url))};
-                ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, notAvailableOnClientServiceFactory);
-            `);
         }
     }
 });
+
+
+if(Bundle) Bundle.addModule('worker', `
+    import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+    import { notAvailableOnClientServiceFactory } from ${JSON.stringify(fileURLToPath(import.meta.url))};
+    ServiceFactory.include(notAvailableOnClientServiceFactory);
+`);
 
 export const notAvailableOnClientServiceFactory =  {
     create(){
