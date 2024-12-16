@@ -13,7 +13,10 @@ export const client = {
 export default {
     create(){
         if(!this.context.root.theme){
-            this.context.root.theme = (async () => await this.database.site.theme || 'default')();
+            this.context.root.theme = (async () => {
+                const site = await this.database.site;
+                return site?.theme || 'default';
+            })();
         }
         return this.context.root.theme;
     }
