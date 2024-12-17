@@ -1,21 +1,10 @@
 
 import { IS_SERVER } from './constants.js';
-import { defer } from './defer.js';
 
-const { readdir, stat, exists, dirname, fileURLToPath } = defer(async () => {
-    const { readdir, stat, existsSync } = await import(`${'fs'}`); 
-    const { promisify } = await import(`${'util'}`);
-    const { dirname } = await import(`${'path'}`);
-    const { fileURLToPath } = await import(`${'url'}`);
-
-    return {
-        readdir: (...args) => promisify(readdir)(...args),
-        stat:  (...args) => promisify(stat)(...args),
-        exists: existsSync,
-        dirname,
-        fileURLToPath
-    }
-});
+import { readdir, stat } from 'fs/promises'; // pinstripe-if-client: const readdir = undefined, stat = undefined;
+import { existsSync as exists } from 'fs'; // pinstripe-if-client: const exists = undefined;
+import { dirname } from 'path'; // pinstripe-if-client: const dirname = undefined;
+import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 
 const imported = {};
 const importQueue = [];
