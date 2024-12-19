@@ -3,7 +3,7 @@ import { Class } from "./class.js";
 export const HttpProxy = Class.extend().include({
 
     initialize(){
-        this.worker = new Worker("/_shell/javascripts/worker.js");
+        this.worker = new Worker("/_pinstripe/_shell/javascripts/worker.js");
         this.session = {};
         this.sessionIdCounter = 0;
 

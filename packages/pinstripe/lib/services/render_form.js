@@ -72,7 +72,7 @@ export default {
             }
         });
 
-        return this.renderView('_form', {
+        return this.renderView('_pinstripe/_form', {
             requiresProofOfWork,
             isPlaceholder: this.params._placeholder == 'true',
             method: this.params._method,

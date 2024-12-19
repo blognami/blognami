@@ -152,7 +152,7 @@ export default {
                     data-placeholder="&_placeholder=true"
                     ${isPlaceholder ? this.renderHtml`disabled` : ''}
                 >
-                    ${this.renderView('_panel', {
+                    ${this.renderView('_pinstripe/_panel', {
                         title,
                         body: this.renderHtml`
                             ${() => {
@@ -245,11 +245,11 @@ export default {
                         `,
                         footer: this.renderHtml`
                             <div class="${this.cssClasses.footer}">
-                                ${this.renderView('_button', {
+                                ${this.renderView('_pinstripe/_button', {
                                     type: 'submit',
                                     body: submitTitle
                                 })}
-                                ${this.renderView('_button', {
+                                ${this.renderView('_pinstripe/_button', {
                                     body: this.renderHtml`
                                         ${cancelTitle}
                                         <script type="pinstripe">

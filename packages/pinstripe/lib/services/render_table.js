@@ -17,7 +17,7 @@ export default {
 
         const columns = extractColumns(tableAdapter, options, this.inflector);
 
-        return this.renderView('_table', {
+        return this.renderView('_pinstripe/_table', {
             title,
             search,
             columns,
