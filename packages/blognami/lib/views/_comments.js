@@ -125,12 +125,12 @@ export default {
                 <div class="${this.cssClasses.commentsFooter}">
                     ${() => {
                         if(commentable.constructor.name == 'comment') return this.renderHtml`
-                            <a class="${this.cssClasses.action}" href="/_actions/add_comment?commentableId=${commentable.id}" target="_overlay" data-test-id="add-comment">Reply</a>
+                            <a class="${this.cssClasses.action}" href="/_actions/guest/add_comment?commentableId=${commentable.id}" target="_overlay" data-test-id="add-comment">Reply</a>
                         `;
                         return this.renderView('_button', {
                             tagName: 'a',
                             isFullWidth: true,
-                            href: `/_actions/add_comment?commentableId=${commentable.id}`,
+                            href: `/_actions/guest/add_comment?commentableId=${commentable.id}`,
                             target: '_overlay',
                             'data-test-id': 'add-comment',
                             body: 'Add comment',

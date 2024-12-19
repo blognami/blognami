@@ -14,7 +14,7 @@ export default {
             title: 'Monthly',
             price: `${currencySymbol}${membershipTiers.monthlyPrice} per month`,
             features: ['Access to all premium content', 'Billed monthly.'],
-            action: `/_actions/subscribe?plan=monthly&returnUrl=${encodeURIComponent(returnUrl)}`
+            action: `/_actions/guest/subscribe?plan=monthly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
         if(membershipTiers.enableYearly) options.push({
@@ -22,7 +22,7 @@ export default {
             title: 'Yearly',
             price: `${currencySymbol}${membershipTiers.yearlyPrice} per year`,
             features: ['Access to all premium content', 'Billed yearly.'],
-            action: `/_actions/subscribe?plan=yearly&returnUrl=${encodeURIComponent(returnUrl)}`
+            action: `/_actions/guest/subscribe?plan=yearly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
         if(membershipTiers.enableFree) options.push({
@@ -30,7 +30,7 @@ export default {
             title: 'None',
             price: 'Free',
             features: ['Access to all free content.'],
-            action: `/_actions/subscribe?plan=free&returnUrl=${encodeURIComponent(returnUrl)}`
+            action: `/_actions/guest/subscribe?plan=free&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
         if(options.length == 1) plan = options[0].name;
@@ -39,7 +39,7 @@ export default {
             <pinstripe-modal>
                 ${this.renderView('_panel', {
                     title: 'Choose a subscription plan',
-                    body: this.renderView('_actions/_subscription_options', { options }),
+                    body: this.renderView('_actions/guest/_subscription_options', { options }),
                     footer: this.renderView('_button', {
                         body: this.renderHtml`
                             Cancel
@@ -58,7 +58,7 @@ export default {
         }
 
         if(!user) return this.renderHtml`
-            <span data-component="pinstripe-anchor" data-href="/_actions/sign_in?title=${encodeURIComponent('Subscribe')}&returnUrl=${encodeURIComponent(`/_actions/subscribe?plan=${plan}&returnUrl=${encodeURIComponent(returnUrl)}`)}">
+            <span data-component="pinstripe-anchor" data-href="/_actions/guest/sign_in?title=${encodeURIComponent('Subscribe')}&returnUrl=${encodeURIComponent(`/_actions/guest/subscribe?plan=${plan}&returnUrl=${encodeURIComponent(returnUrl)}`)}">
                 <script type="pinstripe">
                     this.parent.trigger('click');
                 </script>
