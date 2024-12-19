@@ -77,7 +77,7 @@ export default {
     render(){
         return this.renderHtml`
             <pinstripe-modal width="medium" height="full">
-                ${this.renderView('_panel', {
+                ${this.renderView('_pinstripe/_panel', {
                     title: this.params.title,
                     body: this.renderHtml`
                         ${() => {
@@ -124,7 +124,7 @@ export default {
                             `;
                         }}
                     `,
-                    footer: this.renderView('_button', {
+                    footer: this.renderView('_pinstripe/_button', {
                         body: this.renderHtml`
                             Close
                             <script type="pinstripe">
