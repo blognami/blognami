@@ -1,5 +1,5 @@
 
-import { View, createHash } from '../../../view.js';
+import { View, createHash } from '../../../../view.js';
 import { parse as parseCss, stringify as stringifyCss } from 'css'; // pinstripe-if-client: const { parseCss, stringifyCss }  = {};
 
 let out;

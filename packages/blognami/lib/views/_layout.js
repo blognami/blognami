@@ -80,7 +80,7 @@ export default {
             user = await this.session.user;
         }
 
-        return this.renderView('_shell', {
+        return this.renderView('_pinstripe/_shell', {
             meta: [
                 { name: 'pinstripe-load-cache-namespace', content: user ? 'signed-in' : 'signed-out' },
                 ...meta
