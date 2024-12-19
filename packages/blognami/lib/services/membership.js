@@ -183,7 +183,7 @@ export default {
         const baseUrl = new URL('/', this.initialParams._url);
         baseUrl.protocol = 'https:';
         baseUrl.host = host;
-        return new URL('/_actions/stripe_webhook', baseUrl);
+        return new URL('/_actions/guest/stripe_webhook', baseUrl);
     },
 
     webhookUrlIsPublicallyAccessible(){

@@ -24,7 +24,7 @@ export default {
                         <script type="pinstripe">
                             this.parent.patch({
                                 ...this.parent.attributes,
-                                href: '/_actions/subscribe?returnUrl=' + encodeURIComponent(window.location.href)
+                                href: '/_actions/guest/subscribe?returnUrl=' + encodeURIComponent(window.location.href)
                             })
                         </script>
                     `,

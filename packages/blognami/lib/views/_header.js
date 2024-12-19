@@ -22,7 +22,7 @@ export default {
                 links.push({ href: '/_actions/user/your_account', target: '_overlay', testId: 'your-account', body: user.name });
             }
         } else {
-            links.push({ href: '/_actions/sign_in', target: '_overlay', preload: true, testId: 'sign-in', body: 'Sign in' });
+            links.push({ href: '/_actions/guest/sign_in', target: '_overlay', preload: true, testId: 'sign-in', body: 'Sign in' });
         }
 
         return this.renderView('_navbar', {

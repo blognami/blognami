@@ -7,7 +7,7 @@ export default {
 
         if(!this.user){
             return this.renderHtml`
-                <span data-component="pinstripe-anchor" data-href="/_actions/sign_in?title=${encodeURIComponent('Add comment')}&returnUrl=${encodeURIComponent(`/_actions/add_comment?commentableId=${this.params.commentableId}`)}">
+                <span data-component="pinstripe-anchor" data-href="/_actions/guest/sign_in?title=${encodeURIComponent('Add comment')}&returnUrl=${encodeURIComponent(`/_actions/guest/add_comment?commentableId=${this.params.commentableId}`)}">
                     <script type="pinstripe">
                         this.parent.trigger('click');
                     </script>

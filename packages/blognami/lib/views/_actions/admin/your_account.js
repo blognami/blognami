@@ -8,7 +8,7 @@ export default {
                 ${this.renderView('_menu', {
                     items: [
                         { href: `/${user.slug}`, target: '_top', body: 'Profile', testId: 'profile'},
-                        { href: `/_actions/sign_out`, target: '_overlay', body: 'Sign out', testId: 'sign-out'}
+                        { href: `/_actions/guest/sign_out`, target: '_overlay', body: 'Sign out', testId: 'sign-out'}
                     ]
                 })}
             </pinstripe-popover>

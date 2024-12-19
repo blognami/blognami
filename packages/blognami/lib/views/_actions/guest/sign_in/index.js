@@ -41,7 +41,7 @@ export default {
                     }));
 
                     return this.renderHtml`
-                        <span data-component="pinstripe-anchor" data-href="/_actions/sign_in/verify_password?email=${encodeURIComponent(email)}${optionalParams}"><script type="pinstripe">this.parent.trigger('click');</script></span>
+                        <span data-component="pinstripe-anchor" data-href="/_actions/guest/sign_in/verify_password?email=${encodeURIComponent(email)}${optionalParams}"><script type="pinstripe">this.parent.trigger('click');</script></span>
                     `;
                 },
             }

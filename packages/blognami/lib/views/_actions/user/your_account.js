@@ -27,7 +27,7 @@ export default {
             }
         );
 
-        items.push({ href: `/_actions/sign_out`, target: '_overlay', body: 'Sign out', testId: 'sign-out'});
+        items.push({ href: `/_actions/guest/sign_out`, target: '_overlay', body: 'Sign out', testId: 'sign-out'});
 
         return this.renderHtml`
             <pinstripe-popover>
