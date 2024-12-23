@@ -53,6 +53,8 @@ export default {
         const cancelTitle = options.cancelTitle || formAdapter.cancelTitle;
         const unsavedChangesConfirm = options.unsavedChangesConfirm || formAdapter.unsavedChangesConfirm;
         const _class = options.class || formAdapter.class;
+        const width = options.width || formAdapter.width;
+        const height = options.height || formAdapter.height;
 
         const indexedFields = indexFieldsByName(fields);
         const otherErrors = [];
@@ -82,7 +84,9 @@ export default {
             submitTitle,
             cancelTitle,
             unsavedChangesConfirm,
-            class: _class
+            class: _class,
+            width,
+            height
         });
     }
 }

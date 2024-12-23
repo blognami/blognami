@@ -76,7 +76,7 @@ export const decorators = {
 export default {
     render(){
         return this.renderHtml`
-            <pinstripe-modal width="medium" height="full">
+            <pinstripe-modal width="medium">
                 ${this.renderView('_pinstripe/_panel', {
                     title: this.params.title,
                     body: this.renderHtml`
@@ -113,7 +113,7 @@ export default {
                                 ${() => {
                                     if(this.params.pageCount > 1) return this.renderHtml`
                                         <div class="${this.cssClasses.pagination}">
-                                            ${this.renderView('_pagination', {
+                                            ${this.renderView('_pinstripe/_pagination', {
                                                 pageCount: this.params.pageCount,
                                                 page: this.params.page,
                                                 q: this.params.q,
