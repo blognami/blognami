@@ -101,13 +101,15 @@ export const styles = `
 
     .loading-indicator {
         display: inline-flex;
+        flex-wrap: wrap;
         align-items: center;
-        font-size: 12px;
+        justify-content: start;
+        font-size: 11px;
+        gap: 0.5em;
     }
 
     .proof-of-work-progress {
         display: inline-block;
-        margin-left: 0.5em;
     }
 `;
 
@@ -136,11 +138,13 @@ export default {
             fields,
             submitTitle,
             cancelTitle,
-            class: _class
+            class: _class,
+            width = 'medium',
+            height = 'auto'
         } = this.params;
 
         return this.renderHtml`
-            <pinstripe-modal>
+            <pinstripe-modal width="${width}" height="${height}">
                 <form
                     class="${this.cssClasses.form}${_class ? ` ${_class}` : ''}"
                     method="post"

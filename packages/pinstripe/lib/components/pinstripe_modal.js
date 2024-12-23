@@ -1,4 +1,21 @@
 
+
+const MOBILE_HEIGHT_MAP = {
+    full: 'calc(100vh - 8.2rem)',
+}
+
+const DESKTOP_WIDTH_MAP = {
+    small: '600px',
+    medium: '800px',
+    large: '1000px',
+    auto: '0',
+    full: '0'
+};
+
+const DESKTOP_HEIGHT_MAP = {
+    full: 'calc(100vh - 4rem)',
+};
+
 export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
@@ -9,13 +26,13 @@ export default {
 
         const { width = 'medium', height = 'auto' } = this.params;
 
+        const mobileHeight = MOBILE_HEIGHT_MAP[height] || height;
+        const desktopWidth = DESKTOP_WIDTH_MAP[width] || width;
+        const desktopHeight = DESKTOP_HEIGHT_MAP[height] || height;
+
         this.shadow.patch(`
             <style>
                 .root {
-                    display: flex;
-                    align-items: center;
-                    flex-direction: column;
-                    justify-content: center;
                     overflow: auto;
                     z-index: 40;
                     position: absolute;
@@ -25,11 +42,10 @@ export default {
                     height: 100vh;
                     background-color: rgba(10, 10, 10, 0.86);
                 }
+
                 .close-button {
                     background: none;
-                    position: fixed;
-                    right: 2.0rem;
-                    top: 2.0rem;
+                    display: inline-block;
                     height: 3.2rem;
                     width: 3.2rem;
                     user-select: none;
@@ -64,29 +80,55 @@ export default {
                     height: 50%;
                     width: 0.2rem;
                 }
-                .container {
-                    min-height: calc(100vh - 4.0rem);
-                    width: calc(100vw - 16.0rem);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+
+                @media (max-width: 766px) {
+                    .container {
+                        width: 100vw;
+                        min-height: 100vh;
+                        display: grid;
+                        grid-template-columns: [grid-start] 1rem [full-start] auto [full-end] 1rem [grid-end];
+                        grid-template-rows: [grid-start] 0 [top-start] 7.2rem [top-end] 0 [full-start] ${mobileHeight} [full-end] 1rem [grid-end];
+                    }
+
+                    .close-button {
+                        grid-area: top / full;
+                        position: absolute;
+                        right: 2rem;
+                        top: 2rem;
+                    }
+
+                    .body {
+                        grid-area: full;
+                    }
                 }
-                .body {
-                    max-width: 100%;
-                }
-                .root.is-medium-width .body {
-                    width: 800px;
-                }
-                .root.is-full-width .body {
-                    width: 100%;
-                }
-                .root.is-full-height .body {
-                    height: 100%;
+
+                @media (min-width: 767px) {
+                    .container {
+                        width: 100vw;
+                        min-height: 100vh;
+                        display: grid;
+                        grid-template-columns: [grid-start] 7.2rem [full-start] auto [fixed-start] minmax(0, ${desktopWidth}) [fixed-end] auto [full-end] 7.2rem [grid-end];
+                        grid-template-rows: [grid-start] 2rem [full-start] ${desktopHeight} [full-end] 2rem [grid-end];
+                    }
+
+                    .close-button {
+                        position: fixed;
+                        right: 2.0rem;
+                        top: 2.0rem;
+                    }
+
+                    .body {
+                        grid-area: full / ${['auto', 'full'].includes(desktopWidth) ? 'full' : 'fixed'};
+                        display: flex;
+                        flex-direction: column;
+                        align-items: stretch;
+                        justify-content: center;
+                    }
                 }
             </style>
-            <div class="root is-${width}-width is-${height}-height">
-                <button class="close-button"></button>
+            <div class="root">
                 <div class="container">
+                    <button class="close-button"></button>
                     <div class="body">
                         <slot>
                     </div>

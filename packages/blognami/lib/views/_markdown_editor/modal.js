@@ -3,8 +3,7 @@ export const styles = `
     .root {
         display: flex;
         flex-direction: row;
-        width: 120.0rem;
-        max-width: 100%;
+        width: 100%;
         height: 100%;
         background: #fff;
         z-index: 1;
@@ -106,7 +105,7 @@ export const decorators = {
 export default {
     render(){
         return this.renderHtml`
-            <pinstripe-modal class="${this.cssClasses.modal}" width="full" height="full">
+            <pinstripe-modal class="${this.cssClasses.modal}" width="120.0rem" height="full">
                 <div class="${this.cssClasses.root}">
                     <div class="${this.cssClasses.textPane}">
                         <textarea name="value" data-part="editor-textarea">${this.params.value}</textarea>

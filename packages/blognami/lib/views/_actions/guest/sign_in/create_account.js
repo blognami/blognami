@@ -22,6 +22,7 @@ export default {
                 title,
                 fields: [{ name: 'email', type: 'hidden' }, { name: 'password', type: 'hidden' }, { name: 'name', label: 'Your Name'}],
                 submitTitle: 'Next',
+                width: 'small',
                 
                 async success(){
                     const user = await that.database.users.insert({

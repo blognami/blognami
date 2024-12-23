@@ -23,6 +23,7 @@ export default {
                 fields: [{ name: 'email', label: 'Your email', placeholder: "We'll send a one-time-password to this address." }],
                 submitTitle: 'Next',
                 requiresProofOfWork: true,
+                width: 'small',
         
                 success: async ({ email }) => {
                     const user = await this.database.users.where({ email }).first();

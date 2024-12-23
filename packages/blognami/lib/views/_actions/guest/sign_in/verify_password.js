@@ -34,6 +34,7 @@ export default {
                 title,
                 fields: [{ name: 'password', type: 'password', label: 'Your one-time-password', placeholder: 'Enter the one-time-password this has just been sent to you (via email).' }],
                 submitTitle: 'Next',
+                width: 'small',
                 
                 async success(){
                     const user = await that.database.users.where({ email }).first();
