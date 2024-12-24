@@ -45,7 +45,7 @@ export default {
                 host: '127.0.0.1',
                 user: 'root',
                 password: '',
-                database: `${await this.project.name}_${environment}`
+                database: `${this.inflector.snakeify(await this.project.name)}_${environment}`
             }, out);
         }
 
