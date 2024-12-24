@@ -108,6 +108,9 @@ export default {
         } else {
             body = data;
         }
+
+        body = body.replace(/^\s+|\s+$/g, '');
+
         return [ frontMatter, body ];
     }
 };

@@ -3,7 +3,7 @@
 ## Package index
 
 - [blognami](https://github.com/blognami/blognami/tree/main/packages/blognami)
-- [demo](https://github.com/blognami/blognami/tree/main/packages/demo)
+- [blognami-demo](https://github.com/blognami/blognami/tree/main/packages/blognami-demo)
 - [pinstripe](https://github.com/blognami/blognami/tree/main/packages/pinstripe)
 
 ## License
