@@ -23,13 +23,15 @@ export default {
 
         const { 
             database = { adapter: 'sqlite' },
-            mail = { adapter: 'dummy' }
+            mail = { adapter: 'dummy' },
+            server = {}
         } = out;
         
         return {
             ...out,
             database: await this.normalizeDatabaseConfig(database),
-            mail
+            mail,
+            server: this.normalizeServerConfig(server)
         };
     },
 
@@ -62,5 +64,21 @@ export default {
             defaults: {},
             ...config
         };
+    },
+
+    normalizeServerConfig(config){
+        config.limits ||= {};
+        config.limits.bodySize ||= 100 * 1024 * 1024;
+        config.limits.rawBodySize ||= 1024 * 1024;
+        config.limits.fieldNameSize ||= 100;
+        config.limits.fieldSize ||= 1024 * 1024;
+        config.limits.fields ||= Infinity;
+        config.limits.fileSize ||= 10 * 1024 * 1024;
+        config.limits.files ||= Infinity;
+        config.limits.parts ||= Infinity;
+        config.limits.headerPairs ||= 2000;
+        config.limits.imageWidth ||= 1024;
+        config.limits.imageHeight ||= 1024;
+        return config;
     }
 };

@@ -26,6 +26,8 @@ export default {
         const errors = {};
         if(this.params._method == 'POST'){
             try {
+                if(this.params._bodyErrors) throw new ValidationError(this.params._bodyErrors);
+
                 if(requiresProofOfWork){
                     if(!this.params._proofOfWork) throw new ValidationError({ _proofOfWork: 'Must not be blank' });
                     if(!await verifyProofOfWork(values, this.params._proofOfWork)) throw new ValidationError({ _proofOfWork: 'Must be a valid' });
