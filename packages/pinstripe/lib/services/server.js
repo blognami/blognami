@@ -2,6 +2,7 @@
 import http from 'http';
 import Busboy from 'busboy';
 import { createHash } from 'crypto';
+import sharp from 'sharp';
 
 export default {
     create(){
@@ -17,7 +18,7 @@ export default {
 
         http.createServer(async (request, response) => {
             try {
-                const params = await this.extractParams(request, baseUrl);
+                const params = await this.extractParams(request, baseUrl, await this.config.server.limits);
 
                 const [ status, headers, body ] = await this.callHandler.handleCall(params);
 
@@ -50,7 +51,7 @@ export default {
         });
     },
 
-    async extractParams(request, baseUrl){
+    async extractParams(request, baseUrl, limits){
         const { method, url, headers } = request;
         const _url = new URL(url, baseUrl);
 
@@ -59,7 +60,7 @@ export default {
             urlParams[key] = value;
         });
 
-        const body = method.match(/^POST|PUT|PATCH$/) ? await this.parseBody(request) : {};
+        const body = method.match(/^POST|PUT|PATCH$/) ? await this.parseBody(request, limits) : {};
         
         return {
             ...urlParams,
@@ -71,45 +72,111 @@ export default {
         };
     },
 
-    async parseBody(request){
+    async parseBody(request, limits){
+        const errors = {};
+
         const contentType = request.headers['content-type'] || '';
 
         const promises = [];
         
-        promises.push(new Promise((resolve) => {
+        let bodySize = 0;
+        const bodySizeLimit = limits.bodySize;
+
+        promises.push(new Promise((resolve, reject) => {
             const chunks = [];
-            request.on('data', chunk => chunks.push(chunk));
+            request.on('data', chunk => {
+                bodySize += chunk.length;
+                if(bodySize <= bodySizeLimit) chunks.push(chunk);
+                if(!errors.general && bodySize > bodySizeLimit) errors.general = `body too large - limit of ${bodySizeLimit} bytes has been reached`;
+            });
             request.on('end', () => {
-                const _body = Buffer.concat(chunks).toString();
-                resolve(contentType.match(/application\/json/) ? { _body, ...JSON.parse(_body)} : { _body });
+                let _body = Buffer.concat(chunks).toString();
+                if(_body.length > limits.rawBodySize){
+                    _body = `${_body.slice(0, limits.rawBodySize)}...`;
+                }
+
+                try{
+                    resolve(contentType.match(/application\/json/) && bodySize <= bodySizeLimit ? { _body, ...JSON.parse(_body)} : { _body });
+                } catch (e){
+                    reject(e);
+                }
             });
         }));
 
         if(contentType.match(/multipart\/(form-data|x-www-form-urlencoded)/)) promises.push(new Promise((resolve) => {
             const out = {};
-            const busboy = Busboy({ headers: request.headers });
+            const busboy = Busboy({headers: request.headers, limits: {
+                fieldNameSize: limits.fieldNameSize,
+                fieldSize: limits.fieldSize,
+                fields: limits.fields,
+                fileSize: limits.fileSize,
+                files: limits.files,
+                parts: limits.parts,
+                headerPairs: limits.headerPairs
+            }});
         
             busboy.on('file', function(fieldname, file, info) {
-                const { filename, mimeType, encoding } = info;
+                let { filename, mimeType, encoding } = info;
                 
                 const chunks = [];
         
                 file.on('data', chunk => {
                     chunks.push(Buffer.from(chunk));
                 });
+
+                file.on('limit', () => {
+                    if(!errors[fieldname]) errors[fieldname] = `file too large - limit of ${limits.fileSize} bytes has been reached`;
+                });
         
                 file.on('end', () => {
-                    out[fieldname] = {
-                        filename,
-                        encoding,
-                        mimeType,
-                        data: Buffer.concat(chunks)
-                    };
+                    out[fieldname] = (async () => {
+                        let data = Buffer.concat(chunks);
+
+                        if(mimeType.match(/^image\/(png|jpeg|gif|webp|avif|tiff)$/)){
+                            let image = sharp(data);
+
+                            const metadata = await image.metadata();
+
+                            image = image.resize(limits.imageWidth, limits.imageHeight, {
+                                fit: 'inside',
+                                withoutEnlargement: true
+                            });
+
+                            if(metadata.format == 'tiff'){
+                                image = image.toFormat('webp');
+                                mimeType = 'image/webp';
+                                filename = filename.replace(/\.tiff$/, '.webp');
+                            }
+
+                            data = await image.toBuffer();
+                        }
+
+                        return {
+                            filename,
+                            encoding,
+                            mimeType,
+                            data
+                        };
+                    })();
                 });
             });
         
-            busboy.on('field', (fieldname, value) => {
-                out[fieldname] = value
+            busboy.on('field', (fieldname, value, info) => {
+                out[fieldname] = value;
+                if(!errors[fieldname] && info.nameTruncated) errors[fieldname] = `name too long - limit of ${limits.fieldNameSize} bytes has been reached`;
+                if(!errors[fieldname] && info.valueTruncated) errors[fieldname] = `value too long - limit of ${limits.fieldSize} bytes has been reached`;
+            });
+
+            busboy.on('partsLimit', () => {
+                if(!errors.general) errors.general = `too many parts - limit of ${limits.parts} parts has been reached`;
+            });
+
+            busboy.on('filesLimit', () => {
+                if(!errors.general) errors.general = `too many files - limit of ${limits.files} files has been reached`;
+            });
+
+            busboy.on('fieldsLimit', () => {
+                if(!errors.general) errors.general = `too many fields - limit of ${limits.fields} fields has been reached`;
             });
         
             busboy.on('finish', () => resolve(out));
@@ -118,6 +185,16 @@ export default {
         }));
 
         const results = await Promise.all(promises);
+
+        for (const result of results){
+            for(const [key, value] of Object.entries(result)){
+                result[key] = await value;
+            }
+        }
+
+        if(Object.keys(errors).length) results.push({
+            _bodyErrors: errors
+        });
 
         return Object.assign({}, ...results);
     },
