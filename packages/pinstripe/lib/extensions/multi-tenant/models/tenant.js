@@ -1,5 +1,6 @@
 
-import { Row } from "pinstripe/database";
+import { Row, Database } from "pinstripe/database";
+import { defer } from "../../../defer.js";
 
 export default {
     meta(){
@@ -10,5 +11,13 @@ export default {
         });
 
         this.hasMany('tenants', { cascadeDelete: false });
+    },
+
+    get scopedDatabase(){
+        return defer(async () => {
+            const out = await Database.new(this.database.client);
+            out.tenant = this;
+            return out;
+        });
     }
 };
