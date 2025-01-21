@@ -6,6 +6,9 @@ import { existsSync as exists } from 'fs'; // pinstripe-if-client: const exists 
 import { dirname } from 'path'; // pinstripe-if-client: const dirname = undefined;
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 
+import { FileImporter } from './file_importer.js';
+import './file_importers/default.js.js';
+
 const imported = {};
 const importQueue = [];
 
@@ -44,40 +47,29 @@ const normalizeDirPath = async (dirPath) => {
     return out;
 };
 
-const importAllRecursive = async (dirPath, currentDirPath, fileImporter = defaultFileImporter) => {
+const importAllRecursive = async (dirPath, currentDirPath, fileImporterConfig) => {
     const items = await readdir(currentDirPath);
     for(let i in items){
         const item = items[i];
         const currentPath = `${currentDirPath}/${item}`;
         const stats = await stat(currentPath);
         if(stats.isDirectory()){
-            const fileImporterFilePath = `${currentPath}/_file_importer.js`;
-            if(await exists(fileImporterFilePath)){
-                let fileImporter = (await import(fileImporterFilePath)).default;
-                if(!fileImporter) continue;
-                await importAllRecursive(currentPath, currentPath, fileImporter);
+            const fileImporterConfigFilePath = `${currentPath}/_file_importer.js`;
+            if(await exists(fileImporterConfigFilePath)){
+                let fileImporterConfig = (await import(fileImporterConfigFilePath)).default;
+                if(!fileImporterConfig) continue;
+                await importAllRecursive(currentPath, currentPath, fileImporterConfig);
             } else {
-                await importAllRecursive(dirPath, currentPath, fileImporter);
+                await importAllRecursive(dirPath, currentPath, fileImporterConfig);
             }           
         } else if(!imported[currentPath]) {
             imported[currentPath] = true;
-            const filePath = currentPath;
-            const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
-            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/.]+$/, '');
-            const extension = relativeFilePath.replace(/^.*\./, '');
-            await fileImporter.importFile({ dirPath, filePath, relativeFilePath, relativeFilePathWithoutExtension, extension });
+            await FileImporter.importFile(dirPath, currentPath, fileImporterConfig);
         }
     }
 };
 
-const defaultFileImporter = {
-    async importFile({ filePath }){
-        if(filePath.match(/\/[^\.\/]+\.js$/)){
-            await import(filePath);
-        }
-    }
-};
-
-
-if(IS_SERVER) importAll(import.meta.url);
-
+if(IS_SERVER) {
+    importAll(`${import.meta.url}/../file_importers`);
+    importAll(import.meta.url);
+}
