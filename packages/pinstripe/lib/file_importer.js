@@ -9,13 +9,12 @@ export const FileImporter = Class.extend().include({
         this.include(Registry);
 
         this.assignProps({
-            async importFile(dirPath, filePath, config = { type: 'default' }){
+            async importFile(dirPath, filePath, config){
                 const { type, ...otherConfig } = config;
                 const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
-                const relativeFilePathWithoutExtension = [relativeFilePath.replace(/\.[^/.]+$/, '')];
-                const extension = relativeFilePath.replace(/^.*\./, '').split('.');
+                const relativeFilePathWithoutExtension = [relativeFilePath.replace(/\.[^/]+$/, '')];
+                const extension = relativeFilePath.replace(/^.*?\.([^/]+)$/, '$1').split('.');
 
-                let found = false;
                 while(extension.length > 0){
                     const candidateImporterName = `${type}.${extension.join('.')}`;
                     if(this.mixins[candidateImporterName]){
@@ -27,20 +26,17 @@ export const FileImporter = Class.extend().include({
                             extension: extension.join('.'),
                             config: otherConfig
                         }).importFile();
-                        found = true;
-                        break;
+                        return;
                     }
                     relativeFilePathWithoutExtension.push(extension.shift());
                 }
-
-                if(found) return;
 
                 await this.create(type, {
                     dirPath,
                     filePath,
                     relativeFilePath,
                     relativeFilePathWithoutExtension: relativeFilePath.replace(/\.[^/.]+$/, ''),
-                    extension: relativeFilePath.replace(/^.*\./, ''),
+                    extension: relativeFilePath.replace(/^.*?\.([^/]+)$/, '$1'),
                     config: otherConfig
                 }).importFile();
             }

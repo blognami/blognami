@@ -1,1 +1,1 @@
-export { Command as default } from 'pinstripe';
+export default { type: 'command' };

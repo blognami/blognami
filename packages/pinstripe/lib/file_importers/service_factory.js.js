@@ -1,11 +1,15 @@
 
+import { FileImporter } from "../file_importer.js";
 import { ServiceFactory } from '../service_factory.js';
 import { Bundle } from '../bundle.js'; // pinstripe-if-client: const Bundle = undefined;
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 import { MissingResourceError } from '../missing_resource_error.js';
 
-ServiceFactory.FileImporter.register('js', {
-    async importFile({ filePath, relativeFilePathWithoutExtension }){
+
+FileImporter.register('service_factory.js', {
+    async importFile(){
+        const {relativeFilePathWithoutExtension, filePath} = this;
+        if(!filePath.match(/\/[^\.\/]+\.js$/)) return;
         if(relativeFilePathWithoutExtension == '_file_importer') return;
 
         const { default: _default, client } = (await import(filePath));
@@ -31,7 +35,6 @@ ServiceFactory.FileImporter.register('js', {
         }
     }
 });
-
 
 if(Bundle) Bundle.addModule('worker', `
     import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};

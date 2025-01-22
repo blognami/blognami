@@ -1,12 +1,14 @@
-
 import { promisify } from 'util';
 import { readFile } from 'fs';
 import Yaml from 'js-yaml';
 
-import { View } from '../view.js';
+import { FileImporter } from "../file_importer.js";
+import { View } from "../view.js";
 
-View.FileImporter.register('md', {
-    importFile({ relativeFilePathWithoutExtension, filePath }){
+FileImporter.register('view.md.js', {
+    async importFile(){
+        const {relativeFilePathWithoutExtension, filePath} = this;
+        
         let extractParamsPromise;
 
         View.register(relativeFilePathWithoutExtension, {

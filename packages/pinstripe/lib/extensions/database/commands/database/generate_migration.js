@@ -23,7 +23,7 @@ export default {
     
             await generateFile(`lib/migrations/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { Migration as default } from 'pinstripe/database';`);
+                line(`export default { type: 'migration' };`);
                 line();
             });
     

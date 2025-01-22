@@ -1,1 +1,1 @@
-export { View as default } from 'pinstripe';
+export default { type: 'view' };

@@ -1,7 +1,4 @@
 
-import { promisify } from 'util'; // pinstripe-if-client: const promisify = undefined;
-import { readFile } from 'fs'; // pinstripe-if-client: const readFile = undefined;
-import { default as mimeTypes } from 'mime-types'; // pinstripe-if-client: const mimeTypes = undefined;
 import * as crypto from 'crypto'; // pinstripe-if-client: const crypto = undefined;
 
 import { Class } from './class.js';
@@ -30,22 +27,6 @@ export const View = Class.extend().include({
                 });
             }
         });
-
-        const registry = this;
-
-        this.FileImporter.include({
-            importFile({ relativeFilePath, filePath }){
-                registry.register(relativeFilePath, {
-                    meta(){
-                        this.filePaths.push(filePath);
-                    },
-
-                    render(){
-                        return renderFile(filePath);
-                    }
-                });
-            }
-        });
     },
 
     get hash(){
@@ -66,12 +47,6 @@ export const View = Class.extend().include({
         // by default do nothing
     }
 });
-
-const renderFile = async filePath => [
-    200,
-    { 'content-type': mimeTypes.lookup(filePath) || 'application/octet-stream' },
-    [ await promisify(readFile)(filePath) ]
-];
 
 export function createHash(data){
     return crypto.createHash('sha1').update(data).digest('base64').replace(/[^a-z0-9]/ig, '').replace(/^(.{10}).*$/, '$1');

@@ -1,5 +1,6 @@
 import { importAll } from 'pinstripe';
 
+importAll(`${import.meta.url}/../file_importers`);
 importAll(import.meta.url);
 
 export { Client } from './client.js';

@@ -1,15 +1,18 @@
 
+import { FileImporter } from "../file_importer.js";
 import { View, createHash } from '../view.js';
 import { Bundle } from '../bundle.js'; // pinstripe-if-client: const Bundle = undefined;
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 import { inflector } from '../inflector.js';
 
-View.FileImporter.register('js', {
-    async importFile({ filePath, relativeFilePathWithoutExtension }){
+FileImporter.register('view.js', {
+    async importFile(){
+        const {relativeFilePathWithoutExtension, filePath} = this;
+        
         if(relativeFilePathWithoutExtension == '_file_importer') return;
 
         const { default: _default, client, decorators } = (await import(filePath));
-
+        
         if(_default || client) View.register(relativeFilePathWithoutExtension, {
             meta(){
                 this.filePaths.push(filePath);

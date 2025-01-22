@@ -1,1 +1,1 @@
-export { BackgroundJob as default } from 'pinstripe';
+export default { type: 'background_job' };

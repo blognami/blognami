@@ -1,2 +1,1 @@
-
-export { Row as default } from 'pinstripe/database';
+export default { type: 'model' };

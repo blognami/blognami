@@ -15,7 +15,7 @@ export default {
     
             await generateFile(`lib/background_jobs/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { BackgroundJob as default } from 'pinstripe';`);
+                line(`export default { type: 'background_job' };`);
                 line();
             });
     

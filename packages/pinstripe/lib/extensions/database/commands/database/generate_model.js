@@ -21,7 +21,7 @@ export default {
     
             await generateFile(`lib/models/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { Row as default } from 'pinstripe/database';`);
+                line(`export default { type: 'model' };`);
                 line();
             });
     

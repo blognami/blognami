@@ -1,2 +1,1 @@
-
-export { ServiceFactory as default } from 'pinstripe';
+export default { type: 'service_factory' };

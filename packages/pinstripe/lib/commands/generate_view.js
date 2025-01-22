@@ -34,7 +34,7 @@ export default {
     
             await generateFile(`lib/views/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { View as default } from 'pinstripe';`);
+                line(`export default { type: 'view' };`);
                 line();
             });
 

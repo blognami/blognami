@@ -1,2 +1,1 @@
-
-export { Migration as default } from 'pinstripe/database';
+export default { type: 'migration' };

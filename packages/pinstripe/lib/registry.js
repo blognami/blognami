@@ -92,46 +92,6 @@ export const Registry = {
             
             create(name, ...args){
                 return this.for(name).new(...args);
-            },
-
-            get FileImporter(){
-                if(!this.registry.hasOwnProperty('_FileImporter')){
-                    this.registry._FileImporter = Class.extend().include({
-                        meta(){
-                            this.include(Registry);
-                            
-                            this.assignProps({
-                                async importFile({ extension, ...rest }){
-                                    await this.create(extension).importFile({ extension, ...rest });
-                                }
-                            });
-                        },
-
-                        importFile(){
-                            // by default do nothing
-                        }
-                    });
-
-                    const that = this;
-                    this.registry._FileImporter.register('js', {
-                        async importFile({ filePath, relativeFilePathWithoutExtension }){
-                            if(relativeFilePathWithoutExtension == '_file_importer') return;
-                            const { default: _default } = (await import(filePath));
-                            if(!_default) return;
-                            that.register(relativeFilePathWithoutExtension, {
-                                meta(){
-                                    this.filePaths.push(filePath);
-                                    this.include(_default);
-                                }
-                            });
-                        }
-                    });
-                }
-                return this.registry._FileImporter;
-            },
-
-            async importFile(...args){
-                await this.FileImporter.importFile(...args);
             }
         })
     }

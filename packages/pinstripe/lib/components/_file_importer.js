@@ -1,1 +1,1 @@
-export { Component as default } from '../component.js';
+export default { type: 'component' };

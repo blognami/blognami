@@ -47,7 +47,7 @@ const normalizeDirPath = async (dirPath) => {
     return out;
 };
 
-const importAllRecursive = async (dirPath, currentDirPath, fileImporterConfig) => {
+const importAllRecursive = async (dirPath, currentDirPath, fileImporterConfig = { type: 'default' }) => {
     const items = await readdir(currentDirPath);
     for(let i in items){
         const item = items[i];

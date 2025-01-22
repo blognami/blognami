@@ -13,7 +13,7 @@ export default {
     
             await generateFile(`lib/components/_file_importer.js`, { skipIfExists: true }, () => {
                 line();
-                line(`export { Component as default } from 'pinstripe';`);
+                line(`export default { type: 'component' };`);
                 line();
             });
 
