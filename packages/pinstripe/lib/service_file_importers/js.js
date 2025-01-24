@@ -5,8 +5,10 @@ import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath
 import { MissingResourceError } from '../missing_resource_error.js';
 
 ServiceFactory.FileImporter.register('js', {
-    async importFile({ filePath, relativeFilePathWithoutExtension }){
-        if(relativeFilePathWithoutExtension == '_file_importer') return;
+    async importFile(){
+        if(!this.isExactMatch) return;
+
+        const { filePath, relativeFilePathWithoutExtension } = this;
 
         const { default: _default, client } = (await import(filePath));
 

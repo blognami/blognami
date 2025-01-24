@@ -34,7 +34,9 @@ export const View = Class.extend().include({
         const registry = this;
 
         this.FileImporter.include({
-            importFile({ relativeFilePath, filePath }){
+            importFile(){
+                const { relativeFilePath, filePath } = this;
+
                 registry.register(relativeFilePath, {
                     meta(){
                         this.filePaths.push(filePath);

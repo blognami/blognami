@@ -8,16 +8,18 @@ Component.FileImporter.register('js', {
         const { importFile } = this.prototype;
 
         this.include({
-            async importFile(params){
-                const { filePath, relativeFilePathWithoutExtension } = params;
-                if((await import(filePath)).default){
+            async importFile(){
+                if(!this.isExactMatch) return;
+                
+                if((await import(this.filePath)).default){
                     Bundle.addModule('window', `
                         import { Component } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
-                        import include from ${JSON.stringify(filePath)};
-                        Component.register(${JSON.stringify(relativeFilePathWithoutExtension)}, include);
+                        import include from ${JSON.stringify(this.filePath)};
+                        Component.register(${JSON.stringify(this.relativeFilePath.replace(/\.js$/, ''))}, include);
                     `);
                 }
-                return importFile.call(this, params);
+                
+                return importFile.call(this);
             }
         });
     }
