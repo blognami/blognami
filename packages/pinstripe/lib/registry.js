@@ -101,9 +101,35 @@ export const Registry = {
                             this.include(Registry);
                             
                             this.assignProps({
-                                async importFile({ extension, ...rest }){
-                                    await this.create(extension).importFile({ extension, ...rest });
+                                async importFile({ dirPath, filePath }){
+                                    if(filePath.match(/\/_file_importer\.js$/)) return;
+                                    const matches = filePath.match(/^.*?\.([^/]+)$/);
+                                    if(!matches) return;
+                                    const extension = matches[1].split('.');
+                                    while(extension.length > 0){
+                                        const candidateExtension = extension.join('.');
+                                        if(this.mixins[candidateExtension]){
+                                            await this.create(candidateExtension, { dirPath, filePath }).importFile();
+                                            return;
+                                        }
+                                        extension.shift();
+                                    }
+                                    await this.create(matches[1], { dirPath, filePath }).importFile();
                                 }
+                            });
+                        },
+
+                        initialize({ dirPath, filePath }){
+                            const relativeFilePath = filePath.substring(dirPath.length + 1);
+
+                            const regExpEscapedExtension = this.constructor.name.replace(/\./g, '\\.')
+
+                            this.assignProps({ 
+                                dirPath,
+                                filePath,
+                                relativeFilePath: relativeFilePath,
+                                relativeFilePathWithoutExtension: relativeFilePath.replace(RegExp(`\.${regExpEscapedExtension}$`), ''),
+                                isExactMatch: !RegExp(`\\.[^\/]+\\.${regExpEscapedExtension}$`).test(filePath)
                             });
                         },
 
@@ -114,11 +140,15 @@ export const Registry = {
 
                     const that = this;
                     this.registry._FileImporter.register('js', {
-                        async importFile({ filePath, relativeFilePathWithoutExtension }){
-                            if(relativeFilePathWithoutExtension == '_file_importer') return;
-                            const { default: _default } = (await import(filePath));
+                        async importFile(){
+                            if(!this.isExactMatch) return;
+
+                            const { default: _default } = await import(this.filePath);
                             if(!_default) return;
-                            that.register(relativeFilePathWithoutExtension, {
+
+                            const { filePath } = this;
+
+                            that.register(this.relativeFilePathWithoutExtension, {
                                 meta(){
                                     this.filePaths.push(filePath);
                                     this.include(_default);

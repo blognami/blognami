@@ -62,10 +62,7 @@ const importAllRecursive = async (dirPath, currentDirPath, fileImporter = defaul
         } else if(!imported[currentPath]) {
             imported[currentPath] = true;
             const filePath = currentPath;
-            const relativeFilePath = filePath.substr(dirPath.length).replace(/^\//, '');
-            const relativeFilePathWithoutExtension = relativeFilePath.replace(/\.[^/.]+$/, '');
-            const extension = relativeFilePath.replace(/^.*\./, '');
-            await fileImporter.importFile({ dirPath, filePath, relativeFilePath, relativeFilePathWithoutExtension, extension });
+            await fileImporter.importFile({ dirPath, filePath });
         }
     }
 };

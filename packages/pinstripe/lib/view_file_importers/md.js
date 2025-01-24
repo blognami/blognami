@@ -6,8 +6,10 @@ import Yaml from 'js-yaml';
 import { View } from '../view.js';
 
 View.FileImporter.register('md', {
-    importFile({ relativeFilePathWithoutExtension, filePath }){
+    importFile(){
         let extractParamsPromise;
+
+        const { filePath, relativeFilePathWithoutExtension } = this;
 
         View.register(relativeFilePathWithoutExtension, {
             meta(){
