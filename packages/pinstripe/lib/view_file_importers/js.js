@@ -5,8 +5,8 @@ import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath
 import { inflector } from '../inflector.js';
 
 View.FileImporter.register('js', {
-    async importFile({ filePath, relativeFilePathWithoutExtension }){
-        if(relativeFilePathWithoutExtension == '_file_importer') return;
+    async importFile(){
+        const { filePath, relativeFilePathWithoutExtension } = this;
 
         const { default: _default, client, decorators } = (await import(filePath));
 
