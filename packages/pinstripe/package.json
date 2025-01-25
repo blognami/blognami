@@ -8,6 +8,7 @@
   "exports": {
     ".": "./lib/index.js",
     "./database": "./lib/extensions/database/index.js",
+    "./multi-app": "./lib/extensions/multi-app/index.js",
     "./multi-tenant": "./lib/extensions/multi-tenant/index.js",
     "./util": "./lib/util.js",
     "./static": "./lib/extensions/static/index.js",
