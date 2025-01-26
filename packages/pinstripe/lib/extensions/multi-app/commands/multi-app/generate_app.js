@@ -27,11 +27,7 @@ export default {
                             line();
                             line(`_url.pathname = _url.pathname.replace(/^\\/_apps\\/[^/]+/, '');`);
                             line();
-                            line(`if (!_url.pathname.match(/^\\/_pinstripe\\//)) {`);
-                                indent(() => {
-                                    line(`return [404, {'content-type': 'text/plain'}, ['Not found']];`);
-                                });
-                            line(`}`);
+                            line(`if (!_url.pathname.match(/^\\/_pinstripe\\//)) return this.renderView('_404');`);
                             line();
                             line(`return this.callHandler.handleCall(this.params);`);
                         line(`}`);
