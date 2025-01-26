@@ -1,7 +1,7 @@
 {
   "private": true,
   "type": "module",
-  "name": "blognami-demo",
+  "name": "demo",
   "version": "0.33.0",
   "license": "MIT",
   "exports": {
