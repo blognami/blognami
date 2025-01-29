@@ -7,7 +7,7 @@ export default {
             fields: [{ name: 'file', type: 'file' }],
             success(image){
                 return that.renderHtml`
-                    <span class="${that.cssClassesFor('_markdown_editor/modal').lineInserter}" data-line-content="![${image.title}](/${image.slug})">
+                    <span class="${that.cssClassesFor('main/_markdown_editor/modal').lineInserter}" data-line-content="![${image.title}](/${image.slug})">
                         <script type="pinstripe">
                             this.parent.trigger('click');
                         </script>

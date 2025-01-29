@@ -13,47 +13,12 @@ export default {
             return this.callHandler.handleCall(params, true);
         });
 
-        const normalizedParams = this.normalizeParams(params);
-        this.context.params = normalizedParams;
-
-        const viewName = normalizedParams._url.pathname.replace(/^\/|\/$/g, '') || 'index';
+        this.context.params = this.normalizeParams(params);
         
-        let out = await this.renderGuardViews(viewName, normalizedParams);
-        if(out) return out;
-
-        if(!viewName.match(/(^|\/)_[^\/]+(|\/index)$/)){
-            out = this.normalizeResponse(await this.renderView(viewName, normalizedParams));
-            if(out) return out;
-        }
-        
-        out = await this.renderDefaultViews(viewName, normalizedParams);
+        const out = this.normalizeResponse(await this.app.render());
         if(out) return out;
 
         return [404, {'content-type': 'text/plain'}, ['Not found']];
-    },
-
-    async renderGuardViews(viewName, params){
-        const viewNameSegments = viewName != '' ? viewName.split(/\//) : [];
-
-        const prefixSegments = [];
-        while(true){
-            const candidateGuardViewName = prefixSegments.length ? [...prefixSegments, 'guard'].join('/') : 'guard';
-            const out = this.normalizeResponse(await this.renderView(candidateGuardViewName, params));
-            if(out) return out;
-            if(viewNameSegments.length == 0) break;
-            prefixSegments.push(viewNameSegments.shift());
-        }
-    },
-
-    async renderDefaultViews(viewName, params){
-        const prefixSegments = viewName != '' ? viewName.split(/\//) : [];
-        while(true){
-            const candidateDefaultViewName = prefixSegments.length ? [...prefixSegments, 'default'].join('/') : 'default';
-            const out = this.normalizeResponse(await this.renderView(candidateDefaultViewName, params));
-            if(out) return out;
-            if(prefixSegments.length == 0) break;
-            prefixSegments.pop();
-        }
     },
 
     normalizeParams(params){
