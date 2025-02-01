@@ -10,11 +10,11 @@ export default {
     },
 
     start(options = {}){
-        const {  host = '127.0.0.1', port = 3000 } = options;
+        const {  hostname = '127.0.0.1', port = 3000 } = options;
 
         const isTest = process.env.NODE_ENV == 'test';
 
-        const baseUrl = new URL(`http://${host}:${port}/`);
+        const baseUrl = new URL(`http://${hostname}:${port}/`);
 
         http.createServer(async (request, response) => {
             try {
@@ -46,8 +46,8 @@ export default {
                 response.end(error);
             }
             if(!isTest) console.log(`${request.method}: ${request.url} (${response.statusCode})`);
-        }).listen(port, host, () => {
-            if(!isTest) console.log(`Pinstripe running at "http://${host}:${port}/"`)
+        }).listen(port, hostname, () => {
+            if(!isTest) console.log(`Pinstripe running at "http://${hostname}:${port}/"`)
         });
     },
 
