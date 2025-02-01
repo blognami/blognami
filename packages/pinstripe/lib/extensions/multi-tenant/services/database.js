@@ -8,27 +8,29 @@ export default {
                 this.context.root.databaseClient = Client.new(await this.config.database);
             }
 
-            const out = await Database.new(this.context.root.databaseClient);
+            this.database = await Database.new(this.context.root.databaseClient);
 
-            if(out.info.tenants){
-                const headers = this.initialParams._headers;
-                const hostname = this.initialParams._url.hostname;
-                const host = (headers['host'] || hostname).replace(/\:\d+$/, '').toLowerCase();
-                const { primaryDomain = '' } = await this.config;
-                const domainSuffix = `\.${primaryDomain}`.toLowerCase();
-                const tenantId = headers['x-tenant-id'];
+            if(this.database.info.tenants){
+                let { tenant = defaultCallback } = await this.config;
 
-                if(tenantId){
-                    out.tenant = await out.tenants.where({ id: tenantId }).first();
-                } else if(host.endsWith(domainSuffix)){
-                    const name = host.substr(0, host.length - domainSuffix.length);
-                    out.tenant = await out.tenants.where({ name }).first();
-                } else {
-                    out.tenant = await out.tenants.where({ host }).first();
-                }
+                const tenantId = this.initialParams._headers['x-tenant-id'];
+                if(tenantId) tenant = await this.database.tenants.where({ id: tenantId }).first();
+                
+                if(typeof tenant == 'function') tenant = await tenant.call(this);
+
+                if(typeof tenant == 'string') tenant = await this.database.tenants.where({ name: tenant }).first();
+                
+                if(tenant) this.database.tenant = tenant;
             }
 
-            return out;
+            return this.database;
         });
     }
 };
+
+function defaultCallback(){
+    const headers = this.initialParams._headers;
+    const hostname = this.initialParams._url.hostname;
+    const host = (headers['host'] || hostname).replace(/\:\d+$/, '').toLowerCase();
+    return this.database.tenants.where({ host }).first();
+}
