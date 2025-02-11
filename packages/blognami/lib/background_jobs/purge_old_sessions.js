@@ -8,7 +8,7 @@ export default {
 
     async run(){
         await this.database.sessions.where({
-            lastAccessedAtLt: Date.now() - (1000 * 60 * this.minutesUntilExpiry)
+            lastAccessedAtLt: new Date(Date.now() - (1000 * 60 * this.minutesUntilExpiry))
         }).delete();
     }
 };
