@@ -1,5 +1,7 @@
 
-export default {
+import { Component } from "../component.js";
+
+Component.register('pinstripe-body',  {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -37,4 +39,4 @@ export default {
             this.shadow.find('.styles').patch('');
         }
     }
-};
+});

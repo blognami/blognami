@@ -1,5 +1,7 @@
 
-export default {
+import { Component } from "../component.js";
+
+Component.register('pinstripe-skeleton', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -52,4 +54,4 @@ export default {
             <div class="root"><slot></div>
         `);
     }
-};
+});

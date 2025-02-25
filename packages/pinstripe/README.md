@@ -1,7 +1,7 @@
 
 # Welcome to Pinstripe
 
-A slick web framework for Node.js.
+A slick web framework for your browser.
 
 ## License
 

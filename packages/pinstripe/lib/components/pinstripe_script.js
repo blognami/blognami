@@ -1,6 +1,7 @@
 
+import { Component } from "../component.js";
 
-export default {
+Component.register('pinstripe-script', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -8,4 +9,4 @@ export default {
 
         (new Function(this.text)).call(this);
     }
-};
+});
