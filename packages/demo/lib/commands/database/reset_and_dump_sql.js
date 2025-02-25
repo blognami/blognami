@@ -6,7 +6,7 @@ export default {
         const { adapter, ...databaseConfig } = await this.config.database;
         const { rootPath } = await this.project;
 
-        execSync(`pinstripe database:reset`, {
+        execSync(`blognami database:reset`, {
             env: process.env
         });
 

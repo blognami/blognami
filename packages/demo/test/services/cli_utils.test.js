@@ -1,5 +1,5 @@
 
-import { Workspace } from 'pinstripe';
+import { Workspace } from 'blognami';
 
 [
     { input: '', expectedOutput: []},

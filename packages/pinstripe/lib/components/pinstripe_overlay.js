@@ -1,5 +1,7 @@
 
-export default {
+import { Component } from "../component.js";
+
+Component.register('pinstripe-overlay', {
     meta(){
         this.include('pinstripe-frame');
     },
@@ -46,4 +48,4 @@ export default {
 
         delete this.parent._overlayChild;
     }
-};
+});

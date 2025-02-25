@@ -1,5 +1,7 @@
 
-export default {
+import { Component } from "../component.js";
+
+Component.register('pinstripe-popover', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -81,4 +83,4 @@ export default {
         this.node.style.left = `${left}px`;
         this.node.style.top = `${top}px`;
     }
-};
+});

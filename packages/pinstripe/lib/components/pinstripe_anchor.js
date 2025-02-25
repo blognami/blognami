@@ -1,7 +1,8 @@
 
+import { Component } from "../component.js";
 import { loadFrame, getFrame, normalizeUrl } from "./helpers.js";
 
-export default {
+Component.register('pinstripe-anchor', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
         this.on('click', (event) => {
@@ -20,4 +21,4 @@ export default {
 
         if(this.is('input, textarea')) this.on('keyup', (event) => this.trigger('click'));
     }
-};
+});

@@ -1,5 +1,7 @@
 
-export default {
+import { Component } from "../component.js";
+
+Component.register('pinstripe-progress-bar', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -73,4 +75,4 @@ export default {
             }
         }
     }
-};
+});

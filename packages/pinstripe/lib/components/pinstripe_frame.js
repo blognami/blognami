@@ -1,7 +1,8 @@
 
+import { Component } from "../component.js";
 import { loadCache, normalizeUrl } from "./helpers.js";
 
-export default {
+Component.register('pinstripe-frame', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -73,6 +74,6 @@ export default {
         await clearEventLoop();
         progressBar.stop();
     }
-};
+});
 
 const clearEventLoop = () => new Promise(resolve => setTimeout(resolve, 0));
