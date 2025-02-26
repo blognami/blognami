@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@blognami/main",
-  "description": "A slick CMS for Node.js.",
+  "description": "Implements the core of the main app.",
   "version": "0.33.0",
   "author": "Jody Salt",
   "license": "MIT",
