@@ -1,7 +1,7 @@
 
-# Welcome to Blognami
+# @blognami/main
 
-A slick [CMS](https://en.wikipedia.org/wiki/Content_management_system) for Node.js.
+Implements the core of the main app.
 
 ## License
 
