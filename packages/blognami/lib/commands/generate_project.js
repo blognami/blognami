@@ -3,7 +3,7 @@ import { spawnSync } from 'child_process';
 import * as crypto from 'crypto';
 
 const defaultDependencies = [
-   'blognami'
+   '@blognami/main'
 ];
 
 export default {
@@ -23,7 +23,7 @@ export default {
 
       let { with: dependencies = '', core = false } = this.params;
 
-      dependencies = dependencies.split(/\s+/).map(dependency => dependency.trim());
+      dependencies = dependencies.split(/\s+/).map(dependency => dependency.trim()).filter(dependency => dependency != '');
 
       if(!core) defaultDependencies.forEach(dependency => {
          if(!dependencies.includes(dependency)) dependencies.unshift(dependency);
