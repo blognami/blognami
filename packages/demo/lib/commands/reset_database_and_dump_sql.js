@@ -6,7 +6,7 @@ export default {
         const { adapter, ...databaseConfig } = await this.config.database;
         const { rootPath } = await this.project;
 
-        execSync(`blognami database:reset`, {
+        execSync(`blognami reset-database`, {
             env: process.env
         });
 
