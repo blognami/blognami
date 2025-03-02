@@ -14,8 +14,8 @@
     "test:models:mysql": "DATABASE_ADAPTER=mysql SKIP_FIXTURES=true NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
     "test:models:sqlite": "DATABASE_ADAPTER=sqlite SKIP_FIXTURES=true NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/models",
     "test:e2e": "npm run test:e2e:$(echo ${DATABASE_ADAPTER:-sqlite})",
-    "test:e2e:mysql": "NODE_ENV=test DATABASE_ADAPTER=mysql start-server-and-test 'blognami database:reset-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run cypress:run'",
-    "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'blognami database:reset-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run cypress:run'",
+    "test:e2e:mysql": "NODE_ENV=test DATABASE_ADAPTER=mysql start-server-and-test 'blognami reset-database-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run cypress:run'",
+    "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'blognami reset-database-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run cypress:run'",
     "cypress:run": "cypress run",
     "cypress:open": "cypress open",
     "test:services": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/services"
