@@ -132,7 +132,7 @@ export default {
             line();
             line('```bash');
             indent(() => {
-               line('blognami init-database');
+               line('blognami initialize-database');
                line('blognami start-server');
             });
             line('```');
