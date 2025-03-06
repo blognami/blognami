@@ -1,6 +1,6 @@
 
 export default {
-    async render(){
+    render(){
         return this.renderHtml`
             <pinstripe-popover>
                 <pinstripe-menu>
