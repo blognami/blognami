@@ -1,8 +1,10 @@
 
 export default {
-    render(){
+    async render(){
+        const user = await this.session.user;
+        
         return this.renderHtml`
-            <a href="/_actions/admin/add_page" target="_overlay" data-test-id="add-page">Page</a>
+            <a href="/${user.slug}" target="_top" data-test-id="profile">Profile</a>
         `;
     }
 };
