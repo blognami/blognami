@@ -2,7 +2,7 @@
 export default {
     render(){
         return this.renderHtml`
-            <a href="/_actions/admin/add_page" target="_overlay" data-test-id="add-page">Page</a>
+            <a href="/_actions/admin/edit_membership_tiers" target="_overlay" data-test-id="edit-site-membership">Membership tiers</a>
         `;
     }
 };
