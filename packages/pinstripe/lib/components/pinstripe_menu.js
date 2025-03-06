@@ -14,12 +14,6 @@ Component.register('pinstripe-menu', {
                     width: 100vw;
                     max-width: 250px;
                     padding: 6px 0;
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                ::slotted(*) {
-                    order: 100;
                 }
                 
                 ::slotted(a) {

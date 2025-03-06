@@ -1,3 +1,5 @@
+import { View } from 'blognami';
+
 export default {
     create(){
         return (...args) => this.defer(() => this.matchViews(...args));
@@ -6,9 +8,9 @@ export default {
     async matchViews(includePatterns = "*", excludePatterns = []){
         const normalizedIncludePatterns = this.normalizePatterns(includePatterns);
         const normalizedExcludePatterns = this.normalizePatterns(excludePatterns);
-        return Object.keys(await this.app.viewMap).filter(name => (
+        return await this.sortViews(Object.keys(await this.app.viewMap).filter(name => (
             normalizedIncludePatterns.some(pattern => pattern.test(name)) && !normalizedExcludePatterns.some(pattern => pattern.test(name))
-        ));
+        )));
     },
 
     normalizePatterns(patterns){
@@ -24,5 +26,15 @@ export default {
             return new RegExp(`^${pattern.replace(/\*/g, '.*')}$`);
         }
         return out;
+    },
+
+    async sortViews(views){
+        const viewMap = await this.app.viewMap;
+        const out = views.map(name => ({
+            name,
+            displayOrder: View.for(viewMap[name]).displayOrder ?? 100,
+        }));
+        out.sort((a, b) => a.displayOrder - b.displayOrder);
+        return  out.map(({ name }) => name);
     }
 };
