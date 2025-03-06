@@ -4,7 +4,7 @@ export default {
         return this.renderHtml`
             <pinstripe-popover>
                 <pinstripe-menu>
-                    ${this.matchViews('_actions/admin/add_content/_*').map(name => this.renderView(name))}
+                    ${this.renderViews('_actions/admin/add_content/_*')}
                 </pinstripe-menu>
             </pinstripe-popover>
         `;
