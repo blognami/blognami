@@ -1,6 +1,8 @@
 
 import 'blognami';
 import '@blognami/main';
+import '@blognami/pages';
+import '@blognami/posts';
 
 import { importAll } from 'blognami';
 

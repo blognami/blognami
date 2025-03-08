@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "name": "@blognami/comments",
+  "description": "Implements comments in the main app.",
+  "version": "0.33.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "dependencies": {
+    "@blognami/users": "^0.33.0"
+  }
+}
