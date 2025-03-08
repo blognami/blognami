@@ -1,7 +1,5 @@
 
 
-import { Component } from "../component.js";
-
 const MOBILE_HEIGHT_MAP = {
     full: 'calc(100vh - 8.2rem)',
 }
@@ -18,7 +16,7 @@ const DESKTOP_HEIGHT_MAP = {
     full: 'calc(100vh - 4rem)',
 };
 
-Component.register('pinstripe-modal', {
+export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -158,5 +156,5 @@ Component.register('pinstripe-modal', {
     },
 
     isModal: true
-});
+}
 

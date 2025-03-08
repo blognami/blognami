@@ -1,10 +1,11 @@
 
-import { Component } from "../component.js";
 import { loadCache, normalizeUrl } from "./helpers.js";
+
+import { HttpProxy } from "../http_proxy.js";
 
 const preloading = {};
 
-Component.register('pinstripe-document', {
+export default {
     meta(){
         this.include('pinstripe-frame');
 
@@ -32,11 +33,7 @@ Component.register('pinstripe-document', {
 
     get httpProxy(){
         if(!this._httpProxy){
-            this._httpProxy = {
-                fetch(...args){
-                    return fetch(...args);
-                }
-            };
+            this._httpProxy = HttpProxy.new();
         }
         return this._httpProxy;
     },
@@ -89,4 +86,4 @@ Component.register('pinstripe-document', {
         loadCache.put(`${this.document.loadCacheNamespace}:${url}`, html);
         delete preloading[url.toString()];
     }
-});
+};

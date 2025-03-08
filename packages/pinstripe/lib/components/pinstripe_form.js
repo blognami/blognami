@@ -1,8 +1,7 @@
 
-import { Component } from "../component.js";
 import { loadFrame, getFrame, normalizeUrl } from "./helpers.js";
 
-Component.register('pinstripe-form', {
+export default {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
@@ -50,7 +49,7 @@ Component.register('pinstripe-form', {
     get hasUnsavedChanges(){
         return this.params.hasUnsavedChanges == 'true' || JSON.stringify(this.values) != this._initialHash;
     }
-});
+};
 
 function valuesToWatch(){
     const out = {}

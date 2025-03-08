@@ -1,2 +1,0 @@
-
-export { defer } from 'haberdash';
