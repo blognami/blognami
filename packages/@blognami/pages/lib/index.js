@@ -1,6 +1,5 @@
 
 import '@blognami/main';
-import '@blognami/users';
 
 import { importAll } from 'blognami';
 
