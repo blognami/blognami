@@ -1,8 +1,12 @@
 
 import 'blognami';
 import '@blognami/main';
+import '@blognami/images';
 import '@blognami/pages';
 import '@blognami/posts';
+import '@blognami/tags';
+import '@blognami/users';
+import '@blognami/membership';
 
 import { importAll } from 'blognami';
 

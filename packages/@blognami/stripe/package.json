@@ -1,9 +1,0 @@
-{
-  "type": "module",
-  "name": "@blognami/stripe",
-  "version": "0.0.0",
-  "license": "MIT",
-  "exports": {
-    ".": "./lib/index.js"
-  }
-}
