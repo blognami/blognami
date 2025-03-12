@@ -1,5 +1,4 @@
 
-import { ValidationError } from '../../../blognami/lib/validation_error.js';
 import '../../lib/index.js';
 
 import { Workspace } from 'blognami';
