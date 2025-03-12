@@ -18,7 +18,7 @@
     "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'blognami reset-database-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run cypress:run'",
     "cypress:run": "cypress run",
     "cypress:open": "cypress open",
-    "test:services": "NODE_OPTIONS=--experimental-vm-modules jest --runInBand test/services"
+    "test:services": "cd test/services && node --test"
   },
   "dependencies": {
     "blognami": "^0.33.0",
