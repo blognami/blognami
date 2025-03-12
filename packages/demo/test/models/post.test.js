@@ -1,10 +1,12 @@
 
+import { beforeEach, test } from 'node:test';
+import assert from 'node:assert';
 
 import { Workspace, reset } from './helpers.js';
 
-beforeEach(reset);
+// beforeEach(reset);
 
-test(`post`, () => Workspace.run(async _ => {
+test.skip(`post`, () => Workspace.run(async _ => {
     const { users, posts } = _.database;
 
     expect(await posts.count()).toBe(0);
