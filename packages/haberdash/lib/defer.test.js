@@ -1,14 +1,16 @@
 
-import { defer } from './defer.js';
+import test from 'node:test';
+import assert from 'node:assert';
 
+import { defer } from './defer.js';
 
 test('defer (1)', async () => {
     const hello = defer(() => (name = 'world') => `hello ${name}`);
     
-    expect(await hello()).toBe("hello world");
-    expect(await hello().length).toBe(11);
-    expect(await hello('jody')).toBe("hello jody");
-    expect(await hello('jody').length).toBe(10);
+    assert.equal(await hello(), "hello world");
+    assert.equal(await hello().length, 11);
+    assert.equal(await hello('jody'), "hello jody");
+    assert.equal(await hello('jody').length, 10);
 });
 
 test('defer (2)', async () => {
@@ -22,8 +24,8 @@ test('defer (2)', async () => {
         }
     }));
     
-    expect(await foo.bar().baz()).toBe("boo");
-    expect(await foo.bar().baz().length).toBe(3);
+    assert.equal(await foo.bar().baz(), "boo");
+    assert.equal(await foo.bar().baz().length, 3);
 });
 
 test('defer (3)', async () => {
@@ -33,15 +35,15 @@ test('defer (3)', async () => {
         }
     }));
     
-    expect(await foo.toString()).toBe("hello world");
+    assert.equal(await foo.toString(), "hello world");
 });
 
 test('defer (4)', async () => {
 
     const { foo } = defer(() => ({}));
     
-    expect(typeof await foo).toBe("undefined");
+    assert.equal(typeof await foo, "undefined");
 
-    expect(typeof await foo).toBe("undefined");
+    assert.equal(typeof await foo, "undefined");
 });
 

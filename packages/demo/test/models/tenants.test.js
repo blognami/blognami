@@ -4,21 +4,21 @@ import assert from 'node:assert';
 
 import { Workspace, reset } from './helpers.js';
 
-// beforeEach(reset);
+beforeEach(reset);
 
 const COLLECTION_NAMES = ['comments', 'commentables', 'pages', 'pageables', 'posts', 'revisables', 'sessions', 'sites', 'tagables', 'users'];
 
 if(process.env.TENANCY == 'multi'){
-    test.skip(`tenant`, () => Workspace.run(async _ => {
+    test(`tenant`, () => Workspace.run(async _ => {
         const { tenant, site, users, posts, withoutTenantScope: database } = _.database;
 
-        expect(typeof await tenant).toBe('object');
+        assert.equal(typeof await tenant, 'object');
 
         await expectItemCollectionCountsToBeCorrect(tenant);
 
         await expectItemCollectionCountsToBeCorrect(database);
 
-        expect(typeof await site).toBe('object');
+        assert.equal(typeof await site, 'object');
 
         const user = await users.insert({
             name: 'Admin',
@@ -37,7 +37,7 @@ if(process.env.TENANCY == 'multi'){
 
         await tenant.delete();
 
-        expect(typeof await tenant).toBe('undefined');
+        assert.equal(typeof await tenant, 'undefined');
 
         await expectItemCollectionCountsToBeCorrect(database);
     }));
@@ -46,7 +46,7 @@ if(process.env.TENANCY == 'multi'){
         for(let collectionName of COLLECTION_NAMES) {
             const expectedCount = expectedCounts[collectionName] ?? 0;
             try {
-                expect(await item[collectionName].count()).toBe(expectedCount);
+                assert.equal(await item[collectionName].count(), expectedCount);
             } catch(e){
                 throw new Error(`Expect ${collectionName} count should be correct: ${e.message}`)
             }
@@ -54,9 +54,9 @@ if(process.env.TENANCY == 'multi'){
     }
 
 } else {
-    test.skip(`tenant`, () => Workspace.run(async _ => {
+    test(`tenant`, () => Workspace.run(async _ => {
         const { tenant } = _.database;
 
-        expect(typeof await tenant).toBe('undefined');
+        assert.equal(typeof await tenant, 'undefined');
     }));
 }

@@ -4,12 +4,12 @@ import assert from 'node:assert';
 
 import { Workspace, reset } from './helpers.js';
 
-// beforeEach(reset);
+beforeEach(reset);
 
-test.skip(`pageable`, () => Workspace.run(async _ => {
+test(`pageable`, () => Workspace.run(async _ => {
     const { pageables, users, posts, tag } = _.database;
 
-    expect(await pageables.count()).toBe(0);
+    assert.equal(await pageables.count(), 0);
 
     const user = await users.insert({
         name: 'Admin',
@@ -17,12 +17,12 @@ test.skip(`pageable`, () => Workspace.run(async _ => {
         role: 'admin'
     });
 
-    expect(await pageables.count()).toBe(1);
+    assert.equal(await pageables.count(), 1);
 
     const post = await posts.insert({
         userId: user.id,
         title: 'Foo'
     });
 
-    expect(await pageables.count()).toBe(2);
+    assert.equal(await pageables.count(), 2);
 }));

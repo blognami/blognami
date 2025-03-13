@@ -1,3 +1,6 @@
+import test from 'node:test';
+import assert from 'node:assert';
+
 import { Command } from "./command.js";
 
 [
@@ -25,7 +28,7 @@ import { Command } from "./command.js";
     },
 ].forEach(({ args, expectedParams }, i) => {
     test(`Command.extractParams (${i}})`, () => {
-        expect(Command.extractParams(args)).toStrictEqual(expectedParams);
+        assert.deepEqual(Command.extractParams(args), expectedParams);
     });
 });
 
