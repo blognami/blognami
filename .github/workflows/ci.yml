@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm install
-      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} MODULES=${{ matrix.modules }} npm run test
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} MODULES="${{ matrix.modules }}" npm run test
         env:
           CI: true
       - name: Archive videos of failed cypress tests
