@@ -19,15 +19,11 @@ export default {
     
         const featuredPosts = posts.where({ featured: true });
 
-        return this.renderHtml`
-            ${async () => {
-                if(await featuredPosts.count() > 0) return this.renderView('_section', {
-                    title: 'Featured',
-                    level: 3,
-                    testId: 'featured-section',
-                    body: this.renderView('_posts', { posts: featuredPosts, compact: true })
-                });
-            }}
-        `;
+        if(await featuredPosts.count() > 0) return this.renderView('_section', {
+            title: 'Featured',
+            level: 3,
+            testId: 'featured-section',
+            body: this.renderView('_posts', { posts: featuredPosts, compact: true })
+        });
     }
 };

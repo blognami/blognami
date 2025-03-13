@@ -29,31 +29,27 @@ export default {
     async render(){
         const tags = this.database.posts.tags.orderBy('name');
         
-        return this.renderHtml`
-            ${async () => {
-                if(await tags.count() > 0) return this.renderView('_section', {
-                    title: 'Tags',
-                    level: 3,
-                    testId: 'tags-section',
-                    body: tags.all().map(({ name, slug }) => this.renderHtml`
-                        <a class="${this.cssClasses.tagsItem}" href="/${slug}">
-                            <h4 class="${this.cssClasses.tagsName}">${name}</h4>
-                            <span class="${this.cssClasses.tagsCount}">
-                                ${async () => {
-                                    const count = await this.database.posts.where({ tags: { name } }).count();
-                                    if(count == 1) return this.renderHtml`
-                                        ${count} post
-                                    `;
+        if(await tags.count() > 0) return this.renderView('_section', {
+            title: 'Tags',
+            level: 3,
+            testId: 'tags-section',
+            body: tags.all().map(({ name, slug }) => this.renderHtml`
+                <a class="${this.cssClasses.tagsItem}" href="/${slug}">
+                    <h4 class="${this.cssClasses.tagsName}">${name}</h4>
+                    <span class="${this.cssClasses.tagsCount}">
+                        ${async () => {
+                            const count = await this.database.posts.where({ tags: { name } }).count();
+                            if(count == 1) return this.renderHtml`
+                                ${count} post
+                            `;
 
-                                    return this.renderHtml`
-                                        ${count} posts
-                                    `;
-                                }}
-                            </span>
-                        </a>
-                    `)
-                });
-            }}
-        `;
+                            return this.renderHtml`
+                                ${count} posts
+                            `;
+                        }}
+                    </span>
+                </a>
+            `)
+        });
     }
 };

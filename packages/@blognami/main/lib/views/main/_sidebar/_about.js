@@ -10,18 +10,16 @@ export default {
     
         const site = await this.database.site;
 
-        return this.renderHtml`
-            ${this.renderView('_section', {
-                title: 'About',
-                testId: 'about-section',
-                body: async () => {
-                    if(isAdmin) return this.renderView('_editable_area', {
-                        url: "/_actions/admin/edit_site_description",
-                        body: this.renderMarkdown(await site.description)
-                    });
-                    return this.renderMarkdown(await site.description)
-                }
-            })}
-        `;
+        return this.renderView('_section', {
+            title: 'About',
+            testId: 'about-section',
+            body: async () => {
+                if(isAdmin) return this.renderView('_editable_area', {
+                    url: "/_actions/admin/edit_site_description",
+                    body: this.renderMarkdown(await site.description)
+                });
+                return this.renderMarkdown(await site.description)
+            }
+        });
     }
 };
