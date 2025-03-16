@@ -1,5 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert';
 
-import { VirtualNode } from './virtual_node';
+import { VirtualNode } from './virtual_node.js';
 
 [   
     {
@@ -22,7 +24,7 @@ import { VirtualNode } from './virtual_node';
     const fragment = VirtualNode.fromString(html);
     expectedProperties.forEach(([selector, expectedValue]) => {
         test(`fromString (${i})`, () => {
-            expect(selector(fragment)).toBe(expectedValue);
+            assert.equal(selector(fragment), expectedValue);
         });
     })
 });

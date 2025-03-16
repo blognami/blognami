@@ -20,16 +20,7 @@
     "clean": "rm -rf ./node_modules",
     "start": "blognami start-server",
     "test": "npm run test:unit",
-    "test:unit": "jest lib"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.9.0",
-    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
-    "@babel/preset-env": "^7.9.0",
-    "babel-jest": "^29.7.0",
-    "jest": "^28.0.1",
-    "jest-environment-jsdom": "^29.1.2",
-    "start-server-and-test": "2.0.4"
+    "test:unit": "cd lib && node --test"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -37,7 +28,7 @@
     "chalk": "^4.1.0",
     "cron-parser": "^4.3.0",
     "css": "^3.0.0",
-    "esbuild": "^0.15.12",
+    "esbuild": "^0.25.1",
     "html-entities": "^2.3.2",
     "js-yaml": "^4.1.0",
     "luxon": "^2.3.1",

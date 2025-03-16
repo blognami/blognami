@@ -1,4 +1,7 @@
 
+import { beforeEach, test } from 'node:test';
+import assert from 'node:assert';
+
 import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
@@ -6,7 +9,7 @@ beforeEach(reset);
 test(`commentable`, () => Workspace.run(async _ => {
     const { users, commentables, comments, posts } = _.database;
 
-    expect(await commentables.count()).toBe(0);
+    assert.equal(await commentables.count(), 0);
 
     const user = await users.insert({
         name: 'Admin',
@@ -20,7 +23,7 @@ test(`commentable`, () => Workspace.run(async _ => {
         enableComments: true
     });
 
-    expect(await commentables.count()).toBe(1);
+    assert.equal(await commentables.count(), 1);
 
     await comments.insert({
         userId: user.id,
@@ -28,13 +31,13 @@ test(`commentable`, () => Workspace.run(async _ => {
         body: 'Comment 1'
     });
 
-    expect(await commentables.count()).toBe(2);
-    expect(await post.comments.count()).toBe(1);
+    assert.equal(await commentables.count(), 2);
+    assert.equal(await post.comments.count(), 1);
 
     const comment = await post.comments.first();
-    expect(comment.body).toBe('Comment 1');
-    expect(await comment.commentable.id).toBe(post.id);
-    expect(await comment.rootCommentable.id).toBe(post.id);
+    assert.equal(comment.body, 'Comment 1');
+    assert.equal(await comment.commentable.id, post.id);
+    assert.equal(await comment.rootCommentable.id, post.id);
 
     const subComment = await comments.insert({
         userId: user.id,
@@ -42,25 +45,25 @@ test(`commentable`, () => Workspace.run(async _ => {
         body: 'Comment 1.1'
     });
 
-    expect(await commentables.count()).toBe(3);
-    expect(await post.comments.count()).toBe(1);
-    expect(await post.comments.comments.count()).toBe(1);
-    expect(await subComment.commentable.id).toBe(comment.id);
-    expect(await subComment.rootCommentable.id).toBe(post.id);
+    assert.equal(await commentables.count(), 3);
+    assert.equal(await post.comments.count(), 1);
+    assert.equal(await post.comments.comments.count(), 1);
+    assert.equal(await subComment.commentable.id, comment.id);
+    assert.equal(await subComment.rootCommentable.id, post.id);
 
     await post.update({
         enableComments: false
     });
 
-    await expect(async () => {
+    await assert.rejects(async () => {
         await comments.insert({
             userId: user.id,
             commentableId: comment.id,
             body: 'Comment 1.2'
         });  
-    }).rejects.toThrow(JSON.stringify({ general: 'Comments have not been enabled.' }))
+    }, { message: JSON.stringify({ general: 'Comments have not been enabled.' })});
 
-    expect(await commentables.count()).toBe(3);
+    assert.equal(await commentables.count(), 3);
 
     await post.update({
         enableComments: true
@@ -72,10 +75,10 @@ test(`commentable`, () => Workspace.run(async _ => {
         body: 'Comment 1.2'
     });
 
-    expect(await commentables.count()).toBe(4);
+    assert.equal(await commentables.count(), 4);
 
     await post.delete();
 
-    expect(await commentables.count()).toBe(0);
+    assert.equal(await commentables.count(), 0);
 
 }));

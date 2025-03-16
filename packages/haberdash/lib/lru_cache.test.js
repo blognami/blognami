@@ -1,3 +1,5 @@
+import test from 'node:test';
+import assert from 'node:assert';
 
 import { LruCache } from './lru_cache.js';
 
@@ -10,14 +12,14 @@ test('LruCache (1)', () => {
     cache.put('bar', 'pear');
     cache.put('baz', 'plum');
 
-    expect(cache.index.length).toBe(3);
-    expect(cache.index.map(({ key }) => key)).toStrictEqual(['bar', 'baz', 'foo']);
+    assert.equal(cache.index.length, 3);
+    assert.deepEqual(cache.index.map(({ key }) => key), ['bar', 'baz', 'foo']);
 
     cache.put('boo', 'peach');
     
-    expect(cache.index.length).toBe(3);
-    expect(cache.index.map(({ key }) => key)).toStrictEqual(['bar', 'baz', 'boo']);
-    expect(cache.get('foo')).toBe(undefined);
+    assert.equal(cache.index.length, 3);
+    assert.deepEqual(cache.index.map(({ key }) => key), ['bar', 'baz', 'boo']);
+    assert.equal(cache.get('foo'), undefined);
     
 });
 
@@ -30,16 +32,16 @@ test('LruCache (2)', () => {
     cache.put('bar', 'pear');
     cache.put('baz', 'plum');
 
-    expect(cache.index.length).toBe(3);
-    expect(cache.index.map(({ key }) => key)).toStrictEqual(['bar', 'baz', 'foo']);
-    expect(cache.get('foo')).toBe('apple');
+    assert.equal(cache.index.length, 3);
+    assert.deepEqual(cache.index.map(({ key }) => key), ['bar', 'baz', 'foo']);
+    assert.equal(cache.get('foo'), 'apple');
 
     cache.put('boo', 'peach');
     
-    expect(cache.index.length).toBe(3);
-    expect(cache.index.map(({ key }) => key)).toStrictEqual(['bar', 'foo', 'boo']);
-    expect(cache.get('foo')).toBe('apple');
-    expect(cache.index.map(({ key }) => key)).toStrictEqual(['foo', 'bar', 'boo']);
-    expect(cache.get('foo')).toBe('apple');
-    expect(cache.index.map(({ key }) => key)).toStrictEqual(['foo', 'bar', 'boo']);
+    assert.equal(cache.index.length, 3);
+    assert.deepEqual(cache.index.map(({ key }) => key), ['bar', 'foo', 'boo']);
+    assert.equal(cache.get('foo'), 'apple');
+    assert.deepEqual(cache.index.map(({ key }) => key), ['foo', 'bar', 'boo']);
+    assert.equal(cache.get('foo'), 'apple');
+    assert.deepEqual(cache.index.map(({ key }) => key), ['foo', 'bar', 'boo']);
 });
