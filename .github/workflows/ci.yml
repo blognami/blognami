@@ -18,7 +18,9 @@ jobs:
       matrix:
         node: [18.x, 20.x]
         database-adapter: [mysql, sqlite]
-        tenancy: [single, multi]
+        modules:
+          - '@blognami/pages, @blognami/posts, @blognami/tags'
+          - 'blognami/multi-tenant, @blognami/pages, @blognami/posts, @blognami/tags'
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node }}
@@ -26,7 +28,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm install
-      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} npm run test
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} MODULES="${{ matrix.modules }}" npm run test
         env:
           CI: true
       - name: Archive videos of failed cypress tests

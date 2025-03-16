@@ -5,7 +5,10 @@ import Yaml from 'js-yaml';
 
 export default {
     async run(){
-        if(process.env.TENANCY == 'multi'){
+        const defaultModules = '@blognami/pages, @blognami/posts, @blognami/tags';
+        this.modules = (process.env.MODULES ?? defaultModules).split(/\s*,\s*/).filter(Boolean);
+
+        if(this.modules.includes('blognami/multi-tenant')){
             await this.database.tenants.insert({
                 name: 'test',
                 host: '127.0.0.1'
@@ -58,7 +61,11 @@ export default {
     async loadMarkdownFile(dirPath, filePath){
         const data = await promisify(readFile)(filePath, 'utf8');
         const [ frontMatter, body ] = this.extractFrontMatterAndBody(data);
-        const { tags, ...otherFrontMatter } = frontMatter;
+        const { type = 'post', tags, ...otherFrontMatter } = frontMatter;
+
+        if(type == 'page' && !this.modules.includes('@blognami/pages')) return;
+        if(type == 'post' && !this.modules.includes('@blognami/posts')) return;
+
         const tagIds = [];
         if(tags){
             for(let tagName of tags){
@@ -89,9 +96,7 @@ export default {
             });
         }
 
-        const { type = 'post', ...values } = entity;
-
-        const { id } = await this.database[this.inflector.pluralize(type)].insert(values);
+        const { id } = await this.database[this.inflector.pluralize(type)].insert(entity);
         
         for(let tagId of tagIds){
             await this.database.tagableTags.insert({ tagableId: id, tagId });

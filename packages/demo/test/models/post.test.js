@@ -1,4 +1,6 @@
 
+import { beforeEach, test } from 'node:test';
+import assert from 'node:assert';
 
 import { Workspace, reset } from './helpers.js';
 
@@ -7,7 +9,7 @@ beforeEach(reset);
 test(`post`, () => Workspace.run(async _ => {
     const { users, posts } = _.database;
 
-    expect(await posts.count()).toBe(0);
+    assert.equal(await posts.count(), 0);
 
     const user = await users.insert({
         name: 'Admin',
@@ -20,22 +22,22 @@ test(`post`, () => Workspace.run(async _ => {
         title: 'Foo'
     });
 
-    expect(await posts.count()).toBe(1);
+    assert.equal(await posts.count(), 1);
 
     let post = await posts.where({ id }).first();
 
-    expect(post.title).toBe('Foo');
+    assert.equal(post.title, 'Foo');
 
 
-    expect(await post.user.name).toBe('Admin');
+    assert.equal(await post.user.name, 'Admin');
 
     await post.update({ title: 'Bar' });
 
     post = await posts.where({ id }).first();
 
-    expect(post.title).toBe('Bar');
+    assert.equal(post.title, 'Bar');
 
     await post.delete();
 
-    expect(await posts.count()).toBe(0);
+    assert.equal(await posts.count(), 0);
 }));

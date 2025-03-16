@@ -1,6 +1,8 @@
 
+import { beforeEach, test } from 'node:test';
+import assert from 'node:assert';
 
-import { Workspace, reset } from './helpers.js';
+import { Workspace, reset, modules } from './helpers.js';
 
 beforeEach(reset);
 
@@ -9,22 +11,22 @@ test(`site`, () => Workspace.run(async _ => {
 
     const { title } = await site;
 
-    expect(title).toBe('');
+    assert.equal(title, '');
 
-    expect(await sites.count()).toBe(1);
+    assert.equal(await sites.count(), 1);
 }));
 
-if(process.env.TENANCY == 'multi'){
+if(modules.includes('blognami/multi-tenant')){
     test(`site with multi-tenancy and tenant exists`, () => Workspace.run(async _ => {
         const { tenant, site, sites } = _.database;
 
-        expect(typeof await tenant).toBe('object');
+        assert.equal(typeof await tenant, 'object');
 
-        expect(typeof await site).toBe('object');
+        assert.equal(typeof await site, 'object');
 
-        expect(await sites.count()).toBe(1);
+        assert.equal(await sites.count(), 1);
 
-        expect(await _.database.run(`select * from sites`).length).toBe(1);
+        assert.equal(await _.database.run(`select * from sites`).length, 1);
     }));
     
 
@@ -33,12 +35,12 @@ if(process.env.TENANCY == 'multi'){
         
         const { tenant, site, sites } = _.database;
 
-        expect(typeof await tenant).toBe('undefined');
+        assert.equal(typeof await tenant, 'undefined');
 
-        expect(typeof await site).toBe('undefined');
+        assert.equal(typeof await site, 'undefined');
 
-        expect(await sites.count()).toBe(0);
+        assert.equal(await sites.count(), 0);
 
-        expect(await _.database.run(`select * from sites`).length).toBe(0);
+        assert.equal(await _.database.run(`select * from sites`).length, 0);
     }));
 }

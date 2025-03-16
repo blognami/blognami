@@ -1,5 +1,6 @@
 
-
+import { beforeEach, test } from 'node:test';
+import assert from 'node:assert';
 
 import { Workspace, reset } from './helpers.js';
 
@@ -8,7 +9,7 @@ beforeEach(reset);
 test(`tagable`, () => Workspace.run(async _ => {
     const { users, tagables, posts, tags, tagableTags } = _.database;
 
-    expect(await tagables.count()).toBe(0);
+    assert.equal(await tagables.count(), 0);
 
     const user = await users.insert({
         name: 'Admin',
@@ -28,34 +29,34 @@ test(`tagable`, () => Workspace.run(async _ => {
     await tagableTags.insert({ tagId: appleTag.id, tagableId: post.id });
     await tagableTags.insert({ tagId: pearTag.id, tagableId: post.id });
 
-    expect(await tagables.count()).toBe(1);
-    expect(await tagables.where({ tags: { name:  'Apple' } }).count()).toBe(1);
-    expect(await tagables.where({ tags: { name:  'Pear' } }).count()).toBe(1);
-    expect(await tagables.where({ tags: { name:  'Peach' } }).count()).toBe(0);
-    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Pear' } }).count()).toBe(1);
-    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Peach' } }).count()).toBe(0);
+    assert.equal(await tagables.count(), 1);
+    assert.equal(await tagables.where({ tags: { name:  'Apple' } }).count(), 1);
+    assert.equal(await tagables.where({ tags: { name:  'Pear' } }).count(), 1);
+    assert.equal(await tagables.where({ tags: { name:  'Peach' } }).count(), 0);
+    assert.equal(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Pear' } }).count(), 1);
+    assert.equal(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Peach' } }).count(), 0);
 
     let tagable = await tagables.where({ id: post.id }).first();
 
-    expect(tagable.title).toBe('Foo');
-    expect(await tagable.tags.count()).toBe(2);
+    assert.equal(tagable.title, 'Foo');
+    assert.equal(await tagable.tags.count(), 2);
 
     await tagable.tagableTags.delete();
     await tagableTags.insert({ tagId: appleTag.id, tagableId: tagable.id });
     await tagableTags.insert({ tagId: peachTag.id, tagableId: tagable.id });
     
-    expect(await tagable.tags.count()).toBe(2);
-    expect(await tagables.where({ tags: { name:  'Apple' } }).count()).toBe(1);
-    expect(await tagables.where({ tags: { name:  'Pear' } }).count()).toBe(0);
-    expect(await tagables.where({ tags: { name:  'Peach' } }).count()).toBe(1);
-    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Pear' } }).count()).toBe(0);
-    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Peach' } }).count()).toBe(1);
+    assert.equal(await tagable.tags.count(), 2);
+    assert.equal(await tagables.where({ tags: { name:  'Apple' } }).count(), 1);
+    assert.equal(await tagables.where({ tags: { name:  'Pear' } }).count(), 0);
+    assert.equal(await tagables.where({ tags: { name:  'Peach' } }).count(), 1);
+    assert.equal(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Pear' } }).count(), 0);
+    assert.equal(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Peach' } }).count(), 1);
 
     await tagable.tagableTags.delete();
-    expect(await tagable.tags.count()).toBe(0);
-    expect(await tagables.where({ tags: { name:  'Apple' } }).count()).toBe(0);
-    expect(await tagables.where({ tags: { name:  'Pear' } }).count()).toBe(0);
-    expect(await tagables.where({ tags: { name:  'Peach' } }).count()).toBe(0);
-    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Pear' } }).count()).toBe(0);
-    expect(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Peach' } }).count()).toBe(0);
+    assert.equal(await tagable.tags.count(), 0);
+    assert.equal(await tagables.where({ tags: { name:  'Apple' } }).count(), 0);
+    assert.equal(await tagables.where({ tags: { name:  'Pear' } }).count(), 0);
+    assert.equal(await tagables.where({ tags: { name:  'Peach' } }).count(), 0);
+    assert.equal(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Pear' } }).count(), 0);
+    assert.equal(await tagables.where({ tags: { name:  'Apple' } }).where({ tags: { name: 'Peach' } }).count(), 0);
 }));

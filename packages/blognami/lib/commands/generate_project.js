@@ -3,7 +3,11 @@ import { spawnSync } from 'child_process';
 import * as crypto from 'crypto';
 
 const defaultDependencies = [
-   '@blognami/main'
+   'blognami',
+   '@blognami/main',
+   '@blognami/tags',
+   '@blognami/posts',
+   '@blognami/pages',
 ];
 
 export default {
@@ -21,15 +25,24 @@ export default {
          process.exit();
       }
 
-      let { with: dependencies = '', core = false } = this.params;
+      const {
+         core = false,
+         with: _with = '',
+         withoutPages = false,
+         withoutPosts = false,
+         withoutTags = false 
+      } = this.params;
 
-      dependencies = dependencies.split(/\s+/).map(dependency => dependency.trim()).filter(dependency => dependency != '');
-
-      if(!core) defaultDependencies.forEach(dependency => {
-         if(!dependencies.includes(dependency)) dependencies.unshift(dependency);
+      let dependencies = core ? ['blognami'] : defaultDependencies;
+      _with.split(/\s+/).map(dependency => dependency.trim()).filter(Boolean).forEach(dependency => {
+         if(!dependencies.includes(dependency)) dependencies.push(dependency);
       });
-      if(!dependencies.includes('blognami')) dependencies.unshift('blognami');
-
+      dependencies = dependencies.filter(dependency => {
+         if(withoutPages && dependency == '@blognami/pages') return false;
+         if(withoutPosts && dependency == '@blognami/posts') return false;
+         if(withoutTags && dependency == '@blognami/tags') return false;
+         return true;
+      });
    
       const { generateDir, generateFile, line, indent, echo } = this.fsBuilder;
    
@@ -132,7 +145,7 @@ export default {
             line();
             line('```bash');
             indent(() => {
-               line('blognami init-database');
+               line('blognami initialize-database');
                line('blognami start-server');
             });
             line('```');

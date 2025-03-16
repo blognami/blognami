@@ -1,4 +1,7 @@
 
+import test from 'node:test';
+import assert from 'node:assert';
+
 import { Workspace } from 'blognami';
 
 [
@@ -14,7 +17,7 @@ import { Workspace } from 'blognami';
     ] },
 ].forEach(({ input, expectedOutput}, i) => {
     test(`cliUtils.normalizeFields (${i}})`, () => Workspace.run(function(){
-        expect(this.cliUtils.normalizeFields(input)).toStrictEqual(expectedOutput);
+        assert.deepEqual(this.cliUtils.normalizeFields(input), expectedOutput);
     }));
 });
 

@@ -1,5 +1,6 @@
 
-
+import { beforeEach, test } from 'node:test';
+import assert from 'node:assert';
 
 import { Workspace, reset } from './helpers.js';
 
@@ -8,7 +9,7 @@ beforeEach(reset);
 test(`session`, () => Workspace.run(async _ => {
     const { sessions, users } = _.database;
 
-    expect(await sessions.count()).toBe(0);
+    assert.equal(await sessions.count(), 0);
 
     const user = await users.insert({
         name: 'Admin',
@@ -21,8 +22,8 @@ test(`session`, () => Workspace.run(async _ => {
         passString: 'foo'
     });
 
-    expect(await sessions.count()).toBe(1);
+    assert.equal(await sessions.count(), 1);
 
-    expect(await session.user.name).toBe('Admin');
+    assert.equal(await session.user.name, 'Admin');
 }));
 

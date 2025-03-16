@@ -4,6 +4,8 @@ import '@blognami/main';
 
 import { importAll } from 'blognami';
 
-if(process.env.TENANCY == 'multi') import('blognami/multi-tenant');
+const defaultModules = '@blognami/pages, @blognami/posts, @blognami/tags';
+const modules = (process.env.MODULES ?? defaultModules).split(/\s*,\s*/).filter(Boolean);
+modules.forEach(module => import(module));
 
 importAll(import.meta.url);

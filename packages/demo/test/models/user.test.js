@@ -1,4 +1,7 @@
 
+import { beforeEach, test } from 'node:test';
+import assert from 'node:assert';
+
 import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
@@ -6,7 +9,7 @@ beforeEach(reset);
 test(`user`, () => Workspace.run(async _ => {
     const { users, posts, tags, tagableTags } = _.database;
 
-    expect(await users.count()).toBe(0);
+    assert.equal(await users.count(), 0);
 
     const { id: userId } = await users.insert({
         name: 'Admin',
@@ -14,25 +17,25 @@ test(`user`, () => Workspace.run(async _ => {
         role: 'admin'
     });
 
-    expect(await users.count()).toBe(1);
+    assert.equal(await users.count(), 1);
 
     const user = await users.where({ id: userId }).first();
 
-    expect(user.name).toBe('Admin');
+    assert.equal(user.name, 'Admin');
 
-    expect(await user.posts.count()).toBe(0);
+    assert.equal(await user.posts.count(), 0);
 
-    expect(await user.posts.tags.count()).toBe(0);
+    assert.equal(await user.posts.tags.count(), 0);
 
     await posts.insert({ userId, title: 'Foo' });
 
-    expect(await user.posts.count()).toBe(1);
+    assert.equal(await user.posts.count(), 1);
 
-    expect(await user.posts.tags.count()).toBe(0);
+    assert.equal(await user.posts.tags.count(), 0);
 
     const { id: postId } = await posts.insert({ userId, title: 'Foo' });
 
-    expect(await user.posts.count()).toBe(2);
+    assert.equal(await user.posts.count(), 2);
 
     const appleTag = await tags.insert({ name: 'Apple' });
     const pearTag = await tags.insert({ name: 'Pear' });
@@ -40,7 +43,7 @@ test(`user`, () => Workspace.run(async _ => {
 
     await tagableTags.insert({ tagId: appleTag.id, tagableId: postId });
 
-    expect(await user.posts.tags.count()).toBe(1);
+    assert.equal(await user.posts.tags.count(), 1);
 
     const { id: postId2 } = await posts.insert({ userId, title: 'Foo' });
 
@@ -49,13 +52,13 @@ test(`user`, () => Workspace.run(async _ => {
     await tagableTags.insert({ tagId: pearTag.id, tagableId: postId2 });
     await tagableTags.insert({ tagId: peachTag.id, tagableId: postId2 });
 
-    expect(await user.posts.count()).toBe(3);
+    assert.equal(await user.posts.count(), 3);
 
-    expect(await user.posts.tags.count()).toBe(3);
+    assert.equal(await user.posts.tags.count(), 3);
 
-    expect(await tagableTags.count()).toBe(4);
+    assert.equal(await tagableTags.count(), 4);
 
     await user.posts.delete();
 
-    expect(await tagableTags.count()).toBe(0);
+    assert.equal(await tagableTags.count(), 0);
 }));

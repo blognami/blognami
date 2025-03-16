@@ -1,4 +1,6 @@
 
+import { beforeEach, test } from 'node:test';
+import assert from 'node:assert';
 
 import { Workspace, reset } from './helpers.js';
 
@@ -7,8 +9,8 @@ beforeEach(reset);
 test(`revisable`, () => Workspace.run(async _ => {
     const { revisables, revisions, users, posts } = _.database;
 
-    expect(await revisables.count()).toBe(0);
-    expect(await revisions.count()).toBe(0);
+    assert.equal(await revisables.count(), 0);
+    assert.equal(await revisions.count(), 0);
 
     const user = await users.insert({
         name: 'Admin',
@@ -21,40 +23,40 @@ test(`revisable`, () => Workspace.run(async _ => {
         title: 'Foo'
     });
 
-    expect(await revisables.count()).toBe(1);
-    expect(await revisions.count()).toBe(0);
-    expect(await post.revisions.count()).toBe(0);
+    assert.equal(await revisables.count(), 1);
+    assert.equal(await revisions.count(), 0);
+    assert.equal(await post.revisions.count(), 0);
 
     await post.update({
         body: 'Apple'
     });
 
-    expect(await revisions.count()).toBe(0);
-    expect(await post.revisions.count()).toBe(0);
+    assert.equal(await revisions.count(), 0);
+    assert.equal(await post.revisions.count(), 0);
 
     await post.update({
         revisionUserId: user.id,
         body: 'Apple'
     });
 
-    expect(await revisions.count()).toBe(0);
-    expect(await post.revisions.count()).toBe(0);
+    assert.equal(await revisions.count(), 0);
+    assert.equal(await post.revisions.count(), 0);
 
     await post.update({
         revisionUserId: user.id,
         body: 'Pear'
     });
 
-    expect(await revisions.count()).toBe(1);
-    expect(await post.revisions.count()).toBe(1);
+    assert.equal(await revisions.count(), 1);
+    assert.equal(await post.revisions.count(), 1);
 
     await post.update({
         revisionUserId: user.id,
         body: 'Plum'
     });
 
-    expect(await revisions.count()).toBe(2);
-    expect(await post.revisions.count()).toBe(2);
+    assert.equal(await revisions.count(), 2);
+    assert.equal(await post.revisions.count(), 2);
 
     const post2 = await posts.insert({
         revisionUserId: user.id,
@@ -62,9 +64,9 @@ test(`revisable`, () => Workspace.run(async _ => {
         title: 'Foo',
     });
 
-    expect(await revisions.count()).toBe(2);
-    expect(await post.revisions.count()).toBe(2);
-    expect(await post2.revisions.count()).toBe(0);
+    assert.equal(await revisions.count(), 2);
+    assert.equal(await post.revisions.count(), 2);
+    assert.equal(await post2.revisions.count(), 0);
 
     const post3 = await posts.insert({
         revisionUserId: user.id,
@@ -73,9 +75,9 @@ test(`revisable`, () => Workspace.run(async _ => {
         body: 'Apple',
     });
 
-    expect(await revisions.count()).toBe(3);
-    expect(await post.revisions.count()).toBe(2);
-    expect(await post2.revisions.count()).toBe(0);
-    expect(await post3.revisions.count()).toBe(1);
+    assert.equal(await revisions.count(), 3);
+    assert.equal(await post.revisions.count(), 2);
+    assert.equal(await post2.revisions.count(), 0);
+    assert.equal(await post3.revisions.count(), 1);
 }));
 

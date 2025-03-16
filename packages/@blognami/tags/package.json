@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "name": "@blognami/tags",
+  "description": "Implements tags in the main app.",
+  "version": "0.33.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "dependencies": {
+    "@blognami/main": "^0.33.0"
+  }
+}
