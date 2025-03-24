@@ -22,8 +22,7 @@ export default {
             description: [
                 'Provident itaque iste.',
                 '  * [Osinski Extensions](/osinski-extensions)'
-            ].join('\n'),
-            language: 'en'
+            ].join('\n')
         });
     
         this.user = await this.database.users.insert({

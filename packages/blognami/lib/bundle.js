@@ -50,15 +50,18 @@ export const Bundle = Class.extend().include({
             await promisify(writeFile)(`${tmpDir}/module-${i}.js`, this.constructor.modules[i]);
         }
         
-        await build({
+        const { errors } = await build({
             entryPoints: [inFile],
             bundle: true,
             sourcemap: true,
             outfile: outFile,
             plugins: [this.plugin],
             nodePaths: await Project.instance.nodePaths,
-            minify: process.env.NODE_ENV == 'production'
+            minify: process.env.NODE_ENV == 'production',
+            logLevel: 'silent'
         });
+
+        errors.forEach(error => console.error(error));
 
         const out = {
             js: (await promisify(readFile)(outFile, 'utf8')).replace(/\/\/#.*?$/m, ''),

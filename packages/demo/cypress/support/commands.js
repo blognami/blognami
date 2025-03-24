@@ -30,7 +30,7 @@ Cypress.Commands.add('resetDatabaseFromSql', async () => {
 
 Cypress.Commands.add('signIn', (email) => {
     cy.getByTestId('navbar', 'sign-in').click();
-    cy.topModal().submitForm({ email });
+    cy.topModal().submitForm({ email, legal: true });
     cy.topModal().submitForm({ password: email });
 });
 

@@ -7,6 +7,7 @@ Component.register('pinstripe-anchor', {
         this.constructor.parent.prototype.initialize.call(this, ...args);
         this.on('click', (event) => {
             const { confirm, target = '_self', method = 'GET', href, placeholder } = this.params;
+            if(target == '_blank') return;
             if(normalizeUrl(href, window.location.href).host != window.location.host) return;
             event.preventDefault();
             loadFrame.call(this, { confirm, target, method, url: href, placeholderUrl: placeholder });
