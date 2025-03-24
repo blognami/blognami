@@ -14,13 +14,21 @@ export default {
         return this.renderForm(
             this.createModel({
                 meta(){
-                    this.mustNotBeBlank('email')
-                    this.mustBeAValidEmail('email')
+                    this.mustNotBeBlank('email');
+                    this.mustBeAValidEmail('email');
+                    this.validateWith(function(){
+                        if(!this.isValidationError('legal') && this.legal != 'true') {
+                            this.setValidationError('legal', 'You must agree to the terms of service and aknowledge you have read the privacy and cookie policies.');
+                        }
+                    });
                 }
             }),
             {
                 title,
-                fields: [{ name: 'email', label: 'Your email', placeholder: "We'll send a one-time-password to this address." }],
+                fields: [
+                    { name: 'email', label: 'Your email', placeholder: "We'll send a one-time-password to this address." },
+                    { name: 'legal', type: 'checkbox', label: this.renderHtml`I agree to the <a href="/_legal/terms-of-service" target="_blank">terms of service</a>, and acknowledge I have read the <a href="/_legal/privacy-policy" target="_blank">privacy policy</a> and <a href="/_legal/cookie-policy" target="_blank">cookie policy</a>.` }
+                ],
                 submitTitle: 'Next',
                 requiresProofOfWork: true,
                 width: 'small',

@@ -110,7 +110,7 @@ export function describeApp(role) {
           cy.getByTestId("main", "add-comment").contains("Add comment").click();
           cy.topModal().contains("Add comment");
           if (role == "guest") {
-            cy.topModal().submitForm({ email: "bob@example.com" });
+            cy.topModal().submitForm({ email: "bob@example.com", legal: true });
             cy.topModal().submitForm({ password: "bob@example.com" });
             cy.topModal().submitForm({ name: "Bob" });
           }

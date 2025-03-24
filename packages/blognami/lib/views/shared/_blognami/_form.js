@@ -32,6 +32,10 @@ export const styles = `
         font-size: 1.6rem;
         font-weight: 700;
     }
+    
+    .label a {
+        text-decoration: underline;
+    }
 
     .input:not([type='checkbox']) {
         -moz-appearance: none;
@@ -73,7 +77,7 @@ export const styles = `
         box-shadow: 0 0 0 0.125em rgb(241 70 104 / 25%);
     }
 
-    .input:not([type='checkbox']) + .is-error {
+    .input + .is-error {
         font-size: 1.2rem;
         margin-top: 0.25rem;
     }

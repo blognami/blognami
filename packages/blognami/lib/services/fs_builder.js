@@ -94,7 +94,7 @@ export default {
             if(matches){
                 await generateDir(matches[1], () => generateFile(matches[2], options, fn));
             } else {
-                const data = (await grab(fn)).join('');
+                const data = (grab(fn)).join('');
                 const filePath = `${process.cwd()}/${name}`;
     
                 if(!fs.existsSync(filePath)){
