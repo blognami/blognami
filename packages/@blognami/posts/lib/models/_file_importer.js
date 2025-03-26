@@ -1,1 +1,1 @@
-export { Row as default } from 'blognami/database';
+export { Row as default } from '@blognami/database';

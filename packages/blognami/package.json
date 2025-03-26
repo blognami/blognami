@@ -6,12 +6,7 @@
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
-    ".": "./lib/index.js",
-    "./database": "./lib/extensions/database/index.js",
-    "./multi-tenant": "./lib/extensions/multi-tenant/index.js",
-    "./util": "./lib/util.js",
-    "./static": "./lib/extensions/static/index.js",
-    "./only-once": "./lib/extensions/only-once/index.js"
+    ".": "./lib/index.js"
   },
   "bin": {
     "blognami": "./cli.js"
