@@ -1,5 +1,5 @@
 
-import { defer } from 'blognami/util';
+import { defer } from 'haberdash';
 
 export default {
     meta(){

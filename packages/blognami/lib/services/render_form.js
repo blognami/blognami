@@ -31,7 +31,7 @@ export default {
                 if(requiresProofOfWork){
                     if(!this.params._proofOfWork) throw new ValidationError({ _proofOfWork: 'Must not be blank' });
                     if(!await verifyProofOfWork(values, this.params._proofOfWork)) throw new ValidationError({ _proofOfWork: 'Must be a valid' });
-                    if(await this.onlyOnce.hasBeenUsed({ proofOfWork: this.params._proofOfWork })) throw new ValidationError({ _proofOfWork: 'Must be unused' });
+                    if(await this.oneTimeToken.hasBeenUsed({ proofOfWork: this.params._proofOfWork })) throw new ValidationError({ _proofOfWork: 'Must be unused' });
                 }
 
                 const out = await formAdapter.submit(values, { validateWith, success }) || this.renderHtml`
@@ -39,7 +39,7 @@ export default {
                         <script type="pinstripe">this.parent.trigger('click');</script>
                     </span>
                 `;
-                if(requiresProofOfWork) await this.onlyOnce.markAsUsed({ proofOfWork: this.params._proofOfWork });
+                if(requiresProofOfWork) await this.oneTimeToken.markAsUsed({ proofOfWork: this.params._proofOfWork });
                 return out;
             } catch(e){
                 if(!(e instanceof ValidationError)){
