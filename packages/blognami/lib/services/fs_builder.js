@@ -181,7 +181,7 @@ export default {
         const fn = typeof args[0] == 'function' ? args.shift() : () => {};
         const matches = name.match(/^(.*)\/([^\/]*)$/);
         if(matches){
-            await generateDir(matches[1], () => generateFile(matches[2], options, fn));
+            await this.generateDir(matches[1], () => this.generateFile(matches[2], options, fn));
         } else {
             const data = (grab(fn)).join('');
             const filePath = `${process.cwd()}/${name}`;
@@ -202,7 +202,8 @@ export default {
 
     async inProjectRootDir(fn){
         const previousDirPath = process.cwd();
-        process.chdir(await this.project.rootPath);
+        const { rootPath } = await this.project;
+        if(rootPath) process.chdir(rootPath);
         await fn();
         process.chdir(previousDirPath);
     }
