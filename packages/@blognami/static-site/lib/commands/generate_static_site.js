@@ -21,7 +21,7 @@ export default {
             return _url.pathname == '/404' || (page.status == 200 && !Object.keys(otherParams).length)
         });
 
-        const { inProjectRootDir, generateDir, generateFile, echo } = this.fsBuilder;
+        const { inProjectRootDir, generateDir, generateFile } = this.fsBuilder;
 
         const isGenerated = {};
 
@@ -44,7 +44,7 @@ export default {
 
                     if(!isGenerated[filePath]){
                         isGenerated[filePath] = true;
-                        await generateFile(filePath, () => {
+                        await generateFile(filePath, ({ echo }) => {
                             echo(data.join(''));
                         });    
                     }

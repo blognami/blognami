@@ -9,22 +9,22 @@ export default {
             process.exit();
         }
 
-        const { inProjectRootDir, generateFile, line, indent } = this.fsBuilder;
+        const { inProjectRootDir, generateFile } = this.fsBuilder;
     
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/apps/_file_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/apps/_file_importer.js`, { skipIfExists: true }, ({ line }) => {
                 line();
                 line(`export { App as default } from 'blognami';`);
                 line();
             });
     
-            await generateFile(`lib/apps/${normalizedName}.js`, () => {
+            await generateFile(`lib/apps/${normalizedName}.js`, ({ line, indent }) => {
                 line();
                 line(`export default {`);
-                indent(() => {
+                indent(({ line, indent }) => {
                     line('compose(){');
-                    indent(() => {
+                    indent(({ line }) => {
                         line(`return ['shared', '${this.inflector.dasherize(normalizedName)}'];`);
                     });
                     line('}');
