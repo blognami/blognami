@@ -17,25 +17,25 @@ export default {
         const unixTime = Math.floor(new Date().getTime() / 1000);
         const name = `${unixTime}_${suffix}`;
 
-        const { inProjectRootDir, generateFile, line, indent } = this.fsBuilder;
+        const { inProjectRootDir, generateFile } = this.fsBuilder;
     
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/migrations/_file_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/migrations/_file_importer.js`, { skipIfExists: true }, ({ line }) => {
                 line();
                 line(`export { Migration as default } from '@blognami/database';`);
                 line();
             });
     
-            await generateFile(`lib/migrations/${name}.js`, () => {
+            await generateFile(`lib/migrations/${name}.js`, ({ line, indent }) => {
                 line();
                 line(`export default {`);
-                indent(() => {
+                indent(({ line, indent }) => {
                     line(`async migrate(){`);
-                    indent(() => {
+                    indent(({ line, indent }) => {
                         if(table && normalizedFields.length){
                             line(`await this.database.table('${table}', async ${table} => {`);
-                            indent(() => {
+                            indent(({ line }) => {
                                 normalizedFields.forEach(({ name, type }) => {
                                     line(`await ${table}.addColumn('${name}', '${type}');`);
                                 });

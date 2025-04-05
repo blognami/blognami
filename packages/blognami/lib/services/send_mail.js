@@ -13,9 +13,11 @@ export default {
         });
     },
 
-    createDummy({ defaults }){
-        return (mailOptions = {}) => {
-            const { text, html, ...otherMailOptions } = { ...defaults, ...mailOptions };
+    async createDummy({ defaults }){
+        const normalizedDefaults = await this.normalizeMailOptions(defaults);
+        return async (mailOptions = {}) => {
+            const normalizedMailOptions = await this.normalizeMailOptions(mailOptions);
+            const { text, html, ...otherMailOptions } = { ...normalizedDefaults, ...normalizedMailOptions };
             if(process.env.NODE_ENV == 'test') return;
             console.log('');
             console.log('----------------------------------------');
@@ -40,8 +42,23 @@ export default {
         }
     },
 
-    createSmtp({ defaults, ...config }){
-        const transport = createTransport(config, defaults);
-        return (mailOptions = {}) => transport.sendMail(mailOptions);
+    async createSmtp({ defaults, ...config }){
+        const normalizedDefaults = await this.normalizeMailOptions(defaults);
+        const transport = createTransport(config, normalizedDefaults);
+        return async (mailOptions = {}) => transport.sendMail( await this.normalizeMailOptions(mailOptions));
+    },
+
+    async normalizeMailOptions(mailOptions = {}){
+        let { text, html, ...out } = mailOptions;
+
+        if(typeof text == 'function') text = await this.renderText(text);
+        text = await text;
+        if(text) out.text = text.toString();
+
+        if(typeof html == 'function') html = await this.renderText(html);
+        html = await html;
+        if(html) out.html = html.toString();
+
+        return out;
     }
 };

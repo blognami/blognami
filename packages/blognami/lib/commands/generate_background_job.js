@@ -9,30 +9,30 @@ export default {
             process.exit();
         }
 
-        const { inProjectRootDir, generateFile, line, indent } = this.fsBuilder;
+        const { inProjectRootDir, generateFile } = this.fsBuilder;
     
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/background_jobs/_file_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/background_jobs/_file_importer.js`, { skipIfExists: true }, ({ line }) => {
                 line();
                 line(`export { BackgroundJob as default } from 'blognami';`);
                 line();
             });
     
-            await generateFile(`lib/background_jobs/${normalizedName}.js`, () => {
+            await generateFile(`lib/background_jobs/${normalizedName}.js`, ({ line, indent }) => {
                 line();
                 line(`export default {`);
-                indent(() => {
+                indent(({ line, indent }) => {
                     line('meta(){');
-                    indent(() => {
+                    indent(({ line }) => {
                         line(`this.schedule('* * * * *'); // run every minute`);
                     });
                     line('}');
                 });
                 line();
-                indent(() => {
+                indent(({ line, indent }) => {
                     line('run(){');
-                    indent(() => {
+                    indent(({ line }) => {
                         line(`console.log('${this.inflector.dasherize(normalizedName)} background job coming soon!')`);
                     });
                     line('}');
