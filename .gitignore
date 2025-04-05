@@ -5,6 +5,7 @@ pkg/
 videos/
 screenshots/
 downloads/
+packages/*test
 
 *.db
 *.db-journal

@@ -15,20 +15,20 @@ export default {
             await this.runCommand('generate-migration', { suffix: `create_${name}`, fields, table: collectionName});
         }
     
-        const { inProjectRootDir, generateFile, line, indent } = this.fsBuilder;
+        const { inProjectRootDir, generateFile } = this.fsBuilder;
     
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/models/_file_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/models/_file_importer.js`, { skipIfExists: true }, ({ line }) => {
                 line();
                 line(`export { Row as default } from '@blognami/database';`);
                 line();
             });
     
-            await generateFile(`lib/models/${name}.js`, () => {
+            await generateFile(`lib/models/${name}.js`, ({ line, indent }) => {
                 line();
                 line(`export default {`);
-                indent(() => {
+                indent(({ line }) => {
                     line();
                 });
                 line('};');

@@ -46,7 +46,9 @@ export default {
                     this.runInNewWorkspace(({ sendMail }) => sendMail({ 
                         to: email,
                         subject: 'Your one-time-password',
-                        text: `Your one-time-password: "${password}" - this will be valid for approximately 3 mins.`
+                        text({ line }){
+                            line(`Your one-time-password: "${password}" - this will be valid for approximately 3 mins.`);
+                        }
                     }));
 
                     return this.renderHtml`

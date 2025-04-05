@@ -28,25 +28,25 @@ export default {
     
         const existingFileData = useExistingFile ? (await readFile(existingFilePath)).toString('utf8') : '';
 
-        const { inProjectRootDir, generateFile, line, indent, echo } = this.fsBuilder;
+        const { inProjectRootDir, generateFile } = this.fsBuilder;
 
         await inProjectRootDir(async () => {
     
-            await generateFile(`lib/views/_file_importer.js`, { skipIfExists: true }, () => {
+            await generateFile(`lib/views/_file_importer.js`, { skipIfExists: true }, ({ line }) => {
                 line();
                 line(`export { View as default } from 'blognami';`);
                 line();
             });
 
-            await generateFile(`lib/views/${normalizedName}`, () => {
+            await generateFile(`lib/views/${normalizedName}`, ({ echo, line, indent }) => {
                 if(useExistingFile){
                     echo(existingFileData);
                 } else if(normalizedNameExtension == 'js') {
                     line();
                     line('export const styles = `');
-                    indent(() => {
+                    indent(({ line, indent }) => {
                         line(".root {");
-                        indent(() => {
+                        indent(({ line }) => {
                             line("background: yellow;");
                         });
                         line("}");
@@ -54,13 +54,13 @@ export default {
                     line('`;');
                     line();
                     line('export default {');
-                    indent(() => {
+                    indent(({ line, indent }) => {
                         line('render(){')
-                        indent(() => {
+                        indent(({ line, indent }) => {
                             line('return this.renderHtml`')
-                            indent(() => {
+                            indent(({ line, indent }) => {
                                 line('<div class="${this.cssClasses.root}">');
-                                indent(() => {
+                                indent(({ line }) => {
                                     line(`<h1>${normalizedName} view</h1>`);
                                 });
                                 line(`</div>`)

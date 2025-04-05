@@ -47,7 +47,7 @@ export default {
 
       Object.assign(this, { name, dependencies });
    
-      const { generateDir, generateFile, line, indent } = this.fsBuilder;
+      const { generateDir } = this.fsBuilder;
    
       await generateDir(name, async () => {
          await this.generatePackageJson();
@@ -65,9 +65,9 @@ export default {
    },
 
    async generatePackageJson(){
-      const { generateFile, echo } = this.fsBuilder;
+      const { generateFile } = this.fsBuilder;
 
-      await generateFile(`package.json`, () => {
+      await generateFile(`package.json`, ({ echo }) => {
          echo(JSON.stringify({
             type: "module",
             name: this.name,
@@ -81,17 +81,17 @@ export default {
    },
 
    async generateBlognamiConfig(){
-      const { generateFile, line, indent } = this.fsBuilder;
+      const { generateFile } = this.fsBuilder;
 
-      await generateFile(`blognami.config.js`, () => {
+      await generateFile(`blognami.config.js`, ({ line, indent }) => {
          line();
          line(`const environment = process.env.NODE_ENV || 'development';`);
          line();
          line(`let database;`);
          line(`if(environment == 'production'){`)
-         indent(() => {
+         indent(({ line, indent }) => {
             line(`database = {`);
-            indent(() => {
+            indent(({ line }) => {
                line(`adapter: 'mysql',`)
                line(`host: 'localhost',`);
                line(`user: 'root',`);
@@ -101,9 +101,9 @@ export default {
             line(`};`);
          });
          line(`} else {`);
-         indent(() => {
+         indent(({ line, indent }) => {
             line(`database = {`);
-            indent(() => {
+            indent(({ line }) => {
                line(`adapter: 'sqlite',`);
                line(`filename: \`\${environment}.db\``)
             });
@@ -113,15 +113,15 @@ export default {
          line();
          line(`let mail;`);
          line(`if(environment == 'production'){`)
-         indent(() => {
+         indent(({ line, indent }) => {
             line(`mail = {`);
-            indent(() => {
+            indent(({ line, indent }) => {
                line(`adapter: 'smtp',`)
                line(`host: "smtp.example.com",`)
                line(`port: 465,`);
                line(`secure: true, // use TLS`);
                line(`auth: {`);
-               indent(() => {
+               indent(({ line }) => {
                   line(`user: "username",`);
                   line(`pass: "password",`);
                });
@@ -130,9 +130,9 @@ export default {
             line(`};`);
          });
          line(`} else {`);
-         indent(() => {
+         indent(({ line, indent }) => {
             line(`mail = {`);
-            indent(() => {
+            indent(({ line }) => {
                line(`adapter: 'dummy'`);
             });
             line(`};`);
@@ -140,7 +140,7 @@ export default {
          line(`}`);
          line();
          line(`export default {`);
-         indent(() => {
+         indent(({ line }) => {
             line(`database,`);
             line(`mail,`);
             line(`salt: '${crypto.randomUUID()}'`)
@@ -150,9 +150,9 @@ export default {
    },
 
    async generateLibIndex(){
-      const { generateFile, line } = this.fsBuilder;
+      const { generateFile } = this.fsBuilder;
 
-      await generateFile(`lib/index.js`, () => {
+      await generateFile(`lib/index.js`, ({ line }) => {
          line();
          this.dependencies.forEach((dependency) => {
             if(dependency != 'blognami') line(`import '${dependency}';`);
@@ -166,16 +166,16 @@ export default {
    },
 
    async generateReadme(){
-      const { generateFile, line, indent } = this.fsBuilder;
+      const { generateFile } = this.fsBuilder;
 
-      await generateFile(`README.md`, () => {
+      await generateFile(`README.md`, ({ line, indent }) => {
          line();
          line(`# ${this.name}`);
          line();
          line('## Getting started');
          line();
          line('```bash');
-         indent(() => {
+         indent(({ line }) => {
             line('blognami initialize-database');
             line('blognami start-server');
          });
@@ -185,15 +185,15 @@ export default {
    },
 
    async generateSeedDatabaseCommand(){
-      const { generateFile, line, indent, echo } = this.fsBuilder;
+      const { generateFile } = this.fsBuilder;
 
-      await generateFile(`lib/commands/_file_importer.js`, { skipIfExists: true }, () => {
+      await generateFile(`lib/commands/_file_importer.js`, { skipIfExists: true }, ({ line }) => {
          line();
          line(`export { Command as default } from 'blognami';`);
          line();
       });
 
-      await generateFile(`lib/commands/seed_database/_file_importer.js`, { skipIfExists: true }, () => {
+      await generateFile(`lib/commands/seed_database/_file_importer.js`, { skipIfExists: true }, ({ line }) => {
          line();
          line(`export default undefined;`);
          line();
@@ -205,33 +205,33 @@ export default {
       const privacyPolicy = await readFile(`${currentDir}generate_project/legal/privacy_policy.md`, 'utf8');
       const cookiePolicy = await readFile(`${currentDir}generate_project/legal/cookie_policy.md`, 'utf8');
 
-      await generateFile(`lib/commands/seed_database/legal/terms_of_service.md`, { skipIfExists: true }, () => {
+      await generateFile(`lib/commands/seed_database/legal/terms_of_service.md`, { skipIfExists: true }, ({ echo }) => {
          echo(termsOfService);
       });
 
-      await generateFile(`lib/commands/seed_database/legal/privacy_policy.md`, { skipIfExists: true }, () => {
+      await generateFile(`lib/commands/seed_database/legal/privacy_policy.md`, { skipIfExists: true }, ({ echo }) => {
          echo(privacyPolicy);
       });
 
-      await generateFile(`lib/commands/seed_database/legal/cookie_policy.md`, { skipIfExists: true }, () => {
+      await generateFile(`lib/commands/seed_database/legal/cookie_policy.md`, { skipIfExists: true }, ({ echo }) => {
          echo(cookiePolicy);
       });
 
-      await generateFile(`lib/commands/seed_database.js`, () => {
+      await generateFile(`lib/commands/seed_database.js`, ({ line, indent }) => {
          line();
          line(`import { readFile } from 'fs/promises';`);
          line();
          line(`export default {`);
-         indent(() => {
+         indent(({ line, indent }) => {
             line('async run(){');
-            indent(() => {
+            indent(({ line, indent }) => {
                line(`const currentDir = new URL('.', import.meta.url).pathname;`);
                line(`const termsOfService = await readFile(\`\${currentDir}seed_database/legal/terms_of_service.md\`, 'utf8');`);
                line(`const privacyPolicy = await readFile(\`\${currentDir}seed_database/legal/privacy_policy.md\`, 'utf8');`);
                line(`const cookiePolicy = await readFile(\`\${currentDir}seed_database/legal/cookie_policy.md\`, 'utf8');`);
                line();
                line(`await this.database.site.update({`);
-               indent(() => {
+               indent(({ line }) => {
                   line(`title: '${this.inflector.capitalize(this.name)}',`)
                   line(`termsOfService,`);
                   line(`privacyPolicy,`);
@@ -240,7 +240,7 @@ export default {
                line(`});`);
                line();
                line(`this.user = await this.database.users.insert({`);
-               indent(() => {
+               indent(({ line }) => {
                   line(`name: 'Admin',`);
                   line(`email: 'admin@example.com',`);
                   line(`role: 'admin'`);
