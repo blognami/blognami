@@ -1,2 +1,2 @@
 
-export { Command as default } from 'blognami';
+export { Command as default } from 'sintra';

@@ -1,2 +1,0 @@
-
-export { LruCache } from 'haberdash';

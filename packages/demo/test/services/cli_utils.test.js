@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 
-import { Workspace } from 'blognami';
+import { Workspace } from 'sintra';
 
 [
     { input: '', expectedOutput: []},

@@ -8,7 +8,7 @@ export default {
         const defaultModules = '@blognami/pages, @blognami/posts, @blognami/tags';
         this.modules = (process.env.MODULES ?? defaultModules).split(/\s*,\s*/).filter(Boolean);
 
-        if(this.modules.includes('@blognami/multi-tenant')){
+        if(this.modules.includes('@sintra/multi-tenant')){
             await this.database.tenants.insert({
                 name: 'test',
                 host: '127.0.0.1'
