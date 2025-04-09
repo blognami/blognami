@@ -1,2 +1,0 @@
-
-export { trapify } from 'haberdash';

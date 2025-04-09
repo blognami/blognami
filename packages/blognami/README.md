@@ -1,7 +1,7 @@
 
 # Welcome to Blognami
 
-A slick web framework for Node.js.
+A slick CMS for Node.js.
 
 ## License
 

@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "name": "@sintra/utils",
+  "description": "A utility library with meta programming.",
+  "version": "0.33.0",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js",
+    "./node": "./lib/polyfills/node/index.js"
+  },
+  "scripts": {
+    "clean": "rm -rf ./node_modules",
+    "test": "npm run test:unit",
+    "test:unit": "cd lib && node --test"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "html-entities": "^2.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/@sintra/utils"
+  }
+}

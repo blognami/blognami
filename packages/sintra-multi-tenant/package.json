@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "name": "@sintra/multi-tenant",
+  "version": "0.0.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  }
+}

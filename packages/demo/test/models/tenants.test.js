@@ -8,7 +8,7 @@ beforeEach(reset);
 
 const COLLECTION_NAMES = ['comments', 'commentables', 'pages', 'pageables', 'posts', 'revisables', 'sessions', 'sites', 'tagables', 'users'];
 
-if(modules.includes('@blognami/multi-tenant')){
+if(modules.includes('@sintra/multi-tenant')){
     test(`tenant`, () => Workspace.run(async _ => {
         const { tenant, site, users, posts, withoutTenantScope: database } = _.database;
 

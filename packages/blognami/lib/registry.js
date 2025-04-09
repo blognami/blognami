@@ -1,2 +1,0 @@
-
-export { Registry } from 'haberdash';

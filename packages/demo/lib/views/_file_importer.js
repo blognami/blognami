@@ -1,2 +1,2 @@
 
-export { View as default } from 'blognami';
+export { View as default } from 'sintra';
