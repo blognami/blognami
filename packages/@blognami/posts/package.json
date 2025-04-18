@@ -2,13 +2,13 @@
   "type": "module",
   "name": "@blognami/posts",
   "description": "Implements posts in the main app.",
-  "version": "0.33.0",
+  "version": "0.34.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "@blognami/main": "^0.33.0",
-    "@blognami/tags": "^0.33.0"
+    "@blognami/main": "^0.34.0",
+    "@blognami/tags": "^0.34.0"
   }
 }

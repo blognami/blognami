@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "name": "demo",
-  "version": "0.33.0",
+  "version": "0.34.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
@@ -22,7 +22,7 @@
     "test:cli": "cd test/cli && node --test --test-concurrency 1"
   },
   "dependencies": {
-    "sintra": "^0.33.0",
+    "sintra": "^0.34.0",
     "busboy": "1.6.0",
     "mysql2": "3.10.1"
   },
