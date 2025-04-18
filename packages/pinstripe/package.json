@@ -2,7 +2,7 @@
   "type": "module",
   "name": "pinstripe",
   "description": "A slick web framework for your browser.",
-  "version": "0.33.0",
+  "version": "0.34.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -10,6 +10,9 @@
   },
   "scripts": {
     "clean": "rm -rf ./node_modules"
+  },
+  "dependencies": {
+    "@sintra/utils": "^0.34.0"
   },
   "devDependencies": {
     "esbuild": "^0.25.1"

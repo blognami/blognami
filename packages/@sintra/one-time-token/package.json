@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@sintra/one-time-token",
-  "version": "0.0.0",
+  "version": "0.34.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
