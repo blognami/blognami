@@ -9,9 +9,7 @@ const optionPattern = /^-([a-z]|-[a-z\-]+)$/;
 export const Command = Class.extend().include({
     meta(){
         this.assignProps({ 
-            name: 'Command',
-            internal: true,
-            external: false
+            name: 'Command'
         });
 
         this.include(ImportableRegistry);

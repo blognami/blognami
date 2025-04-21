@@ -17,13 +17,16 @@ import { Workspace } from './lib/workspace.js';
     await importAll();
 
     if(exists){
-        Command.names.forEach(commandName => {
-            if(!Command.for(commandName).internal) Command.unregister(commandName);
-        });
+        Command.unregister('generate-project');
     } else {
         Command.names.forEach(commandName => {
-            if(!Command.for(commandName).external) Command.unregister(commandName);
+            if(commandName == 'list-commands' || commandName == 'generate-project') return;
+            Command.unregister(commandName);
         });
+    }
+
+    if(process.env.SINTRA_KEEP_INITIALIZE_PROJECT_COMMAND != 'true'){
+        Command.unregister('initialize-project');
     }
     
     try {
