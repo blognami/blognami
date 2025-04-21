@@ -4,13 +4,6 @@ import * as crypto from 'crypto';
 import { readFile } from 'fs/promises';
 
 export default {
-   meta(){
-      this.assignProps({
-          external: true,
-          internal: false
-      });
-  },
-
    async run(){
       const name = this.params.name || '';
       if(name == ''){
@@ -38,9 +31,9 @@ export default {
       
          await this.generateReadme();
 
-         await this.generateSeedDatabaseCommand();
-
          this.installDependencies();
+
+         this.initializeProject();
       });
    },
 
@@ -164,80 +157,19 @@ export default {
       });
    },
 
-   async generateSeedDatabaseCommand(){
-      const { generateFile } = this.fsBuilder;
-
-      await generateFile(`lib/commands/_file_importer.js`, { skipIfExists: true }, ({ line }) => {
-         line();
-         line(`export { Command as default } from 'sintra';`);
-         line();
-      });
-
-      await generateFile(`lib/commands/seed_database/_file_importer.js`, { skipIfExists: true }, ({ line }) => {
-         line();
-         line(`export default undefined;`);
-         line();
-      });
-
-      const currentDir = new URL('.', import.meta.url).pathname;
-
-      const termsOfService = await readFile(`${currentDir}generate_project/legal/terms_of_service.md`, 'utf8');
-      const privacyPolicy = await readFile(`${currentDir}generate_project/legal/privacy_policy.md`, 'utf8');
-      const cookiePolicy = await readFile(`${currentDir}generate_project/legal/cookie_policy.md`, 'utf8');
-
-      await generateFile(`lib/commands/seed_database/legal/terms_of_service.md`, { skipIfExists: true }, ({ echo }) => {
-         echo(termsOfService);
-      });
-
-      await generateFile(`lib/commands/seed_database/legal/privacy_policy.md`, { skipIfExists: true }, ({ echo }) => {
-         echo(privacyPolicy);
-      });
-
-      await generateFile(`lib/commands/seed_database/legal/cookie_policy.md`, { skipIfExists: true }, ({ echo }) => {
-         echo(cookiePolicy);
-      });
-
-      await generateFile(`lib/commands/seed_database.js`, ({ line, indent }) => {
-         line();
-         line(`import { readFile } from 'fs/promises';`);
-         line();
-         line(`export default {`);
-         indent(({ line, indent }) => {
-            line('async run(){');
-            indent(({ line, indent }) => {
-               line(`const currentDir = new URL('.', import.meta.url).pathname;`);
-               line(`const termsOfService = await readFile(\`\${currentDir}seed_database/legal/terms_of_service.md\`, 'utf8');`);
-               line(`const privacyPolicy = await readFile(\`\${currentDir}seed_database/legal/privacy_policy.md\`, 'utf8');`);
-               line(`const cookiePolicy = await readFile(\`\${currentDir}seed_database/legal/cookie_policy.md\`, 'utf8');`);
-               line();
-               line(`await this.database.site.update({`);
-               indent(({ line }) => {
-                  line(`title: '${this.inflector.capitalize(this.name)}',`)
-                  line(`termsOfService,`);
-                  line(`privacyPolicy,`);
-                  line(`cookiePolicy`);
-               });
-               line(`});`);
-               line();
-               line(`this.user = await this.database.users.insert({`);
-               indent(({ line }) => {
-                  line(`name: 'Admin',`);
-                  line(`email: 'admin@example.com',`);
-                  line(`role: 'admin'`);
-               });
-               line('});')
-            });
-            line('}');
-         });
-         line('};');
-         line();
-      });
-   },
-
    installDependencies(){
       spawnSync('npm', [ 'install', ...this.dependencies ], {
          stdio: 'inherit'
       });
-   }
+   },
 
+   initializeProject(){
+      spawnSync('npx', [ 'sintra', 'initialize-project'], {
+         stdio: 'inherit',
+         env: {
+            ...process.env,
+            SINTRA_KEEP_INITIALIZE_PROJECT_COMMAND: 'true',
+         }
+      });
+   }
 };
