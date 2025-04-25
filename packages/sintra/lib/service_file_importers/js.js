@@ -5,35 +5,23 @@ import { fileURLToPath } from 'url'; // sintra-if-client: const fileURLToPath = 
 import { MissingResourceError } from '../missing_resource_error.js';
 
 ServiceFactory.FileImporter.register('js', {
-    async importFile(){
-        if(!this.isExactMatch) return;
+    meta(){
+        const { importFile } = this.prototype;
 
-        const { filePath, relativeFilePathWithoutExtension } = this;
+        this.include({
+            async importFile(){
+                await importFile.call(this);
 
-        const { default: _default, client } = (await import(filePath));
+                const { relativeFilePathWithoutExtension } = this;
 
-        if(_default || client) ServiceFactory.register(relativeFilePathWithoutExtension, {
-            meta(){
-                this.filePaths.push(filePath);
-                if(_default) this.include(_default);
+                if(Bundle) Bundle.addModule('worker', `
+                    import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                    ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {});
+                `);
             }
         });
-
-        if(client) {
-            Bundle.addModule('worker', `
-                import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
-                import { ${typeof client == 'boolean' ? `default as client` : `client`} } from ${JSON.stringify(filePath)};
-                ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
-                    meta(){
-                        this.filePaths.push(${JSON.stringify(filePath)});
-                        this.include(client);
-                    }
-                });
-            `);
-        }
     }
 });
-
 
 if(Bundle) Bundle.addModule('worker', `
     import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};

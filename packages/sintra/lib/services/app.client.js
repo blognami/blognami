@@ -1,12 +1,11 @@
 
 import { App } from '../app.js';
 
-
 let cache;
 
-export const client = {
+export default {
     create(){
-        return this.defer(async () => {
+        if(this.isClient) return this.defer(async () => {
             if(!this.context.root.hasOwnProperty('app')){
                 if(!cache) cache = fetch('/_sintra/_shell/services/app.json').then(response => response.json());
                 const app = await cache;
@@ -14,11 +13,6 @@ export const client = {
             }
             return this.context.root.app;
         });
-    }
-};
-
-export default {
-    create(){
         return this.defer(async () => {
             if(!this.context.root.hasOwnProperty('app')){
                 let { app = defaultCallback } = await this.config;

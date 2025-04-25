@@ -1,8 +1,6 @@
 
 import { MissingResourceError } from '../missing_resource_error.js';
 
-export const client = true;
-
 export default {
     create(){
         return this;
