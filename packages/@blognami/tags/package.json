@@ -9,5 +9,10 @@
   },
   "dependencies": {
     "@blognami/main": "^0.34.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/@blognami/tags"
   }
 }

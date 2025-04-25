@@ -5,5 +5,13 @@
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
+  },
+  "dependencies": {
+    "sintra": "^0.34.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/@sintra/one-time-token"
   }
 }
