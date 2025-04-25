@@ -1,7 +1,5 @@
 
-export const client = true;
-
- export default {
+export default {
     create(){
         if(!this.context.root.hasOwnProperty('params')){
             this.context.root.params = {
