@@ -331,6 +331,8 @@ export const Table = Class.extend().include({
 
         await this.database.client.adapt(this, {
             async mysql(){
+                if(!TYPE_TO_MYSQL_COLUMN_TYPE_MAP[type]) throw new Error(`Invalid column type "${type}" for "${this.constructor.name}".`);
+
                 const query = [`alter table \`${this.constructor.name}\` add column \`${name}\` ${TYPE_TO_MYSQL_COLUMN_TYPE_MAP[type]}`]
 
                 if(_default !== undefined){
@@ -341,6 +343,8 @@ export const Table = Class.extend().include({
             },
 
             async sqlite(){
+                if(!TYPE_TO_SQLITE_COLUMN_TYPE_MAP[type]) throw new Error(`Invalid column type "${type}" for "${this.constructor.name}".`);
+
                 let defaultSql = _default;
                 if(typeof defaultSql == 'string') {
                     defaultSql = `default '${defaultSql}'`;
