@@ -13,7 +13,8 @@ export default {
             await users.addColumn('membershipExpiresAt', 'datetime');
             await users.addColumn('lastSuccessfulSignInAt', 'datetime');
             await users.addColumn('lastFailedSignInAt', 'datetime');
-            await users.addColumn('emailNotificationsDeliveryFrequency', 'string');
+            await users.addColumn('emailNotificationDeliveryFrequency', 'string');
+            await users.addColumn('lastEmailNotificationDeliveredAt', 'datetime');
         });  
     }
 };
