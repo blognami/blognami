@@ -20,6 +20,23 @@ export default {
             if(this.salt) return;
             this.salt = crypto.randomUUID();
         });
+
+        this.scope('readyToDeliverNotifications', function(enabled = false){
+            if(!enabled) return;
+            
+            const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+            const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+            this.where(
+                `((? = 'asap' and (? <= ?)) or (? = 'daily' and (? <= ?)))`,
+                this.tableReference.createColumnReference('emailNotificationFrequency'),
+                this.tableReference.createColumnReference('emailNotificationLastSentAt'),
+                tenMinutesAgo,
+                this.tableReference.createColumnReference('emailNotificationFrequency'),
+                this.tableReference.createColumnReference('emailNotificationLastSentAt'),
+                oneDayAgo
+            );
+        });
     },
 
     async generatePassword(){
@@ -89,6 +106,9 @@ export default {
                     line('---');
                     line();
                 }
+            });
+            await this.update({
+                emailNotificationLastSentAt: Date.now()
             });
         });
     }
