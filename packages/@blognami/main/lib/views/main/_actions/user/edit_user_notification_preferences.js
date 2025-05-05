@@ -10,7 +10,7 @@ export default {
                     type: 'select',
                     options: {
                         none: 'None',
-                        hourly: 'Hourly',
+                        asap: 'As soon as possible',
                         daily: 'Daily'
                     }
                 }
