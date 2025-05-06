@@ -15,6 +15,7 @@ export default {
             await users.addColumn('lastFailedSignInAt', 'datetime');
             await users.addColumn('emailNotificationFrequency', 'string', { default: 'asap' });
             await users.addColumn('emailNotificationLastSentAt', 'datetime');
+            await users.addColumn('emailNotificationScheduledAt', 'datetime');
         });  
     }
 };

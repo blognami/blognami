@@ -24,23 +24,16 @@ export default {
         });
 
         this.assignProps({
-            asapNotificationDelay: 10 * 60 * 1000,
+            asapEmailNotificationDelay: 10 * 60 * 1000,
         });
 
         this.scope('readyToDeliverNotifications', function(enabled = false){
             if(!enabled) return;
-
-            const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
-            const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-
             this.where(
-                `((? = 'asap' and (? <= ?)) or (? = 'daily' and (? <= ?)))`,
+                `? in ('asap', 'daily') and ? < ?`,
                 this.tableReference.createColumnReference('emailNotificationFrequency'),
-                this.tableReference.createColumnReference('emailNotificationLastSentAt'),
-                tenMinutesAgo,
-                this.tableReference.createColumnReference('emailNotificationFrequency'),
-                this.tableReference.createColumnReference('emailNotificationLastSentAt'),
-                oneDayAgo
+                this.tableReference.createColumnReference('emailNotificationScheduledAt'),
+                new Date()
             );
         });
     },
@@ -66,9 +59,20 @@ export default {
     },
 
     async notify(fn){
+        if(this.emailNotificationFrequency == 'none') return;
+
         const body = await this.workspace.renderText(fn).toString();
         
         await this.database.lock(async () => {
+            if(!this.emailNotificationScheduledAt || this.emailNotificationScheduledAt < this.emailNotificationLastSentAt){
+                if(this.emailNotificationFrequency == 'asap') await this.update({
+                    emailNotificationScheduledAt: Date.now() + this.constructor.asapEmailNotificationDelay
+                });
+                if(this.emailNotificationFrequency == 'daily') await this.update({
+                    emailNotificationScheduledAt: new Date().setHours(0, 0, 0, 0) + 24 * 60 * 60 * 1000
+                });
+            }
+
             const notification = await this.notifications.where({ body }).first();
             if(notification) {
                 await notification.update({
@@ -91,11 +95,12 @@ export default {
     },
 
     get readyToDeliverNotifications(){
-
-        return false;
+        if(this.emailNotificationFrequency == 'none') return false;
+        return this.emailNotificationScheduledAt != null && this.emailNotificationScheduledAt < new Date();
     },
 
-    async deliverNotifications(){
+    async deliverNotifications({ force = false } = {}){
+        if(!force && !this.readyToDeliverNotifications) return;
         const site = await this.database.site;
         const notifications = await this.notifications.orderBy('createdAt').all();
         if(notifications.length == 0) return;

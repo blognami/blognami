@@ -49,7 +49,7 @@ test(`notification`, () => Workspace.run(async function(){
     });
     assert.equal(await user.notifications.count(), 2);
     
-    await user.deliverNotifications();
+    await user.deliverNotifications({ force: true });
 
     assert.equal(await user.notifications.count(), 0);
 }));

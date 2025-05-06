@@ -1,10 +1,12 @@
 
 export default {
     meta(){
-        this.schedule('* * * * *'); // run every minute
+        this.schedule('*/5 * * * *');
     },
 
-    run(){
-        console.log('deliver-notifications background job coming soon!')
+    async run(){
+        for (let user of await this.database.users.where({ readyToDeliverNotifications: true }).all()){
+            await user.deliverNotifications();
+        }
     }
 };
