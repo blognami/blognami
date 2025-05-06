@@ -1,6 +1,8 @@
 
 import * as crypto from 'crypto';
 
+
+
 export default {
     meta(){
         this.include('pageable');
@@ -21,9 +23,13 @@ export default {
             this.salt = crypto.randomUUID();
         });
 
+        this.assignProps({
+            asapNotificationDelay: 10 * 60 * 1000,
+        });
+
         this.scope('readyToDeliverNotifications', function(enabled = false){
             if(!enabled) return;
-            
+
             const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
             const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
 
@@ -82,6 +88,11 @@ export default {
             ...options,
             to: this.email
         });
+    },
+
+    get readyToDeliverNotifications(){
+
+        return false;
     },
 
     async deliverNotifications(){
