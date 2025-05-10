@@ -47,7 +47,7 @@ export const Table = Class.extend().include({
                                         if(values.length > 0) query.push('(');
                                         
                                         values.forEach((value, i) => {
-                                            if(i > 0) query.push(' or ');
+                                            if(i > 0) suffix == 'Ne' ? query.push(' and ') : query.push(' or ');
 
                                             this.database.client.adapt(this, {
                                                 mysql(){
