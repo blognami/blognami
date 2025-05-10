@@ -26,12 +26,13 @@ export default {
     },
 
     async notifySubscribers(){
-        const { title, slug, access } = await this.post;
-        const url = new URL(`/${slug}`, this.params._url);
-        const membershipTiers = ['yearly', 'monthly'];
-        if(access != 'paid') membershipTiers.push('free');
-
         await this.runInNewWorkspace(async function (){
+            const post = await this.database.posts.where({ id: this.params.id }).first();
+            const { title, slug, access } = await post;
+            const url = new URL(`/${slug}`, this.params._url);
+            const membershipTiers = ['yearly', 'monthly'];
+            if(access != 'paid') membershipTiers.push('free');
+
             let page = 1;
             while(true){
                 const users = this.users.where({ membershipTier: membershipTiers }).paginate(page, 100).all();
