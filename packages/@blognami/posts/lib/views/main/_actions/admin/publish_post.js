@@ -25,7 +25,16 @@ export default {
         });
     },
 
-    notifySubscribers(){
-        console.log('---------------- notifySubscribers');
+    async notifySubscribers(){
+        const { name, slug, access } = await this.post;
+        const url = new URL(`/${slug}`, this.params._url);
+        const membershipTiers = ['yearly', 'monthly'];
+        if(access != 'paid') membershipTiers.push('free');
+
+        await this.runInNewWorkspace(async function (){
+            while(true){
+                const users = this.users.where({});
+            }
+        });
     }
 };
