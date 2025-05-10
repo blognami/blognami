@@ -32,8 +32,18 @@ export default {
         if(access != 'paid') membershipTiers.push('free');
 
         await this.runInNewWorkspace(async function (){
+            let page = 1;
             while(true){
-                const users = this.users.where({});
+                const users = this.users.where({ membershipTier: membershipTiers }).paginate(page, 100).all();
+                if(users.length == 0) break;
+                for(const user of users){
+                    await user.notify(({ line }) => {
+                        line(`A new post has been published: "${name}"`);
+                        line();
+                        line(`  * ${url}`);
+                    });
+                }
+                page++;
             }
         });
     }
