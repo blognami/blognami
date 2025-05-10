@@ -26,7 +26,7 @@ export default {
     },
 
     async notifySubscribers(){
-        const { name, slug, access } = await this.post;
+        const { title, slug, access } = await this.post;
         const url = new URL(`/${slug}`, this.params._url);
         const membershipTiers = ['yearly', 'monthly'];
         if(access != 'paid') membershipTiers.push('free');
@@ -38,7 +38,7 @@ export default {
                 if(users.length == 0) break;
                 for(const user of users){
                     await user.notify(({ line }) => {
-                        line(`A new post has been published: "${name}"`);
+                        line(`A new post with title "${title}" has been published:`);
                         line();
                         line(`  * ${url}`);
                     });
