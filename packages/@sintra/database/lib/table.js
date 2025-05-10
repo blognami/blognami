@@ -41,19 +41,26 @@ export const Table = Class.extend().include({
                             Object.keys(columns).forEach(name => {        
                                 Object.keys(MYSQL_COMPARISON_OPERATORS).forEach(suffix => {
                                     this.scope(`${name}${suffix}`, function(value){
-                                        return this.database.client.adapt(this, {
-                                            mysql(){
-                                                let operator = MYSQL_COMPARISON_OPERATORS[suffix];
-                                                if(name.match(/(^id|Id$)/)){
-                                                    operator = MYSQL_KEY_COMPARISON_OPERATORS[suffix] || operator;
+                                        const query = ['('];
+                                        const values = Array.isArray(value) ? value : [value];
+                                        
+                                        values.forEach((value, i) => {
+                                            this.database.client.adapt(this, {
+                                                mysql(){
+                                                    let operator = MYSQL_COMPARISON_OPERATORS[suffix];
+                                                    if(name.match(/(^id|Id$)/)){
+                                                        operator = MYSQL_KEY_COMPARISON_OPERATORS[suffix] || operator;
+                                                    }
+                                                    query.push(operator, this.tableReference.createColumnReference(name), value);
+                                                },
+            
+                                                sqlite(){
+                                                    query.push(SQLITE_COMPARISON_OPERATORS[suffix], this.tableReference.createColumnReference(name), value);
                                                 }
-                                                this.where(operator, this.tableReference.createColumnReference(name), value);
-                                            },
-        
-                                            sqlite(){
-                                                this.where(SQLITE_COMPARISON_OPERATORS[suffix], this.tableReference.createColumnReference(name), value);
-                                            }
+                                            });
                                         });
+
+                                        this.where(...query);
                                     });
                                 });
                             });
