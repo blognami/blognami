@@ -41,8 +41,9 @@ export const Table = Class.extend().include({
                             Object.keys(columns).forEach(name => {        
                                 Object.keys(MYSQL_COMPARISON_OPERATORS).forEach(suffix => {
                                     this.scope(`${name}${suffix}`, function(value){
-                                        const query = ['('];
+                                        const query = [];
                                         const values = Array.isArray(value) ? value : [value];
+                                        if(values.length > 0) query.push('(');
                                         
                                         values.forEach((value, i) => {
                                             this.database.client.adapt(this, {
@@ -59,6 +60,7 @@ export const Table = Class.extend().include({
                                                 }
                                             });
                                         });
+                                        if(values.length > 0) query.push(')');
 
                                         this.where(...query);
                                     });
