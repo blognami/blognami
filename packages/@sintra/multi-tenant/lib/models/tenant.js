@@ -15,7 +15,7 @@ export default {
 
     get scopedDatabase(){
         return defer(async () => {
-            const out = await Database.new(this.database.client);
+            const out = await Database.new(this.database.client, this.database.context);
             out.tenant = this;
             return out;
         });

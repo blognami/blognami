@@ -1,8 +1,7 @@
 
 import crypto from 'crypto';
 
-import { ImportableRegistry } from 'sintra';
-import  { Model, defineCallbacks } from 'sintra';
+import { ImportableRegistry, Model, defineCallbacks, Workspace } from 'sintra';
 import { Table } from "./table.js";
 import { TableReference } from './table_reference.js';
 import { defer } from '@sintra/utils';
@@ -113,6 +112,7 @@ export const Row = Model.extend().include({
 
     initialize(database, fields = {}, exists = false){
         this.database = database;
+        this.workspace = Workspace.new(database.context);
         this._initialFields = {};
         this._exists = exists;
         

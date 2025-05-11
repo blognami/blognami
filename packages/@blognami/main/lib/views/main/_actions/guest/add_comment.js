@@ -21,8 +21,8 @@ export default {
         });
     },
 
-    async success(comment){
-        await this.notifyUsers(comment);
+    async success({ id }){
+        this.notifyUsers({ commentId: id, currentUserId: this.user.id, baseUrl: this.params._url });
 
         return this.renderHtml`
             <span data-component="pinstripe-anchor" data-target="_top">
@@ -33,39 +33,39 @@ export default {
         `;
     },
 
-    async notifyUsers(comment){
-        const commentable = await comment.commentable;
-        const { title, slug } = await commentable.rootCommentable;
-        const url = new URL(`/${slug}`, this.params._url);
+    async notifyUsers({ commentId, currentUserId, baseUrl }){
+        await this.runInNewWorkspace(async function (){
+            const comment = await this.database.comments.where({ id: commentId }).first();
+            if(!comment) return;
+            const commentable = await comment.commentable;
+            const { title, slug } = await commentable.rootCommentable;
+            const url = new URL(`/${slug}`, baseUrl);
 
-        if(commentable.constructor.name == 'comment'){
-            const commentableUser = await commentable.user;
+            if(commentable.constructor.name == 'comment'){
+                const commentableUser = await commentable.user;
 
-            if(commentableUser.id != this.user.id) this.notifyUserOfNewCommentReply({ email: commentableUser.email, name: commentableUser.name, title, url });
+                if(commentableUser.id != currentUserId) await commentableUser.notify(({ line }) => {
+                    line(`A new comment reply has been added to "${title}":`);
+                    line();
+                    line(`  * ${url}`);
+                });
 
-            await comment.commentable.comments.user.where({ idNe: this.user.id }).where({ idNe: commentableUser.id  }).all().forEach(({ name, email}) => {
-                this.notifyUserOfNewCommentReply({ email, name, title, url });
-            });
-        } else {
-            await this.database.users.where({ idNe: this.user.id, role: 'admin' }).all().forEach(({ name, email}) => {
-                this.notifyUserOfNewComment({ email, name, title, url });
-            });
-        }
-    },
-
-    notifyUserOfNewComment({ email, name, title, url }){
-        this.runInNewWorkspace(({ sendMail }) => sendMail({ 
-            to: email,
-            subject: 'New comment notification',
-            text: `Hi ${name},\n\nA new comment has been added to "${title}":\n\n  * ${url}`
-        }));
-    },
-
-    notifyUserOfNewCommentReply({ email, name, title, url }){
-        this.runInNewWorkspace(({ sendMail }) => sendMail({ 
-            to: email,
-            subject: 'New comment reply notification',
-            text: `Hi ${name},\n\nA new comment reply has been added to "${title}":\n\n  * ${url}`
-        }));
+                for(const user of await comment.commentable.comments.user.where({ idNe: currentUserId }).where({ idNe: commentableUser.id  }).all()){
+                    await user.notify(({ line }) => {
+                        line(`A new comment reply has been added to "${title}":`);
+                        line();
+                        line(`  * ${url}`);
+                    });
+                }
+            } else {
+                for(const user of await this.database.users.where({ idNe: currentUserId, role: 'admin' }).all()){
+                    await user.notify(({ line }) => {
+                        line(`A new comment has been added to "${title}":`);
+                        line();
+                        line(`  * ${url}`);
+                    });
+                }
+            }
+        });
     }
 };
