@@ -8,6 +8,11 @@ export const styles = `
     .header {
         margin-bottom: 4rem;
     }
+    
+    .status-bar {
+        margin-bottom: 2rem;
+        text-align: right;
+    }
 
     .tag {
         color: var(--accent-color);
@@ -147,6 +152,35 @@ export default {
             body: this.renderHtml`
                 <section>
                     <article class="${this.cssClasses.article}">
+                        ${() => {
+                            if(!isAdmin) return;
+                            
+                            if(post.published) return this.renderHtml`
+                                <div class="${this.cssClasses.statusBar}">
+                                    ${this.renderView('_button', {
+                                        tagName: 'a',
+                                        href: `/_actions/admin/unpublish_post?id=${post.id}`,
+                                        target: '_overlay',
+                                        ['data-test-id']: 'unpublish-post',
+                                        ['data-method']: 'post',
+                                        ['data-confirm']: 'Are you really sure you want to unpublish this post?',
+                                        body: 'Unpublish'
+                                    })}
+                                </div>
+                            `;
+
+                            return this.renderHtml`
+                                <div class="${this.cssClasses.statusBar}">
+                                    ${this.renderView('_button', {
+                                        tagName: 'a',
+                                        href: `/_actions/admin/publish_post?id=${post.id}`,
+                                        target: '_overlay',
+                                        ['data-test-id']: 'publish-post',
+                                        body: 'Publish'
+                                    })}
+                                </div>
+                            `;
+                        }}
                         <header class="${this.cssClasses.header}">
                             <span class="${this.cssClasses.meta}">
                                 By <a href="/${postUser.slug}">${postUser.name}</a>
@@ -208,7 +242,6 @@ export default {
                                         <p><b>Meta description:</b> ${post.metaDescription}</p>
                                         <p><b>Slug:</b> ${post.slug}</p>
                                         <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
-                                        <p><b>Published:</b> ${post.published ? 'true' : 'false'}</p>
                                         <p><b>Enable comments:</b> ${post.enableComments ? 'true' : 'false'}</p>
                                     `,
                                     linkTestId: "edit-post-meta",

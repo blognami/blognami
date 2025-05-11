@@ -4,10 +4,10 @@ import { Workspace } from 'sintra';
 
 export default {
     create(){
-        return (...args) => this.runBackgroundJob(this.context, ...args);
+        return name => this.runBackgroundJob(this.context, name);
     },
 
-    async runBackgroundJob(name, ...args){
+    async runBackgroundJob(name){
         const { multiTenant = true, tenantsFilter = tenants => tenants } = BackgroundJob.for(name);
 
         if(multiTenant){
@@ -16,12 +16,12 @@ export default {
                 for(let tenant of await tenantsFilter(this.database.tenants).all()){
                     await Workspace.run(async function(){
                         this.initialParams._headers['x-tenant-id'] = tenant.id;
-                        await BackgroundJob.run(this.context, ...args);
+                        await BackgroundJob.run(this.context, name);
                     });
                 }
             });
         } else {
-            await BackgroundJob.run(this.context, ...args);
+            await BackgroundJob.run(this.context, name);
         }
     }
 };

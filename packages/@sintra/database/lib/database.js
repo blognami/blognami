@@ -14,15 +14,16 @@ export const Database = Class.extend().include({
         this.assignProps({ name: 'database' });
     },
 
-    async initialize(client){
+    async initialize(client, context){
         this.client = client;
+        this.context = context;
         if(!loadSchemaPromise) loadSchemaPromise = loadSchema.call(this, client);
         await loadSchemaPromise;
         return trapify(this);
     },
 
     get withoutTenantScope(){
-        return Database.new(this.client);
+        return Database.new(this.client, this.context);
     },
 
     table(name, fn){

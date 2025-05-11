@@ -13,6 +13,9 @@ export default {
             await users.addColumn('membershipExpiresAt', 'datetime');
             await users.addColumn('lastSuccessfulSignInAt', 'datetime');
             await users.addColumn('lastFailedSignInAt', 'datetime');
+            await users.addColumn('emailNotificationFrequency', 'string', { default: 'asap' });
+            await users.addColumn('emailNotificationLastSentAt', 'datetime');
+            await users.addColumn('emailNotificationScheduledAt', 'datetime');
         });  
     }
 };

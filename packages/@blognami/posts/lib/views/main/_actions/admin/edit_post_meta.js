@@ -17,7 +17,7 @@ export default {
         };
 
         return this.renderForm(this.database.posts.where({ id: this.params.id }).first(), {
-            fields: [accessField, 'metaTitle', 'metaDescription', 'slug', 'featured', 'published', 'enableComments'],
+            fields: [accessField, 'metaTitle', 'metaDescription', 'slug', 'featured', 'enableComments'],
             success({ slug }){
                 return that.renderHtml`
                     <span data-component="pinstripe-anchor" data-href="/${slug}" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
