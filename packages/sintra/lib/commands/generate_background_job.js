@@ -27,7 +27,7 @@ export default {
                     indent(({ line }) => {
                         line(`this.schedule('* * * * *'); // run every minute`);
                     });
-                    line('}');
+                    line('},');
                 });
                 line();
                 indent(({ line, indent }) => {

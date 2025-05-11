@@ -149,6 +149,31 @@ export function describeApp(role) {
         });
 
         if (role == "admin") {
+          it(`should have an interface to allow the user to unpublish/publish the post`, () => {
+            cy.getByTestId("main", "unpublish-post").should(
+              "contain",
+              "Unpublish"
+            ).click();
+
+            cy.getByTestId("main", "unpublish-post").should("not.exist");
+
+            cy.getByTestId("main", "publish-post").should(
+              "contain",
+              "Publish"
+            ).click();
+
+            cy.topModal().submitForm({
+               notifySubscribers: true,
+            });
+
+            cy.getByTestId("main", "publish-post").should("not.exist");
+
+            cy.getByTestId("main", "unpublish-post").should(
+              "contain",
+              "Unpublish"
+            );
+          });
+
           it(`should have an interface to allow the user to edit the title`, () => {
             cy.getByTestId("main", "post-title").should(
               "not.contain",
@@ -346,27 +371,6 @@ export function describeApp(role) {
               cy.getByTestId("sidebar", "featured-section").should(
                 "not.contain",
                 "Alexandra Burgs"
-              );
-            });
-
-            it(`should have an interface to allow the user to edit the published flag`, () => {
-              cy.getByTestId("main", "post-meta").should(
-                "contain",
-                "Published: true"
-              );
-
-              cy.getByTestId("main", "edit-post-meta").click();
-              cy.topModal().submitForm({ published: false });
-              cy.getByTestId("main", "post-meta").should(
-                "contain",
-                "Published: false"
-              );
-
-              cy.getByTestId("main", "edit-post-meta").click();
-              cy.topModal().submitForm({ published: true });
-              cy.getByTestId("main", "post-meta").should(
-                "contain",
-                "Published: true"
               );
             });
 

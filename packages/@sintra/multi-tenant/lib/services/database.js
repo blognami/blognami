@@ -8,7 +8,7 @@ export default {
                 this.context.root.databaseClient = Client.new(await this.config.database);
             }
 
-            this.database = await Database.new(this.context.root.databaseClient);
+            this.database = await Database.new(this.context.root.databaseClient, this.context);
 
             if(this.database.info.tenants){
                 let { tenant = defaultCallback } = await this.config;
