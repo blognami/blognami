@@ -9,8 +9,6 @@ export default {
             await this.database.tagableTags.insert({ tagableId: id, tagId });
         }
         
-        return this.renderHtml`
-            <span data-component="pinstripe-anchor" data-target="_parent"><script type="pinstripe">this.parent.trigger('click');</script></span>
-        `;
+        return this.renderRedirect({ target: '_parent' });
     }
 };

@@ -6,13 +6,9 @@ export default {
         }
 
         if(!this.user){
-            return this.renderHtml`
-                <span data-component="pinstripe-anchor" data-href="/_actions/guest/sign_in?title=${encodeURIComponent('Add comment')}&returnUrl=${encodeURIComponent(`/_actions/guest/add_comment?commentableId=${this.params.commentableId}`)}">
-                    <script type="pinstripe">
-                        this.parent.trigger('click');
-                    </script>
-                </span>
-            `;
+            return this.renderRedirect({
+                url: `/_actions/guest/sign_in?title=${encodeURIComponent('Add comment')}&returnUrl=${encodeURIComponent(`/_actions/guest/add_comment?commentableId=${this.params.commentableId}`)}`
+            });
         }
 
         return this.renderForm(this.database.comments, {
@@ -24,13 +20,7 @@ export default {
     async success({ id }){
         this.notifyUsers({ commentId: id, currentUserId: this.user.id, baseUrl: this.params._url });
 
-        return this.renderHtml`
-            <span data-component="pinstripe-anchor" data-target="_top">
-                <script type="pinstripe">
-                    this.parent.trigger('click');
-                </script>
-            </span>
-        `;
+        return this.renderRedirect({ target: '_top' });
     },
 
     async notifyUsers({ commentId, currentUserId, baseUrl }){

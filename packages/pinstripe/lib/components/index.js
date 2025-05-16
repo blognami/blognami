@@ -9,5 +9,6 @@ import './pinstripe_modal.js';
 import './pinstripe_overlay.js';
 import './pinstripe_popover.js';
 import './pinstripe_progress_bar.js';
+import './pinstripe_redirect.js';
 import './pinstripe_script.js';
 import './pinstripe_skeleton.js';

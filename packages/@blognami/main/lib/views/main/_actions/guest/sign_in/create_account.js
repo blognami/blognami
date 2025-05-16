@@ -40,21 +40,14 @@ export default {
                     
                     const [ status, headers, body ] = await that.renderHtml`
                         ${() => {
-                            if(returnUrl){
-                                return that.renderHtml`
-                                    <span data-component="pinstripe-anchor" data-href="${returnUrl}">
-                                        <script type="pinstripe">
-                                            this.parent.trigger('click');
-                                            
-                                            const { document } = this;
-                                            this.overlay.on('close', () => document.load());
-                                        </script>
-                                    </span>
-                                `;
-                            }
-                            return that.renderHtml`
-                                <span data-component="pinstripe-anchor" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
+                            if(returnUrl) return that.renderHtml`
+                                ${that.renderRedirect({ url: returnUrl })}
+                                <script type="pinstripe">
+                                    const { document } = this;
+                                    this.overlay.on('close', () => document.load());
+                                </script>
                             `;
+                            return that.renderRedirect({ target: '_top' });
                         }}
                     `.toResponseArray();
             

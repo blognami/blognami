@@ -34,11 +34,7 @@ export default {
                     if(await this.oneTimeToken.hasBeenUsed({ proofOfWork: this.params._proofOfWork })) throw new ValidationError({ _proofOfWork: 'Must be unused' });
                 }
 
-                const out = await formAdapter.submit(values, { validateWith, success }) || this.renderHtml`
-                    <span data-component="pinstripe-anchor" data-target="_parent">
-                        <script type="pinstripe">this.parent.trigger('click');</script>
-                    </span>
-                `;
+                const out = await formAdapter.submit(values, { validateWith, success }) || this.renderRedirect({ target: '_parent' });
                 if(requiresProofOfWork) await this.oneTimeToken.markAsUsed({ proofOfWork: this.params._proofOfWork });
                 return out;
             } catch(e){

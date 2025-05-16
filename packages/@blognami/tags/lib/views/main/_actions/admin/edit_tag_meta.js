@@ -6,9 +6,10 @@ export default {
         return this.renderForm(this.database.tags.where({ id: this.params.id }).first(), {
             fields: ['name', 'metaTitle', 'metaDescription', 'slug'],
             success({ slug }){
-                return that.renderHtml`
-                    <span data-component="pinstripe-anchor" data-href="/${slug}" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
-                `;
+                return that.renderRedirect({
+                    url: `/${slug}`,
+                    target: '_top'
+                });
             }
         })
     }

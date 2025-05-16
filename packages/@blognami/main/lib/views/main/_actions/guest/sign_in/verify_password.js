@@ -38,9 +38,7 @@ export default {
                 
                 async success(){
                     const user = await that.database.users.where({ email }).first();
-                    if(!user) return that.renderHtml`
-                        <span data-component="pinstripe-anchor" data-href="/_actions/guest/sign_in/create_account?email=${encodeURIComponent(email)}&password=${encodeURIComponent(await that.database.site.generatePassword(email))}${optionalParams}"><script type="pinstripe">this.parent.trigger('click');</script></span>
-                    `;
+                    if(!user) return that.renderRedirect({ url: `/_actions/guest/sign_in/create_account?email=${encodeURIComponent(email)}&password=${encodeURIComponent(await that.database.site.generatePassword(email))}${optionalParams}`});
                     await user.logSuccessfulSignIn();
                     const passString = crypto.randomUUID();
                     const session = await that.database.sessions.insert({
@@ -51,21 +49,14 @@ export default {
                     
                     const [ status, headers, body ] = await that.renderHtml`
                         ${() => {
-                            if(returnUrl){
-                                return that.renderHtml`
-                                    <span data-component="pinstripe-anchor" data-href="${returnUrl}">
-                                        <script type="pinstripe">
-                                            this.parent.trigger('click');
-                                            
-                                            const { document } = this;
-                                            this.overlay.on('close', () => document.load());
-                                        </script>
-                                    </span>
-                                `;
-                            }
-                            return that.renderHtml`
-                                <span data-component="pinstripe-anchor" data-target="_top"><script type="pinstripe">this.parent.trigger('click');</script></span>
+                            if(returnUrl) return that.renderHtml`
+                                ${that.renderRedirect({ url: returnUrl })}
+                                <script type="pinstripe">
+                                    const { document } = this;
+                                    this.overlay.on('close', () => document.load());
+                                </script>
                             `;
+                            return that.renderRedirect({ target: '_top' });
                         }}
                     `.toResponseArray();
             
