@@ -57,13 +57,9 @@ export default {
             user = await this.session.user;
         }
 
-        if(!user) return this.renderHtml`
-            <span data-component="pinstripe-anchor" data-href="/_actions/guest/sign_in?title=${encodeURIComponent('Subscribe')}&returnUrl=${encodeURIComponent(`/_actions/guest/subscribe?plan=${plan}&returnUrl=${encodeURIComponent(returnUrl)}`)}">
-                <script type="pinstripe">
-                    this.parent.trigger('click');
-                </script>
-            </span>
-        `;
+        if(!user) return this.renderRedirect({
+            url: `/_actions/guest/sign_in?title=${encodeURIComponent('Subscribe')}&returnUrl=${encodeURIComponent(`/_actions/guest/subscribe?plan=${plan}&returnUrl=${encodeURIComponent(returnUrl)}`)}`
+        });
 
         const reloadHtml = this.renderHtml`
             <script type="pinstripe">
