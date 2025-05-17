@@ -13,13 +13,11 @@
     --font-serif: Lora, Times, serif; /* stylelint-disable-line value-keyword-case */
     --font-mono: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace; /* stylelint-disable-line value-keyword-case */
     --head-nav-gap: 2.8rem;
-    --h1-size: 4.6rem;
     --gap: 3.6rem;
 }
 
 @media (max-width: 767px) {
     :root {
-        --h1-size: 3.2rem !important;
         --gap: 2rem;
     }
 }

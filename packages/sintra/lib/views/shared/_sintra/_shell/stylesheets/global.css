@@ -37,7 +37,7 @@ h6 {
 }
 
 h1 {
-    font-size: var(--h1-size);
+    font-size: 4.6rem;
 }
 
 h2 {
@@ -116,6 +116,9 @@ iframe {
 }
 
 @media (max-width: 767px) {
+    h1 {
+        font-size: 3.2rem;
+    }
     h2 {
         font-size: 2.4rem;
     }
