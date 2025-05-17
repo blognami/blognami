@@ -3,8 +3,8 @@ export const styles = `
     .root {
         padding-top: 8rem;
         padding-bottom: 8rem;
-        padding-right: var(--gap);
-        padding-left: var(--gap);
+        padding-right: 3.6rem;
+        padding-left: 3.6rem;
         color: var(--color-secondary-text);
     }
 
@@ -33,6 +33,8 @@ export const styles = `
         .root {
             padding-top: 6.4rem;
             padding-bottom: 12rem;
+            padding-right: 2rem;
+            padding-left: 2rem;
         }
 
         .inner {
