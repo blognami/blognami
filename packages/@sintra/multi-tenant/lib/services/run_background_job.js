@@ -4,7 +4,7 @@ import { Workspace } from 'sintra';
 
 export default {
     create(){
-        return name => this.runBackgroundJob(this.context, name);
+        return name => this.runBackgroundJob(name);
     },
 
     async runBackgroundJob(name){
