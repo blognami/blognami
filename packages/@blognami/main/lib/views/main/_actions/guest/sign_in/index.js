@@ -27,7 +27,7 @@ export default {
                 title,
                 fields: [
                     { name: 'email', label: 'Your email', placeholder: "We'll send a one-time-password to this address." },
-                    { name: 'legal', type: 'checkbox', label: this.renderHtml`I agree to the <a href="/_legal/terms-of-service" target="_blank">terms of service</a>, and acknowledge I have read the <a href="/_legal/privacy-policy" target="_blank">privacy policy</a> and <a href="/_legal/cookie-policy" target="_blank">cookie policy</a>.` }
+                    { name: 'legal', type: 'checkbox', label: this.renderHtml`I agree to the <a href="/legal/terms-of-service" target="_blank">terms of service</a>, and acknowledge I have read the <a href="/legal/privacy-policy" target="_blank">privacy policy</a> and <a href="/legal/cookie-policy" target="_blank">cookie policy</a>.` }
                 ],
                 submitTitle: 'Next',
                 requiresProofOfWork: true,
