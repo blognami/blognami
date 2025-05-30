@@ -56,12 +56,12 @@ export default {
                 <div class="${this.cssClasses.inner}">
                     <div>
                         ${site.title} © ${new Date().getFullYear()}
-                        | <a href="/_legal/terms-of-service">Terms of Service</a>
-                        | <a href="/_legal/privacy-policy">Privacy Policy</a>
-                        | <a href="/_legal/cookie-policy">Cookie Policy</a>
+                        | <a href="/legal/terms-of-service">Terms of Service</a>
+                        | <a href="/legal/privacy-policy">Privacy Policy</a>
+                        | <a href="/legal/cookie-policy">Cookie Policy</a>
                     </div>    
                     <div class="${this.cssClasses.poweredBy} ">
-                        <a href="https://sintra.com/" target="_blank" rel="noopener">Powered by Blognami</a>
+                        <a href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
                     </div>
                 </div>
             </footer>

@@ -1,7 +1,6 @@
 
 import { spawnSync } from 'child_process';
 import * as crypto from 'crypto';
-import { readFile } from 'fs/promises';
 
 export default {
    async run(){
