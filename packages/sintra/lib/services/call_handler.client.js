@@ -13,10 +13,48 @@ export default {
 
         this.context.params = this.normalizeParams(params);
         
-        const out = this.normalizeResponse(await this.app.render());
+        const out = this.normalizeResponse(await this.render());
         if(out) return out;
 
         return [404, {'content-type': 'text/plain'}, ['Not found']];
+    },
+
+    async render(){
+        const viewName = this.params._url.pathname.replace(/^\/|\/$/g, '') || 'index';
+        
+        let out = await this.renderGuardViews(viewName, this.params);
+        if(out) return out;
+
+        if(!viewName.match(/(^|\/)_[^\/]+(|\/index)$/)){
+            out = await this.renderView(viewName, this.params);
+            if(out) return out;
+        }
+        
+        return this.renderDefaultViews(viewName, this.params);
+    },
+
+    async renderGuardViews(viewName, params){
+        const viewNameSegments = viewName != '' ? viewName.split(/\//) : [];
+
+        const prefixSegments = [];
+        while(true){
+            const candidateGuardViewName = prefixSegments.length ? [...prefixSegments, 'guard'].join('/') : 'guard';
+            const out = await this.renderView(candidateGuardViewName, params);
+            if(out) return out;
+            if(viewNameSegments.length == 0) break;
+            prefixSegments.push(viewNameSegments.shift());
+        }
+    },
+
+    async renderDefaultViews(viewName, params){
+        const prefixSegments = viewName != '' ? viewName.split(/\//) : [];
+        while(true){
+            const candidateDefaultViewName = prefixSegments.length ? [...prefixSegments, 'default'].join('/') : 'default';
+            const out = await this.renderView(candidateDefaultViewName, params);
+            if(out) return out;
+            if(prefixSegments.length == 0) break;
+            prefixSegments.pop();
+        }
     },
 
     normalizeParams(params){

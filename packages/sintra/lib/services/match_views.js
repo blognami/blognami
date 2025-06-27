@@ -8,7 +8,7 @@ export default {
     async matchViews(includePatterns = "*", excludePatterns = []){
         const normalizedIncludePatterns = this.normalizePatterns(includePatterns);
         const normalizedExcludePatterns = this.normalizePatterns(excludePatterns);
-        return await this.sortViews(Object.keys(await this.app.viewMap).filter(name => (
+        return await this.sortViews(Object.keys(await this.viewMap).filter(name => (
             normalizedIncludePatterns.some(pattern => pattern.test(name)) && !normalizedExcludePatterns.some(pattern => pattern.test(name))
         )));
     },
@@ -29,7 +29,7 @@ export default {
     },
 
     async sortViews(views){
-        const viewMap = await this.app.viewMap;
+        const viewMap = await this.viewMap;
         const out = views.map(name => ({
             name,
             displayOrder: View.for(viewMap[name]).displayOrder ?? 100,
