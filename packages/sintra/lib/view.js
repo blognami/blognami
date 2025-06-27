@@ -28,6 +28,18 @@ export const View = Class.extend().include({
                     view.context.params = params;
                     return view.render();
                 });
+            },
+
+            get featuresIsEnabledFor(){
+                if(!this.hasOwnProperty('_featuresIsEnabledFor')){
+                    this._featuresIsEnabledFor = [];
+                }
+                return this._featuresIsEnabledFor;
+            },
+
+            featureFor(name){
+                if(this.featuresIsEnabledFor.includes(name)) return;
+                this.featuresIsEnabledFor.push(name);
             }
         });
 

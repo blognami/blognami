@@ -1,7 +1,6 @@
 
 import './initialize.js';
 
-export * from './app.js';
 export * from './background_job.js'; // sintra-if-client: export const BackgroundJob = undefined;
 export * from './command.js'; // sintra-if-client: export const Command = undefined;
 export * from './context.js'; // sintra-if-client: export const Context = undefined;
