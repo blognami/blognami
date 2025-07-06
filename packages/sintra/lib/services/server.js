@@ -200,6 +200,6 @@ export default {
     },
 
     createHash(data){
-        return createHash('sha1').update(JSON.stringify(data)).digest('base64');
+        return `"${createHash('sha1').update(JSON.stringify(data)).digest('base64')}"`;
     }
 };
