@@ -63,6 +63,13 @@ Component.register('pinstripe-document', {
         return this.head.find('meta[name="pinstripe-load-cache-namespace"]')?.params.content ?? 'default';
     },
 
+    get globalStyles(){
+        if(!this._globalStyles){
+            this._globalStyles = mergeCssStylesheets(this.node.styleSheets ?? []);
+        }
+        return this._globalStyles;
+    },
+
     async load(url = this.url.toString(), options = {}){
         const { replace, method = 'GET' } = options;
         const previousUrl = this.url.toString();
@@ -90,3 +97,21 @@ Component.register('pinstripe-document', {
         delete preloading[url.toString()];
     }
 });
+
+
+export function mergeCssStylesheets(stylesheets, out = new CSSStyleSheet()) {
+    for(const sheet of stylesheets){
+        try {
+            for(const rule of sheet.cssRules) {
+                if(rule instanceof CSSImportRule) {
+                    mergeCssStylesheets([ rule.styleSheet ], out);
+                } else {
+                    out.insertRule(rule.cssText);
+                }
+            }
+        } catch (e) {
+            // Ignore errors from stylesheets that cannot be merged
+        }
+    }
+    return out;
+}
