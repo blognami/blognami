@@ -50,6 +50,8 @@ Component.register('pinstripe-frame', {
             if(useCache){
                 this.status = 'complete';
                 this.patch(cachedHtml);
+                await clearEventLoop();
+                progressBar.stop();
                 return;
             }
             this.status = 'using-cached-html';
