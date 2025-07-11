@@ -49,7 +49,7 @@ Component.register('pinstripe-frame', {
         if(cachedHtml) {
             if(useCache){
                 this.status = 'complete';
-                this.patch(html);
+                this.patch(cachedHtml);
                 return;
             }
             this.status = 'using-cached-html';
