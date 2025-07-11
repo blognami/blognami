@@ -87,21 +87,23 @@ export default {
             ],
             body: this.renderHtml`
                 ${this.renderView('_header')}
-                <div class="${this.cssClasses.site}">
-                    <main id="main" class="${this.cssClasses.main} ${this.cssClasses.outer}">
-                        <div class="${this.cssClasses.inner}">
-                            <div class="${this.cssClasses.wrapper}">
-                                <div data-test-id="main">
-                                    ${body}
+                <blognami-layout>
+                    <div class="${this.cssClasses.site}">
+                        <main id="main" class="${this.cssClasses.main} ${this.cssClasses.outer}">
+                            <div class="${this.cssClasses.inner}">
+                                <div class="${this.cssClasses.wrapper}">
+                                    <div data-test-id="main">
+                                        ${body}
+                                    </div>
+                                    <aside class="${this.cssClasses.sidebar}" data-test-id="sidebar">
+                                        ${this.renderView('_sidebar')}
+                                    </aside>
                                 </div>
-                                <aside class="${this.cssClasses.sidebar}" data-test-id="sidebar">
-                                    ${this.renderView('_sidebar')}
-                                </aside>
                             </div>
-                        </div>
-                    </main>
-                    ${this.renderView('_footer')}
-                </div>
+                        </main>
+                        ${this.renderView('_footer')}
+                    </div>
+                </blognami-layout>
             `
         });
     }

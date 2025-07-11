@@ -65,9 +65,17 @@ Component.register('pinstripe-document', {
 
     get globalStyles(){
         if(!this._globalStyles){
-            this._globalStyles = mergeCssStylesheets(this.node.styleSheets ?? []);
+            try {
+                this._globalStyles = mergeCssStylesheets(this.node.styleSheets ?? []);
+            } catch (e) {
+                this._globalStyles = undefined;
+            }
         }
         return this._globalStyles;
+    },
+
+    get componentBase(){
+        return this.head.find('meta[name="pinstripe-component-base"]')?.params.content ?? '/_components';
     },
 
     async load(url = this.url.toString(), options = {}){
