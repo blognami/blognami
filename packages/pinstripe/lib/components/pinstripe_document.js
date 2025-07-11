@@ -75,7 +75,7 @@ Component.register('pinstripe-document', {
     },
 
     get componentBase(){
-        return this.head.find('meta[name="pinstripe-component-base"]')?.params.content ?? '/_components';
+        return this.head.find('meta[name="pinstripe-component-base"]')?.params.content;
     },
 
     async load(url = this.url.toString(), options = {}){

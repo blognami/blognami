@@ -56,14 +56,20 @@ export const Component = Class.extend().include({
         }
 
         const { name } = this.constructor;
-        if(name.match(/^([a-z0-9]+|document-fragment)$/) || this.constructor.mixins[name]) return;
+
+        if(this.constructor.mixins[name]) return;
+
+        if(name.match(/^([a-z0-9]+|document-fragment)$/)) return;
+        
+        const { componentBase } = this.document;
+        if(!componentBase) return;
 
         this.shadow.patch(`
             <pinstripe-global-styles></pinstripe-global-styles>
             <pinstripe-frame use-cache="true" load-on-init="false"></pinstripe-frame>
         `);
         const frame = this.shadow.find('pinstripe-frame');
-        const { componentBase } = this.document;
+        
         const url = new URL(`${componentBase}/${name}`, frame.url);
         const { params } = this;
         for(const [key, value] of Object.entries(params)){
