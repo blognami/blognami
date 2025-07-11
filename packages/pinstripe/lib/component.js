@@ -60,7 +60,7 @@ export const Component = Class.extend().include({
 
         this.shadow.patch(`
             <pinstripe-global-styles></pinstripe-global-styles>
-            <pinstripe-frame load-on-init="false"></pinstripe-frame>
+            <pinstripe-frame use-cache="true" load-on-init="false"></pinstripe-frame>
         `);
         const frame = this.shadow.find('pinstripe-frame');
         const { componentBase } = this.document;
