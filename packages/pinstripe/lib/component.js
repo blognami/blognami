@@ -65,6 +65,10 @@ export const Component = Class.extend().include({
         const frame = this.shadow.find('pinstripe-frame');
         const { componentBase } = this.document;
         const url = new URL(`${componentBase}/${name}`, frame.url);
+        const { params } = this;
+        for(const [key, value] of Object.entries(params)){
+            url.searchParams.set(key, value);
+        }
         frame.load(url);
     },
 
