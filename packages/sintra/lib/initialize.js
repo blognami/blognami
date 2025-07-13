@@ -14,12 +14,6 @@ if(typeof window != 'undefined'){
             return this._httpProxy;
         }
     });
-
-    window.addEventListener('DOMContentLoaded', () => {
-        const documentComponent = Component.instanceFor(document);
-        documentComponent.observe({ add: true }, component => component.descendants);
-        documentComponent.patch(document.documentElement.outerHTML);
-    });
 }
 
 if(typeof window == 'undefined' && typeof addEventListener == 'function'){

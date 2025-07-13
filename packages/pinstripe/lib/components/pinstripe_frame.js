@@ -44,9 +44,16 @@ Component.register('pinstripe-frame', {
         await clearEventLoop();
         this.status = 'loading';
         this.url = url;
-        const { method = 'GET', placeholderUrl } = options;
+        const { method = 'GET', placeholderUrl, useCache = this.params.useCache == 'true' } = options;
         const cachedHtml = method == 'GET' ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
         if(cachedHtml) {
+            if(useCache){
+                this.status = 'complete';
+                this.patch(cachedHtml);
+                await clearEventLoop();
+                progressBar.stop();
+                return;
+            }
             this.status = 'using-cached-html';
             this.patch(cachedHtml);
         }

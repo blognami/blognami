@@ -54,6 +54,28 @@ export const Component = Class.extend().include({
         if(autofocus){
             this.setTimeout(() => this.node.focus());
         }
+
+        const { name } = this.constructor;
+
+        if(this.constructor.mixins[name]) return;
+
+        if(name.match(/^([a-z0-9]+|document-fragment)$/)) return;
+        
+        const { componentBase } = this.document;
+        if(!componentBase) return;
+
+        this.shadow.patch(`
+            <pinstripe-global-styles></pinstripe-global-styles>
+            <pinstripe-frame use-cache="true" load-on-init="false"></pinstripe-frame>
+        `);
+        const frame = this.shadow.find('pinstripe-frame');
+        
+        const url = new URL(`${componentBase}/${name}`, frame.url);
+        const { params } = this;
+        for(const [key, value] of Object.entries(params)){
+            url.searchParams.set(key, value);
+        }
+        frame.load(url);
     },
 
     get type(){
@@ -565,7 +587,7 @@ function createVirtualNode(html){
 function patch(attributes, virtualChildren){
     const isFrame = this.type == 'pinstripe-frame' || this.attributes['data-component'] == 'pinstripe-frame';
     const isEmptyFrame = isFrame && virtualChildren.length == 0;
-    if(isEmptyFrame && attributes['data-load-on-init'] === undefined){
+    if(isEmptyFrame && attributes['load-on-init'] === undefined && attributes['data-load-on-init'] === undefined){
         attributes['data-load-on-init'] = 'true';
     }
     patchAttributes.call(this, attributes);
