@@ -1,24 +1,20 @@
 
 export default {
     async render(){
-        if(await this.session){
-            this.user = await this.session.user;
-        }
-
-        if(!this.user){
+        if(await this.isSignedOut){
             return this.renderRedirect({
                 url: `/_actions/guest/sign_in?title=${encodeURIComponent('Add comment')}&returnUrl=${encodeURIComponent(`/_actions/guest/add_comment?commentableId=${this.params.commentableId}`)}`
             });
         }
 
         return this.renderForm(this.database.comments, {
-            fields: ['commentableId', { name: 'userId', value: this.user.id}, { name: 'body', type: '_markdown_editor'}],
+            fields: ['commentableId', { name: 'userId', value: await this.user.id }, { name: 'body', type: '_markdown_editor'}],
             success: this.success.bind(this)
         });
     },
 
     async success({ id }){
-        this.notifyUsers({ commentId: id, currentUserId: this.user.id, baseUrl: this.params._url });
+        this.notifyUsers({ commentId: id, currentUserId: await this.user.id, baseUrl: this.params._url });
 
         return this.renderRedirect({ target: '_top' });
     },

@@ -4,7 +4,7 @@ export default {
         return this.renderHtml`
             <pinstripe-popover>
                 <pinstripe-menu>
-                    ${this.renderViews('_actions/admin/add_content/_*')}
+                    ${this.renderViews('_navbar/_links/_edit_settings/menu/_*')}
                 </pinstripe-menu>
             </pinstripe-popover>
         `;

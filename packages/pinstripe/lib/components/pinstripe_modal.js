@@ -138,7 +138,10 @@ Component.register('pinstripe-modal', {
             </div>
         `);
 
-        this.shadow.on('click', '.root, .container, .body, .close-button', () => this.trigger('close'));
+        this.shadow.on('click', '.root, .container, .body, .close-button', () => {
+            if(this.overlay.find('nextSiblings', 'pinstripe-overlay')) return;
+            this.trigger('close');
+        });
 
         this.on('clean', () => this.document.body.unclip());
 
