@@ -7,7 +7,7 @@ export const styles = `
 
 export default {
     async render(){
-        const user = await this.session.user;
+        const user = await this.user;
 
         return this.renderHtml`
             ${() => {

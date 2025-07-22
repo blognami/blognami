@@ -23,7 +23,7 @@ export default {
 
     normalizePattern(pattern){
         if(typeof pattern === 'string') {
-            return new RegExp(`^${pattern.replace(/\*/g, '.*')}$`);
+            return new RegExp(`^${pattern.replace(/\*/g, '[^/]*')}$`);
         }
         return out;
     },
