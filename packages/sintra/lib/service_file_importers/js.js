@@ -14,7 +14,7 @@ ServiceFactory.FileImporter.register('js', {
 
                 const { relativeFilePathWithoutExtension } = this;
 
-                if(Bundle) Bundle.addModule('worker', `
+                if(Bundle) Bundle.addModule('serviceWorker', `
                     import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
                     ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {});
                 `);
@@ -23,7 +23,7 @@ ServiceFactory.FileImporter.register('js', {
     }
 });
 
-if(Bundle) Bundle.addModule('worker', `
+if(Bundle) Bundle.addModule('serviceWorker', `
     import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
     import { notAvailableOnClientServiceFactory } from ${JSON.stringify(fileURLToPath(import.meta.url))};
     ServiceFactory.include(notAvailableOnClientServiceFactory);

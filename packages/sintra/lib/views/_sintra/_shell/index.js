@@ -1,13 +1,23 @@
 
 export default {
-    render(){
+    async render(){
         const { language = 'en', meta = [], body } = this.params;
+
+        const version = await this.version;
+
+        const urlSearchParams = new URLSearchParams({ version });
+
+        const versionedMeta = [
+            { tagName: 'link', rel: 'stylesheet', href: `/_sintra/_shell/stylesheets/all.css?${urlSearchParams}` },
+            { tagName: 'script', src: `/_sintra/_shell/javascripts/window.js?${urlSearchParams}` },
+            { tagName: 'meta', name: 'sintra-service-worker-url', content: `/_sintra/_shell/javascripts/service_worker.js?${urlSearchParams}` },
+        ];
 
         return this.renderHtml`
             <!DOCTYPE html>
             <html lang="${language}">
                 <head>
-                    ${this.mergeMeta([ ...this.defaultMeta, ...meta ]).map(attributes => this.renderTag(attributes))}
+                    ${this.mergeMeta([ ...this.defaultMeta, ...versionedMeta, ...meta ]).map(attributes => this.renderTag(attributes))}
                 </head>
                 <body>
                     ${body}
@@ -22,9 +32,7 @@ export default {
         { tagName: 'meta', name: 'pinstripe-load-cache-namespace', content: 'default' },
         { tagName: 'link', rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { tagName: 'link', rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true },
-        { tagName: 'link', rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&display=swap' },
-        { tagName: 'link', rel: 'stylesheet', href: '/_sintra/_shell/stylesheets/all.css' },
-        { tagName: 'script', src: '/_sintra/_shell/javascripts/window.js' }
+        { tagName: 'link', rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&display=swap' }
     ],
 
     mergeMeta(meta){

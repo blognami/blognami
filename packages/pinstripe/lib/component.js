@@ -489,7 +489,7 @@ export const Component = Class.extend().include({
                     }))
                 }
                 const promises = [
-                    this.document.httpProxy.fetch(normalizedUrl, { signal: abortController.signal, ...otherOptions }), 
+                    fetch(normalizedUrl, { signal: abortController.signal, ...otherOptions }), 
                     new Promise((resolve, reject) => {
                         minimumDelayTimeout = setTimeout(resolve, minimumDelay);
                         rejectMinimumDelay = reject;
