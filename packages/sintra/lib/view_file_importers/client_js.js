@@ -15,7 +15,7 @@ View.FileImporter.register('client.js', {
 
                 const { filePath, relativeFilePathWithoutExtension } = this;
 
-                Bundle.addModule('worker', `
+                Bundle.addModule('serviceWorker', `
                     import { View } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
                     import { default as client } from ${JSON.stringify(filePath)};
                     View.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {

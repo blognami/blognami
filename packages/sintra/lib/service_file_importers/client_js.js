@@ -15,7 +15,7 @@ ServiceFactory.FileImporter.register('client.js', {
 
                 const { filePath, relativeFilePathWithoutExtension } = this;
 
-                Bundle.addModule('worker', `
+                Bundle.addModule('serviceWorker', `
                     import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
                     import { default as _default } from ${JSON.stringify(filePath)};
                     ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {

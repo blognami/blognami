@@ -30,17 +30,6 @@ Component.register('pinstripe-document', {
 
     isDocument: true,
 
-    get httpProxy(){
-        if(!this._httpProxy){
-            this._httpProxy = {
-                fetch(...args){
-                    return fetch(...args);
-                }
-            };
-        }
-        return this._httpProxy;
-    },
-
     get head(){
         if(!this._head){
             this._head = this.find('head');

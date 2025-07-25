@@ -90,6 +90,6 @@ export const Bundle = Class.extend().include({
     }
 });
 
-['window', 'worker'].forEach(environment => {
+['window', 'serviceWorker'].forEach(environment => {
     Bundle.addModule(environment, `import ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};`);
 });

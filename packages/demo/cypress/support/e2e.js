@@ -21,5 +21,17 @@ Cypress.on('uncaught:exception', (error, runnable) => {
     return false;
 });
 
+Cypress.on('window:before:load', (win) => {
+  // Unregister all service workers before the test
+  if ('serviceWorker' in win.navigator) {
+    win.navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (let registration of registrations) {
+        registration.unregister();
+      }
+    });
+  }
+});
+
+
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
