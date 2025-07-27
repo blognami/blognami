@@ -5,5 +5,10 @@
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
+  },
+  "dependencies": {
+    "@sintra/utils": "^0.34.0",
+    "markdown-it": "^14.1.0",
+    "sintra": "^0.34.0"
   }
 }
