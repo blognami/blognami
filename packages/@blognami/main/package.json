@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@sintra/database": "^0.34.0",
+    "@sintra/markdown": "^0.34.0",
     "@sintra/one-time-token": "^0.34.0",
     "sintra": "^0.34.0",
     "stripe": "^16.9.0"
