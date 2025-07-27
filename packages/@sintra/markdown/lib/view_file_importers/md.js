@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import { readFile } from 'fs';
 import Yaml from 'js-yaml';
 
-import { View } from '../view.js';
+import { View } from 'sintra';
 
 View.FileImporter.register('md', {
     importFile(){
