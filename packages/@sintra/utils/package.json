@@ -2,7 +2,7 @@
   "type": "module",
   "name": "@sintra/utils",
   "description": "A utility library with meta programming.",
-  "version": "0.34.0",
+  "version": "0.35.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {

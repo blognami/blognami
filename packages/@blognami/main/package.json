@@ -2,7 +2,7 @@
   "type": "module",
   "name": "@blognami/main",
   "description": "Implements the core of the main app.",
-  "version": "0.34.1",
+  "version": "0.35.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -12,9 +12,9 @@
     "clean": "rm -rf ./node_modules"
   },
   "dependencies": {
-    "@sintra/database": "^0.34.0",
-    "@sintra/one-time-token": "^0.34.0",
-    "sintra": "^0.34.0",
+    "@sintra/database": "^0.35.0",
+    "@sintra/one-time-token": "^0.35.0",
+    "sintra": "^0.35.0",
     "stripe": "^16.9.0"
   },
   "repository": {
