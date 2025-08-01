@@ -2,14 +2,14 @@
   "type": "module",
   "name": "blognami",
   "description": "A slick CMS for Node.js.",
-  "version": "0.34.0",
+  "version": "0.35.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "@blognami/pages": "^0.34.0",
-    "@blognami/posts": "^0.34.0"
+    "@blognami/pages": "^0.35.0",
+    "@blognami/posts": "^0.35.0"
   }
 }

@@ -1,13 +1,13 @@
 {
   "type": "module",
   "name": "@sintra/static-site",
-  "version": "0.34.0",
+  "version": "0.35.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "sintra": "^0.34.0"
+    "sintra": "^0.35.0"
   },
   "repository": {
     "type": "git",
