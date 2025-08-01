@@ -2,7 +2,7 @@
   "type": "module",
   "name": "sintra",
   "description": "A slick web framework for Node.js.",
-  "version": "0.34.1",
+  "version": "0.35.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -18,7 +18,7 @@
     "test:unit": "cd lib && node --test"
   },
   "dependencies": {
-    "@sintra/utils": "^0.34.0",
+    "@sintra/utils": "^0.35.0",
     "bcrypt": "^5.0.1",
     "busboy": "^1.6.0",
     "chalk": "^4.1.0",
@@ -31,7 +31,7 @@
     "memfs": "^3.2.2",
     "mime-types": "^2.1.28",
     "nodemailer": "^6.9.14",
-    "pinstripe":"^0.34.0",
+    "pinstripe":"^0.35.0",
     "punycode": "^2.3.0",
     "sharp": "^0.33.5",
     "tmp": "^0.2.1",
