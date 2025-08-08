@@ -3,7 +3,7 @@ import { promisify } from 'util';
 import { readFile } from 'fs';
 import Yaml from 'js-yaml';
 
-import { View } from '../view.js';
+import { View } from 'sintra';
 
 View.FileImporter.register('md', {
     importFile(){
@@ -21,7 +21,12 @@ View.FileImporter.register('md', {
                     extractParamsPromise = await this.extractParams();
                 }
                 const params = await extractParamsPromise;
-                return this.renderView('_layout', params);
+
+                if(this.isRoot){
+                    return this.renderView('_layout', params);
+                }
+
+                return params.body;
             },
 
             async extractParams(){
@@ -30,7 +35,7 @@ View.FileImporter.register('md', {
                 return { 
                     ...frontMatter, 
                     body: this.renderView('_content', {
-                        body: this.renderMarkdown(body)
+                        body: this.renderMarkdown(body, { allowHtml: true })
                     })
                 };
             },

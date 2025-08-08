@@ -75,6 +75,20 @@ export const View = Class.extend().include({
         }
         return this._cssClasses;
     },
+
+    get isRoot(){
+        if(!this._isRoot){
+            const contexts = [];
+            let context = this.context;
+            while(context){
+                contexts.push(context);
+                context = context.parent;
+            }
+            const views = contexts.map(context => context.view).filter(Boolean);
+            this._isRoot = views.length == 1;
+        }
+        return this._isRoot;
+    },
     
     render(){
         // by default do nothing
