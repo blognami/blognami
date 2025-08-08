@@ -1,0 +1,22 @@
+{
+  "type": "module",
+  "name": "@blognami/docs",
+  "description": "Documentation for Blognami.",
+  "version": "0.35.0",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "scripts": {
+    "clean": "rm -rf ./node_modules"
+  },
+  "dependencies": {
+    "sintra": "^0.35.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/@blognami/docs"
+  }
+}

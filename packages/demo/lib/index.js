@@ -1,6 +1,7 @@
 
 import 'sintra';
 import '@blognami/main';
+import '@blognami/docs';
 
 import { importAll } from 'sintra';
 
