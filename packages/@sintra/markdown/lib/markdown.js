@@ -16,13 +16,14 @@ export const Markdown = Class.extend().include({
     },
 
     initialize(value, options = {}){
-        const { mode = 'view' } = options;
+        const { mode = 'view', allowHtml = false } = options;
         this.value = value;
         this.mode = mode;
+        this.allowHtml = allowHtml;
     },
 
     render(){
-        const html = new MarkdownIt().use(injectLineNumbers).render(this.value || '');
+        const html = new MarkdownIt({ html: this.allowHtml, linkify: true }).use(injectLineNumbers).render(this.value || '');
         const virtualNode = parseHtml(html);
         virtualNode.children.forEach(paragraph => {
             if(paragraph.type != 'p') return;
