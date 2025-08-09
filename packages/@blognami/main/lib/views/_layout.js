@@ -29,10 +29,12 @@ export const styles = `
         }
     }
 
-    .wrapper {
-        display: grid;
-        grid-template-columns: 4fr 2fr;
-        column-gap: 2.4rem;
+    @media (min-width: 768px) {
+        .wrapper {
+            display: grid;
+            grid-template-columns: 4fr 2fr;
+            column-gap: 2.4rem;
+        }
     }
 
     .sidebar {
