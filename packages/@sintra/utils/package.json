@@ -6,8 +6,7 @@
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
-    ".": "./lib/index.js",
-    "./node": "./lib/polyfills/node/index.js"
+    ".": "./lib/index.js"
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",

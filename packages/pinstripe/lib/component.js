@@ -1,11 +1,9 @@
 
 import { Class } from './class.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
-import { Inflector } from './inflector.js';
 import { VirtualNode } from './virtual_node.js';
 import { Registry } from './registry.js';
 import { ComponentEvent } from './component_event.js';
-import { generateProofOfWork } from './proof_of_work.js';
 
 export const Component = Class.extend().include({
     meta(){
@@ -17,23 +15,25 @@ export const Component = Class.extend().include({
             instanceFor(node){
                 if(!node._component){
                     node._component = Component.new(node, true);
-                    node._component = Component.create(
-                        node._component.attributes['data-component'] || (node._component.type == '#document' ? 'pinstripe-document' : node._component.type),
-                        node
-                    );
-                    if(!this.isFromCachedHtml) (node._component.attributes.class || '').trim().split(/\s+/).forEach((className) => {
-                        const decoratorMethodName = `.${className}`;
-                        if(typeof node._component[decoratorMethodName] == 'function'){
-                            node._component[decoratorMethodName]();
-                        }
-                    });
-                    if(node.isConnected) node._component.trigger('init', { bubbles: false });
+                    if(node.isConnected){
+                        node._component = Component.create(
+                            node._component.attributes['data-component'] || (node._component.type == '#document' ? 'pinstripe-document' : node._component.type),
+                            node
+                        );
+                        if(!this.isFromCachedHtml) (node._component.attributes.class || '').trim().split(/\s+/).forEach((className) => {
+                            const decoratorMethodName = `.${className}`;
+                            if(typeof node._component[decoratorMethodName] == 'function'){
+                                node._component[decoratorMethodName]();
+                            }
+                        });
+                        node._component.trigger('init', { bubbles: false });
+                    }
                 }
                 return node._component;
             },
 
             normalizeName(name){
-                return Inflector.instance.dasherize(name);
+                return name.toLowerCase().replace(/[\W_]+/g, ' ').trim().replace(' ', '-');
             }
         });
     },
@@ -474,20 +474,13 @@ export const Component = Class.extend().include({
         let isSuccess = false;
 
         const promise = (async () => {
-            const { minimumDelay = 0, requiresProofOfWork = false, ...otherOptions } = options;
+            const { minimumDelay = 0, ...otherOptions } = options;
             const frame = this.frame || this;
             const normalizedUrl = new URL(url, frame.url);
             
             try {
-                if(requiresProofOfWork){
-                    if(!(otherOptions.body instanceof FormData)) throw new Error(`Proof of work requires form data to be present`);
-                    const values = {};
-                    otherOptions.body.forEach((value, key) => values[key] = value);
-                    otherOptions.body.append('_proofOfWork', await generateProofOfWork(values, { 
-                        abortSignal: abortController.signal,
-                        onProgress: progress => this.trigger('proofOfWorkProgress', { data: progress, bubbles: false })
-                    }))
-                }
+                otherOptions.body = await otherOptions.body;
+
                 const promises = [
                     fetch(normalizedUrl, { signal: abortController.signal, ...otherOptions }), 
                     new Promise((resolve, reject) => {

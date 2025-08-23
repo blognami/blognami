@@ -1,4 +1,6 @@
 
+import { generateProofOfWork } from '../../proof_of_work.js';
+
 export const styles = `
     .form {
         display: block;
@@ -118,8 +120,38 @@ export const styles = `
 `;
 
 export const decorators = {
+    proofOfWorkInput(){
+        this.assignProps({
+            value: {
+                then: async resolve => {
+                    const { node: formNode } = this.form;
+                    const values = this.form.values;
+
+                    delete values._proofOfWork;
+                    for(const [name, value] of Object.entries(values)){
+                       values[name] = `${await value}`;
+                    }
+
+                    const abortController = new AbortController();
+
+                    Object.assign(abortController, {
+                        destroy(){
+                            abortController.abort();
+                        }
+                    });
+
+                    this.frame.manage(abortController);
+
+                    resolve(await generateProofOfWork(values, { 
+                        abortSignal: abortController.signal,
+                        onProgress: progress => this.constructor.instanceFor(formNode).trigger('proofOfWorkProgress', { data: progress, bubbles: false })
+                    }));
+                }
+            }
+        })
+    },
     proofOfWorkProgress(){
-        this.frame.on('proofOfWorkProgress', e => {
+        this.form.on('proofOfWorkProgress', e => {
             const progress = e.detail;
             this.patch({
                 ...this.attributes,
@@ -156,7 +188,6 @@ export default {
                     autocomplete="off"
                     ${unsavedChangesConfirm ? this.renderHtml`data-unsaved-changes-confirm="${unsavedChangesConfirm}"` : undefined}
                     ${unsavedChangesConfirm && method == 'POST' ? this.renderHtml`data-has-unsaved-changes="true"` : undefined}
-                    ${requiresProofOfWork ? this.renderHtml`data-requires-proof-of-work="true"` : undefined}
                     data-placeholder="&_placeholder=true"
                     ${isPlaceholder ? this.renderHtml`disabled` : ''}
                 >
@@ -266,10 +297,14 @@ export default {
                                     `
                                 })}
                                 ${() => {
-                                    if(isPlaceholder && requiresProofOfWork) return this.renderHtml`
+                                    if(!requiresProofOfWork) return;
+                                    if(isPlaceholder) return this.renderHtml`
                                         <span class="${this.cssClasses.loadingIndicator}">
                                             Generating anti-spam code <progress class="${this.cssClasses.proofOfWorkProgress}" max="100">0.0 %</progress>
                                         </span>
+                                    `;
+                                    return this.renderHtml`
+                                        <input class="${this.cssClasses.proofOfWorkInput}" type="hidden" name="_proofOfWork">
                                     `;
                                 }}
                             </div>

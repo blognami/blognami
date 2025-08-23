@@ -1,5 +1,4 @@
 
-import '@sintra/utils/node'; // sintra-if-client: /* ignore */
 import { Component } from './component.js';
 
 import { Workspace } from './workspace.js';

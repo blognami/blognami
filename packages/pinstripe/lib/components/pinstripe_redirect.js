@@ -1,6 +1,6 @@
 
 import { Component } from "../component.js";
-import { loadFrame, getFrame, normalizeUrl } from "./helpers.js";
+import { loadFrame, normalizeUrl } from "./helpers.js";
 
 Component.register('pinstripe-redirect', {
     initialize(...args){
