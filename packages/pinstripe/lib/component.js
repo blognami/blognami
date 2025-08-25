@@ -32,6 +32,10 @@ export const Component = Class.extend().include({
                     }
                 }
                 return node._component;
+            },
+
+            normalizeName(name){
+                return name.toLowerCase().replace(/[\W_]+/g, ' ').trim().replace(' ', '-');
             }
         });
     },

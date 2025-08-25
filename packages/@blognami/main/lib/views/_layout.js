@@ -93,7 +93,7 @@ export default {
                     <main id="main" class="${this.cssClasses.main} ${this.cssClasses.outer}">
                         <div class="${this.cssClasses.inner}">
                             <div class="${this.cssClasses.wrapper}">
-                                <div data-test-id="main">
+                                <div data-test-id="main" p-on:click="alert('hello')">
                                     ${body}
                                 </div>
                                 <aside class="${this.cssClasses.sidebar}" data-test-id="sidebar">

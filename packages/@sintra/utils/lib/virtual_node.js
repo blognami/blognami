@@ -85,13 +85,13 @@ export class VirtualNode {
                 const attributes = {};
 
                 while(html.length > 0){
-                    if(matches = html.match(/^\s*([\w-]+)\s*=\s*\"([^\"]*)\"/)){
+                    if(matches = html.match(/^\s*([\w-:]+)\s*=\s*\"([^\"]*)\"/)){
                         attributes[matches[1]] = unescapeHtml(matches[2]);
-                    } else if(matches = html.match(/^\s*([\w-]+)\s*=\s*\'([^\']*)\'/)){
+                    } else if(matches = html.match(/^\s*([\w-:]+)\s*=\s*\'([^\']*)\'/)){
                         attributes[matches[1]] = unescapeHtml(matches[2]);
-                    } else if(matches = html.match(/^\s*([\w-]+)\s*=\s*([^\s>]+)/)){
+                    } else if(matches = html.match(/^\s*([\w-:]+)\s*=\s*([^\s>]+)/)){
                         attributes[matches[1]] = unescapeHtml(matches[2]);
-                    } else if(matches = html.match(/^\s*([\w-]+)/)){
+                    } else if(matches = html.match(/^\s*([\w-:]+)/)){
                         attributes[matches[1]] = null;
                     } else {
                         html.match(/^[^>]*>/);

@@ -9,22 +9,25 @@ export const Decorator = Class.extend().include({
         this.assignProps({
             decorate(component){
                 const attributes = component.attributes;
-                const decoratorNames = new Set();
+                const decoratorAttributes = {};
                 for(const name in attributes){
-                    const matches = name.match(/^p-([^:])/);
+                    const matches = name.match(/^p-(([^:]+).*)$/);
                     if(!matches) continue;
-                    const decoratorName = matches[1];
-                    decoratorNames.add(decoratorName);
+                    console.log('name', name);
+                    console.log('matches', matches);
+                    decoratorAttributes[matches[2]] ??= {};
+                    decoratorAttributes[matches[2]][matches[1]] = attributes[name];
                 }
-                for(const decoratorName of decoratorNames){
-                   this.create(decoratorName, component).decorate();
+                for(const decoratorName of Object.keys(decoratorAttributes)){
+                   this.create(decoratorName, component, decoratorAttributes[decoratorName]).decorate();
                 }
             }
         })
     },
 
-    initialize(component){
+    initialize(component, attributes){
         this.component = component;
+        this.attributes = attributes;
     },
 
     decorate(){
