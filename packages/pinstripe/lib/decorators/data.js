@@ -7,13 +7,22 @@ Decorator.register('data', {
     decorate(){
         const { component } = this;
 
-        component.data = trapify({
-            ...JSON.parse(this.attributes.data || '{}'),
-            __set(target, name, value){
-                target[name] = value;
-                component.patch({ ...component.attributes, 'p-data': JSON.stringify(target) });
-                component.trigger('data:change');
+        component.assignProps({
+            get data(){
+                return this._data;
+            },
+
+            set data(data){
+                this._data = trapify({ ...data, __set: (target, name, value) => {
+                    target[name] = value;
+                    this.patch({ ...this.attributes, 'p-data': JSON.stringify(target) });
+                    this.trigger('data:change');
+                }});
+                this.patch({ ...this.attributes, 'p-data': JSON.stringify(data) });
+                this.trigger('data:change');
             }
         });
+
+        component.data = JSON.parse(this.attributes.data || '{}');
     }
 });
