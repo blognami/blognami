@@ -108,8 +108,16 @@ export const Component = Class.extend().include({
         return this.node.textContent;
     },
 
+    set text(value){
+        this.node.textContent = value;
+    },
+    
     get html(){
         return this.node.innerHTML;
+    },
+
+    set html(value){
+        this.patch(value);
     },
 
     get realParent(){
