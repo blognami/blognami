@@ -1,19 +1,19 @@
 
 
 import { Decorator } from '../decorator.js';
-import { trapify } from '../trapify.js';
 
-Decorator.register('data', {
+Decorator.register('bind', {
     decorate(){
-        const { component } = this;
-
-        component.data = trapify({
-            ...JSON.parse(this.attributes.data || '{}'),
-            __set(target, name, value){
-                target[name] = value;
-                component.patch({ ...component.attributes, 'p-data': JSON.stringify(target) });
-                component.trigger('data:change');
-            }
-        });
+        for(const [name, value] of Object.entries(this.attributes)){
+            const matches = name.match(/^bind:(.+)$/);
+            if(!matches) continue;
+            const propName = matches[1];
+            const dataComponent = this.component.find('parents', '[p-data]');
+            if(!dataComponent) continue;
+            this.component.manage(dataComponent.on('data:change', () => {
+                this.component[propName] = dataComponent.data[value];
+            }));
+            this.component[propName] = dataComponent.data[value];
+        }
     }
 });
