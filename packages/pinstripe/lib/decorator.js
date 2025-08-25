@@ -13,8 +13,6 @@ export const Decorator = Class.extend().include({
                 for(const name in attributes){
                     const matches = name.match(/^p-(([^:]+).*)$/);
                     if(!matches) continue;
-                    console.log('name', name);
-                    console.log('matches', matches);
                     decoratorAttributes[matches[2]] ??= {};
                     decoratorAttributes[matches[2]][matches[1]] = attributes[name];
                 }
