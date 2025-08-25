@@ -1,6 +1,6 @@
 
 
-const TRAP_NAMES = ['get' ,'deleteProperty' ,'ownKeys' ,'has' ,'apply' ,'defineProperty' ,'getPrototypeOf' ,'setPrototypeOf' ,'isExtensible' ,'preventExtensions' ,'getOwnPropertyDescriptor' ,'enumerate' ,'construct'];
+const TRAP_NAMES = ['get', 'set', 'deleteProperty' ,'ownKeys' ,'has' ,'apply' ,'defineProperty' ,'getPrototypeOf' ,'setPrototypeOf' ,'isExtensible' ,'preventExtensions' ,'getOwnPropertyDescriptor' ,'enumerate' ,'construct'];
 
 export const trapify = o => new Proxy(new Proxy(o, {
     get(target, name, ...args){
