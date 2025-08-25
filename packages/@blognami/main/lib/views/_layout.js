@@ -89,7 +89,7 @@ export default {
             ],
             body: this.renderHtml`
                 ${this.renderView('_header')}
-                <div class="${this.cssClasses.site}">
+                <div class="${this.cssClasses.site}" p-data>
                     <main id="main" class="${this.cssClasses.main} ${this.cssClasses.outer}">
                         <div class="${this.cssClasses.inner}">
                             <div class="${this.cssClasses.wrapper}">
