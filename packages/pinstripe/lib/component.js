@@ -94,6 +94,10 @@ export const Component = Class.extend().include({
         return out;
     },
 
+    set attributes(attributes){
+        patchAttributes.call(this, attributes);
+    },
+
     get params(){
         const out = {};
         const { attributes } = this;
@@ -111,7 +115,7 @@ export const Component = Class.extend().include({
     set text(value){
         this.node.textContent = value;
     },
-    
+
     get html(){
         return this.node.innerHTML;
     },
