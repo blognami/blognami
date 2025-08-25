@@ -16,10 +16,10 @@ Decorator.register('data', {
                 this._data = trapify({ ...data, __set: (target, name, value) => {
                     target[name] = value;
                     this.patch({ ...this.attributes, 'p-data': JSON.stringify(target) });
-                    this.trigger('data:change');
+                    this.trigger('data:change', { bubbles: false });
                 }});
                 this.patch({ ...this.attributes, 'p-data': JSON.stringify(data) });
-                this.trigger('data:change');
+                this.trigger('data:change', { bubbles: false });
             }
         });
 
