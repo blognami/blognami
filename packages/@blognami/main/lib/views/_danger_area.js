@@ -64,9 +64,9 @@ export default {
             <div class="${this.cssClasses.root}" p-data="{open: false}" p-bind:attributes:data-is-open="open">
                 <div class="${this.cssClasses.header}">
                     <div class="${this.cssClasses.title}">Danger Area</div>
-                    <div class="${this.cssClasses.toggle}" ${testId ? this.renderHtml`data-test-id="${testId}"` : ''}>
-                        <div class="${this.cssClasses.open}" p-on:click="this.data.open = true">Open</div>
-                        <div class="${this.cssClasses.close}" p-on:click="this.data.open = false">Close</div>
+                    <div ${testId ? this.renderHtml`data-test-id="${testId}"` : ''} p-on:click="this.data.open = !this.data.open">
+                        <div class="${this.cssClasses.open}">Open</div>
+                        <div class="${this.cssClasses.close}">Close</div>
                     </div>
                 </div>
                 <div class="${this.cssClasses.body}">
