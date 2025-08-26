@@ -23,6 +23,6 @@ Decorator.register('data', {
             }
         });
 
-        component.data = JSON.parse(this.attributes.data || '{}');
+        component.data = (new Function(`return ${this.attributes.data || '{}'}`))();
     }
 });
