@@ -91,7 +91,13 @@ export const Component = Class.extend().include({
                 out[this.node.attributes[i].name] = this.node.attributes[i].value;
             }
         }
-        return out;
+        return new Proxy(out, {
+            set: (target, prop, value) => {
+                target[prop] = value;
+                this.attributes = { ...out, [prop]: value };
+                return true;
+            }
+        });
     },
 
     set attributes(attributes){

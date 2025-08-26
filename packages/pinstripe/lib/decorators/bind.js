@@ -4,16 +4,28 @@ import { Decorator } from '../decorator.js';
 
 Decorator.register('bind', {
     decorate(){
+        const { component } = this;
+
+        const dataComponent = component.find('parentsIncludingThis', '[p-data]');
+        if(!dataComponent) return;
+
+        if(this.attributes.bind) {
+            const fn = new Function(this.attributes.bind);
+            component.manage(dataComponent.on('data:change', () => {
+                fn.call(component);
+            }));
+            fn.call(component);
+        }
+
         for(const [name, value] of Object.entries(this.attributes)){
             const matches = name.match(/^bind:(.+)$/);
             if(!matches) continue;
-            const propName = matches[1];
-            const dataComponent = this.component.find('parents', '[p-data]');
-            if(!dataComponent) continue;
-            this.component.manage(dataComponent.on('data:change', () => {
-                this.component[propName] = dataComponent.data[value];
+            const path = matches[1].split(':');
+            const fn = new Function(`this${path.map(item => `[${JSON.stringify(item)}]`).join('')} = this.data.${value}`);
+            component.manage(dataComponent.on('data:change', () => {
+                fn.call(component);
             }));
-            this.component[propName] = dataComponent.data[value];
+            fn.call(component);
         }
     }
 });
