@@ -7,12 +7,11 @@ import '../style_rules/index.js';
 
 Decorator.register('style', {
     decorate(){
-        
-    },
-
-    generateStyles(rules, modifiers) {
-        const out = {};
-        this.compileRules(rules).call(StyleRule, out);
-        return out;
+        const styles = {};
+        for(const [name, value] of Object.entries(this.attributes)){
+            const modifiers = name.replace(/^style:/, '').split(':');
+            StyleRule.applyRules(value, styles);
+        }
+        console.log(`styles ${JSON.stringify(styles, null, 2)}`);
     }
 });
