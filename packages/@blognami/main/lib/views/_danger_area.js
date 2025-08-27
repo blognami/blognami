@@ -61,7 +61,7 @@ export default {
         const { body, testId = 'toggle-danger-area' } = this.params;
 
         return this.renderHtml`
-            <div class="${this.cssClasses.root}" p-data="{open: false}" p-bind="this.attributes['data-is-open'] = this.data.open">
+            <div class="${this.cssClasses.root}" p-data="{open: false}" p-bind:attributes:data-is-open="open">
                 <div class="${this.cssClasses.header}">
                     <div class="${this.cssClasses.title}">Danger Area</div>
                     <div ${testId ? this.renderHtml`data-test-id="${testId}"` : ''} p-on:click="this.data.open = !this.data.open">
