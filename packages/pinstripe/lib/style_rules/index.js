@@ -1,2 +1,2 @@
 
-import './bg.js';
+import './P.js';
