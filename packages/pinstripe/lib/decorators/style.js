@@ -13,5 +13,9 @@ Decorator.register('style', {
             StyleRule.applyRules(value, styles);
         }
         console.log(`styles ${JSON.stringify(styles, null, 2)}`);
-    }
+    },
+
+    createCssSelector(){
+
+    }        
 });
