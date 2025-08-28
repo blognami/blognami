@@ -7,12 +7,35 @@ test(`StyleRule.parseRules`, () => {
     assert.deepEqual(StyleRule.parseRules(''), []);
     assert.deepEqual(StyleRule.parseRules(' '), []);
     assert.deepEqual(StyleRule.parseRules('  '), []);
+
+    // Single rules
     assert.deepEqual(StyleRule.parseRules('background: yellow'), ['background: yellow']);
-    assert.deepEqual(StyleRule.parseRules('  background: yellow  '), ['background: yellow']);
+    assert.deepEqual(StyleRule.parseRules('background: yellow;'), ['background: yellow']);
+    assert.deepEqual(StyleRule.parseRules('background: yellow '), ['background: yellow']);
+    assert.deepEqual(StyleRule.parseRules('background: yellow; '), ['background: yellow']);
+    assert.deepEqual(StyleRule.parseRules(' background: yellow; '), ['background: yellow']);
+    assert.deepEqual(StyleRule.parseRules(' background: yellow ; '), ['background: yellow']);
+
+    // Multiple rules
     assert.deepEqual(StyleRule.parseRules('background: yellow; color: blue'), ['background: yellow', 'color: blue']);
-    assert.deepEqual(StyleRule.parseRules('background: yellow; color: blue;'), ['background: yellow', 'color: blue']);
+    assert.deepEqual(StyleRule.parseRules('background: yellow ; color: blue'), ['background: yellow', 'color: blue']);
+    assert.deepEqual(StyleRule.parseRules(' background: yellow  ;  color: blue '), ['background: yellow', 'color: blue']);
+    assert.deepEqual(StyleRule.parseRules('background: rgb(123, 456, 789); color: blue'), ['background: rgb(123, 456, 789)', 'color: blue']);
+    assert.deepEqual(StyleRule.parseRules('background: url("foo;bar"); color: blue'), ['background: url("foo;bar")', 'color: blue']);
+    assert.deepEqual(StyleRule.parseRules('background: url(\'foo;bar\'); color: blue'), ['background: url(\'foo;bar\')', 'color: blue']);
+
+    // Other
+    assert.deepEqual(StyleRule.parseRules('background: url("foo;bar"); P; color: blue;'), ['background: url("foo;bar")', 'P', 'color: blue']);
 });
 
+test(`StyleRule.normalizeRules`, () => {
+    assert.deepEqual(StyleRule.normalizeRules([]), []);
+    assert.deepEqual(StyleRule.normalizeRules(['background: yellow']), [{name: 'background', args: 'yellow'}]);
+    assert.deepEqual(StyleRule.normalizeRules(['background: rgb(123, 456, 789)']), [{name: 'background', args: 'rgb(123, 456, 789)'}]);
+    assert.deepEqual(StyleRule.normalizeRules(['background: url("foo;bar")']), [{name: 'background', args: 'url("foo;bar")'}]);
+    assert.deepEqual(StyleRule.normalizeRules(['P']), [{name: 'P', args: ''}]);
+    assert.deepEqual(StyleRule.normalizeRules(['color: blue']), [{name: 'color', args: 'blue'}]);
+});
 
 
 // test(`StyleRule.parseRules`, () => {

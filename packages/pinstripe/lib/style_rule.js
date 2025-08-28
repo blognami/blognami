@@ -64,22 +64,11 @@ export const StyleRule = Class.extend().include({
             normalizeRules(rules){
                 const out = [];
                 for (const rule of rules) {
-                    let matches = rule.match(/^([\w-]+?)-\((.*)\)$/);
-                    if (matches) {
-                        out.push({ name: matches[1], args: JSON.stringify(matches[2]) });
-                        continue;
-                    }
-                    matches = rule.match(/^([\w-]+?)\((.*)\)$/);
+                    const matches = rule.match(/^([\w-]+):\s*(.*)$/);
                     if (matches) {
                         out.push({ name: matches[1], args: matches[2] });
                         continue;
                     }
-                    matches = rule.match(/^([\w-]+)-([^a-z-].*)$/i);
-                    if (matches) {
-                        out.push({ name: matches[1], args: JSON.stringify(matches[2]) });
-                        continue;
-                    }
-
                     out.push({ name: rule, args: '' });
                 }
                 return out;
