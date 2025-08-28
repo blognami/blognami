@@ -66,6 +66,13 @@ test(`StyleRule.compileRules`, () => {
     ]);
 });
 
+test(`StyleRule.applyRules`, () => {
+    assert.deepEqual(StyleRule.applyRules('background: yellow'), { background: 'yellow' });
+    assert.deepEqual(StyleRule.applyRules('background: rgb(123, 456, 789); color: blue'), { background: 'rgb(123, 456, 789)', color: 'blue' });
+    assert.deepEqual(StyleRule.applyRules('background: url("foo;bar"); color: blue'), { background: 'url("foo;bar")', color: 'blue' });
+    assert.deepEqual(StyleRule.applyRules('background: url(\'foo;bar\'); color: blue'), { background: "url('foo;bar')", color: 'blue' });
+});
+
 // test(`StyleRule.parseRules`, () => {
 //     assert.deepEqual(StyleRule.parseRules(''), []);
 //     assert.deepEqual(StyleRule.parseRules(' '), []);
