@@ -10,6 +10,7 @@ test(`StyleRule.parseRules`, () => {
     assert.deepEqual(StyleRule.parseRules('background: yellow'), ['background: yellow']);
     assert.deepEqual(StyleRule.parseRules('  background: yellow  '), ['background: yellow']);
     assert.deepEqual(StyleRule.parseRules('background: yellow; color: blue'), ['background: yellow', 'color: blue']);
+    assert.deepEqual(StyleRule.parseRules('background: yellow; color: blue;'), ['background: yellow', 'color: blue']);
 });
 
 
