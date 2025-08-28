@@ -82,7 +82,7 @@ export const StyleRule = Class.extend().include({
     },
 
     apply(){
-
+        this.styles[this.constructor.name] = this.value;
     }
 });
 
