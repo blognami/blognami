@@ -49,8 +49,8 @@ export const StyleRule = Class.extend().include({
 
                     buffer.push(token);
 
-                    if (bracketLevel === 0 && buffer.length > 0 && (token == ' ' || tokens.length == 0)) {
-                        const rule = buffer.join('').trim();
+                    if (bracketLevel === 0 && buffer.length > 0 && (token == ';' || tokens.length == 0)) {
+                        const rule = buffer.join('').replace(/^\s*|;\s*$/g, '').trim();
                         if (rule.length > 0) {
                             out.push(rule);
                         }
