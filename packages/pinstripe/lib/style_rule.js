@@ -17,7 +17,7 @@ export const StyleRule = Class.extend().include({
                 if(!this.cache[cacheKey]){
                     const parsedRules = this.parseRules(rules);
                     const normalizedRules = this.normalizeRules(parsedRules);
-                    this.cache[cacheKey] = new Function('styles', normalizedRules.map(({ name, args }) => `this.create(${JSON.stringify(name)}, styles${args ? `, ${args}` : ''}).apply()`).join('; '));
+                    this.cache[cacheKey] = new Function('styles', normalizedRules.map(({ name, value }) => `this.create(${JSON.stringify(name)}, styles, ${JSON.stringify(value)}).apply()`).join('; '));
                 }
                 return this.cache[cacheKey];
             },
@@ -66,19 +66,19 @@ export const StyleRule = Class.extend().include({
                 for (const rule of rules) {
                     const matches = rule.match(/^([\w-]+):\s*(.*)$/);
                     if (matches) {
-                        out.push({ name: matches[1], args: matches[2] });
+                        out.push({ name: matches[1], value: matches[2] });
                         continue;
                     }
-                    out.push({ name: rule, args: '' });
+                    out.push({ name: rule, value: '' });
                 }
                 return out;
             }
         });
     },
 
-    initialize(styles, ...args){
+    initialize(styles, value){
         this.styles = styles;
-        this.args = args;
+        this.value = value;
     },
 
     apply(){

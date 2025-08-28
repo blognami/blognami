@@ -30,11 +30,11 @@ test(`StyleRule.parseRules`, () => {
 
 test(`StyleRule.normalizeRules`, () => {
     assert.deepEqual(StyleRule.normalizeRules([]), []);
-    assert.deepEqual(StyleRule.normalizeRules(['background: yellow']), [{name: 'background', args: 'yellow'}]);
-    assert.deepEqual(StyleRule.normalizeRules(['background: rgb(123, 456, 789)']), [{name: 'background', args: 'rgb(123, 456, 789)'}]);
-    assert.deepEqual(StyleRule.normalizeRules(['background: url("foo;bar")']), [{name: 'background', args: 'url("foo;bar")'}]);
-    assert.deepEqual(StyleRule.normalizeRules(['P']), [{name: 'P', args: ''}]);
-    assert.deepEqual(StyleRule.normalizeRules(['color: blue']), [{name: 'color', args: 'blue'}]);
+    assert.deepEqual(StyleRule.normalizeRules(['background: yellow']), [{name: 'background', value: 'yellow'}]);
+    assert.deepEqual(StyleRule.normalizeRules(['background: rgb(123, 456, 789)']), [{name: 'background', value: 'rgb(123, 456, 789)'}]);
+    assert.deepEqual(StyleRule.normalizeRules(['background: url("foo;bar")']), [{name: 'background', value: 'url("foo;bar")'}]);
+    assert.deepEqual(StyleRule.normalizeRules(['P']), [{name: 'P', value: ''}]);
+    assert.deepEqual(StyleRule.normalizeRules(['color: blue']), [{name: 'color', value: 'blue'}]);
 });
 
 
@@ -57,25 +57,25 @@ test(`StyleRule.normalizeRules`, () => {
 
 // test(`StyleRule.normalizeRules`, () => {
 //     assert.deepEqual(StyleRule.normalizeRules([]), []);
-//     assert.deepEqual(StyleRule.normalizeRules(['apple']), [{name: 'apple', args: ''}]);
-//     assert.deepEqual(StyleRule.normalizeRules(['apple-1']), [{name: 'apple', args: '"1"'}]);
-//     assert.deepEqual(StyleRule.normalizeRules(['apple-1-pear']), [{name: 'apple', args: '"1-pear"'}]);
-//     assert.deepEqual(StyleRule.normalizeRules(['apple-pear-1-pear-plum']), [{name: 'apple-pear', args: '"1-pear-plum"'}]);
-//     assert.deepEqual(StyleRule.normalizeRules(['apple-pear-$-pear-plum']), [{name: 'apple-pear', args: '"$-pear-plum"'}]);
-//     assert.deepEqual(StyleRule.normalizeRules(['apple(1, 2)']), [ {name: 'apple', args: '1, 2'}]);
-//     assert.deepEqual(StyleRule.normalizeRules(['apple-fruit']), [ {name: 'apple-fruit', args: ''}]);
-//     assert.deepEqual(StyleRule.normalizeRules(['pear-#fruit']), [ {name: 'pear', args:  '"#fruit"'}]);
-//     assert.deepEqual(StyleRule.normalizeRules(['banana-(!@£$%^&*())']), [ {name: 'banana', args:  '"!@£$%^&*()"' }]);
-//     assert.deepEqual(StyleRule.normalizeRules(['plum']), [ {name: 'plum', args: ''}]);
-//     assert.deepEqual(StyleRule.normalizeRules(['peach(pineapple-fruit)']), [ {name: 'peach', args: 'pineapple-fruit'}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['apple']), [{name: 'apple', value: ''}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['apple-1']), [{name: 'apple', value: '"1"'}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['apple-1-pear']), [{name: 'apple', value: '"1-pear"'}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['apple-pear-1-pear-plum']), [{name: 'apple-pear', value: '"1-pear-plum"'}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['apple-pear-$-pear-plum']), [{name: 'apple-pear', value: '"$-pear-plum"'}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['apple(1, 2)']), [ {name: 'apple', value: '1, 2'}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['apple-fruit']), [ {name: 'apple-fruit', value: ''}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['pear-#fruit']), [ {name: 'pear', value:  '"#fruit"'}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['banana-(!@£$%^&*())']), [ {name: 'banana', value:  '"!@£$%^&*()"' }]);
+//     assert.deepEqual(StyleRule.normalizeRules(['plum']), [ {name: 'plum', value: ''}]);
+//     assert.deepEqual(StyleRule.normalizeRules(['peach(pineapple-fruit)']), [ {name: 'peach', value: 'pineapple-fruit'}]);
 // });
 
 // test(`StyleRule.compileRules`, () => {
 //     const createStub = () => ({
 //         calls: [],
 
-//         create(...args){
-//             this.calls.push(['create', ...args]);
+//         create(...value){
+//             this.calls.push(['create', ...value]);
 //             return this;
 //         },
 
