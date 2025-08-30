@@ -8,24 +8,24 @@ export const StyleDecorator = Class.extend().include({
         this.include(Registry);
 
         this.assignProps({
-            applyRules(rules, styles = {}){
-                this.compileRules(rules).call(this, styles);
+            applyDecorators(decorators, styles = {}){
+                this.compileDecorators(decorators).call(this, styles);
                 return styles;
             },
 
-            compileRules(rules){
-                const cacheKey = `compiledRules:${rules}`;
+            compileDecorators(decorators){
+                const cacheKey = `compiledRules:${decorators}`;
                 if(!this.cache[cacheKey]){
-                    const parsedRules = this.parseRules(rules);
+                    const parsedRules = this.parseDecorators(decorators);
                     const normalizedRules = this.normalizeRules(parsedRules);
                     this.cache[cacheKey] = new Function('styles', normalizedRules.map(({ name, value }) => `this.create(${JSON.stringify(name)}, styles, ${JSON.stringify(value)}).apply()`).join('; '));
                 }
                 return this.cache[cacheKey];
             },
 
-            parseRules(rules){
+            parseDecorators(decorators){
                 const out = [];
-                const tokens = rules.split('');
+                const tokens = decorators.split('');
                 let bracketLevel = 0;
                 let buffer = [];
 
@@ -62,9 +62,9 @@ export const StyleDecorator = Class.extend().include({
                 return out;
             },
 
-            normalizeRules(rules){
+            normalizeRules(decorators){
                 const out = [];
-                for (const rule of rules) {
+                for (const rule of decorators) {
                     const matches = rule.match(/^([\w-]+):\s*(.*)$/);
                     if (matches) {
                         out.push({ name: matches[1], value: matches[2] });

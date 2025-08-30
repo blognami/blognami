@@ -10,12 +10,12 @@ ComponentDecorator.register('style', {
         const styles = {};
         for(const [name, value] of Object.entries(this.attributes)){
             const modifiers = name.replace(/^style:/, '').split(':');
-            StyleDecorator.applyRules(value, styles);
+            StyleDecorator.applyDecorators(value, styles);
         }
         console.log(`styles ${JSON.stringify(styles, null, 2)}`);
     },
 
     createCssSelector(){
 
-    }        
+    }
 });
