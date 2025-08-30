@@ -1,8 +1,8 @@
 import { Class } from './class.js';
 
-export const Style = Class.extend({
+export const Style = Class.extend().include({
     initialize(){
-        this.selector = '&';
+        this.className = '&';
         this.condition = ['&'];
         this.properties = {};
     },
@@ -26,7 +26,7 @@ export const Style = Class.extend({
                 if(item.match(/^@/)){
                     atRules.push(item);
                 } else {
-                    selectors.push(item.replace(/&/g, this.selector));
+                    selectors.push(item.replace(/&/g, `.${this.className}`));
                 }
             }
             if(selectors.length == 0) return;
@@ -43,7 +43,7 @@ export const Style = Class.extend({
     },
 
     toString(){
-        return ;
+        return this.toCssRules().join('\n');
     }
 });
 

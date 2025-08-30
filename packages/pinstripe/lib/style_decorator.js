@@ -17,7 +17,7 @@ export const StyleDecorator = Class.extend().include({
                 if(!this.cache[cacheKey]){
                     const parsedRules = this.parseDecorators(decorators);
                     const normalizedRules = this.normalizeDecorators(parsedRules);
-                    this.cache[cacheKey] = new Function('styles', normalizedRules.map(({ name, value }) => `this.create(${JSON.stringify(name)}, styles, ${JSON.stringify(value)}).apply()`).join('; '));
+                    this.cache[cacheKey] = new Function('style', normalizedRules.map(({ name, value }) => `this.create(${JSON.stringify(name)}, style, ${JSON.stringify(value)}).apply()`).join('; '));
                 }
                 return this.cache[cacheKey];
             },
@@ -76,13 +76,13 @@ export const StyleDecorator = Class.extend().include({
         });
     },
 
-    initialize(styles, value){
-        this.styles = styles;
+    initialize(style, value){
+        this.style = style;
         this.value = value;
     },
 
     apply(){
-        this.styles[this.constructor.name] = this.value;
+        this.style.properties[this.constructor.name] = this.value;
     }
 });
 
