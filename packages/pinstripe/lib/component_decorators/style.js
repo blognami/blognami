@@ -8,9 +8,10 @@ import '../style_decorators/index.js';
 ComponentDecorator.register('style', {
     decorate(){
         const style = Style.new();
-        for(const [name, value] of Object.entries(this.attributes)){
-            const modifiers = name.replace(/^style:/, '').split(':');
-            StyleDecorator.applyDecorators(value, style);
+        for(const [name, decorators] of Object.entries(this.attributes)){
+            StyleDecorator.applyDecorators(decorators, style);
+            const namespaceDecorators = name.replace(/^style(:|$)/, '').split(':').filter(Boolean).map(modifier => `@${modifier}`).join(';');
+            StyleDecorator.applyDecorators(namespaceDecorators, style);
         }
         console.log(style.toString());
     },
