@@ -1,8 +1,8 @@
 
 
-import { Decorator } from '../decorator.js';
+import { ComponentDecorator } from '../component_decorator.js';
 
-Decorator.register('bind', {
+ComponentDecorator.register('bind', {
     decorate(){
         const { component } = this;
 

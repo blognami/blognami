@@ -2,8 +2,8 @@
 import { Class } from './class.js';
 import { Registry } from './registry.js';
 
-// Perhaps ComponentDecorator would be a better name?
-export const Decorator = Class.extend().include({
+// Perhaps ComponentComponentDecorator would be a better name?
+export const ComponentDecorator = Class.extend().include({
     meta(){
         this.include(Registry);
 

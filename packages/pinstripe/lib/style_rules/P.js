@@ -1,7 +1,7 @@
 
-import { StyleRule } from "../style_rule.js";
+import { StyleDecorator } from "../style_decorator.js";
 
-StyleRule.register('P', {
+StyleDecorator.register('P', {
     apply(){
         this.styles['padding'] = this.value;
     }

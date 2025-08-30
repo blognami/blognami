@@ -1,9 +1,9 @@
 
 
-import { Decorator } from '../decorator.js';
+import { ComponentDecorator } from '../component_decorator.js';
 import { trapify } from '../trapify.js';
 
-Decorator.register('data', {
+ComponentDecorator.register('data', {
     decorate(){
         const { component } = this;
 

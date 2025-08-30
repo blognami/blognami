@@ -1,7 +1,7 @@
 
-import { Decorator } from '../decorator.js';
+import { ComponentDecorator } from '../component_decorator.js';
 
-Decorator.register('on', {
+ComponentDecorator.register('on', {
     decorate(){
         for(const [name, value] of Object.entries(this.attributes)){
             const matches = name.match(/^on:(.+)$/);
