@@ -2,7 +2,6 @@
 import { Class } from './class.js';
 import { Registry } from './registry.js';
 
-// Perhaps StyleMacro or StyleComponentDecorator would be a better name?
 export const StyleDecorator = Class.extend().include({
     meta(){
         this.include(Registry);
