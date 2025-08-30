@@ -29,12 +29,12 @@ test(`StyleDecorator.parseRules`, () => {
 });
 
 test(`StyleDecorator.normalizeRules`, () => {
-    assert.deepEqual(StyleDecorator.normalizeRules([]), []);
-    assert.deepEqual(StyleDecorator.normalizeRules(['background: yellow']), [{name: 'background', value: 'yellow'}]);
-    assert.deepEqual(StyleDecorator.normalizeRules(['background: rgb(123, 456, 789)']), [{name: 'background', value: 'rgb(123, 456, 789)'}]);
-    assert.deepEqual(StyleDecorator.normalizeRules(['background: url("foo;bar")']), [{name: 'background', value: 'url("foo;bar")'}]);
-    assert.deepEqual(StyleDecorator.normalizeRules(['P']), [{name: 'P', value: ''}]);
-    assert.deepEqual(StyleDecorator.normalizeRules(['color: blue']), [{name: 'color', value: 'blue'}]);
+    assert.deepEqual(StyleDecorator.normalizeDecorators([]), []);
+    assert.deepEqual(StyleDecorator.normalizeDecorators(['background: yellow']), [{name: 'background', value: 'yellow'}]);
+    assert.deepEqual(StyleDecorator.normalizeDecorators(['background: rgb(123, 456, 789)']), [{name: 'background', value: 'rgb(123, 456, 789)'}]);
+    assert.deepEqual(StyleDecorator.normalizeDecorators(['background: url("foo;bar")']), [{name: 'background', value: 'url("foo;bar")'}]);
+    assert.deepEqual(StyleDecorator.normalizeDecorators(['P']), [{name: 'P', value: ''}]);
+    assert.deepEqual(StyleDecorator.normalizeDecorators(['color: blue']), [{name: 'color', value: 'blue'}]);
 });
 
 test(`StyleDecorator.compileRules`, () => {
