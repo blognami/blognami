@@ -1,15 +1,16 @@
 
 import { Class } from './class.js';
 import { Registry } from './registry.js';
+import { Style } from './style.js';
 
 export const StyleDecorator = Class.extend().include({
     meta(){
         this.include(Registry);
 
         this.assignProps({
-            applyDecorators(decorators, styles = {}){
-                this.compileDecorators(decorators).call(this, styles);
-                return styles;
+            applyDecorators(decorators, style = Style.new()){
+                this.compileDecorators(decorators).call(this, style);
+                return style;
             },
 
             compileDecorators(decorators){

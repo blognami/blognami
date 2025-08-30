@@ -5,5 +5,5 @@ import { StyleDecorator } from '../style_decorator.js';
 import './P.js';
 
 test(`styleRule: P`, () => {
-    assert.deepEqual(StyleDecorator.applyDecorators('P: 1px'), { padding: '1px' });
+    assert.deepEqual(StyleDecorator.applyDecorators('P: 1px').properties, { padding: '1px' });
 });

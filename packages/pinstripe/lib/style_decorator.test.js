@@ -67,9 +67,8 @@ test(`StyleDecorator.compileRules`, () => {
 });
 
 test(`StyleDecorator.applyDecorators`, () => {
-    assert.deepEqual(StyleDecorator.applyDecorators('background: yellow'), { background: 'yellow' });
-    assert.deepEqual(StyleDecorator.applyDecorators('background: rgb(123, 456, 789); color: blue'), { background: 'rgb(123, 456, 789)', color: 'blue' });
-    assert.deepEqual(StyleDecorator.applyDecorators('background: url("foo;bar"); color: blue'), { background: 'url("foo;bar")', color: 'blue' });
-    assert.deepEqual(StyleDecorator.applyDecorators('background: url(\'foo;bar\'); color: blue'), { background: "url('foo;bar')", color: 'blue' });
+    assert.deepEqual(StyleDecorator.applyDecorators('background: yellow').properties, { background: 'yellow' });
+    assert.deepEqual(StyleDecorator.applyDecorators('background: rgb(123, 456, 789); color: blue').properties, { background: 'rgb(123, 456, 789)', color: 'blue' });
+    assert.deepEqual(StyleDecorator.applyDecorators('background: url("foo;bar"); color: blue').properties, { background: 'url("foo;bar")', color: 'blue' });
+    assert.deepEqual(StyleDecorator.applyDecorators('background: url(\'foo;bar\'); color: blue').properties, { background: "url('foo;bar')", color: 'blue' });
 });
-
