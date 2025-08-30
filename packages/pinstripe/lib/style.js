@@ -1,10 +1,10 @@
 import { Class } from './class.js';
 
 export const Style = Class.extend().include({
-    initialize(){
-        this.className = '&';
-        this.condition = ['&'];
-        this.properties = {};
+    initialize(className = 'style', condition = ['&'], properties = {}){
+        this.className = className;
+        this.condition = condition;
+        this.properties = properties;
     },
 
     toCssRules(){

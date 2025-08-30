@@ -83,6 +83,7 @@ export const StyleDecorator = Class.extend().include({
     },
 
     apply(){
+        if(!this.constructor.name.match(/^([a-z0-9-_]+)$/)) return;
         this.style.properties[this.constructor.name] = this.value;
     }
 });
