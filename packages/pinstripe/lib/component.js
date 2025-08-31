@@ -308,16 +308,6 @@ export const Component = Class.extend().include({
         return this.frame?.status == 'using-cached-html';
     },
 
-    get data(){
-        return this.find('parents', '[p-data]')?.data;
-    },
-
-    set data(value){
-        const dataComponent = this.find('parents', '[p-data]');
-        if(!dataComponent) return;
-        dataComponent.data = value;
-    },
-
     focus(){
         this.node.focus();
         return this;

@@ -36,32 +36,31 @@ export const styles = `
     .body > * + * { margin-top: 2rem; }
 `;
 
-// export const decorators = {
-//     toggle(){
-//         this.on('click', () => {
-//             const root = this.parent.parent;
-//             if(root.attributes['data-is-open'] == 'true'){
-//                 root.patch({
-//                     ...root.attributes,
-//                     'data-is-open': 'false'
-//                 });
-//             } else {
-//                 root.patch({
-//                     ...root.attributes,
-//                     'data-is-open': 'true'
-//                 });
-//             }
-//         });
-//     }
-// };
-
+export const decorators = {
+    toggle(){
+        this.on('click', () => {
+            const root = this.parent.parent;
+            if(root.attributes['data-is-open'] == 'true'){
+                root.patch({
+                    ...root.attributes,
+                    'data-is-open': 'false'
+                });
+            } else {
+                root.patch({
+                    ...root.attributes,
+                    'data-is-open': 'true'
+                });
+            }
+        });
+    }
+};
 
 export default {
     render(){
         const { body, testId = 'toggle-danger-area' } = this.params;
 
         return this.renderHtml`
-            <div class="${this.cssClasses.root}" p-data="{open: false}" p-bind:attributes:data-is-open="open">
+            <div class="${this.cssClasses.root}">
                 <div class="${this.cssClasses.header}">
                     <div class="${this.cssClasses.title}">Danger Area</div>
                     <div ${testId ? this.renderHtml`data-test-id="${testId}"` : ''} p-on:click="this.data.open = !this.data.open">
