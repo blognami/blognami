@@ -13,6 +13,9 @@
     - rename content to "prose"?
 - Add reset as in-line string.
 - remove vars.css replace with theme object
+- Add cache buster to url
+
+## Flatten asset folders
 
 ## Make Pinstripe a full-stack framework (again)
 - Rename pinstripe -> @pinstripe/window
