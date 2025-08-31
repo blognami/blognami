@@ -7,6 +7,10 @@
 
 ~~Allow form fields to return thenable values.~~
 
+## Remove default google fonts
+
+- remove from layout
+
 ## Combine css into a single file
 
 - remove global.css (add to content)
