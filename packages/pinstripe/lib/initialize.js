@@ -1,6 +1,5 @@
 
 import './components/index.js';
-import './decorators/index.js';
 import { Component } from './component.js';
 
 if(typeof window != 'undefined'){

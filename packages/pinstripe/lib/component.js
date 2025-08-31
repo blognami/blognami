@@ -4,7 +4,6 @@ import { TEXT_ONLY_TAGS } from './constants.js';
 import { VirtualNode } from './virtual_node.js';
 import { Registry } from './registry.js';
 import { ComponentEvent } from './component_event.js';
-import { Decorator } from './decorator.js';
 
 export const Component = Class.extend().include({
     meta(){
@@ -27,7 +26,6 @@ export const Component = Class.extend().include({
                                 node._component[decoratorMethodName]();
                             }
                         });
-                        if(!this.isFromCachedHtml) Decorator.decorate(node._component);
                         node._component.trigger('init', { bubbles: false });
                     }
                 }
