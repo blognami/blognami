@@ -7,10 +7,13 @@
 
 ~~Allow form fields to return thenable values.~~
 
-## Implement `p-*` decorators
+## Combine css into a single file
 
-Remove `decorators` view exports.
+- remove global.css (add to content)
+    - rename content to "prose"?
+- Add reset as in-line string.
+- remove vars.css replace with theme object
 
-## Use tailwind as css build tool
-
-Remove `styles` view exports.
+## Make Pinstripe a full-stack framework (again)
+- Rename pinstripe -> @pinstripe/window
+- Rename sintra -> pinstripe
