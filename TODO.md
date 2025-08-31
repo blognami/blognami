@@ -10,6 +10,7 @@
 ## Remove default google fonts
 
 - remove from layout
+- use tailwind defaults
 
 ## Combine css into a single file
 
