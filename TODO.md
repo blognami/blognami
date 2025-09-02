@@ -7,15 +7,18 @@
 
 ~~Allow form fields to return thenable values.~~
 
-## Remove default google fonts
+## ~~Remove default google fonts~~
 
-- remove from layout
-- use tailwind defaults
+- ~~remove from layout~~
+- ~~use tailwind defaults~~
 
 ## Combine css into a single file
 
-- remove global.css (add to content)
-    - rename content to "prose"?
+- ~~remove global.css (add to content)~~
+    - ~~rename content to "prose"?~~
+- Use postcss with:
+    - https://www.npmjs.com/package/autoprefixer
+    - https://www.npmjs.com/package/@csstools/postcss-oklab-function
 - Add reset as in-line string.
 - remove vars.css replace with theme object
 - Add cache buster to url

@@ -30,9 +30,6 @@ export default {
         { tagName: 'meta', charset: 'utf-8' },
         { tagName: 'meta', name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { tagName: 'meta', name: 'pinstripe-load-cache-namespace', content: 'default' },
-        { tagName: 'link', rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { tagName: 'link', rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true },
-        { tagName: 'link', rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&display=swap' }
     ],
 
     mergeMeta(meta){

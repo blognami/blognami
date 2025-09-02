@@ -5,6 +5,30 @@
     box-sizing: border-box;
 }
 
+/*
+  Remove the default font size and weight for headings.
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+  Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+a {
+  color: inherit;
+  -webkit-text-decoration: inherit;
+  text-decoration: inherit;
+}
+
 /* Remove default margin */
 body,
 h1,
@@ -71,4 +95,18 @@ select {
         animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
     }
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: var(--font-sans);
+    font-size: 1.6rem;
+    line-height: 1.6;
+    color: var(--color-primary-text);
+    background-color: var(--color-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }

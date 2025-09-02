@@ -1,5 +1,118 @@
 
 export const styles = `
+    .root img {
+        height: auto;
+    }
+
+    .root a {
+        color: var(--color-black);
+        text-decoration: none;
+    }
+
+    .root a:hover {
+        opacity: 0.8;
+    }
+
+    .root h1,
+    .root h2,
+    .root h3,
+    .root h4,
+    .root h5,
+    .root h6 {
+        line-height: 1.15;
+        color: var(--color-black);
+        letter-spacing: -0.02em;
+    }
+
+    .root h1 {
+        font-size: var(--h1-size);
+    }
+
+    .root h2 {
+        font-size: 2.8rem;
+    }
+
+    .root h3 {
+        font-size: 2.4rem;
+    }
+
+    .root h4 {
+        font-size: 2.2rem;
+    }
+
+    .root h5 {
+        font-size: 2rem;
+    }
+
+    .root h6 {
+        font-size: 1.8rem;
+    }
+
+    .root hr {
+        width: 100%;
+        height: 1px;
+        background-color: var(--color-light-gray);
+        border: 0;
+    }
+
+    .root blockquote:not([class]) {
+        padding-left: 2rem;
+        border-left: 4px solid var(--accent-color);
+    }
+
+    .root figcaption {
+        margin-top: 1.6rem;
+        font-size: 1.4rem;
+        line-height: 1.4;
+        color: var(--color-secondary-text);
+        text-align: center;
+    }
+
+    .root pre {
+        padding: 1.6rem 2.4rem;
+        overflow-x: scroll;
+        hyphens: none;
+        line-height: 1.5;
+        white-space: pre;
+        background-color: var(--color-lighter-gray);
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .root code {
+        font-family: var(--font-mono);
+        font-size: 15px;
+    }
+
+    .root pre > code {
+        max-width: 600px;
+        display: block;
+        overflow: auto;
+    }
+
+    .root :not(pre) > code {
+        padding: 0.4rem;
+        color: var(--accent-color);
+        background-color: var(--color-lighter-gray);
+        border-radius: 3px;
+    }
+
+    .root iframe {
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        border: 0;
+    }
+
+    @media (max-width: 767px) {
+        .root h2 {
+            font-size: 2.4rem;
+        }
+
+        .root h3 {
+            font-size: 2.1rem;
+        }
+    }
+
     .root > * + * {
         margin-top: 2.8rem;
         margin-bottom: 0;
