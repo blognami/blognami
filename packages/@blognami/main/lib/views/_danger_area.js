@@ -60,10 +60,10 @@ export default {
         const { body, testId = 'toggle-danger-area' } = this.params;
 
         return this.renderHtml`
-            <div class="${this.cssClasses.root}">
+            <div class="${this.cssClasses.root}" data-is-open="false">
                 <div class="${this.cssClasses.header}">
                     <div class="${this.cssClasses.title}">Danger Area</div>
-                    <div ${testId ? this.renderHtml`data-test-id="${testId}"` : ''} p-on:click="this.data.open = !this.data.open">
+                    <div class="${this.cssClasses.toggle}" ${testId ? this.renderHtml`data-test-id="${testId}"` : ''}>
                         <div class="${this.cssClasses.open}">Open</div>
                         <div class="${this.cssClasses.close}">Close</div>
                     </div>
