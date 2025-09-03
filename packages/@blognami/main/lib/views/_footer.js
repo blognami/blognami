@@ -25,7 +25,7 @@ export const styles = `
     }
 
     .root a:hover {
-        color: var(--color-black);
+        color: #000;
         opacity: 1;
     }
 

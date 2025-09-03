@@ -5,7 +5,7 @@ export const styles = `
     }
 
     .root a {
-        color: var(--color-black);
+        color: #000;
         text-decoration: none;
     }
 
@@ -20,7 +20,7 @@ export const styles = `
     .root h5,
     .root h6 {
         line-height: 1.15;
-        color: var(--color-black);
+        color: #000;
         letter-spacing: -0.02em;
     }
 

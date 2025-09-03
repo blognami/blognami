@@ -12,7 +12,9 @@ export const Theme = Class.extend().include({
     return reset.call(this);
   },
 
-  colors: {},
+  colors: {
+    
+  },
 
   fonts: {},
 
