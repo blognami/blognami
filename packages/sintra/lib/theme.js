@@ -13,7 +13,7 @@ export const Theme = Class.extend().include({
   },
 
   colors: {
-    
+
   },
 
   fonts: {},
@@ -135,7 +135,7 @@ function reset(){
             font-size: 1.6rem;
             line-height: 1.6;
             color: var(--color-primary-text);
-            background-color: var(--color-white);
+            background-color: #fff;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
