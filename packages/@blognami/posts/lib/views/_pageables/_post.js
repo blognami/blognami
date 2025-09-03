@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ colors }) => `
     .article {
         max-width: 650px;
         margin: 0 auto 0 auto;
@@ -15,7 +15,7 @@ export const styles = `
     }
 
     .tag {
-        color: var(--accent-color);
+        color: ${colors.accent};
     }
 
     .meta {

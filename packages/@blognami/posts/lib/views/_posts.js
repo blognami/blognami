@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ colors }) => `
     .post + .post {
         margin-top: 8rem;
     }
@@ -38,7 +38,7 @@ export const styles = `
     }
 
     .post-date {
-        color: var(--accent-color);
+        color: ${colors.accent};
     }
 
     .post-meta-wrapper {
