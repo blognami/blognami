@@ -19,7 +19,7 @@
 - Use postcss with:
     - https://www.npmjs.com/package/autoprefixer
     - https://www.npmjs.com/package/@csstools/postcss-oklab-function
-- Add reset as in-line string.
+- ~~Add reset as in-line string.~~
 - remove vars.css replace with theme object
 - Add cache buster to url
 

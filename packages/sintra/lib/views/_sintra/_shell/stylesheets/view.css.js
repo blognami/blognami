@@ -7,14 +7,15 @@ let out;
 export default {
     async render(){
         if(!out){
-            const buffer = [];
+            const buffer = [ this.theme.reset ];
             for(let viewName of View.names){
                 const { filePaths } = View.for(viewName);
                 for(let filePath of filePaths){
                     if(!filePath.match(/\.js$/)) continue;
                     const { styles } = await import(filePath);
                     if(!styles) continue;
-                    const ast = parseCss(styles);
+                    const normalizedStyles = typeof styles == 'function' ? styles(this.theme) : styles;
+                    const ast = parseCss(normalizedStyles);
                     const hash = createHash(viewName);
                     traverseCssAst(ast, ({ selectors }) => {
                         if(!Array.isArray(selectors)) return;
