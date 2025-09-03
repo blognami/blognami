@@ -13,7 +13,14 @@ export const Theme = Class.extend().include({
   },
 
   colors: {
-
+    accent: '#FF1A75',
+    primaryText: '#000',
+    secondaryText: '#757575',
+    lighterGray: '#f6f6f6',
+    lightGray: '#e6e6e6',
+    midGray: '#ccc',
+    darkGray: '#444',
+    darkerGray: '#15171a'
   },
 
   fonts: {},
