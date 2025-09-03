@@ -23,7 +23,11 @@ export const Theme = Class.extend().include({
     darkerGray: '#15171a'
   },
 
-  fonts: {},
+  fonts: {
+    sans: '-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif',
+    serif: 'Times, serif',
+    mono: 'Menlo, Consolas, Monaco, Liberation Mono, Lucida Console, monospace'
+  },
 
   spacing: {},
 
