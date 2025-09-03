@@ -15,16 +15,16 @@ export const styles = ({ colors }) => `
     h4,
     h5,
     h6 {
-    font-size: inherit;
-    font-weight: inherit;
+        font-size: inherit;
+        font-weight: inherit;
     }
 
     /* Reset links to optimize for opt-in styling instead of opt-out*/
 
     a {
-    color: inherit;
-    -webkit-text-decoration: inherit;
-    text-decoration: inherit;
+        color: inherit;
+        -webkit-text-decoration: inherit;
+        text-decoration: inherit;
     }
 
     /* Remove default margin */
