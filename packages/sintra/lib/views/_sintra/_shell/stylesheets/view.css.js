@@ -7,7 +7,7 @@ let out;
 export default {
     async render(){
         if(!out){
-            const buffer = [ this.theme.reset ];
+            const buffer = [];
             for(let viewName of View.names){
                 const { filePaths } = View.for(viewName);
                 for(let filePath of filePaths){
