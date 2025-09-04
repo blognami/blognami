@@ -1,11 +1,14 @@
 import { Class } from "./class.js";
 import { Singleton } from "./singleton.js";
+import { themeVariables } from './theme_variables.js';
 
 export const Theme = Class.extend().include({
   meta() {
     this.assignProps({ name: 'Theme' });
 
     this.include(Singleton);
+
+    this.include(themeVariables);
   },
 
   // colors: {
