@@ -1,5 +1,5 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ colors, fonts }) => `
     .post + .post {
         margin-top: 8rem;
     }
@@ -33,7 +33,7 @@ export const styles = ({ colors }) => `
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1;
-        color: var(--color-secondary-text);
+        color: ${colors.secondaryText};
         text-transform: uppercase;
     }
 
@@ -59,10 +59,10 @@ export const styles = ({ colors }) => `
 
     .compact .post-excerpt {
         margin-top: 0.8rem;
-        font-family: var(--font-sans);
+        font-family: ${fonts.sans};
         font-size: inherit;
         line-height: 1.55;
-        color: var(--color-secondary-text);
+        color: ${colors.secondaryText};
         letter-spacing: 0;
     }
 

@@ -1,5 +1,5 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ colors, fonts }) => `
     /* Box sizing rules */
     *,
     *::before,
@@ -100,7 +100,7 @@ export const styles = ({ colors }) => `
     }
 
     body {
-        font-family: var(--font-sans);
+        font-family: ${fonts.sans};
         font-size: 1.6rem;
         line-height: 1.6;
         color: ${colors.primaryText};
@@ -119,9 +119,9 @@ export default {
         const urlSearchParams = new URLSearchParams({ version });
 
         const versionedMeta = [
-            { tagName: 'link', rel: 'stylesheet', href: `/_sintra/_shell/stylesheets/all.css?${urlSearchParams}` },
-            { tagName: 'script', src: `/_sintra/_shell/javascripts/window.js?${urlSearchParams}` },
-            { tagName: 'meta', name: 'sintra-service-worker-url', content: `/_sintra/_shell/javascripts/service_worker.js?${urlSearchParams}` },
+            { tagName: 'link', rel: 'stylesheet', href: `/_sintra/_shell/styles.css?${urlSearchParams}` },
+            { tagName: 'script', src: `/_sintra/_shell/window.js?${urlSearchParams}` },
+            { tagName: 'meta', name: 'sintra-service-worker-url', content: `/_sintra/_shell/service_worker.js?${urlSearchParams}` },
         ];
 
         return this.renderHtml`

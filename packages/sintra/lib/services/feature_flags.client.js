@@ -5,7 +5,7 @@ export default {
     create(){
         if(this.isClient) return this.defer(async () => {
             if(!this.context.root.hasOwnProperty('featureFlags')){
-                if(!cache) cache = fetch('/_sintra/_shell/services/feature_flags.json').then(response => response.json());
+                if(!cache) cache = fetch('/_sintra/_shell/feature_flags.json').then(response => response.json());
                 this.context.root.featureFlags = await cache
             }
             return this.context.root.featureFlags;

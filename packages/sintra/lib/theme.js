@@ -9,7 +9,7 @@ export const Theme = Class.extend().include({
   },
 
   colors: {
-    accent: '#FF1A75',
+    accent: 'oklch(59.2% 0.249 0.584)', // eventually we can use a @colors.pink.600 reference here
     primaryText: '#000',
     secondaryText: '#757575',
     lighterGray: '#f6f6f6',
@@ -28,6 +28,10 @@ export const Theme = Class.extend().include({
   spacing: {},
 
   breakpoints: {},
+
+  resolveReferences(){
+    // will resolves any references in the theme object e.g. @colors.pink.600
+  },
 
   remify,
 });

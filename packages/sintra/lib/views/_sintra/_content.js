@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ colors, fonts }) =>`
     .root img {
         height: auto;
     }
@@ -25,7 +25,13 @@ export const styles = `
     }
 
     .root h1 {
-        font-size: var(--h1-size);
+        font-size: 4.6rem;
+    }
+    
+    @media (max-width: 767px) {
+        .root h1 {
+            font-size: 3.2rem;
+        }
     }
 
     .root h2 {
@@ -51,20 +57,20 @@ export const styles = `
     .root hr {
         width: 100%;
         height: 1px;
-        background-color: var(--color-light-gray);
+        background-color: ${colors.lightGray};
         border: 0;
     }
 
     .root blockquote:not([class]) {
         padding-left: 2rem;
-        border-left: 4px solid var(--accent-color);
+        border-left: 4px solid ${colors.accent};
     }
 
     .root figcaption {
         margin-top: 1.6rem;
         font-size: 1.4rem;
         line-height: 1.4;
-        color: var(--color-secondary-text);
+        color: ${colors.secondaryText};
         text-align: center;
     }
 
@@ -74,12 +80,12 @@ export const styles = `
         hyphens: none;
         line-height: 1.5;
         white-space: pre;
-        background-color: var(--color-lighter-gray);
+        background-color: ${colors.lighterGray};
         -webkit-overflow-scrolling: touch;
     }
 
     .root code {
-        font-family: var(--font-mono);
+        font-family: ${fonts.mono};
         font-size: 15px;
     }
 
@@ -91,8 +97,8 @@ export const styles = `
 
     .root :not(pre) > code {
         padding: 0.4rem;
-        color: var(--accent-color);
-        background-color: var(--color-lighter-gray);
+        color: ${colors.accent};
+        background-color: ${colors.lighterGray};
         border-radius: 3px;
     }
 

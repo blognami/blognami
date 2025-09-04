@@ -24,7 +24,7 @@ export const styles = ({ colors }) => `
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1;
-        color: var(--color-secondary-text);
+        color: ${colors.secondaryText};
         text-transform: uppercase;
     }
 
@@ -41,7 +41,7 @@ export const styles = ({ colors }) => `
     .footer {
         padding-top: 3.2rem;
         margin-top: 8rem;
-        border-top: 1px solid var(--color-light-gray);
+        border-top: 1px solid ${colors.lightGray};
     }
 
     @media (max-width: 767px) {

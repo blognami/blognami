@@ -21,14 +21,14 @@ export const styles = ({ colors }) => `
         flex: 1 1 0;
         border-style: solid;
         border-width: 0 0 0 2px;
-        border-color: var(--color-light-gray);
+        border-color: ${colors.lightGray};
         padding-left: 1em;
     }
 
     .comment-meta {
         border-style: solid;
         border-width: 0 0 2px 0;
-        border-color: var(--color-light-gray);
+        border-color: ${colors.lightGray};
         padding-bottom: 1em;
     }
 
@@ -37,7 +37,6 @@ export const styles = ({ colors }) => `
     }
 
     .comment-created-at {
-        color: var(--color-gray);
         font-size: 12px;
         font-weight: 500;
     }
