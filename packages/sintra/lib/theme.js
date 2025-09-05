@@ -14,7 +14,21 @@ export const Theme = Class.extend().include({
       },
 
       resolveReferences(){
-        // will resolves any references in the theme object e.g. @colors.pink.600
+        for(const key of Object.keys(themeVariables)){
+          this[key] = this[key];
+        }
+        while(true){
+          let isChange = false;
+          traverse(this, value => {
+            if(typeof value != 'string') return value;
+            const matches = value.match(/@([\w.]+)/);
+            if(!matches) return value;
+            isChange = true;
+            return getNestedProperty(this, matches[1]);
+          });
+          if(!isChange) break;
+        }
+        return this;
       },
 
       remify,
@@ -23,12 +37,12 @@ export const Theme = Class.extend().include({
     this.prototype.deepMerge({
       colors: {
         sintra: {
-          accent: 'oklch(59.2% 0.249 0.584)', // eventually we can use a @colors.pink.600 reference here
-          primaryText: '#000',
-          secondaryText: '#757575',
-          lighterGray: '#f6f6f6',
-          lightGray: '#e6e6e6',
-          darkGray: '#444',
+          accent: '@colors.pink.600',
+          primaryText: '@colors.black',
+          secondaryText: '@colors.gray.500',
+          lighterGray: '@colors.gray.50',
+          lightGray: '@colors.gray.200',
+          darkGray: '@colors.gray.700',
         }
       }
     });
@@ -52,4 +66,18 @@ function deepMerge(target, source) {
       target[key] = value;
     }
   }
+}
+
+function traverse(o, fn){
+  for(const key in o){
+    if(typeof o[key] === 'object'){
+      traverse(o[key], fn);
+    } else {
+      o[key] = fn(o[key]);
+    }
+  }
+}
+
+function getNestedProperty(o, path) {
+  return path.split('.').reduce((o, p) => o ? o[p] : undefined, o);
 }
