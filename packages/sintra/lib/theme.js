@@ -38,7 +38,7 @@ export const Theme = Class.extend().include({
       colors: {
         sintra: {
           accent: '@colors.pink.600',
-          primaryText: '@colors.gray.900',
+          primaryText: '@colors.gray.950',
           secondaryText: '@colors.gray.500',
         }
       }
