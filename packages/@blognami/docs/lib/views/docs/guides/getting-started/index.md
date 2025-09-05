@@ -2,7 +2,7 @@
 # 🚀 Getting Started with Blognami
 
 > **Welcome aboard!** 🎉
-> Blognami is an open-source blogging platform built on its own full-stack web framework — **Sintra**.
+> Blognami is an open-source blogging platform built on its own full-stack web framework — **Pinstripe**.
 > This guide will walk you from **nothing installed** to **your first post live** in just a few minutes.
 >
 > You’ll learn:
@@ -10,7 +10,7 @@
 > * How to set up Blognami on your machine
 > * How to sign in as an admin
 > * How to create and edit posts
-> * A quick intro to Sintra, the framework behind it
+> * A quick intro to Pinstripe, the framework behind it
 >
 > 🖐 Hi, I’m **Jody Salt**, the creator of Blognami — and I’m genuinely excited you’re here.
 > This project is still in its early days, so you’re getting in on the ground floor. Let’s build something great together.
@@ -34,15 +34,15 @@ Before we touch the keyboard, make sure you have:
 
 ## 📦 Step 2 — Create Your First Project
 
-We’re going to let **Sintra** (Blognami’s command-line sidekick) handle all the setup.
+We’re going to let **Pinstripe** (Blognami’s command-line sidekick) handle all the setup.
 
 In your terminal, run:
 
 ```bash
-npx sintra generate-project --name foo --with blognami
+npx pinstripe generate-project --name foo --with blognami
 cd foo
-npx sintra initialize-database
-npx sintra start-server
+npx pinstripe initialize-database
+npx pinstripe start-server
 ```
 
 Then, open your browser and visit:
@@ -136,7 +136,7 @@ Since this is just a test, feel free to explore other features — most are self
 Want to start fresh? Just run:
 
 ```bash
-npx sintra reset-database
+npx pinstripe reset-database
 ```
 
 📝 **Why This Matters:** In early development, you’ll break things.
@@ -144,16 +144,16 @@ Being able to instantly wipe and restart keeps you moving forward instead of deb
 
 ---
 
-## 🧩 Step 7 — Meet Sintra
+## 🧩 Step 7 — Meet Pinstripe
 
-You’ve been using **Sintra** this whole time — it’s the CLI and framework powering Blognami.
+You’ve been using **Pinstripe** this whole time — it’s the CLI and framework powering Blognami.
 
-Here’s the philosophy: **Blognami and Sintra are symbiotic**.
+Here’s the philosophy: **Blognami and Pinstripe are symbiotic**.
 
-* **Blognami** benefits from Sintra’s flexibility — you can customize and extend it endlessly
-* **Sintra** stays lean because Blognami makes sure every feature solves a real, tested problem
+* **Blognami** benefits from Pinstripe’s flexibility — you can customize and extend it endlessly
+* **Pinstripe** stays lean because Blognami makes sure every feature solves a real, tested problem
 
-💡 **Pro Tip:** By building your app on Sintra, you’re also building on a framework that was born to run real-world projects, not just demo apps.
+💡 **Pro Tip:** By building your app on Pinstripe, you’re also building on a framework that was born to run real-world projects, not just demo apps.
 
 ---
 
@@ -163,7 +163,7 @@ You’ve got a working Blognami app. Now let’s keep the momentum going:
 
 > ### 📂 **Check out the code**
 >
-> Both **Blognami** and **Sintra** are open source. Dive into the code, learn how it works, and maybe even make your first pull request.
+> Both **Blognami** and **Pinstripe** are open source. Dive into the code, learn how it works, and maybe even make your first pull request.
 > 👉 [Visit the GitHub repository](https://github.com/blognami/blognami)
 
 ---

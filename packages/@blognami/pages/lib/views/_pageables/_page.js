@@ -15,7 +15,7 @@ export const styles = ({ colors }) => `
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1;
-        color: ${colors.sintra.secondaryText};
+        color: ${colors.pinstripe.secondaryText};
         text-transform: uppercase;
     }
 

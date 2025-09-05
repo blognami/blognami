@@ -15,7 +15,7 @@ export const styles = ({ colors }) => `
     }
 
     .tag {
-        color: ${colors.sintra.accent};
+        color: ${colors.pinstripe.accent};
     }
 
     .meta {
@@ -24,7 +24,7 @@ export const styles = ({ colors }) => `
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1;
-        color: ${colors.sintra.secondaryText};
+        color: ${colors.pinstripe.secondaryText};
         text-transform: uppercase;
     }
 

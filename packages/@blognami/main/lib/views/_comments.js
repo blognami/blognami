@@ -54,7 +54,7 @@ export const styles = ({ colors }) => `
     .action {
         font-size: 12px;
         font-weight: 500;
-        color: ${colors.sintra.accent};
+        color: ${colors.pinstripe.accent};
     }
 `;
 

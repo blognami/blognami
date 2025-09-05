@@ -20,7 +20,7 @@ jobs:
         database-adapter: [mysql, sqlite]
         modules:
           - '@blognami/pages, @blognami/posts, @blognami/tags'
-          - '@sintra/multi-tenant, @blognami/pages, @blognami/posts, @blognami/tags'
+          - '@pinstripe/multi-tenant, @blognami/pages, @blognami/posts, @blognami/tags'
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node }}

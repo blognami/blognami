@@ -33,12 +33,12 @@ export const styles = ({ colors, fonts }) => `
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1;
-        color: ${colors.sintra.secondaryText};
+        color: ${colors.pinstripe.secondaryText};
         text-transform: uppercase;
     }
 
     .post-date {
-        color: ${colors.sintra.accent};
+        color: ${colors.pinstripe.accent};
     }
 
     .post-meta-wrapper {
@@ -62,7 +62,7 @@ export const styles = ({ colors, fonts }) => `
         font-family: ${fonts.sans};
         font-size: inherit;
         line-height: 1.55;
-        color: ${colors.sintra.secondaryText};
+        color: ${colors.pinstripe.secondaryText};
         letter-spacing: 0;
     }
 

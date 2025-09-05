@@ -8,19 +8,19 @@ import { reset, inPackagesDir, run } from './helpers.js';
 
 afterEach(reset);
 
-test(`sintra list-commands`, () => inPackagesDir(() => {
-    assert.equal(run(`npx sintra list-commands`).stdout, [
+test(`pinstripe list-commands`, () => inPackagesDir(() => {
+    assert.equal(run(`npx pinstripe list-commands`).stdout, [
         'The following commands are available:',
         '',
         '  * generate-project',
         '  * list-commands'
     ].join('\n'));
 
-    run(`npx sintra generate-project --name list-commands-test --with blognami`);
+    run(`npx pinstripe generate-project --name list-commands-test --with blognami`);
 
     chdir('list-commands-test');
 
-    assert.equal(run(`npx sintra list-commands`).stdout, [
+    assert.equal(run(`npx pinstripe list-commands`).stdout, [
         'The following commands are available:',
         '',
         '  * drop-database',
@@ -47,19 +47,19 @@ test(`sintra list-commands`, () => inPackagesDir(() => {
         ].join('\n'));
 }));
 
-test(`sintra`, () => inPackagesDir(() => {
-    assert.equal(run(`npx sintra`).stdout, [
+test(`pinstripe`, () => inPackagesDir(() => {
+    assert.equal(run(`npx pinstripe`).stdout, [
         'The following commands are available:',
         '',
         '  * generate-project',
         '  * list-commands'
     ].join('\n'));
 
-    run(`npx sintra generate-project --name list-commands-test --with blognami`);
+    run(`npx pinstripe generate-project --name list-commands-test --with blognami`);
 
     chdir('list-commands-test');
 
-    assert.equal(run(`npx sintra`).stdout, [
+    assert.equal(run(`npx pinstripe`).stdout, [
         'The following commands are available:',
         '',
         '  * drop-database',

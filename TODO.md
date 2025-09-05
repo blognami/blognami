@@ -3,7 +3,7 @@
 
 ## ~~Move proof of work out of pinstripe~~
 
-~~Move it into Sintra.~~
+~~Move it into Pinstripe.~~
 
 ~~Allow form fields to return thenable values.~~
 
@@ -30,4 +30,4 @@
 
 ## Make Pinstripe a full-stack framework (again)
 - Rename pinstripe -> @pinstripe/window
-- Rename sintra -> pinstripe
+- Rename pinstripe -> pinstripe

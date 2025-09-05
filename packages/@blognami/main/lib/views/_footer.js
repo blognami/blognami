@@ -5,7 +5,7 @@ export const styles = ({ colors }) => `
         padding-bottom: 8rem;
         padding-right: 3.6rem;
         padding-left: 3.6rem;
-        color: ${colors.sintra.secondaryText};
+        color: ${colors.pinstripe.secondaryText};
     }
     
     @media (max-width: 767px) {
@@ -28,7 +28,7 @@ export const styles = ({ colors }) => `
     }
 
     .root a {
-        color: ${colors.sintra.secondaryText};
+        color: ${colors.pinstripe.secondaryText};
     }
 
     .root a:hover {

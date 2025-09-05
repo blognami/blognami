@@ -23,6 +23,6 @@
   "workspaces": [
     "packages/*",
     "packages/@blognami/*",
-    "packages/@sintra/*"
+    "packages/@pinstripe/*"
   ]
 }
