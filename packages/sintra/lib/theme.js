@@ -44,13 +44,14 @@ function remify(value) {
 }
 
 function deepMerge(target, source) {
-  for (const key of Object.keys(source)) {
-    if (source[key] instanceof Object && key in target) {
-      Object.assign(source[key], deepMerge(target[key], source[key]));
+  for(const [key, value] of Object.entries(source)){
+    if(typeof value == 'object'){
+      if(typeof target[key] != 'object'){
+        target[key] = {};
+      }
+      deepMerge(target, value);
+    } else {
+      source[key] = value;
     }
   }
-
-  // Join `target` and modified `source`
-  Object.assign(target || {}, source);
-  return target;
 }
