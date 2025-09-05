@@ -1,2 +1,2 @@
 
-export { Component } from 'pinstripe';
+export { Component } from '@sintra/window';
