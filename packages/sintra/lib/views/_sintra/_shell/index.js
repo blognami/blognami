@@ -1,4 +1,115 @@
 
+export const styles = ({ colors, fonts }) => `
+    /* Box sizing rules */
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    /* Remove the default font size and weight for headings */
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: inherit;
+        font-weight: inherit;
+    }
+
+    /* Reset links to optimize for opt-in styling instead of opt-out*/
+
+    a {
+        color: inherit;
+        -webkit-text-decoration: inherit;
+        text-decoration: inherit;
+    }
+
+    /* Remove default margin */
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    figure,
+    blockquote,
+    dl,
+    dd {
+        margin: 0;
+    }
+
+    /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+    ul[role="list"],
+    ol[role="list"] {
+        list-style: none;
+    }
+
+    /* Set core root defaults */
+    html:focus-within {
+        scroll-behavior: smooth;
+    }
+
+    /* Set core body defaults */
+    body {
+        min-height: 100vh;
+        line-height: 1.5;
+        text-rendering: optimizespeed;
+    }
+
+    /* A elements that don't have a class get default styles */
+    a:not([class]) {
+        text-decoration-skip-ink: auto;
+    }
+
+    /* Make images easier to work with */
+    img,
+    picture {
+        display: block;
+        max-width: 100%;
+    }
+
+    /* Inherit fonts for inputs and buttons */
+    input,
+    button,
+    textarea,
+    select {
+        font: inherit;
+    }
+
+    /* Remove all animations and transitions for people that prefer not to see them */
+    @media (prefers-reduced-motion: reduce) {
+        html:focus-within {
+            scroll-behavior: auto;
+        }
+
+        *,
+        *::before,
+        *::after {
+            transition-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+        }
+    }
+
+    html {
+        font-size: 62.5%;
+    }
+
+    body {
+        font-family: ${fonts.sans};
+        font-size: 1.6rem;
+        line-height: 1.6;
+        color: ${colors.sintra.primaryText};
+        background-color: #fff;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+`;
+
 export default {
     async render(){
         const { language = 'en', meta = [], body } = this.params;
@@ -8,9 +119,9 @@ export default {
         const urlSearchParams = new URLSearchParams({ version });
 
         const versionedMeta = [
-            { tagName: 'link', rel: 'stylesheet', href: `/_sintra/_shell/stylesheets/all.css?${urlSearchParams}` },
-            { tagName: 'script', src: `/_sintra/_shell/javascripts/window.js?${urlSearchParams}` },
-            { tagName: 'meta', name: 'sintra-service-worker-url', content: `/_sintra/_shell/javascripts/service_worker.js?${urlSearchParams}` },
+            { tagName: 'link', rel: 'stylesheet', href: `/_sintra/_shell/styles.css?${urlSearchParams}` },
+            { tagName: 'script', src: `/_sintra/_shell/window.js?${urlSearchParams}` },
+            { tagName: 'meta', name: 'sintra-service-worker-url', content: `/_sintra/_shell/service_worker.js?${urlSearchParams}` },
         ];
 
         return this.renderHtml`
@@ -30,9 +141,6 @@ export default {
         { tagName: 'meta', charset: 'utf-8' },
         { tagName: 'meta', name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { tagName: 'meta', name: 'pinstripe-load-cache-namespace', content: 'default' },
-        { tagName: 'link', rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { tagName: 'link', rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true },
-        { tagName: 'link', rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,700&family=Inter:wght@400;500;600;700;800&display=swap' }
     ],
 
     mergeMeta(meta){

@@ -55,7 +55,6 @@ export const decorators = {
     }
 };
 
-
 export default {
     render(){
         const { body, testId = 'toggle-danger-area' } = this.params;

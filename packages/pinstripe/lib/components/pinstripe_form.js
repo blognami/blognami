@@ -6,7 +6,7 @@ Component.register('pinstripe-form', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
-        const { confirm, target = '_self', method = 'GET', action, placeholder, requiresProofOfWork, disabled } = this.params;
+        const { confirm, target = '_self', method = 'GET', action, placeholder, disabled } = this.params;
         const frame = target == '_overlay' ? this.frame : getFrame.call(this, target);
 
         this.on('submit', (event) => {
@@ -22,12 +22,12 @@ Component.register('pinstripe-form', {
             delete frame._previousHash;
             this._watchInterval?.destroy();
             
-            loadFrame.call(this, { confirm, target, method, url: action, placeholderUrl: placeholder, requiresProofOfWork: requiresProofOfWork == 'true' });
+            loadFrame.call(this, { confirm, target, method, url: action, placeholderUrl: placeholder });
         });
-    
-        this._initialHash = JSON.stringify(this.values);
 
         if(this.isFromPlaceholderHtml) return;
+
+        this._initialHash = JSON.stringify(this.values);
         
         if(placeholder != undefined) this.document.preload(normalizeUrl(placeholder, frame.url));
         
@@ -39,7 +39,6 @@ Component.register('pinstripe-form', {
         this._watchInterval = this.setInterval(() => {
             const currentHash = JSON.stringify(valuesToWatch.call(this));
             if(frame._previousHash == currentHash) return;
-            console.log(`${frame._previousHash} != ${currentHash}`)
             frame._previousHash = currentHash;
             loadFrame.call(this, { target, method: 'PATCH', url: action });
         }, 100);

@@ -5,7 +5,7 @@ export default {
     create(){
         if(this.isClient) return this.defer(async () => {
             if(!this.context.root.hasOwnProperty('environment')){
-                if(!cache) cache = fetch('/_sintra/_shell/services/environment.json').then(response => response.json());
+                if(!cache) cache = fetch('/_sintra/_shell/environment.json').then(response => response.json());
                 this.context.root.environment = await cache
             }
             return this.context.root.environment;

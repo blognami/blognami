@@ -18,7 +18,9 @@
     "test:unit": "cd lib && node --test"
   },
   "dependencies": {
+    "@csstools/postcss-oklab-function": "^4.0.11",
     "@sintra/utils": "^0.35.0",
+    "autoprefixer": "^10.4.21",
     "bcrypt": "^5.0.1",
     "busboy": "^1.6.0",
     "chalk": "^4.1.0",
@@ -30,7 +32,9 @@
     "memfs": "^3.2.2",
     "mime-types": "^2.1.28",
     "nodemailer": "^6.9.14",
-    "pinstripe":"^0.35.0",
+    "pinstripe": "^0.35.0",
+    "postcss": "^8.5.6",
+    "postcss-minify-selectors": "^7.0.5",
     "punycode": "^2.3.0",
     "sharp": "^0.33.5",
     "tmp": "^0.2.1",
