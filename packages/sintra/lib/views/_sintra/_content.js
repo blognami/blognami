@@ -57,7 +57,7 @@ export const styles = ({ colors, fonts }) =>`
     .root hr {
         width: 100%;
         height: 1px;
-        background-color: ${colors.sintra.lightGray};
+        background-color: ${colors.gray[200]};
         border: 0;
     }
 
@@ -80,7 +80,7 @@ export const styles = ({ colors, fonts }) =>`
         hyphens: none;
         line-height: 1.5;
         white-space: pre;
-        background-color: ${colors.sintra.lighterGray};
+        background-color: ${colors.gray[50]};
         -webkit-overflow-scrolling: touch;
     }
 
@@ -98,7 +98,7 @@ export const styles = ({ colors, fonts }) =>`
     .root :not(pre) > code {
         padding: 0.4rem;
         color: ${colors.sintra.accent};
-        background-color: ${colors.sintra.lighterGray};
+        background-color: ${colors.gray[50]};
         border-radius: 3px;
     }
 

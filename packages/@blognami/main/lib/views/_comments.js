@@ -21,14 +21,14 @@ export const styles = ({ colors }) => `
         flex: 1 1 0;
         border-style: solid;
         border-width: 0 0 0 2px;
-        border-color: ${colors.sintra.lightGray};
+        border-color: ${colors.gray[200]};
         padding-left: 1em;
     }
 
     .comment-meta {
         border-style: solid;
         border-width: 0 0 2px 0;
-        border-color: ${colors.sintra.lightGray};
+        border-color: ${colors.gray[200]};
         padding-bottom: 1em;
     }
 

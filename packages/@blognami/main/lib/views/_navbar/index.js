@@ -3,7 +3,7 @@ export const styles = ({ colors }) => `
     .root {
         border-width: 0 0 0.1rem 0;
         border-style: solid;
-        border-color: ${colors.sintra.lightGray};
+        border-color: ${colors.gray[200]};
         padding-left: 1em;
         padding-right: 1em;
     }
@@ -48,7 +48,7 @@ export const styles = ({ colors }) => `
         display: block;
         width: 1.5em;
         height: 0.2em;
-        background: ${colors.sintra.darkGray};
+        background: ${colors.gray[700]};
         border-radius: 2px;
         transition: all 0.3s;
     }

@@ -40,9 +40,6 @@ export const Theme = Class.extend().include({
           accent: '@colors.pink.600',
           primaryText: '@colors.black',
           secondaryText: '@colors.gray.500',
-          lighterGray: '@colors.gray.50',
-          lightGray: '@colors.gray.200',
-          darkGray: '@colors.gray.700',
         }
       }
     });

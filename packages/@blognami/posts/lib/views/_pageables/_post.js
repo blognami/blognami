@@ -41,7 +41,7 @@ export const styles = ({ colors }) => `
     .footer {
         padding-top: 3.2rem;
         margin-top: 8rem;
-        border-top: 1px solid ${colors.sintra.lightGray};
+        border-top: 1px solid ${colors.gray[200]};
     }
 
     @media (max-width: 767px) {

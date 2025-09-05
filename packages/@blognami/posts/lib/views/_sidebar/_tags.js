@@ -20,7 +20,7 @@ export const styles = ({ colors }) =>`
         padding: 0.4rem 0.8rem;
         font-size: 1.3rem;
         line-height: 1;
-        border: 1px solid ${colors.sintra.lightGray};
+        border: 1px solid ${colors.gray[200]};
         border-radius: 32px;
     }
 `;
