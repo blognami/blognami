@@ -1,1 +1,1 @@
-export { View as default } from 'sintra';
+export { View as default } from 'pinstripe';

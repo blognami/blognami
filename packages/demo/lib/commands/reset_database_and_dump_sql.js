@@ -6,7 +6,7 @@ export default {
         const { adapter, ...databaseConfig } = await this.config.database;
         const { rootPath } = await this.project;
 
-        execSync(`sintra reset-database`, {
+        execSync(`pinstripe reset-database`, {
             env: process.env
         });
 

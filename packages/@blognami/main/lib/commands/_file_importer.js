@@ -1,2 +1,2 @@
 
-export { Command as default } from 'sintra';
+export { Command as default } from 'pinstripe';

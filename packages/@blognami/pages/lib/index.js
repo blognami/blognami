@@ -1,6 +1,6 @@
 
 import '@blognami/main';
 
-import { importAll } from 'sintra';
+import { importAll } from 'pinstripe';
 
 importAll(import.meta.url);

@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 
-import { Workspace } from 'sintra';
+import { Workspace } from 'pinstripe';
 
 [
     { input: '', expectedOutput: []},

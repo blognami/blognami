@@ -1,1 +1,1 @@
-export { Migration as default } from '@sintra/database';
+export { Migration as default } from '@pinstripe/database';

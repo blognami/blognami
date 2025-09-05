@@ -1,0 +1,25 @@
+{
+  "type": "module",
+  "name": "@pinstripe/window",
+  "description": "A slick web framework for your browser.",
+  "version": "0.35.0",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "scripts": {
+    "clean": "rm -rf ./node_modules"
+  },
+  "dependencies": {
+    "@pinstripe/utils": "^0.35.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/@pinstripe/window"
+  }
+}

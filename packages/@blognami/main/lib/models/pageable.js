@@ -1,5 +1,5 @@
 
-import { inflector } from '@sintra/utils';
+import { inflector } from '@pinstripe/utils';
 
 export default {
     meta(){
