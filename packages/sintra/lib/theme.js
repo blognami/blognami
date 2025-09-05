@@ -31,6 +31,15 @@ export const Theme = Class.extend().include({
         return this;
       },
 
+      breakpointFor(minWidthProperty){
+        const minWidth = this.getNestedProperty(`breakpoints.${minWidthProperty}`);
+        return `@media (min-width: ${minWidth})`;
+      },
+
+      getNestedProperty(path) {
+        return getNestedProperty(this, path);
+      },
+
       remify,
     })
 
