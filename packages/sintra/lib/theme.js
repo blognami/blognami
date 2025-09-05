@@ -1,58 +1,56 @@
 import { Class } from "./class.js";
-import { themeVariables } from './theme_variables.js';
+import { themeVariables } from "./theme_variables.js";
 
 export const Theme = Class.extend().include({
   meta() {
-    this.assignProps({ name: 'Theme' });
+    this.assignProps({ name: "Theme" });
 
     this.include(themeVariables);
+  },
 
-    this.include({
-      deepMerge(variables){
-        deepMerge(this, variables);
-        return this;
-      },
-
-      resolveReferences(){
-        for(const key of Object.keys(themeVariables)){
-          this[key] = this[key];
-        }
-        while(true){
-          let isChange = false;
-          traverse(this, value => {
-            if(typeof value != 'string') return value;
-            const matches = value.match(/@([\w.]+)/);
-            if(!matches) return value;
-            isChange = true;
-            return getNestedProperty(this, matches[1]);
-          });
-          if(!isChange) break;
-        }
-        return this;
-      },
-
-      breakpointFor(minWidthProperty){
-        const minWidth = this.getNestedProperty(`breakpoints.${minWidthProperty}`);
-        return `@media (min-width: ${minWidth})`;
-      },
-
-      getNestedProperty(path) {
-        return getNestedProperty(this, path);
-      },
-
-      remify,
-    })
-
-    this.prototype.deepMerge({
+  initialize() {
+    this.deepMerge(themeVariables);
+    this.deepMerge({
       colors: {
         sintra: {
-          accent: '@colors.pink.600',
-          primaryText: '@colors.gray.950',
-          secondaryText: '@colors.gray.500',
-        }
-      }
+          accent: "@colors.pink.600",
+          primaryText: "@colors.gray.950",
+          secondaryText: "@colors.gray.500",
+        },
+      },
     });
-  }
+  },
+
+  deepMerge(variables) {
+    deepMerge(this, variables);
+    return this;
+  },
+
+  resolveReferences() {
+    while (true) {
+      let isChange = false;
+      traverse(this, (value) => {
+        if (typeof value != "string") return value;
+        const matches = value.match(/@([\w.]+)/);
+        if (!matches) return value;
+        isChange = true;
+        return getNestedProperty(this, matches[1]);
+      });
+      if (!isChange) break;
+    }
+    return this;
+  },
+
+  breakpointFor(minWidthProperty) {
+    const minWidth = this.getNestedProperty(`breakpoints.${minWidthProperty}`);
+    return `@media (min-width: ${minWidth})`;
+  },
+
+  getNestedProperty(path) {
+    return getNestedProperty(this, path);
+  },
+
+  remify,
 });
 
 function remify(value) {
@@ -60,9 +58,9 @@ function remify(value) {
 }
 
 function deepMerge(target, source) {
-  for(const [key, value] of Object.entries(source)){
-    if(typeof value == 'object'){
-      if(typeof target[key] != 'object'){
+  for (const [key, value] of Object.entries(source)) {
+    if (typeof value == "object") {
+      if (typeof target[key] != "object") {
         target[key] = {};
       } else {
         target[key] = { ...target[key] };
@@ -74,9 +72,9 @@ function deepMerge(target, source) {
   }
 }
 
-function traverse(o, fn){
-  for(const key in o){
-    if(typeof o[key] === 'object'){
+function traverse(o, fn) {
+  for (const key in o) {
+    if (typeof o[key] === "object") {
       traverse(o[key], fn);
     } else {
       o[key] = fn(o[key]);
@@ -85,5 +83,5 @@ function traverse(o, fn){
 }
 
 function getNestedProperty(o, path) {
-  return path.split('.').reduce((o, p) => o ? o[p] : undefined, o);
+  return path.split(".").reduce((o, p) => (o ? o[p] : undefined), o);
 }
