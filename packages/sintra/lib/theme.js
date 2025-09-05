@@ -48,6 +48,8 @@ function deepMerge(target, source) {
     if(typeof value == 'object'){
       if(typeof target[key] != 'object'){
         target[key] = {};
+      } else {
+        target[key] = { ...target[key] };
       }
       deepMerge(target, value);
     } else {
