@@ -10,6 +10,7 @@ export const Theme = Class.extend().include({
     this.include({
       deepMerge(variables){
         deepMerge(this, variables);
+        return this;
       },
 
       resolveReferences(){

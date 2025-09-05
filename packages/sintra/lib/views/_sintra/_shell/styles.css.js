@@ -27,7 +27,7 @@ export default {
                 if(!filePath.match(/\.js$/)) continue;
                 const { styles } = await import(filePath);
                 if(!styles) continue;
-                const normalizedStyles = typeof styles == 'function' ? styles(this.theme) : styles;
+                const normalizedStyles = typeof styles == 'function' ? styles(await this.theme) : styles;
                 const ast = parseCss(normalizedStyles);
                 const hash = createHash(viewName);
                 traverseCssAst(ast, ({ selectors }) => {
