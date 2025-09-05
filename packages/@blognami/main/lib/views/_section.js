@@ -23,7 +23,7 @@ export const styles = ({ colors }) =>`
         height: 1px;
         margin-left: 1.6rem;
         content: "";
-        background-color: ${colors.lightGray};
+        background-color: ${colors.sintra.lightGray};
     }
 
     .root > * + * {

@@ -103,7 +103,7 @@ export const styles = ({ colors, fonts }) => `
         font-family: ${fonts.sans};
         font-size: 1.6rem;
         line-height: 1.6;
-        color: ${colors.primaryText};
+        color: ${colors.sintra.primaryText};
         background-color: #fff;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;

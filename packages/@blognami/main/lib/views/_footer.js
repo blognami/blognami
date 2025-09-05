@@ -5,7 +5,7 @@ export const styles = ({ colors }) => `
         padding-bottom: 8rem;
         padding-right: 3.6rem;
         padding-left: 3.6rem;
-        color: ${colors.secondaryText};
+        color: ${colors.sintra.secondaryText};
     }
     
     @media (max-width: 767px) {
@@ -28,7 +28,7 @@ export const styles = ({ colors }) => `
     }
 
     .root a {
-        color: ${colors.secondaryText};
+        color: ${colors.sintra.secondaryText};
     }
 
     .root a:hover {

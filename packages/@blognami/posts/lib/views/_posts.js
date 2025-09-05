@@ -33,7 +33,7 @@ export const styles = ({ colors, fonts }) => `
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1;
-        color: ${colors.secondaryText};
+        color: ${colors.sintra.secondaryText};
         text-transform: uppercase;
     }
 
@@ -62,7 +62,7 @@ export const styles = ({ colors, fonts }) => `
         font-family: ${fonts.sans};
         font-size: inherit;
         line-height: 1.55;
-        color: ${colors.secondaryText};
+        color: ${colors.sintra.secondaryText};
         letter-spacing: 0;
     }
 

@@ -3,7 +3,7 @@ export const styles = ({ colors }) => `
     .root {
         border-width: 0.1rem;
         border-style: dashed;
-        border-color: ${colors.darkGray};
+        border-color: ${colors.sintra.darkGray};
     }
     .root:not(:first-child){
         margin-top: 2em;
