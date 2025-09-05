@@ -99,7 +99,6 @@ This monorepo contains **all the packages for both Blognami and Pinstripe**, so 
 ### Other Packages
 
 * [**demo**](./packages/demo) – Example Blognami project
-* [**pinstripe**](./packages/pinstripe) – Pinstripe module
 
 ---
 
