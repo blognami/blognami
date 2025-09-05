@@ -19,8 +19,8 @@ export default {
             if(matches){
                 const type = matches[1];
                 const { customer: customerId } = event.data.object;
-                const { metadata: { sintraUserId } } = await this.stripe.customers.retrieve(customerId);
-                await this.database.users.where({ id: sintraUserId }).update({
+                const { metadata: { pinstripeUserId } } = await this.stripe.customers.retrieve(customerId);
+                await this.database.users.where({ id: pinstripeUserId }).update({
                     membershipTier: type == 'created' ?  'paid' : 'none',
                 });
             }

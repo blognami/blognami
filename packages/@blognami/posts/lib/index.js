@@ -2,6 +2,6 @@
 import '@blognami/main';
 import '@blognami/tags';
 
-import { importAll } from 'sintra';
+import { importAll } from 'pinstripe';
 
 importAll(import.meta.url);

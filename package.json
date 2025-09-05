@@ -8,9 +8,7 @@
     "start": "npm run start --workspace demo",
     "watch": "nodemon -e js,jsx,md,css,html --exec 'npm run start'",
     "test": "npm run test:unit && npm run test:services && npm run test:models && npm run test:cli && npm run test:e2e",
-    "test:unit": "npm run test:unit:@sintra/utils && npm run test:unit:sintra",
-    "test:unit:sintra": "npm run test:unit --workspace sintra",
-    "test:unit:@sintra/utils": "npm run test:unit --workspace @sintra/utils",
+    "test:unit": "npm run test:unit --workspaces --if-present",
     "test:services": "npm run test:services --workspace demo",
     "test:models": "npm run test:models --workspace demo",
     "test:e2e": "npm run test:e2e --workspace demo",
@@ -25,6 +23,6 @@
   "workspaces": [
     "packages/*",
     "packages/@blognami/*",
-    "packages/@sintra/*"
+    "packages/@pinstripe/*"
   ]
 }

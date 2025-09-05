@@ -1,6 +1,6 @@
 
 export default {
     render(){
-        return this.renderView('_sintra/_button', this.params);
+        return this.renderView('_pinstripe/_button', this.params);
     }
 }

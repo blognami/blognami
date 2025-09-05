@@ -8,7 +8,7 @@ beforeEach(reset);
 
 const COLLECTION_NAMES = ['comments', 'commentables', 'pages', 'pageables', 'posts', 'revisables', 'sessions', 'sites', 'tagables', 'users'];
 
-if(modules.includes('@sintra/multi-tenant')){
+if(modules.includes('@pinstripe/multi-tenant')){
     test(`tenant`, () => Workspace.run(async _ => {
         const { tenant, site, users, posts, withoutTenantScope: database } = _.database;
 

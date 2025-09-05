@@ -9,9 +9,9 @@
 > Blognami is still in its **early days**, and every star helps others discover it.
 > If you like the idea, plan to use it, or just want to support open-source work, please **click the ⭐ at the top** — it’s quick, free, and makes a big difference.
 
-**Blognami** is an open-source, passwordless blogging platform built on top of **Sintra**, its own full-stack JavaScript web framework.
+**Blognami** is an open-source, passwordless blogging platform built on top of **Pinstripe**, its own full-stack JavaScript web framework.
 
-This repository contains the complete codebase for both **Blognami** and **Sintra**, along with all related packages and examples.
+This repository contains the complete codebase for both **Blognami** and **Pinstripe**, along with all related packages and examples.
 
 ---
 
@@ -21,10 +21,10 @@ Want to try Blognami?
 Follow the [Getting Started Guide](https://blognami.com/docs/guides/getting-started) to spin up your first blog in minutes:
 
 ```bash
-npx sintra generate-project --name my-blog --with blognami
+npx pinstripe generate-project --name my-blog --with blognami
 cd my-blog
-npx sintra initialize-database
-npx sintra start-server
+npx pinstripe initialize-database
+npx pinstripe start-server
 ```
 
 Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
@@ -36,10 +36,10 @@ Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
 Blognami is **both an app and a framework stack**:
 
 * **Blognami** → The blogging platform itself — passwordless authentication, markdown editing, tagging, and more.
-* **Sintra** → The underlying full-stack web framework powering Blognami.
+* **Pinstripe** → The underlying full-stack web framework powering Blognami.
   It provides the core runtime, database integration, and CLI commands used to create, run, and manage Blognami projects.
 
-This monorepo contains **all the packages for both Blognami and Sintra**, so you can explore the internals, contribute, or extend them.
+This monorepo contains **all the packages for both Blognami and Pinstripe**, so you can explore the internals, contribute, or extend them.
 
 ---
 
@@ -52,7 +52,7 @@ This monorepo contains **all the packages for both Blognami and Sintra**, so you
 +---------------------------+
             ⬇ built on
 +---------------------------+
-|      Sintra Framework     |
+|      Pinstripe Framework     |
 | (Core runtime + CLI, DB,  |
 |  auth, utils, multi-tenant|
 |  static site generation)  |
@@ -63,7 +63,7 @@ This monorepo contains **all the packages for both Blognami and Sintra**, so you
 +---------------------------+
 ```
 
-💡 Think of **Blognami** as the *ready-to-use app* and **Sintra** as the *foundation + toolbox* that makes it possible.
+💡 Think of **Blognami** as the *ready-to-use app* and **Pinstripe** as the *foundation + toolbox* that makes it possible.
 
 ---
 
@@ -82,24 +82,23 @@ This monorepo contains **all the packages for both Blognami and Sintra**, so you
 
 ---
 
-### Sintra Framework
+### Pinstripe Framework
 
-* [**@sintra/database**](./packages/@sintra/database) – Database layer
-* [**@sintra/multi-tenant**](./packages/@sintra/multi-tenant) – Multi-tenancy support
-* [**@sintra/one-time-token**](./packages/@sintra/one-time-token) – One-time token auth system
-* [**@sintra/static-site**](./packages/@sintra/static-site) – Static site generation
-* [**@sintra/utils**](./packages/@sintra/utils) – Utility functions
+* [**@pinstripe/database**](./packages/@pinstripe/database) – Database layer
+* [**@pinstripe/multi-tenant**](./packages/@pinstripe/multi-tenant) – Multi-tenancy support
+* [**@pinstripe/one-time-token**](./packages/@pinstripe/one-time-token) – One-time token auth system
+* [**@pinstripe/static-site**](./packages/@pinstripe/static-site) – Static site generation
+* [**@pinstripe/utils**](./packages/@pinstripe/utils) – Utility functions
 
 **Core + CLI**
 
-* [**sintra**](./packages/sintra) – The core Sintra framework **and** the CLI used to scaffold, run, and manage Blognami projects.
+* [**pinstripe**](./packages/pinstripe) – The core Pinstripe framework **and** the CLI used to scaffold, run, and manage Blognami projects.
 
 ---
 
 ### Other Packages
 
 * [**demo**](./packages/demo) – Example Blognami project
-* [**pinstripe**](./packages/pinstripe) – Pinstripe module
 
 ---
 

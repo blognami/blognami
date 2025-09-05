@@ -1,19 +1,28 @@
 
-import './components/index.js';
 import { Component } from './component.js';
 
-if(typeof window != 'undefined'){
-    const originalDisplay = document.documentElement.style.display;
-    document.documentElement.style.display = 'none';
-    window.addEventListener('DOMContentLoaded', () => {
-        const documentComponent = Component.instanceFor(document);
-        documentComponent.observe({ add: true }, component => component.descendants);
-        documentComponent.patch(document.documentElement.outerHTML);
+import { Workspace } from './workspace.js';
 
-        const interval = setInterval(() => {
-            documentComponent.progressBar.startCount == 0;
-            clearInterval(interval);
-            document.documentElement.style.display = originalDisplay;
-        }, 100);
-    });
+if (typeof navigator != 'undefined' && "serviceWorker" in navigator) {
+    (async () => {
+        try {
+            let scriptUrl = Component.instanceFor(document).head.find('meta[name="pinstripe-service-worker-url"]')?.params.content;
+            if(!scriptUrl) return;
+
+            const registration = await navigator.serviceWorker.getRegistration(scriptUrl);
+
+            if(registration) await registration.unregister();
+
+            await navigator.serviceWorker.register(scriptUrl, {
+                scope: "./",
+                updateViaCache: "none"
+            });
+        } catch (error) {
+            console.error(`Service worker registration failed with ${error}`);
+        }
+    })();
+}
+
+if(typeof window == 'undefined' && typeof addEventListener == 'function'){
+    Workspace.run(({ serviceWorker }) => serviceWorker.start());
 }

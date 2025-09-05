@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ colors }) => `
     .article {
         max-width: 650px;
         margin: 0 auto 0 auto;
@@ -15,7 +15,7 @@ export const styles = `
     }
 
     .tag {
-        color: var(--accent-color);
+        color: ${colors.pinstripe.accent};
     }
 
     .meta {
@@ -24,7 +24,7 @@ export const styles = `
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1;
-        color: var(--color-secondary-text);
+        color: ${colors.pinstripe.secondaryText};
         text-transform: uppercase;
     }
 
@@ -41,7 +41,7 @@ export const styles = `
     .footer {
         padding-top: 3.2rem;
         margin-top: 8rem;
-        border-top: 1px solid var(--color-light-gray);
+        border-top: 1px solid ${colors.gray[200]};
     }
 
     @media (max-width: 767px) {

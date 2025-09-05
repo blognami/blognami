@@ -1,3 +1,3 @@
 
-export { Inflector, inflector } from '@sintra/utils';
+export { Inflector, inflector } from '@pinstripe/utils';
 
