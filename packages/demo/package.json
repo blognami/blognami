@@ -9,20 +9,20 @@
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
-    "start": "sintra start-server",
+    "start": "pinstripe start-server",
     "test:models": "npm run test:models:$(echo ${DATABASE_ADAPTER:-sqlite})",
     "test:models:mysql": "cd test/models && NODE_ENV=test DATABASE_ADAPTER=mysql SKIP_FIXTURES=true node --test --test-concurrency 1",
     "test:models:sqlite": "cd test/models && NODE_ENV=test DATABASE_ADAPTER=sqlite SKIP_FIXTURES=true node --test --test-concurrency 1",
     "test:e2e": "npm run test:e2e:$(echo ${DATABASE_ADAPTER:-sqlite})",
-    "test:e2e:mysql": "NODE_ENV=test DATABASE_ADAPTER=mysql start-server-and-test 'sintra reset-database-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run cypress:run'",
-    "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'sintra reset-database-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run cypress:run'",
+    "test:e2e:mysql": "NODE_ENV=test DATABASE_ADAPTER=mysql start-server-and-test 'pinstripe reset-database-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run cypress:run'",
+    "test:e2e:sqlite": "NODE_ENV=test DATABASE_ADAPTER=sqlite start-server-and-test 'pinstripe reset-database-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run cypress:run'",
     "cypress:run": "cypress run",
     "cypress:open": "cypress open",
     "test:services": "cd test/services && node --test",
     "test:cli": "cd test/cli && node --test --test-concurrency 1"
   },
   "dependencies": {
-    "sintra": "^0.35.0",
+    "pinstripe": "^0.35.0",
     "busboy": "1.6.0",
     "mysql2": "3.10.1"
   },

@@ -1,5 +1,5 @@
 
-import { defer } from '@sintra/utils';
+import { defer } from '@pinstripe/utils';
 
 export default {
     meta(){

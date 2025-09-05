@@ -18,7 +18,7 @@ export default {
         const { id } = await this.database.membershipTiers;
 
         const { data: stripeProducts } = await this.stripe.products.search({
-            query: `metadata['sintraMembershipTiersId']:'${id}' AND active:'true'`,
+            query: `metadata['pinstripeMembershipTiersId']:'${id}' AND active:'true'`,
         });
 
         let out = stripeProducts[0];
@@ -27,8 +27,8 @@ export default {
             out = await this.stripe.products.create({
                 name: 'Membership',
                 metadata: {
-                    sintraMembershipTiersId: id,
-                    sintraEnvironment: process.env.NODE_ENV,
+                    pinstripeMembershipTiersId: id,
+                    pinstripeEnvironment: process.env.NODE_ENV,
                 },
             });
         }
@@ -120,14 +120,14 @@ export default {
 
     async getStripeCustomer({ userId, email }){
         const { data: [ stripeCustomer ] } = await this.stripe.customers.search({
-            query: `metadata['sintraUserId']:'${userId}'`,
+            query: `metadata['pinstripeUserId']:'${userId}'`,
         });
         if(stripeCustomer) return stripeCustomer;
 
         if(email) return await this.stripe.customers.create({
             email,
             metadata: {
-                sintraUserId: userId,
+                pinstripeUserId: userId,
             },
         });
     },
@@ -207,8 +207,8 @@ export default {
                     'customer.subscription.deleted'
                 ],
                 metadata: {
-                    sintraMembershipTiersId: id,
-                    sintraEnvironment: process.env.NODE_ENV,
+                    pinstripeMembershipTiersId: id,
+                    pinstripeEnvironment: process.env.NODE_ENV,
                 },
             });
         }

@@ -1,11 +1,18 @@
 
-export const styles = `
+export const styles = ({ colors }) => `
     .root {
         padding-top: 8rem;
         padding-bottom: 8rem;
-        padding-right: var(--gap);
-        padding-left: var(--gap);
-        color: var(--color-secondary-text);
+        padding-right: 3.6rem;
+        padding-left: 3.6rem;
+        color: ${colors.pinstripe.secondaryText};
+    }
+    
+    @media (max-width: 767px) {
+        .root {
+            padding-right: 2rem;
+            padding-left: 2rem;
+        }
     }
 
     .inner {
@@ -21,11 +28,11 @@ export const styles = `
     }
 
     .root a {
-        color: var(--color-secondary-text);
+        color: ${colors.pinstripe.secondaryText};
     }
 
     .root a:hover {
-        color: var(--color-black);
+        color: #000;
         opacity: 1;
     }
 

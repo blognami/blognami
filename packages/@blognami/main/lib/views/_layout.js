@@ -13,8 +13,15 @@ export const styles = `
     }
 
     .outer {
-        padding-right: var(--gap);
-        padding-left: var(--gap);
+        padding-right: 3.6rem;
+        padding-left: 3.6rem;
+    }
+    
+    @media (max-width: 767px) {
+        .outer {
+            padding-right: 2rem;
+            padding-left: 2rem;
+        }
     }
 
     .inner {
@@ -82,7 +89,7 @@ export default {
             user = await this.session.user;
         }
 
-        return this.renderView('_sintra/_shell', {
+        return this.renderView('_pinstripe/_shell', {
             meta: [
                 { name: 'pinstripe-load-cache-namespace', content: user ? 'signed-in' : 'signed-out' },
                 ...meta

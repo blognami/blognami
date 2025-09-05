@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ colors }) =>`
     .tags-item {
         display: flex;
         align-items: center;
@@ -20,7 +20,7 @@ export const styles = `
         padding: 0.4rem 0.8rem;
         font-size: 1.3rem;
         line-height: 1;
-        border: 1px solid var(--color-light-gray);
+        border: 1px solid ${colors.gray[200]};
         border-radius: 32px;
     }
 `;

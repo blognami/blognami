@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ colors }) =>`
     .root {
         max-width: 720px;
     }
@@ -23,7 +23,7 @@ export const styles = `
         height: 1px;
         margin-left: 1.6rem;
         content: "";
-        background-color: var(--color-light-gray);
+        background-color: ${colors.gray[200]};
     }
 
     .root > * + * {

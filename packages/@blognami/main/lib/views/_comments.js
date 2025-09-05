@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ colors }) => `
     .comments {
         margin-top: 2em;
         display: flex;
@@ -21,14 +21,14 @@ export const styles = `
         flex: 1 1 0;
         border-style: solid;
         border-width: 0 0 0 2px;
-        border-color: var(--color-light-gray);
+        border-color: ${colors.gray[200]};
         padding-left: 1em;
     }
 
     .comment-meta {
         border-style: solid;
         border-width: 0 0 2px 0;
-        border-color: var(--color-light-gray);
+        border-color: ${colors.gray[200]};
         padding-bottom: 1em;
     }
 
@@ -37,7 +37,6 @@ export const styles = `
     }
 
     .comment-created-at {
-        color: var(--color-gray);
         font-size: 12px;
         font-weight: 500;
     }
@@ -55,7 +54,7 @@ export const styles = `
     .action {
         font-size: 12px;
         font-weight: 500;
-        color: var(--accent-color);
+        color: ${colors.pinstripe.accent};
     }
 `;
 

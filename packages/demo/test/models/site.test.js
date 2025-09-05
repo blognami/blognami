@@ -16,7 +16,7 @@ test(`site`, () => Workspace.run(async _ => {
     assert.equal(await sites.count(), 1);
 }));
 
-if(modules.includes('@sintra/multi-tenant')){
+if(modules.includes('@pinstripe/multi-tenant')){
     test(`site with multi-tenancy and tenant exists`, () => Workspace.run(async _ => {
         const { tenant, site, sites } = _.database;
 

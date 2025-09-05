@@ -6,7 +6,7 @@ export default {
         }
 
         return this.renderRedirect({ target: '_top' }).toResponseArray(200, {
-            'Set-Cookie': 'sintraSession='
+            'Set-Cookie': 'pinstripeSession='
         });
     }
 };
