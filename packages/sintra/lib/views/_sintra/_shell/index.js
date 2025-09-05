@@ -100,6 +100,7 @@ export const styles = ({ colors, fonts }) => `
             transform: rotate(360deg);
         }
     }
+
     @keyframes ping {
         75%,
         100% {
@@ -107,11 +108,13 @@ export const styles = ({ colors, fonts }) => `
             opacity: 0;
         }
     }
+
     @keyframes pulse {
         50% {
             opacity: 0.5;
         }
     }
+
     @keyframes bounce {
         0%,
         100% {
