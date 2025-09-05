@@ -26,7 +26,7 @@ test(`Theme`, async () => {
     const theme2 = Theme.new();
 
     assert.equal(theme2.apple, undefined);
-    assert.equal(theme2.colors.sintra, undefined);
+    assert.equal(theme2.colors.sintra.plum, undefined);
     
 });
 
