@@ -38,7 +38,7 @@ export const styles = ({ colors, fonts }) => `
     }
 
     .post-date {
-        color: ${colors.accent};
+        color: ${colors.sintra.accent};
     }
 
     .post-meta-wrapper {

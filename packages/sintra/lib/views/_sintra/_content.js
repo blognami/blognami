@@ -63,7 +63,7 @@ export const styles = ({ colors, fonts }) =>`
 
     .root blockquote:not([class]) {
         padding-left: 2rem;
-        border-left: 4px solid ${colors.accent};
+        border-left: 4px solid ${colors.sintra.accent};
     }
 
     .root figcaption {
@@ -97,7 +97,7 @@ export const styles = ({ colors, fonts }) =>`
 
     .root :not(pre) > code {
         padding: 0.4rem;
-        color: ${colors.accent};
+        color: ${colors.sintra.accent};
         background-color: ${colors.lighterGray};
         border-radius: 3px;
     }

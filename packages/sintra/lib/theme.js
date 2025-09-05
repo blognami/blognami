@@ -1,40 +1,39 @@
 import { Class } from "./class.js";
-import { Singleton } from "./singleton.js";
 import { themeVariables } from './theme_variables.js';
 
 export const Theme = Class.extend().include({
   meta() {
     this.assignProps({ name: 'Theme' });
 
-    this.include(Singleton);
-
     this.include(themeVariables);
 
-    this.prototype.deepMerge({
-      colors: {
-        sintra: {
-          accent: 'oklch(59.2% 0.249 0.584)', // eventually we can use a @colors.pink.600 reference here
-          primaryText: '#000',
-          secondaryText: '#757575',
-          lighterGray: '#f6f6f6',
-          lightGray: '#e6e6e6',
-          midGray: '#ccc',
-          darkGray: '#444',
-          darkerGray: '#15171a'
-        }
-      }
-    });
-  },
+    this.include({
+      deepMerge(variables){
+        deepMerge(this, variables);
+      },
 
-  deepMerge(variables){
-    deepMerge(this, variables);
-  },
+      resolveReferences(){
+        // will resolves any references in the theme object e.g. @colors.pink.600
+      },
 
-  resolveReferences(){
-    // will resolves any references in the theme object e.g. @colors.pink.600
-  },
+      remify,
+    })
 
-  remify,
+    // this.prototype.deepMerge({
+    //   colors: {
+    //     sintra: {
+    //       accent: 'oklch(59.2% 0.249 0.584)', // eventually we can use a @colors.pink.600 reference here
+    //       primaryText: '#000',
+    //       secondaryText: '#757575',
+    //       lighterGray: '#f6f6f6',
+    //       lightGray: '#e6e6e6',
+    //       midGray: '#ccc',
+    //       darkGray: '#444',
+    //       darkerGray: '#15171a'
+    //     }
+    //   }
+    // });
+  }
 });
 
 function remify(value) {
@@ -49,9 +48,9 @@ function deepMerge(target, source) {
       } else {
         target[key] = { ...target[key] };
       }
-      deepMerge(target, value);
+      deepMerge(target[key], value);
     } else {
-      source[key] = value;
+      target[key] = value;
     }
   }
 }

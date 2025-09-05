@@ -15,7 +15,7 @@ export const styles = ({ colors }) => `
     }
 
     .tag {
-        color: ${colors.accent};
+        color: ${colors.sintra.accent};
     }
 
     .meta {
