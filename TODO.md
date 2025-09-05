@@ -26,7 +26,7 @@
 
 ## ~~Flatten asset folders~~
 
-## Use Tailwind's theme defaults
+## ~~Use Tailwind's theme defaults~~
 
 ## Make Pinstripe a full-stack framework (again)
 - Rename pinstripe -> @pinstripe/window
