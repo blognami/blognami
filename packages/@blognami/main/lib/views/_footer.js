@@ -1,11 +1,11 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ packages }) => `
     .root {
         padding-top: 8rem;
         padding-bottom: 8rem;
         padding-right: 3.6rem;
         padding-left: 3.6rem;
-        color: ${colors.pinstripe.secondaryText};
+        color: ${packages.pinstripe.colors.secondaryText};
     }
     
     @media (max-width: 767px) {
@@ -28,7 +28,7 @@ export const styles = ({ colors }) => `
     }
 
     .root a {
-        color: ${colors.pinstripe.secondaryText};
+        color: ${packages.pinstripe.colors.secondaryText};
     }
 
     .root a:hover {
