@@ -1,4 +1,4 @@
-export const themeVariables = {
+export const themeDefaultDesignTokens = {
   fonts: {
     sans: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
     serif: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
@@ -444,5 +444,15 @@ export const themeVariables = {
     ping: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
     pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
     bounce: "bounce 1s infinite",
+  },
+
+  packages: {
+    pinstripe: {
+      colors: {
+        accent: "@colors.pink.600",
+        primaryText: "@colors.gray.950",
+        secondaryText: "@colors.gray.500",
+      },
+    },
   },
 };

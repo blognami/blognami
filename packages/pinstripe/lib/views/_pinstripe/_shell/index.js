@@ -1,5 +1,5 @@
 
-export const styles = ({ colors, fonts }) => `
+export const styles = ({ packages, fonts }) => `
     /* Box sizing rules */
     *,
     *::before,
@@ -135,7 +135,7 @@ export const styles = ({ colors, fonts }) => `
         font-family: ${fonts.sans};
         font-size: 1.6rem;
         line-height: 1.6;
-        color: ${colors.pinstripe.primaryText};
+        color: ${packages.pinstripe.colors.primaryText};
         background-color: #fff;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;

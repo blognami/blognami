@@ -1,5 +1,5 @@
 
-export const styles = ({ colors, fonts }) => `
+export const styles = ({ packages, fonts }) => `
     .post + .post {
         margin-top: 8rem;
     }
@@ -33,12 +33,12 @@ export const styles = ({ colors, fonts }) => `
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1;
-        color: ${colors.pinstripe.secondaryText};
+        color: ${packages.pinstripe.colors.secondaryText};
         text-transform: uppercase;
     }
 
     .post-date {
-        color: ${colors.pinstripe.accent};
+        color: ${packages.pinstripe.colors.accent};
     }
 
     .post-meta-wrapper {
@@ -62,7 +62,7 @@ export const styles = ({ colors, fonts }) => `
         font-family: ${fonts.sans};
         font-size: inherit;
         line-height: 1.55;
-        color: ${colors.pinstripe.secondaryText};
+        color: ${packages.pinstripe.colors.secondaryText};
         letter-spacing: 0;
     }
 

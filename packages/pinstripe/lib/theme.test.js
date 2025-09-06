@@ -13,20 +13,22 @@ test(`Theme`, async () => {
     assert.equal(theme.apple, 'green');
 
     theme.deepMerge({
-        colors: {
+        packages: {
             pinstripe: {
-                plum: 'purple',
+                colors: {
+                    plum: 'purple',
+                }
             }
         }
     });
 
-    assert.equal(theme.colors.pinstripe.plum, 'purple');
+    assert.equal(theme.packages.pinstripe.colors.plum, 'purple');
     assert.equal(typeof theme.colors.red[500], 'string');
 
     const theme2 = Theme.new();
 
     assert.equal(theme2.apple, undefined);
-    assert.equal(theme2.colors.pinstripe.plum, undefined);
+    assert.equal(theme2.packages.pinstripe.colors.plum, undefined);
     
 });
 

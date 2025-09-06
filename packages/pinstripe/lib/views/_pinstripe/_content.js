@@ -1,5 +1,5 @@
 
-export const styles = ({ colors, fonts }) =>`
+export const styles = ({ colors, packages, fonts }) =>`
     .root img {
         height: auto;
     }
@@ -63,14 +63,14 @@ export const styles = ({ colors, fonts }) =>`
 
     .root blockquote:not([class]) {
         padding-left: 2rem;
-        border-left: 4px solid ${colors.pinstripe.accent};
+        border-left: 4px solid ${packages.pinstripe.colors.accent};
     }
 
     .root figcaption {
         margin-top: 1.6rem;
         font-size: 1.4rem;
         line-height: 1.4;
-        color: ${colors.pinstripe.secondaryText};
+        color: ${packages.pinstripe.colors.secondaryText};
         text-align: center;
     }
 
@@ -97,7 +97,7 @@ export const styles = ({ colors, fonts }) =>`
 
     .root :not(pre) > code {
         padding: 0.4rem;
-        color: ${colors.pinstripe.accent};
+        color: ${packages.pinstripe.colors.accent};
         background-color: ${colors.gray[50]};
         border-radius: 3px;
     }

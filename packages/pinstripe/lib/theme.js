@@ -1,24 +1,23 @@
 import { Class } from "./class.js";
-import { themeVariables } from "./theme_variables.js";
+import { themeDefaultDesignTokens } from "./theme_default_design_tokens.js";
 
 export const Theme = Class.extend().include({
   meta() {
     this.assignProps({ name: "Theme" });
 
-    this.include(themeVariables);
-  },
-
-  initialize() {
-    this.deepMerge(themeVariables);
-    this.deepMerge({
-      colors: {
-        pinstripe: {
-          accent: "@colors.pink.600",
-          primaryText: "@colors.gray.950",
-          secondaryText: "@colors.gray.500",
-        },
-      },
+    this.assignProps({
+      defineDesignTokens(designTokens) {
+        const { initialize } = this.prototype;
+        this.include({
+          initialize() {
+            if (initialize) initialize.call(this);
+            this.deepMerge(designTokens);
+          }
+        });
+      }
     });
+
+    this.defineDesignTokens(themeDefaultDesignTokens);
   },
 
   deepMerge(variables) {
