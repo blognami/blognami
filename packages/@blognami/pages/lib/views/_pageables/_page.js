@@ -1,5 +1,5 @@
 
-export const styles = ({ packages }) => `
+export const styles = ({ colors }) => `
     .article {
         max-width: 650px;
         margin: 0 auto 0 auto;
@@ -15,7 +15,7 @@ export const styles = ({ packages }) => `
         font-size: 1.2rem;
         font-weight: 500;
         line-height: 1;
-        color: ${packages.pinstripe.colors.secondaryText};
+        color: ${colors.semantic.secondaryText};
         text-transform: uppercase;
     }
 

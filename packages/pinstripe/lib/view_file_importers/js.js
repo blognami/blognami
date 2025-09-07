@@ -3,12 +3,13 @@ import { View, createHash } from '../view.js';
 import { Bundle } from '../bundle.js'; // pinstripe-if-client: const Bundle = undefined;
 import { fileURLToPath } from 'url'; // pinstripe-if-client: const fileURLToPath = undefined;
 import { inflector } from '../inflector.js';
+import { Theme } from '../theme.js';
 
 View.FileImporter.register('js', {
     async importFile(){
         const { filePath, relativeFilePathWithoutExtension } = this;
 
-        const { default: _default, decorators } = (await import(filePath));
+        const { default: _default, decorators, theme } = (await import(filePath));
 
         if(_default) View.register(relativeFilePathWithoutExtension, {
             meta(){
@@ -26,6 +27,14 @@ View.FileImporter.register('js', {
                 Component.include(createDecoratorsInclude(hash, decorators));
             `);
         }
+
+        if(theme){
+            Theme.defineDesignTokens({
+                views: {
+                    [relativeFilePathWithoutExtension.replace(/\/index$/, '')]: theme
+                }
+            });
+        };
     }
 });
 

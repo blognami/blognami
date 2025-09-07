@@ -294,6 +294,11 @@ export const themeDefaultDesignTokens = {
     },
     black: "#000",
     white: "#fff",
+    semantic: {
+      accent: "@colors.pink.600",
+      primaryText: "@colors.gray.950",
+      secondaryText: "@colors.gray.500",
+    },
   },
 
   spacing: "0.25rem",
@@ -446,13 +451,5 @@ export const themeDefaultDesignTokens = {
     bounce: "bounce 1s infinite",
   },
 
-  packages: {
-    pinstripe: {
-      colors: {
-        accent: "@colors.pink.600",
-        primaryText: "@colors.gray.950",
-        secondaryText: "@colors.gray.500",
-      },
-    },
-  },
+  views: {},
 };
