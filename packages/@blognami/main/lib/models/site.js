@@ -8,7 +8,7 @@ export default {
         this.include('singleton');
         this.include('revisable');
 
-        this.beforeInsert(function(){
+        this.on('before:insert', function(){
             if(this.salt) return;
             this.salt = crypto.randomUUID();
         });

@@ -3,7 +3,7 @@ import { inflector } from '@pinstripe/utils';
 
 export default {
     meta(){
-        this.beforeValidation(async function(){
+        this.on('before:validation', async function(){
             const slug = `${this.slug || ''}`.trim();
             if(slug == ''){
                 let n = 1;
@@ -18,7 +18,7 @@ export default {
             }
         });
 
-        this.validateWith(async pageable => {
+        this.on('validation', async pageable => {
             if(!pageable.isValidationError('slug') && await pageable.database.pageables.where({ idNe: pageable.id, slug: pageable.slug }).count()){
                 pageable.setValidationError('slug', 'Must be unique');
             }

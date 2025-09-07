@@ -3,7 +3,7 @@ export default {
     meta(){
         this.include('pageable');
         this.mustNotBeBlank('file');
-        this.validateWith(function(){
+        this.on('validation', function(){
             if(!this.file) return;
             if(!this.isValidationError('file') && !this.file.filename) this.setValidationError('file', 'Must have a filename');
             if(!this.isValidationError('file') && typeof this.file.mimeType != 'string') this.setValidationError('file', 'Must have a mime type');
