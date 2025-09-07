@@ -19,7 +19,7 @@ export default {
             this.createModel({
                 meta(){
                     this.mustNotBeBlank('password');
-                    this.validateWith(async function(){
+                    this.on('validation', async function(){
                         if(!this.isValidationError('password')){
                             const user = await that.database.users.where({ email }).first();
                             if((user && !await user.verifyPassword(this.password)) || (!user && !await that.database.site.verifyPassword(email, this.password))){

@@ -13,7 +13,7 @@ export default {
             return this.where({ bodyHash });
         });
 
-        this.beforeValidation(function(){
+        this.on('before:validation', function(){
             const now = new Date();
 
             if(!this.createdAt){
@@ -26,7 +26,7 @@ export default {
             this.bodyHash = crypto.createHash('sha1').update(this.body || '').digest('base64');
         });
 
-        this.beforeUpdate(function(){
+        this.on('before:update', function(){
             this.updatedAt = new Date();
         });
     }

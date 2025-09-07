@@ -11,7 +11,7 @@ export default {
             this.createModel({
                 meta(){
                     this.mustNotBeBlank('password');
-                    this.validateWith(async function(){
+                    this.on('validation', async function(){
                         if(!this.isValidationError('password') && !await that.database.site.verifyPassword(email, this.password)){
                             this.setValidationError('general', `Your password is incorrect.`);
                         }

@@ -1,7 +1,7 @@
 
 import crypto from 'crypto';
 
-import { ImportableRegistry, Model, defineCallbacks, Workspace } from 'pinstripe';
+import { ImportableRegistry, Model, Workspace } from 'pinstripe';
 import { Table } from "./table.js";
 import { TableReference } from './table_reference.js';
 import { defer } from '@pinstripe/utils';
@@ -13,8 +13,6 @@ export const Row = Model.extend().include({
         this.assignProps({ name: 'Row' });
 
         this.include(ImportableRegistry);
-
-        defineCallbacks.call(this, 'beforeInsert', 'afterInsert', 'beforeUpdate', 'afterUpdate', 'beforeDelete', 'afterDelete')
 
         this.assignProps({
             normalizeName(name){
@@ -34,18 +32,6 @@ export const Row = Model.extend().include({
 
             get singleton(){
                 return this.for('singleton').includedIn.includes(this.name);
-            },
-
-            beforeInsertOrUpdate(fn){
-                this.beforeInsert(fn);
-                this.beforeUpdate(fn);
-                return this;
-            },
-
-            afterInsertOrUpdate(fn){
-                this.afterInsert(fn);
-                this.afterUpdate(fn);
-                return this;
             },
 
             includeInTable(...args){
@@ -100,7 +86,7 @@ export const Row = Model.extend().include({
 
             mustBeUnique(name, options = {}){
                 const { message = 'Must be unique', collection = this.collectionName } = options;
-                return this.validateWith(async row => {
+                return this.on('validation', async row => {
                     if(row.isValidationError(name)) return;
                     const value = row[name];
                     const alreadyExists = await row.database[collection].where({ [name]: value, idNe: row.id }).count() > 0;
@@ -141,7 +127,7 @@ export const Row = Model.extend().include({
 
             if(this._exists) this.id = this._initialFields.id;
             
-            await (this._exists ? this._runBeforeUpdateCallbacks() : this._runBeforeInsertCallbacks());
+            await (this._exists ? this.trigger('before:update') : this.trigger('before:insert'));
 
             await this.validate({ validateWith});
 
@@ -229,7 +215,7 @@ export const Row = Model.extend().include({
                 this._exists = true;
             }
 
-            await (exists ? this._runAfterUpdateCallbacks() : this._runAfterInsertCallbacks());
+            await (exists ? this.trigger('after:update') : this.trigger('after:insert'));
 
             return this;
         });
@@ -237,7 +223,7 @@ export const Row = Model.extend().include({
 
     async delete(){
         return this.database.transaction(async () => {
-            await this._runBeforeDeleteCallbacks();
+            await this.trigger('before:delete');
 
             const tableReference = TableReference.new(this.constructor.collectionName);
 
@@ -257,7 +243,7 @@ export const Row = Model.extend().include({
                 }
             });
 
-            await this._runAfterDeleteCallbacks();
+            await this.trigger('after:delete');
 
             return this;
         });
@@ -322,7 +308,7 @@ function defineRelationship({ name, type, collectionName, fromKey, toKey, cascad
     });
 
     if(cascadeDelete) {
-        this.beforeDelete(async function(){
+        this.on('before:delete', async function(){
             await this[name].delete();
         });
     }

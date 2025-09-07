@@ -5,7 +5,7 @@ export default {
     meta(){
         this.include('singleton');
 
-        this.beforeInsert(function(){
+        this.on('before:insert', function(){
             if(this.webhookSecret) return;
             this.webhookSecret = crypto.randomUUID();
         });

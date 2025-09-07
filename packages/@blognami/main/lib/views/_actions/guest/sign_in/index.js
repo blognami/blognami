@@ -16,7 +16,7 @@ export default {
                 meta(){
                     this.mustNotBeBlank('email');
                     this.mustBeAValidEmail('email');
-                    this.validateWith(function(){
+                    this.on('validation', function(){
                         if(!this.isValidationError('legal') && this.legal != 'true') {
                             this.setValidationError('legal', 'You must agree to the terms of service and aknowledge you have read the privacy and cookie policies.');
                         }

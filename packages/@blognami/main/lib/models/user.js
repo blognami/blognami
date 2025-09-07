@@ -18,7 +18,7 @@ export default {
         this.mustBeUnique('email');
         this.mustNotBeBlank('role');
 
-        this.beforeInsert(function(){
+        this.on('before:insert', function(){
             if(this.salt) return;
             this.salt = crypto.randomUUID();
         });
