@@ -1,5 +1,5 @@
 
-export const styles = ({ colors, packages }) => `
+export const styles = ({ colors }) => `
     .comments {
         margin-top: 2em;
         display: flex;
@@ -54,7 +54,7 @@ export const styles = ({ colors, packages }) => `
     .action {
         font-size: 12px;
         font-weight: 500;
-        color: ${packages.pinstripe.colors.accent};
+        color: ${colors.semantic.accent};
     }
 `;
 
