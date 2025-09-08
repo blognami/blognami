@@ -3,11 +3,11 @@ export default {
   async render() {
     const that = this;
 
-    const membershipTiers = await this.database.membershipTiers;
-    const wasPaid = membershipTiers.enableMonthly || membershipTiers.enableYearly;
+    const newsletter = await this.database.newsletter;
+    const wasPaid = newsletter.enableMonthly || newsletter.enableYearly;
 
-    const enableMonthly = this.params._method == 'GET' ? membershipTiers.enableMonthly : this.params.enableMonthly == 'true';
-    const enableYearly = this.params._method == 'GET' ? membershipTiers.enableYearly : this.params.enableYearly == 'true';
+    const enableMonthly = this.params._method == 'GET' ? newsletter.enableMonthly : this.params.enableMonthly == 'true';
+    const enableYearly = this.params._method == 'GET' ? newsletter.enableYearly : this.params.enableYearly == 'true';
 
     const fields = [];
 
@@ -31,7 +31,7 @@ export default {
 
     fields.push('enableFree');
 
-    return this.renderForm(membershipTiers, {
+    return this.renderForm(newsletter, {
       fields,
 
       async validateWith(){

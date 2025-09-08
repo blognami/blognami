@@ -3,29 +3,29 @@ export default {
     async render(){
         let { plan, returnUrl } = this.params;
 
-        const membershipTiers = await this.database.membershipTiers;
+        const newsletter = await this.database.newsletter;
 
         const options = [];
 
-        const currencySymbol = this.currency.index[membershipTiers.currency].symbol;
+        const currencySymbol = this.currency.index[newsletter.currency].symbol;
 
-        if(membershipTiers.enableMonthly) options.push({
+        if(newsletter.enableMonthly) options.push({
             name: 'monthly',
             title: 'Monthly',
-            price: `${currencySymbol}${membershipTiers.monthlyPrice} per month`,
+            price: `${currencySymbol}${newsletter.monthlyPrice} per month`,
             features: ['Access to all premium content', 'Billed monthly.'],
             action: `/_actions/guest/subscribe?plan=monthly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
-        if(membershipTiers.enableYearly) options.push({
+        if(newsletter.enableYearly) options.push({
             name: 'yearly',
             title: 'Yearly',
-            price: `${currencySymbol}${membershipTiers.yearlyPrice} per year`,
+            price: `${currencySymbol}${newsletter.yearlyPrice} per year`,
             features: ['Access to all premium content', 'Billed yearly.'],
             action: `/_actions/guest/subscribe?plan=yearly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
-        if(membershipTiers.enableFree) options.push({
+        if(newsletter.enableFree) options.push({
             name: 'free',
             title: 'None',
             price: 'Free',

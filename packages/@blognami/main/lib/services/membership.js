@@ -15,10 +15,10 @@ export default {
     },
 
     async getStripeProduct(){
-        const { id } = await this.database.membershipTiers;
+        const { id } = await this.database.newsletter;
 
         const { data: stripeProducts } = await this.stripe.products.search({
-            query: `metadata['pinstripeMembershipTiersId']:'${id}' AND active:'true'`,
+            query: `metadata['pinstripeNewsletterId']:'${id}' AND active:'true'`,
         });
 
         let out = stripeProducts[0];
@@ -27,7 +27,7 @@ export default {
             out = await this.stripe.products.create({
                 name: 'Membership',
                 metadata: {
-                    pinstripeMembershipTiersId: id,
+                    pinstripeNewsletterId: id,
                     pinstripeEnvironment: process.env.NODE_ENV,
                 },
             });
@@ -52,7 +52,7 @@ export default {
             starting_after = currentStripePrices[currentStripePrices.length - 1].id;
         }
 
-        const { enableMonthly, monthlyPrice, enableYearly, yearlyPrice, currency } = await this.database.membershipTiers;
+        const { enableMonthly, monthlyPrice, enableYearly, yearlyPrice, currency } = await this.database.newsletter;
 
         const out = {};
         
@@ -192,7 +192,7 @@ export default {
     },
 
     async getStripeWebhookEndpoint(){
-        const { id } = await this.database.membershipTiers;
+        const { id } = await this.database.newsletter;
         const webhookUrl = this.getWebhookUrl();
         const { data: stripeWebhookEndpoints } = await this.stripe.webhookEndpoints.list();
         
@@ -207,7 +207,7 @@ export default {
                     'customer.subscription.deleted'
                 ],
                 metadata: {
-                    pinstripeMembershipTiersId: id,
+                    pinstripeNewsletterId: id,
                     pinstripeEnvironment: process.env.NODE_ENV,
                 },
             });
