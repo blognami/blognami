@@ -2,6 +2,8 @@
 export default {
     meta(){
         this.include('singleton');
+        this.include('subscribable');
+        
         this.mustNotBeBlank('monthlyPrice', {
             when: ({ enableMonthly }) => enableMonthly
         });

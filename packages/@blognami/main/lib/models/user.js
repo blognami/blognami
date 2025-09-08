@@ -11,6 +11,7 @@ export default {
         this.hasMany('posts');
         this.hasMany('comments');
         this.hasMany('notifications');
+        this.hasMany('subscriptions');
 
         this.mustNotBeBlank('name');
         this.mustNotBeBlank('email');
