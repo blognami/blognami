@@ -9,5 +9,10 @@ export default {
             if(this.webhookSecret) return;
             this.webhookSecret = crypto.randomUUID();
         });
+
+        this.on('sync_with_subscribable', (stripe, subscribable) => {
+            const { id, paidSubscriptionTiers = [] } = subscribable;
+            // Sync the subscribable with Stripe
+        });
     }
 };

@@ -11,5 +11,20 @@ export default {
             when: ({ enableYearly }) => enableYearly
         });
         this.mustNotBeBlank('currency');
+    },
+
+    get paidSubscriptionTiers(){
+        const out = [];
+        if(this.enableMonthly) out.push({
+            interval: 'month',
+            price: this.monthlyPrice,
+            currency: this.currency,
+        });
+        if(this.enableYearly) out.push({
+            interval: 'year',
+            price: this.yearlyPrice,
+            currency: this.currency,
+        });
+        return out;
     }
 };
