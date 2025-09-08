@@ -11,7 +11,7 @@ export default {
         });
 
         this.on('sync_with_subscribable', (stripe, subscribable) => {
-            const { id, paidSubscriptionTiers = [] } = subscribable;
+            const { id, paidForSubscriptionTiers = [] } = subscribable;
             // Sync the subscribable with Stripe
         });
     }

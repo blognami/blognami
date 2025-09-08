@@ -13,7 +13,7 @@ export default {
         this.mustNotBeBlank('currency');
     },
 
-    get paidSubscriptionTiers(){
+    get paidForSubscriptionTiers(){
         const out = [];
         if(this.enableMonthly) out.push({
             interval: 'month',
