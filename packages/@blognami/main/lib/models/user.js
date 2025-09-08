@@ -12,6 +12,7 @@ export default {
         this.hasMany('comments');
         this.hasMany('notifications');
         this.hasMany('subscriptions');
+        this.hasMany('subscribables', { through: ['subscriptions', 'subscribable'] });
 
         this.mustNotBeBlank('name');
         this.mustNotBeBlank('email');
