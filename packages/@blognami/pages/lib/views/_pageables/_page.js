@@ -54,7 +54,7 @@ export default {
         meta.push({ title: page.metaTitle || page.title });
         if(page.metaDescription) meta.push({ name: 'description', content: page.metaDescription });
 
-        const userHasAccess = post.access == 'public' || await user?.isSubscribedToNewsletter({ tier: page.access });
+        const userHasAccess = page.access == 'public' || await user?.isSubscribedToNewsletter({ tier: page.access });
     
         return this.renderView('_layout', {
             meta,
