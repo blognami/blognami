@@ -201,7 +201,7 @@ const SubscribableHandler = {
           'customer.subscription.deleted'
         ],
         metadata: {
-          pinstripeSubscribableId: id,
+          // pinstripeSubscribableId: id,
           pinstripeEnvironment: process.env.NODE_ENV,
         },
       });
