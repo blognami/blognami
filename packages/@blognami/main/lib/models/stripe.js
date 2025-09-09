@@ -18,7 +18,7 @@ const SubscribableHandler = {
 
     if (!out) {
       out = await this.stripe.api.products.create({
-        name: 'Membership',
+        name: "Membership",
         metadata: {
           pinstripeSubscribableId: id,
           pinstripeEnvironment: process.env.NODE_ENV,
@@ -35,33 +35,44 @@ const SubscribableHandler = {
     const stripePrices = [];
     let starting_after;
     while (true) {
-      const { data: currentStripePrices, has_more } = await this.stripe.api.prices.list({
-        product: stripeProductId,
-        limit: 100,
-        starting_after,
-      });
+      const { data: currentStripePrices, has_more } =
+        await this.stripe.api.prices.list({
+          product: stripeProductId,
+          limit: 100,
+          starting_after,
+        });
       stripePrices.push(...currentStripePrices);
       if (!has_more) break;
       starting_after = currentStripePrices[currentStripePrices.length - 1].id;
     }
 
-    const { monthlyPrice, yearlyPrice, currency } = this.subscribable.subscriptionConfig;
+    const { monthlyPrice, yearlyPrice, currency } =
+      this.subscribable.subscriptionConfig;
 
     const out = {};
     const enableMonthly = monthlyPrice !== undefined;
     const enableYearly = yearlyPrice !== undefined;
 
     const normalizedCurrency = currency.toLowerCase();
-    const stripeMonthlyPrices = stripePrices.filter(({ recurring }) => recurring.interval == 'month');
+    const stripeMonthlyPrices = stripePrices.filter(
+      ({ recurring }) => recurring.interval == "month"
+    );
     const normalizedMonthlyPrice = monthlyPrice ? monthlyPrice * 100 : null;
 
     if (enableMonthly) {
-      const stripeMonthlyPrice = stripeMonthlyPrices.find(({ unit_amount, currency }) => unit_amount == normalizedMonthlyPrice && currency == normalizedCurrency);
+      const stripeMonthlyPrice = stripeMonthlyPrices.find(
+        ({ unit_amount, currency }) =>
+          unit_amount == normalizedMonthlyPrice &&
+          currency == normalizedCurrency
+      );
       if (stripeMonthlyPrice) {
         if (stripeMonthlyPrice.active) {
           out.monthly = stripeMonthlyPrice;
         } else {
-          out.monthly = await this.stripe.api.prices.update(stripeMonthlyPrice.id, { active: true });
+          out.monthly = await this.stripe.api.prices.update(
+            stripeMonthlyPrice.id,
+            { active: true }
+          );
         }
       } else {
         out.monthly = await this.stripe.api.prices.create({
@@ -69,7 +80,7 @@ const SubscribableHandler = {
           currency: normalizedCurrency,
           unit_amount: normalizedMonthlyPrice,
           recurring: {
-            interval: 'month',
+            interval: "month",
           },
         });
       }
@@ -77,20 +88,33 @@ const SubscribableHandler = {
 
     for (const { active, unit_amount, currency, id } of stripeMonthlyPrices) {
       if (!active) continue;
-      if (enableMonthly && unit_amount == normalizedMonthlyPrice && currency == normalizedCurrency) continue;
+      if (
+        enableMonthly &&
+        unit_amount == normalizedMonthlyPrice &&
+        currency == normalizedCurrency
+      )
+        continue;
       await this.stripe.api.prices.update(id, { active: false });
     }
 
-    const stripeYearlyPrices = stripePrices.filter(({ recurring }) => recurring.interval == 'year');
+    const stripeYearlyPrices = stripePrices.filter(
+      ({ recurring }) => recurring.interval == "year"
+    );
     const normalizedYearlyPrice = yearlyPrice ? yearlyPrice * 100 : null;
 
     if (enableYearly) {
-      const stripeYearlyPrice = stripeYearlyPrices.find(({ unit_amount, currency }) => unit_amount == normalizedYearlyPrice && currency == normalizedCurrency);
+      const stripeYearlyPrice = stripeYearlyPrices.find(
+        ({ unit_amount, currency }) =>
+          unit_amount == normalizedYearlyPrice && currency == normalizedCurrency
+      );
       if (stripeYearlyPrice) {
         if (stripeYearlyPrice.active) {
           out.yearly = stripeYearlyPrice;
         } else {
-          out.yearly = await this.stripe.api.prices.update(stripeYearlyPrice.id, { active: true });
+          out.yearly = await this.stripe.api.prices.update(
+            stripeYearlyPrice.id,
+            { active: true }
+          );
         }
       } else {
         out.yearly = await this.stripe.api.prices.create({
@@ -98,7 +122,7 @@ const SubscribableHandler = {
           currency: normalizedCurrency,
           unit_amount: normalizedYearlyPrice,
           recurring: {
-            interval: 'year',
+            interval: "year",
           },
         });
       }
@@ -106,7 +130,12 @@ const SubscribableHandler = {
 
     for (const { active, unit_amount, currency, id } of stripeYearlyPrices) {
       if (!active) continue;
-      if (enableYearly && unit_amount == normalizedYearlyPrice && currency == normalizedCurrency) continue;
+      if (
+        enableYearly &&
+        unit_amount == normalizedYearlyPrice &&
+        currency == normalizedCurrency
+      )
+        continue;
       await this.stripe.api.prices.update(id, { active: false });
     }
 
@@ -114,20 +143,31 @@ const SubscribableHandler = {
   },
 
   async getStripeCustomer({ userId, email }) {
-    const { data: [stripeCustomer] } = await this.stripe.api.customers.search({
+    const {
+      data: [stripeCustomer],
+    } = await this.stripe.api.customers.search({
       query: `metadata['pinstripeUserId']:'${userId}'`,
     });
     if (stripeCustomer) return stripeCustomer;
 
-    if (email) return await this.stripe.api.customers.create({
-      email,
-      metadata: {
-        pinstripeUserId: userId,
-      },
-    });
+    if (email)
+      return await this.stripe.api.customers.create({
+        email,
+        metadata: {
+          pinstripeUserId: userId,
+        },
+      });
   },
 
-  async createCheckoutSession({ interval, userId, email, returnUrl = new URL('/', this.stripe.workspace.initialParams._url).toString() }) {
+  async createCheckoutSession({
+    interval,
+    userId,
+    email,
+    returnUrl = new URL(
+      "/",
+      this.stripe.workspace.initialParams._url
+    ).toString(),
+  }) {
     const stripePrices = await this.getStripePrices();
     const stripePrice = stripePrices[interval];
 
@@ -148,12 +188,17 @@ const SubscribableHandler = {
           quantity: 1,
         },
       ],
-      mode: 'subscription',
+      mode: "subscription",
     });
   },
 
   async createStripePaymentUrl({ interval, userId, email, returnUrl }) {
-    const stripeCheckoutSession = await this.createCheckoutSession({ interval, userId, email, returnUrl });
+    const stripeCheckoutSession = await this.createCheckoutSession({
+      interval,
+      userId,
+      email,
+      returnUrl,
+    });
 
     return stripeCheckoutSession?.url;
   },
@@ -165,7 +210,7 @@ const SubscribableHandler = {
 
     const subscriptions = await this.stripe.api.subscriptions.list({
       customer: stripeCustomer.id,
-      status: 'active'
+      status: "active",
     });
 
     for (const { id } of subscriptions.data) {
@@ -175,30 +220,33 @@ const SubscribableHandler = {
 
   getWebhookUrl() {
     const host = this.stripe.workspace.initialParams._headers.host;
-    const baseUrl = new URL('/', this.stripe.workspace.initialParams._url);
-    baseUrl.protocol = 'https:';
+    const baseUrl = new URL("/", this.stripe.workspace.initialParams._url);
+    baseUrl.protocol = "https:";
     baseUrl.host = host;
-    return new URL('/_actions/guest/stripe_webhook', baseUrl);
+    return new URL("/_actions/guest/stripe_webhook", baseUrl);
   },
 
   webhookUrlIsPublicallyAccessible() {
     const { hostname } = this.getWebhookUrl();
-    return !['localhost', '127.0.0.1'].includes(hostname);
+    return !["localhost", "127.0.0.1"].includes(hostname);
   },
 
   async getStripeWebhookEndpoint() {
     const { id } = this.subscribable;
     const webhookUrl = this.getWebhookUrl();
-    const { data: stripeWebhookEndpoints } = await this.stripe.api.webhookEndpoints.list();
+    const { data: stripeWebhookEndpoints } =
+      await this.stripe.api.webhookEndpoints.list();
 
-    let out = stripeWebhookEndpoints.find(({ url }) => url == webhookUrl.toString());
+    let out = stripeWebhookEndpoints.find(
+      ({ url }) => url == webhookUrl.toString()
+    );
 
     if (!out) {
       out = await this.stripe.api.webhookEndpoints.create({
         url: webhookUrl.toString(),
         enabled_events: [
-          'customer.subscription.created',
-          'customer.subscription.deleted'
+          "customer.subscription.created",
+          "customer.subscription.deleted",
         ],
         metadata: {
           // pinstripeSubscribableId: id,
@@ -212,7 +260,8 @@ const SubscribableHandler = {
 
   async syncStripeWithSubscribable() {
     await this.getStripePrices();
-    if (this.webhookUrlIsPublicallyAccessible()) await this.getStripeWebhookEndpoint();
+    if (this.webhookUrlIsPublicallyAccessible())
+      await this.getStripeWebhookEndpoint();
   },
 };
 
@@ -225,11 +274,13 @@ export default {
       this.webhookSecret = crypto.randomUUID();
     });
 
-    this.on("syncWithSubscribable", (stripe, subscribable) =>
-      stripe
+    this.on("syncWithSubscribable", async (stripe, subscribable) => {
+      const { monthlyPrice, yearlyPrice } = subscribable.subscriptionConfig;
+      if (monthlyPrice === undefined && yearlyPrice === undefined) return;
+      await stripe
         .deligateTo(subscribable, SubscribableHandler)
-        .syncStripeWithSubscribable()
-    );
+        .syncStripeWithSubscribable();
+    });
   },
 
   get api() {
@@ -256,15 +307,31 @@ export default {
     }
   },
 
-  async createPaymentUrl({ subscribableId, interval, userId, email, returnUrl }) {
-    const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
+  async createPaymentUrl({
+    subscribableId,
+    interval,
+    userId,
+    email,
+    returnUrl,
+  }) {
+    const subscribable = await this.database.subscribables
+      .where({ id: subscribableId })
+      .first();
     if (!subscribable) return;
-    return this.delegateTo(subscribable, SubscribableHandler).createStripePaymentUrl({ interval, userId, email, returnUrl });
+    return this.delegateTo(
+      subscribable,
+      SubscribableHandler
+    ).createStripePaymentUrl({ interval, userId, email, returnUrl });
   },
 
   async cancelSubscription({ subscribableId, userId }) {
-    const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
+    const subscribable = await this.database.subscribables
+      .where({ id: subscribableId })
+      .first();
     if (!subscribable) return;
-    return this.delegateTo(subscribable, SubscribableHandler).cancelSubscription({ userId });
-  }
+    return this.delegateTo(
+      subscribable,
+      SubscribableHandler
+    ).cancelSubscription({ userId });
+  },
 };

@@ -36,7 +36,7 @@ export default {
 
       async validateWith(){
         const isPaid = this.enableMonthly || this.enableYearly;
-        if(!this.isValidationError('general') && isPaid && !await that.membership.stripeIsConfiguredCorrectly()){
+        if(!this.isValidationError('general') && isPaid && !await that.database.stripe.isConfiguredCorrectly()){
           this.setValidationError('general', that.renderHtml`Stripe must be configured to offer paid memberships - ${that.renderView('_button', {
             tagName: 'a',
             target: '_overlay',
