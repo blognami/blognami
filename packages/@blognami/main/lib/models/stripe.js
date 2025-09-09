@@ -254,5 +254,17 @@ export default {
     } catch (error) {
       return false;
     }
+  },
+
+  async createPaymentUrl({ subscribableId, interval, userId, email, returnUrl }) {
+    const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
+    if (!subscribable) return;
+    return this.delegateTo(subscribable, SubscribableHandler).createStripePaymentUrl({ interval, userId, email, returnUrl });
+  },
+
+  async cancelSubscription({ subscribableId, userId }) {
+    const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
+    if (!subscribable) return;
+    return this.delegateTo(subscribable, SubscribableHandler).cancelSubscription({ userId });
   }
 };
