@@ -21,15 +21,6 @@ export default {
             }
         );
         fields.push(
-            {
-                name: 'membershipTier',
-                type: 'select',
-                options: {
-                    none: 'None',
-                    free: 'Free',
-                    paid: 'Paid'
-                }
-            },
             'metaTitle',
             'metaDescription',
             'slug'
