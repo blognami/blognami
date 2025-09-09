@@ -18,6 +18,7 @@ const SubscribableHandler = {
 
     if (!out) {
       out = await this.stripe.api.products.create({
+        // Perhaps use subscribable.constructor.name instead of a generic name?
         name: "Membership",
         metadata: {
           pinstripeSubscribableId: id,
@@ -275,6 +276,7 @@ export default {
     });
 
     this.on("syncWithSubscribable", async (stripe, subscribable) => {
+      if(!await stripe.isConfiguredCorrectly()) return;
       await stripe
         .delegateTo(subscribable, SubscribableHandler)
         .syncStripeWithSubscribable();
