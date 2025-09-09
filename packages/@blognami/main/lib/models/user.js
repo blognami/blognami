@@ -131,8 +131,6 @@ export default {
 
     async isSubscribedTo(subscribable, options = {}){
         const { tier = 'free' } = options;
-        if(tier == 'public') return true;
-
         const { id: subscribableId } = await subscribable;
         const subscription = await this.subscriptions.where({ subscribableId }).first();
         if(tier == 'free' && subscription) return true;
