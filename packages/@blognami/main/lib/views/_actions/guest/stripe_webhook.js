@@ -8,7 +8,7 @@ export default {
         let event;
 
         try {
-            event = await this.stripe.webhooks.constructEvent(this.params._body, stripeSignature, webhookSecret);
+            event = await this.database.stripe.api.webhooks.constructEvent(this.params._body, stripeSignature, webhookSecret);
         } catch (error) {
             console.error(error);
             return [403, { 'content-type': 'application/json' }, [JSON.stringify({ error: 'Invalid signature' })]];
@@ -19,7 +19,7 @@ export default {
             if(matches){
                 const type = matches[1];
                 const { customer: customerId } = event.data.object;
-                const { metadata: { pinstripeUserId } } = await this.stripe.customers.retrieve(customerId);
+                const { metadata: { pinstripeUserId } } = await this.database.stripe.api.customers.retrieve(customerId);
                 await this.database.users.where({ id: pinstripeUserId }).update({
                     membershipTier: type == 'created' ?  'paid' : 'none',
                 });
