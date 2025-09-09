@@ -1,7 +1,7 @@
 
 export default {
     async migrate(){
-        await this.database.table('newsletter', async newsletter => {
+        await this.database.table('newsletters', async newsletter => {
             await newsletter.addColumn('enableMonthly', 'boolean');
             await newsletter.addColumn('monthlyPrice', 'decimal');
             await newsletter.addColumn('enableYearly', 'boolean');

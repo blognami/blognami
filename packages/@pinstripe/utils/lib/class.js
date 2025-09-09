@@ -17,6 +17,10 @@ export class Class {
         return assignProps(this, ...sources);
     }
 
+    static deligateTo(...args){
+        return deligateTo(this, ...args);
+    }
+
     static new(...args){
         return new this(...args);
     }
@@ -40,6 +44,10 @@ export class Class {
     assignProps(...sources){
         return assignProps(this, ...sources);
     }
+
+    deligateTo(...args){
+        return deligateTo(this, ...args);
+    }
 }
 
 const assignProps = (target, ...sources) => {
@@ -62,3 +70,5 @@ const assignProps = (target, ...sources) => {
     });
     return target;
 };
+
+const deligateTo = (...args) => Class.extend().include(args.pop()).new(...args);

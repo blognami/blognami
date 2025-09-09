@@ -1,8 +1,6 @@
 
 import * as crypto from 'crypto';
 
-
-
 export default {
     meta(){
         this.include('pageable');
@@ -129,5 +127,22 @@ export default {
                 emailNotificationLastSentAt: Date.now()
             });
         });
+    },
+
+    async isSubscribedTo(subscribable, options = {}){
+        const { tier = 'free' } = options;
+        if(tier == 'public') return true;
+
+        const { id: subscribableId } = await subscribable;
+        const subscription = await this.subscriptions.where({ subscribableId }).first();
+        if(tier == 'free' && subscription) return true;
+        if(tier == 'paid' && subscription?.tier == 'paid') return true;
+
+        return false;
+    },
+
+    async isSubscribedToNewsletter(options = {}){
+        const newsletter = await this.database.newsletter;
+        return this.isSubscribedTo(newsletter, options);
     }
 };
