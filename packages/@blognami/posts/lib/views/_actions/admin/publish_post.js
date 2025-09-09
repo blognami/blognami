@@ -30,8 +30,8 @@ export default {
             if(!post) return;
             const { title, slug, access } = post;
             const url = new URL(`/${slug}`, baseUrl);
-            const tiers = ['yearly', 'monthly'];
-            if(access != 'paid') tier.push('free');
+            const tiers = ['paid'];
+            if(access != 'paid') tiers.push('free');
 
             let page = 1;
             while(true){
