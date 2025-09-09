@@ -4,7 +4,6 @@ export default {
     const that = this;
 
     const newsletter = await this.database.newsletter;
-    const wasPaid = newsletter.enableMonthly || newsletter.enableYearly;
 
     const enableMonthly = this.params._method == 'GET' ? newsletter.enableMonthly : this.params.enableMonthly == 'true';
     const enableYearly = this.params._method == 'GET' ? newsletter.enableYearly : this.params.enableYearly == 'true';
@@ -47,13 +46,6 @@ export default {
           })}.`);
         }
       },
-
-      async success({ enableMonthly, enableYearly }) {
-        const isPaid = enableMonthly || enableYearly;
-        if (isPaid || wasPaid) {
-          await that.membership.syncWithStripe();
-        }
-      }
     });
   },
 };
