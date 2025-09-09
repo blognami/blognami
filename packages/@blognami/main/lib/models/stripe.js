@@ -275,10 +275,8 @@ export default {
     });
 
     this.on("syncWithSubscribable", async (stripe, subscribable) => {
-      const { monthlyPrice, yearlyPrice } = subscribable.subscriptionConfig;
-      if (monthlyPrice === undefined && yearlyPrice === undefined) return;
       await stripe
-        .deligateTo(subscribable, SubscribableHandler)
+        .delegateTo(subscribable, SubscribableHandler)
         .syncStripeWithSubscribable();
     });
   },
