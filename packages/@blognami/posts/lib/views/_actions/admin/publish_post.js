@@ -35,7 +35,7 @@ export default {
 
             let page = 1;
             while(true){
-                const users = await this.database.users.where({ subscriptions: { tiers } }).paginate(page, 100).all();
+                const users = await this.database.users.where({ subscriptions: { tier: tiers } }).paginate(page, 100).all();
                 if(users.length == 0) break;
                 for(const user of users){
                     await user.notify(({ line }) => {

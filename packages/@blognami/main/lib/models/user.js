@@ -141,6 +141,11 @@ export default {
         });
     },
 
+    async createPaymentUrl(subscribable, options = {}){
+        const { id: subscribableId } = await subscribable;
+        return this.database.stripe.createPaymentUrl({ subscribableId, userId: this.id, ...options });
+    },
+
     async isSubscribedTo(subscribable, options = {}){
         const { tier = 'free' } = options;
         const { id: subscribableId } = await subscribable;
@@ -167,6 +172,11 @@ export default {
     async createNewsletterSubscription(options = {}){
         const newsletter = await this.database.newsletter;
         return this.createSubscription(newsletter, options);
+    },
+
+    async createNewsletterPaymentUrl(options = {}){
+        const newsletter = await this.database.newsletter;
+        return this.createPaymentUrl(newsletter, options);
     },
 
     async isSubscribedToNewsletter(options = {}){

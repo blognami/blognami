@@ -306,6 +306,7 @@ export default {
     }
   },
 
+  // perhaps should be called  createSubscriptionPaymentUrl
   async createPaymentUrl({
     subscribableId,
     interval,
