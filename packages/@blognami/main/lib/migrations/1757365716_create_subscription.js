@@ -5,7 +5,6 @@ export default {
             await subscriptions.addColumn('subscribableId', 'foreign_key');
             await subscriptions.addColumn('userId', 'foreign_key');
             await subscriptions.addColumn('tier', 'string');
-            await subscriptions.addColumn('expiresAt', 'datetime');
         });
     }
 };

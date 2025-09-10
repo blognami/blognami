@@ -150,6 +150,17 @@ export default {
         }
     },
 
+    async createSubscription(subscribable, options = {}){
+        const { tier = 'free' } = options;
+        const { id: subscribableId } = await subscribable;
+
+        await this.database.subscriptions.insert({
+            subscribableId,
+            userId: this.id,
+            tier
+        });
+    },
+
     async isSubscribedToNewsletter(options = {}){
         const newsletter = await this.database.newsletter;
         return this.isSubscribedTo(newsletter, options);
