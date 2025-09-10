@@ -143,7 +143,7 @@ export default {
 
     async createPaymentUrl(subscribable, options = {}){
         const { id: subscribableId } = await subscribable;
-        return this.database.stripe.createPaymentUrl({ subscribableId, userId: this.id, ...options });
+        return this.database.stripe.createPaymentUrl({ subscribableId, userId: this.id, email: this.email, ...options });
     },
 
     async isSubscribedTo(subscribable, options = {}){

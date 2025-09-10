@@ -5,12 +5,16 @@ export default {
 
         const stripeSignature = this.params._headers['stripe-signature'];
 
+        console.log('-----------------stripeSignature', stripeSignature);
+
+        console.log('-----------------stripeWebhookBody', this.params._body);
+
         let event;
 
         try {
             event = await this.database.stripe.api.webhooks.constructEvent(this.params._body, stripeSignature, webhookSecret);
         } catch (error) {
-            console.error(error);
+            console.error('-----------------stripeWebhookError', error);
             return [403, { 'content-type': 'application/json' }, [JSON.stringify({ error: 'Invalid signature' })]];
         }
 

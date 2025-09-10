@@ -77,7 +77,7 @@ export default {
 
         return this.renderHtml`
             <script type="pinstripe">
-                window.location.href = ${this.renderHtml(JSON.stringify(await this.membership.createStripePaymentUrl({ interval: plan, userId: user.id, email: user.email, returnUrl })))};
+                window.location.href = ${this.renderHtml(JSON.stringify(await user.createNewsletterPaymentUrl({ interval: plan, returnUrl })))};
             </script>
         `;
     },
