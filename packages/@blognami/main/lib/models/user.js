@@ -129,6 +129,7 @@ export default {
         });
     },
 
+    // perhaps should be called subscribeTo
     async createSubscription(subscribable, options = {}){
         const { tier = 'free' } = options;
         const { id: subscribableId } = await subscribable;
@@ -150,6 +151,7 @@ export default {
         return false;
     },
 
+    // perhaps should be called unsubscribeFrom
     async cancelSubscription(subscribable){
         const { id: subscribableId } = await subscribable;
         const subscription = await this.subscriptions.where({ userId: this.id, subscribableId }).first();
@@ -161,6 +163,7 @@ export default {
         }
     },
 
+    // perhaps should be called subscribeToNewsletter
     async createNewsletterSubscription(options = {}){
         const newsletter = await this.database.newsletter;
         return this.createSubscription(newsletter, options);
@@ -171,6 +174,7 @@ export default {
         return this.isSubscribedTo(newsletter, options);
     },
 
+    // perhaps should be called unsubscribeFromNewsletter
     async cancelNewsletterSubscription(){
         const newsletter = await this.database.newsletter;
         return this.cancelSubscription(newsletter);
