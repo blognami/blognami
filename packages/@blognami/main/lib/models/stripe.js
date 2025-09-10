@@ -253,6 +253,8 @@ const SubscribableHandler = {
           pinstripeEnvironment: process.env.NODE_ENV,
         },
       });
+
+      this.stripe.update({ webhookSecret: out.secret });
     }
 
     return out;
