@@ -139,8 +139,24 @@ export default {
         return false;
     },
 
+    async cancelSubscription(subscribable){
+        const { id: subscribableId } = await subscribable;
+        const subscription = await this.subscriptions.where({ userId: this.id, subscribableId }).first();
+        if(!subscription) return;
+        if(subscription.tier == 'paid'){
+            await this.database.stripe.cancelSubscription({ subscribableId, userId: this.id });
+        } else {
+            await subscription.delete();
+        }
+    },
+
     async isSubscribedToNewsletter(options = {}){
         const newsletter = await this.database.newsletter;
         return this.isSubscribedTo(newsletter, options);
+    },
+
+    async cancelNewsletterSubscription(){
+        const newsletter = await this.database.newsletter;
+        return this.cancelSubscription(newsletter);
     }
 };
