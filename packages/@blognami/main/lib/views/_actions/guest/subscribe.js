@@ -70,7 +70,7 @@ export default {
         if(await user.isSubscribedToNewsletter({ tier: 'paid' })) return reloadHtml;
 
         if(plan == 'free'){
-            await user.createNewsletterSubscription({ tier: 'free' });
+            await user.createNewsletterSubscription();
 
             return reloadHtml;
         }
