@@ -161,7 +161,7 @@ export default {
         }
     },
 
-    async subscribeToNewsletter(options = {}){
+    async createNewsletterSubscription(options = {}){
         const newsletter = await this.database.newsletter;
         return this.createSubscription(newsletter, options);
     },
