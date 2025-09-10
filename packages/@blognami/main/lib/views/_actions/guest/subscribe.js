@@ -70,7 +70,7 @@ export default {
         if(await user.isSubscribedToNewsletter({ tier: 'paid' })) return reloadHtml;
 
         if(plan == 'free'){
-            database.subscriptions.insert({ 
+            await database.subscriptions.insert({ 
                 subscribableId: newsletter.id,
                 userId: user.id,
                 tier: 'free' 
