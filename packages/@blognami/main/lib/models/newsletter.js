@@ -16,7 +16,7 @@ export default {
     },
 
     get subscriptionConfig(){
-        const out = { currency: this.currency };
+        const out = { name: 'Newsletter', currency: this.currency };
         if(this.enableMonthly) out.monthlyPrice = this.monthlyPrice;
         if(this.enableYearly) out.yearlyPrice = this.yearlyPrice;
         return out;

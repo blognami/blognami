@@ -18,8 +18,7 @@ const SubscribableHandler = {
 
     if (!out) {
       out = await this.stripe.api.products.create({
-        // Perhaps use subscribable.constructor.name instead of a generic name?
-        name: "Membership",
+        name: this.subscribable.subscriptionConfig.name,
         metadata: {
           pinstripeSubscribableId: id,
           pinstripeEnvironment: process.env.NODE_ENV,
