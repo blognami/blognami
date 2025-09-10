@@ -129,6 +129,17 @@ export default {
         });
     },
 
+    async createSubscription(subscribable, options = {}){
+        const { tier = 'free' } = options;
+        const { id: subscribableId } = await subscribable;
+
+        await this.database.subscriptions.insert({
+            subscribableId,
+            userId: this.id,
+            tier
+        });
+    },
+
     async isSubscribedTo(subscribable, options = {}){
         const { tier = 'free' } = options;
         const { id: subscribableId } = await subscribable;
@@ -150,15 +161,9 @@ export default {
         }
     },
 
-    async createSubscription(subscribable, options = {}){
-        const { tier = 'free' } = options;
-        const { id: subscribableId } = await subscribable;
-
-        await this.database.subscriptions.insert({
-            subscribableId,
-            userId: this.id,
-            tier
-        });
+    async subscribeToNewsletter(options = {}){
+        const newsletter = await this.database.newsletter;
+        return this.createSubscription(newsletter, options);
     },
 
     async isSubscribedToNewsletter(options = {}){
