@@ -67,10 +67,14 @@ export default {
             </script>
         `;
 
-        if(['monthly', 'yearly'].includes(user.membershipTier)) return reloadHtml;
+        if(await user.isSubscribedToNewsletter({ tier: 'paid' })) return reloadHtml;
 
         if(plan == 'free'){
-            await user.update({ membershipTier: 'free' });
+            database.subscriptions.insert({ 
+                subscribableId: newsletter.id,
+                userId: user.id,
+                tier: 'free' 
+            });
 
             return reloadHtml;
         }
