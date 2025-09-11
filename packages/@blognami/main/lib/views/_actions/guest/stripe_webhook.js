@@ -23,10 +23,15 @@ export default {
             if(matches){
                 const type = matches[1];
                 const { customer: customerId } = event.data.object;
-                const { metadata: { pinstripeUserId } } = await this.database.stripe.api.customers.retrieve(customerId);
-                await this.database.users.where({ id: pinstripeUserId }).update({
-                    membershipTier: type == 'created' ?  'paid' : 'none',
-                });
+                const { metadata: { blognamiUserId } } = await this.database.stripe.api.customers.retrieve(customerId);
+                const user = await this.database.users.where({ id: blognamiUserId }).first();
+                if(user){
+                    if(type == 'created'){
+                        await user.createNewsletterSubscription({ tier: 'paid' });
+                    } else {
+                        await user.cancelNewsletterSubscription();
+                    }
+                }
             }
         } catch (error) {
             console.error(error);

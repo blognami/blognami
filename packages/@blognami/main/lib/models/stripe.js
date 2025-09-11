@@ -146,7 +146,7 @@ const SubscribableHandler = {
     const {
       data: [stripeCustomer],
     } = await this.stripe.api.customers.search({
-      query: `metadata['pinstripeUserId']:'${userId}'`,
+      query: `metadata['blognamiUserId']:'${userId}'`,
     });
     if (stripeCustomer) return stripeCustomer;
 
@@ -154,7 +154,7 @@ const SubscribableHandler = {
       return await this.stripe.api.customers.create({
         email,
         metadata: {
-          pinstripeUserId: userId,
+          blognamiUserId: userId,
         },
       });
   },
