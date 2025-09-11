@@ -21,7 +21,7 @@ const SubscribableHandler = {
         name: this.subscribable.subscriptionConfig.name,
         metadata: {
           pinstripeSubscribableId: id,
-          pinstripeEnvironment: process.env.NODE_ENV,
+          blognamiEnvironment: process.env.NODE_ENV,
         },
       });
     }
@@ -250,7 +250,7 @@ const SubscribableHandler = {
         ],
         metadata: {
           // pinstripeSubscribableId: id,
-          pinstripeEnvironment: process.env.NODE_ENV,
+          blognamiEnvironment: process.env.NODE_ENV,
         },
       });
 
