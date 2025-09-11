@@ -134,6 +134,8 @@ export default {
         const { tier = 'free' } = options;
         const { id: subscribableId } = await subscribable;
 
+        // we need to deal with upgrades/downgrades here
+
         await this.database.subscriptions.insert({
             subscribableId,
             userId: this.id,
