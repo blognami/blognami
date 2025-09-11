@@ -4,17 +4,13 @@ export default {
         const { webhookSecret } = await this.database.stripe;
 
         const stripeSignature = this.params._headers['stripe-signature'];
-
-        console.log('-----------------stripeSignature', stripeSignature);
-
-        console.log('-----------------stripeWebhookBody', this.params._body);
-
+        
         let event;
 
         try {
             event = await this.database.stripe.api.webhooks.constructEvent(this.params._body, stripeSignature, webhookSecret);
         } catch (error) {
-            console.error('-----------------stripeWebhookError', error);
+            console.error(error);
             return [403, { 'content-type': 'application/json' }, [JSON.stringify({ error: 'Invalid signature' })]];
         }
 
@@ -29,8 +25,7 @@ export default {
                     if(type == 'created'){
                         await user.createNewsletterSubscription({ tier: 'paid' });
                     } else {
-                        console.log('-----------------cancelling subscription for user', user.id);
-                        await database.subscriptions.where({
+                        await this.database.subscriptions.where({
                             userId: user.id,
                             subscribableId: await this.database.newsletter.id
                         }).delete();
