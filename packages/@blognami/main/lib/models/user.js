@@ -175,6 +175,8 @@ export default {
         }
     },
 
+    // maybe all the newsletter specific ones should go.
+
     // perhaps should be called subscribeToNewsletter
     async createNewsletterSubscription(options = {}){
         const newsletter = await this.database.newsletter;
