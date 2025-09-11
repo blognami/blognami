@@ -189,6 +189,12 @@ const SubscribableHandler = {
         },
       ],
       mode: "subscription",
+      subscription_data: {
+        metadata: {
+          blognamiSubscribableId: this.subscribable.id,
+          blognamiUserId: userId,
+        }
+      }
     });
   },
 
