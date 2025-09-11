@@ -4,7 +4,7 @@ export default {
         const { webhookSecret } = await this.database.stripe;
 
         const stripeSignature = this.params._headers['stripe-signature'];
-        
+
         let event;
 
         try {
@@ -18,17 +18,16 @@ export default {
             const matches = event.type.match(/^customer\.subscription\.(created|deleted)$/);
             if(matches){
                 const type = matches[1];
-                const { customer: customerId } = event.data.object;
-                const { metadata: { blognamiUserId } } = await this.database.stripe.api.customers.retrieve(customerId);
-                const user = await this.database.users.where({ id: blognamiUserId }).first();
+                const { metadata: { blognamiUserId: userId, blognamiSubscribableId: subscribableId } } = event.data.object;
+                console.log(`----------- subscription ${JSON.stringify({ type, userId, subscribableId })}`);
+                // console.log(`event.data.object ${JSON.stringify(event.data.object, null, 2)}`);
+                const user = await this.database.users.where({ id: userId }).first();
                 if(user){
                     if(type == 'created'){
-                        await user.createNewsletterSubscription({ tier: 'paid' });
+                        const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
+                        if(subscribable) await user.createSubscription(subscribable, { tier: 'paid' });
                     } else {
-                        await this.database.subscriptions.where({
-                            userId: user.id,
-                            subscribableId: await this.database.newsletter.id
-                        }).delete();
+                        await this.database.subscriptions.where({ userId, subscribableId }).delete();
                     }
                 }
             }
