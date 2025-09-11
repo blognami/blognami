@@ -175,7 +175,7 @@ export default {
         }
     },
 
-    // maybe all the newsletter specific ones should go.
+    // maybe all the newsletter specific ones should be removed
 
     // perhaps should be called subscribeToNewsletter
     async createNewsletterSubscription(options = {}){
