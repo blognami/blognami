@@ -29,7 +29,11 @@ export default {
                     if(type == 'created'){
                         await user.createNewsletterSubscription({ tier: 'paid' });
                     } else {
-                        await user.cancelNewsletterSubscription();
+                        console.log('-----------------cancelling subscription for user', user.id);
+                        await database.subscriptions.where({
+                            userId: user.id,
+                            subscribableId: await this.database.newsletter.id
+                        }).delete();
                     }
                 }
             }
