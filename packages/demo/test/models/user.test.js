@@ -61,6 +61,4 @@ test(`user`, () => Workspace.run(async _ => {
     await user.posts.delete();
 
     assert.equal(await tagableTags.count(), 0);
-
-    // assert.equal(await Promise.all([user.isSubscribedToNewsletter(), user.isSubscribedToNewsletter()]), [false, false]);
 }));
