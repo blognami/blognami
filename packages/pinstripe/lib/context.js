@@ -45,7 +45,7 @@ export const Context = Class.extend().include({
         }
         this._lock = (async () => {
             try {
-                out = await fn();
+                out = await fn(fn);
             } finally {
                 delete this._lock;
             }
