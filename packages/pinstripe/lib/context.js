@@ -38,18 +38,27 @@ export const Context = Class.extend().include({
         }
     },
 
-    async lock(fn){
-        let out;
-        while(this._lock){
-            await this._lock;
-        }
-        this._lock = (async () => {
-            try {
-                out = await fn(fn);
-            } finally {
-                delete this._lock;
-            }
-        })();
-        return out;
+    async getOrCreateWithLock(name, fn){
+        if(this[name]) return this[name];
+        await lock.call(this, async () => {
+            if(this[name]) return;
+            this[name] = fn();   
+        });
+        return this[name];
     }
 });
+
+async function lock(fn){
+    while(this._lock){
+        await this._lock;
+    }
+    this._lock = (async () => {
+        try {
+          await fn(this);
+        } finally {
+            delete this._lock;
+        }
+    })();
+    await this._lock;
+}
+
