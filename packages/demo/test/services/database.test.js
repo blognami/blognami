@@ -11,9 +11,9 @@ test(`database.lock`, () => Workspace.run(async function(){
     await Promise.all([
         this.database.lock(async () => {
             await new Promise(resolve => setTimeout(resolve));
-        }, '1'),
+        }),
         this.database.lock(async () => {
             await new Promise(resolve => setTimeout(resolve));
-        }, 'lock2')
+        })
     ])
 }));
