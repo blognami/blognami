@@ -36,5 +36,20 @@ export const Context = Class.extend().include({
                 await resource.destroy();
             }
         }
+    },
+
+    async lock(fn){
+        let out;
+        while(this._lock){
+            await this._lock;
+        }
+        this._lock = (async () => {
+            try {
+                out = await fn();
+            } finally {
+                delete this._lock;
+            }
+        })();
+        return out;
     }
 });

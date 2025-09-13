@@ -8,12 +8,13 @@ import { Workspace } from 'pinstripe';
 
 
 test(`database.lock`, () => Workspace.run(async function(){
+    // await this.database.client
     await Promise.all([
         this.database.lock(async () => {
             await new Promise(resolve => setTimeout(resolve));
-        }),
+        }, '1'),
         this.database.lock(async () => {
             await new Promise(resolve => setTimeout(resolve));
-        })
+        }, 'lock2')
     ])
 }));
