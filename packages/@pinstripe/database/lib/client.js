@@ -43,9 +43,12 @@ export const Client = Class.extend().include({
         await this.adapt(this, {
             async mysql(){
                 if(this.lockLevel == 0){
+                    this.lockLevel++;
                     await this.run(`select get_lock('pinstripe_lock', -1)`);
+                } else {
+                    this.lockLevel++;
                 }
-                this.lockLevel++;
+                
                 try {
                     out = await fn();
                 } catch(e){
@@ -69,6 +72,7 @@ export const Client = Class.extend().include({
     async transaction(fn){
         let out;
         if(this.transactionLevel == 0){
+            this.transactionLevel++;
             await this.adapt(this, {
                 async mysql(){
                     await this.run('start transaction');
@@ -79,8 +83,10 @@ export const Client = Class.extend().include({
                     await this.run('begin exclusive transaction');
                 }
             });
+        } else {
+            this.transactionLevel++;
         }
-        this.transactionLevel++;
+        
         try {
             out = await fn();
         } catch(e){
