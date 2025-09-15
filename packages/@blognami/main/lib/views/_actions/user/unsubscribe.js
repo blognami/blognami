@@ -2,12 +2,10 @@
 export default {
     async render(){
         const user = await this.session.user;
+        const subscribable = await this.database.subscribables.where({ id: this.params.subscribableId }).first();
+        if(!user || !subscribable) return;
 
-        if(user.membershipTier == 'paid'){
-            await this.membership.cancelSubscription({ userId: user.id });
-        } else {
-            await user.update({ membershipTier: 'none' });
-        }
+        await user.unsubscribeFrom(subscribable);
 
         return this.renderRedirect({ target: '_top' });
     }

@@ -28,6 +28,13 @@ export const Context = Class.extend().include({
         return out;
     },
 
+    getOrCreate(name, fn){
+        if(this[name]) return this[name];
+        if(!fn) return;
+        this[name] = fn();
+        return this[name];
+    },
+
     async destroy(){
         const resources = Object.values(this);
         while(resources.length){

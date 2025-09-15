@@ -1,4 +1,4 @@
-
+export * from './async_lock.js';
 export * from './class.js';
 export * from './constants.js';
 export * from './defer.js';

@@ -4,11 +4,12 @@ import { Database, Client } from "@pinstripe/database";
 export default {
     create(){
         return this.defer(async () => {
-            if(!this.context.root.databaseClient){
-                this.context.root.databaseClient = Client.new(await this.config.database);
-            }
-
-            this.database = await Database.new(this.context.root.databaseClient, this.context);
+            this.database = await Database.new(
+                await this.context.root.getOrCreate("databaseClient", async () =>
+                    Client.new(await this.config.database)
+                ),
+                this.context
+            );
 
             if(this.database.info.tenants){
                 let { tenant = defaultCallback } = await this.config;

@@ -1,6 +1,7 @@
 
 export default {
-    render(){
+    async render(){
+        if(await this.isSignedOut) return;
         return this.renderHtml`
             <pinstripe-popover>
                 <pinstripe-menu>
