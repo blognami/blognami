@@ -9,10 +9,11 @@ export default {
             async validateWith(){
                 if(!this.isValidationError('secretKey')){
                     try {
-                        await that.stripe.withSecretKey(this.secretKey).products.list({
+                        await that.database.stripe.api.withSecretKey(this.secretKey).products.list({
                             limit: 1,
                         });
                     } catch (error) {
+                        console.error(error);
                         this.setValidationError('secretKey', 'Invalid secret key.');
                     }
                 }

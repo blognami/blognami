@@ -9,8 +9,6 @@ export default {
             await users.addColumn('email', 'string');
             await users.addColumn('salt', 'string');
             await users.addColumn('role', 'string');
-            await users.addColumn('membershipTier', 'string', { index: true, default: 'none' });
-            await users.addColumn('membershipExpiresAt', 'datetime');
             await users.addColumn('lastSuccessfulSignInAt', 'datetime');
             await users.addColumn('lastFailedSignInAt', 'datetime');
             await users.addColumn('emailNotificationFrequency', 'string', { default: 'asap' });

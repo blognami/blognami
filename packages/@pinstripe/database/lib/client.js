@@ -2,9 +2,16 @@ import mysql from 'mysql2';
 import sqlite from 'sqlite3';
 import { existsSync, unlinkSync } from 'fs';
 
-import { Class } from '@pinstripe/utils';
+import { Class, AsyncLock } from '@pinstripe/utils';
 
 import { MYSQL_COLUMN_TYPE_TO_TYPE_MAP, SQLITE_COLUMN_TYPE_TO_TYPE_MAP } from './constants.js';
+
+const lockAsyncLock = AsyncLock.new();
+const transactionAsyncLock = AsyncLock.new();
+
+let connection;
+let connectionCounter = 0;
+let connectionPromise;
 
 export const Client = Class.extend().include({
     initialize(config){
@@ -12,104 +19,121 @@ export const Client = Class.extend().include({
         this.lockLevel = 0;
         this.transactionLevel = 0;
         this.cache = {};
+        this.connected = false;
     },
 
-    async run(query){
-        if(!this.connection){
-            await this.adapt(this, {
+    async run(query, options = {}){
+        if(!this.connected){
+            this.connected = true;
+            connectionCounter++;
+        }
+
+        while(connectionPromise && !options.skipConnectionPromise) await connectionPromise;
+
+        if(!connection){
+            connectionPromise = this.adapt(this, {
                 async mysql(){
                     const { adapter, database, ...connectionConfig } = this.config;
-                    this.connection = mysql.createConnection(connectionConfig);
-                    this.connection.connect();
+                    connection = mysql.createConnection(connectionConfig);
+                    connection.connect();
                     const databases = (await this.run('show databases')).map(row => row['Database']);
                     if(!databases.includes(database)){
-                        await this.run(`create database ${database}`);
+                        await this.run(`create database ${database}`, { skipConnectionPromise: true });
                     }
-                    await this.run(`use ${database}`);
+                    await this.run(`use ${database}`, { skipConnectionPromise: true });
                 },
 
                 async sqlite(){
                     const { filename } = this.config;
-                    this.connection = new sqlite.Database(filename);
-                    this.connection.configure('busyTimeout', 10000);
+                    connection = new sqlite.Database(filename);
+                    connection.configure('busyTimeout', 10000);
                 }
-            });   
+            });
+            await connectionPromise;
+            connectionPromise = undefined;
         }
+
         return run.call(this, ...prepare.call(this, await resolveQuery(query)));
     },
 
     async lock(fn){
         let out;
-        await this.adapt(this, {
-            async mysql(){
-                if(this.lockLevel == 0){
-                    await this.run(`select get_lock('pinstripe_lock', -1)`);
-                }
-                this.lockLevel++;
-                try {
-                    out = await fn();
-                } catch(e){
-                    this.lockLevel = 0;
-                    await this.run(`select release_lock('pinstripe_lock')`);
-                    throw e;
-                }
-                this.lockLevel--;
-                if(this.lockLevel == 0){
-                    await this.run(`select release_lock('pinstripe_lock')`);
-                }
-            },
+        this.lockLevel++;
+        await lockAsyncLock.lock({ skip: this.lockLevel > 1 }, async () => {
+            await this.adapt(this, {
+                async mysql(){
+                    if(this.lockLevel == 1){
+                        await this.run(`select get_lock('pinstripe_lock', -1)`);
+                    }
+                    
+                    try {
+                        out = await fn();
+                    } catch(e){
+                        this.lockLevel = 0;
+                        await this.run(`select release_lock('pinstripe_lock')`);
+                        throw e;
+                    }
 
-            sqlite(){
-                out = this.transaction(fn);
-            }
+                    if(this.lockLevel == 1){
+                        await this.run(`select release_lock('pinstripe_lock')`);
+                    }
+                },
+
+                async sqlite(){
+                    out = await this.transaction(fn);
+                }
+            });
         });
+        this.lockLevel--;
         return out;
     },
 
     async transaction(fn){
         let out;
-        if(this.transactionLevel == 0){
-            await this.adapt(this, {
-                async mysql(){
-                    await this.run('start transaction');
-                },
-
-                async sqlite(){
-                    await this.run('pragma locking_mode = exclusive');
-                    await this.run('begin exclusive transaction');
-                }
-            });
-        }
         this.transactionLevel++;
-        try {
-            out = await fn();
-        } catch(e){
-            if(this.transactionLevel > 0) await this.adapt(this, {
+        await transactionAsyncLock.lock({ skip: this.transactionLevel > 1 }, async () => {
+            if(this.transactionLevel == 1){
+                await this.adapt(this, {
+                    async mysql(){
+                        await this.run('start transaction');
+                    },
+
+                    async sqlite(){
+                        await this.run('pragma locking_mode = exclusive');
+                        await this.run('begin exclusive transaction');
+                    }
+                });
+            }
+            
+            try {
+                out = await fn();
+            } catch(e){
+                if(this.transactionLevel > 0) await this.adapt(this, {
+                    async mysql(){
+                        await this.run('rollback');
+                    },
+
+                    async sqlite(){
+                        await this.run('rollback');
+                        await this.run('pragma locking_mode = normal');
+                    }
+                });
+                this.transactionLevel = 0;
+                throw e;
+            }
+            
+            if(this.transactionLevel == 1) await this.adapt(this, {
                 async mysql(){
-                    await this.run('rollback');
+                    await this.run('commit');
                 },
 
                 async sqlite(){
-                    await this.run('rollback');
+                    await this.run('commit');
                     await this.run('pragma locking_mode = normal');
                 }
             });
-
-
-            this.transactionLevel = 0;
-            throw e;
-        }
-        this.transactionLevel--;
-        if(this.transactionLevel == 0) await this.adapt(this, {
-            async mysql(){
-                await this.run('commit');
-            },
-
-            async sqlite(){
-                await this.run('commit');
-                await this.run('pragma locking_mode = normal');
-            }
         });
+        this.transactionLevel--;
         return out;
     },
 
@@ -128,18 +152,23 @@ export const Client = Class.extend().include({
     },
 
     async destroy(){
-        if(this.connection) await this.adapt(this, {
+        if(!this.connected) return;
+        this.connected = false;
+        connectionCounter--;
+        if(connectionCounter > 0 || !connection) return;
+        const _connection = connection;
+        connection = undefined;
+        await this.adapt(this, {
             async mysql(){
-                await this.connection.end();
+                await _connection.end();
             },
 
             async sqlite(){
                 await new Promise((resolve, reject) => {
-                    this.connection.close(error => error ? reject(error) : resolve());
+                    _connection.close(error => error ? reject(error) : resolve());
                 });
             }
-        })
-        delete this.connection;
+        });
     },
 
     adapt(...args){
@@ -276,7 +305,7 @@ function run(query, values){
             if(!isTest) console.log(`Query: ${query}`);
             
             const out = await new Promise((resolve, reject) => {
-                this.connection.query(query, (error, rows) => {
+                connection.query(query, (error, rows) => {
                     if(error){
                         reject(error);
                     } else {
@@ -305,7 +334,7 @@ function run(query, values){
             if(!isTest) console.log(`Query: ${query}`);
 
             const out = await new Promise((resolve, reject) => {
-                this.connection.all(query, ...values, (error, rows) => {
+                connection.all(query, ...values, (error, rows) => {
                     if(error){
                         reject(error);
                     } else {

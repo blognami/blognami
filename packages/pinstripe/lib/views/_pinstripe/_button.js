@@ -125,7 +125,7 @@ export const styles = ({ views, colors }) =>`
 
 export default {
     render(){
-        let { tagName = 'button', isPrimary, isDangerous, isFullWidth, size = 'medium', ...attributes } = this.params;
+        let { tagName = 'button', isPrimary, isDangerous, isFullWidth, size = 'medium', class: _class, ...attributes } = this.params;
 
         tagName = tagName.toLowerCase();
         
@@ -146,6 +146,8 @@ export default {
         
         // Layout classes
         if(isFullWidth) classes.push(this.cssClasses.isFullWidth);
+
+        if(_class) classes.push(_class);
         
         return this.renderTag(tagName, { ...attributes, class: classes.join(' ') });
     }

@@ -1,6 +1,12 @@
 
+export const decorators = {
+    button(){
+        this.attributes.href = `${this.attributes.href}&returnUrl=${encodeURIComponent(window.location.href)}`;
+    }
+};
+
 export default {
-    render(){
+    async render(){
         const { access } = this.params;
         
         return this.renderHtml`
@@ -18,16 +24,9 @@ export default {
                     tagName: 'a',
                     target: '_overlay',
                     isPrimary: true,
-                    // TODO: get rid of inline script - replace with controller
-                    body: this.renderHtml`
-                        Subscribe now
-                        <script type="pinstripe">
-                            this.parent.patch({
-                                ...this.parent.attributes,
-                                href: '/_actions/guest/subscribe?returnUrl=' + encodeURIComponent(window.location.href)
-                            })
-                        </script>
-                    `,
+                    href: `/_actions/guest/subscribe?subscribableId=${await this.database.newsletter.id}`,
+                    class: this.cssClasses.button,
+                    body: 'Subscribe now',
                 })}
             </div>
         `;

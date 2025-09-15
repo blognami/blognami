@@ -1,8 +1,6 @@
 
 import * as crypto from 'crypto';
 
-
-
 export default {
     meta(){
         this.include('pageable');
@@ -11,6 +9,8 @@ export default {
         this.hasMany('posts');
         this.hasMany('comments');
         this.hasMany('notifications');
+        this.hasMany('subscriptions');
+        this.hasMany('subscribables', { through: ['subscriptions', 'subscribable'] });
 
         this.mustNotBeBlank('name');
         this.mustNotBeBlank('email');
@@ -127,5 +127,55 @@ export default {
                 emailNotificationLastSentAt: Date.now()
             });
         });
+    },
+
+    // perhaps should be called subscribeTo
+    async subscribeTo(subscribable, options = {}){
+        const { tier = 'free' } = options;
+        const { id: subscribableId } = await subscribable;
+
+        const subscription = await this.database.subscriptions.where({ userId: this.id, subscribableId }).first();
+
+        if(subscription) {
+            await subscription.update({ tier });
+            return;
+        }
+        
+        await this.database.subscriptions.insert({
+            subscribableId,
+            userId: this.id,
+            tier
+        });
+    },
+
+    async createSubscribeUrl(subscribable, options = {}){
+        const { id: subscribableId } = await subscribable;
+        return this.database.stripe.createSubscribeUrl({ subscribableId, userId: this.id, email: this.email, ...options });
+    },
+
+    async isSubscribedTo(subscribable, options = {}){
+        const { tier = 'free' } = options;
+        const { id: subscribableId } = await subscribable;
+        const subscription = await this.subscriptions.where({ subscribableId }).first();
+        if(tier == 'free' && subscription) return true;
+        if(tier == 'paid' && subscription?.tier == 'paid') return true;
+
+        return false;
+    },
+
+    async unsubscribeFrom(subscribable){
+        const { id: subscribableId } = await subscribable;
+        const subscription = await this.subscriptions.where({ userId: this.id, subscribableId }).first();
+        if(!subscription) return;
+        if(subscription.tier == 'paid'){
+            await this.database.stripe.cancelSubscription({ subscribableId, userId: this.id });
+        } else {
+            await subscription.delete();
+        }
+    },
+
+    async isSubscribedToNewsletter(options = {}){
+        const newsletter = await this.database.newsletter;
+        return this.isSubscribedTo(newsletter, options);
     }
 };

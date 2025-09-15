@@ -6,6 +6,10 @@ export default {
     async renderViews(...args){
         const lastArg = args[args.length - 1];
         const params = typeof lastArg == 'object' && !Array.isArray(lastArg) ? args.pop() : {};
-        return this.matchViews(...args).map(name => this.renderView(name, params));
+        const out = [];
+        for(const name of await this.matchViews(...args)){
+            out.push(await this.renderView(name, params));
+        }
+        return out;
     }
 };

@@ -1,35 +1,46 @@
 
 export default {
     async render(){
-        let { plan, returnUrl } = this.params;
+        let { subscribableId, plan, returnUrl } = this.params;
 
-        const membershipTiers = await this.database.membershipTiers;
+        const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
+
+        if(!subscribable) return;
+
+        const { 
+            currency, 
+            monthlyPrice, 
+            monthlyFeatures, 
+            yearlyPrice, 
+            yearlyFeatures, 
+            freeFeatures 
+        } = subscribable.subscriptionConfig;
 
         const options = [];
 
-        const currencySymbol = this.currency.index[membershipTiers.currency].symbol;
+        const currencySymbol = this.currency.index[currency].symbol;
 
-        if(membershipTiers.enableMonthly) options.push({
+        if(monthlyPrice !== undefined) options.push({
             name: 'monthly',
             title: 'Monthly',
-            price: `${currencySymbol}${membershipTiers.monthlyPrice} per month`,
-            features: ['Access to all premium content', 'Billed monthly.'],
+            price: `${currencySymbol}${monthlyPrice} per month`,
+            features: monthlyFeatures,
             action: `/_actions/guest/subscribe?plan=monthly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
-        if(membershipTiers.enableYearly) options.push({
+        if(yearlyPrice !== undefined) options.push({
             name: 'yearly',
             title: 'Yearly',
-            price: `${currencySymbol}${membershipTiers.yearlyPrice} per year`,
-            features: ['Access to all premium content', 'Billed yearly.'],
+            price: `${currencySymbol}${yearlyPrice} per year`,
+            features: yearlyFeatures,
             action: `/_actions/guest/subscribe?plan=yearly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
-        if(membershipTiers.enableFree) options.push({
+        if(freeFeatures) options.push({
             name: 'free',
             title: 'None',
             price: 'Free',
-            features: ['Access to all free content.'],
+            features: freeFeatures,
             action: `/_actions/guest/subscribe?plan=free&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
@@ -58,7 +69,7 @@ export default {
         }
 
         if(!user) return this.renderRedirect({
-            url: `/_actions/guest/sign_in?title=${encodeURIComponent('Subscribe')}&returnUrl=${encodeURIComponent(`/_actions/guest/subscribe?plan=${plan}&returnUrl=${encodeURIComponent(returnUrl)}`)}`
+            url: `/_actions/guest/sign_in?title=${encodeURIComponent('Subscribe')}&returnUrl=${encodeURIComponent(`/_actions/guest/subscribe?subscribableId=${subscribableId}&plan=${plan}&returnUrl=${encodeURIComponent(returnUrl)}`)}`
         });
 
         const reloadHtml = this.renderHtml`
@@ -67,17 +78,17 @@ export default {
             </script>
         `;
 
-        if(['monthly', 'yearly'].includes(user.membershipTier)) return reloadHtml;
+        if(await user.isSubscribedTo(subscribable, { tier: 'paid' })) return reloadHtml;
 
         if(plan == 'free'){
-            await user.update({ membershipTier: 'free' });
+            await user.subscribeTo(subscribable);
 
             return reloadHtml;
         }
 
         return this.renderHtml`
             <script type="pinstripe">
-                window.location.href = ${this.renderHtml(JSON.stringify(await this.membership.createStripePaymentUrl({ interval: plan, userId: user.id, email: user.email, returnUrl })))};
+                window.location.href = ${this.renderHtml(JSON.stringify(await user.createSubscribeUrl(subscribable, { interval: plan, returnUrl })))};
             </script>
         `;
     },

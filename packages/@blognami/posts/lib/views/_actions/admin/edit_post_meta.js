@@ -3,7 +3,7 @@ export default {
     async render(){
         const that = this;
 
-        const { enableFree, enableMonthly, enableYearly } = await this.database.membershipTiers;
+        const { enableFree, enableMonthly, enableYearly } = await this.database.newsletter;
 
         const accessField = {
             name: 'access',

@@ -3,11 +3,10 @@ export default {
   async render() {
     const that = this;
 
-    const membershipTiers = await this.database.membershipTiers;
-    const wasPaid = membershipTiers.enableMonthly || membershipTiers.enableYearly;
+    const newsletter = await this.database.newsletter;
 
-    const enableMonthly = this.params._method == 'GET' ? membershipTiers.enableMonthly : this.params.enableMonthly == 'true';
-    const enableYearly = this.params._method == 'GET' ? membershipTiers.enableYearly : this.params.enableYearly == 'true';
+    const enableMonthly = this.params._method == 'GET' ? newsletter.enableMonthly : this.params.enableMonthly == 'true';
+    const enableYearly = this.params._method == 'GET' ? newsletter.enableYearly : this.params.enableYearly == 'true';
 
     const fields = [];
 
@@ -31,12 +30,12 @@ export default {
 
     fields.push('enableFree');
 
-    return this.renderForm(membershipTiers, {
+    return this.renderForm(newsletter, {
       fields,
 
       async validateWith(){
         const isPaid = this.enableMonthly || this.enableYearly;
-        if(!this.isValidationError('general') && isPaid && !await that.membership.stripeIsConfiguredCorrectly()){
+        if(!this.isValidationError('general') && isPaid && !await that.database.stripe.isConfiguredCorrectly()){
           this.setValidationError('general', that.renderHtml`Stripe must be configured to offer paid memberships - ${that.renderView('_button', {
             tagName: 'a',
             target: '_overlay',
@@ -47,13 +46,6 @@ export default {
           })}.`);
         }
       },
-
-      async success({ enableMonthly, enableYearly }) {
-        const isPaid = enableMonthly || enableYearly;
-        if (isPaid || wasPaid) {
-          await that.membership.syncWithStripe();
-        }
-      }
     });
   },
 };
