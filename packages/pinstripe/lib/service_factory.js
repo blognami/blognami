@@ -12,6 +12,10 @@ export const ServiceFactory = Class.extend().include({
         this.assignProps({
             normalizeName(name){
                 return Inflector.instance.camelize(name);
+            },
+
+            addToClient(){
+                this._addToClient = true;
             }
         });
     },

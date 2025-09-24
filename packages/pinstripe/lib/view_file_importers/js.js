@@ -11,12 +11,27 @@ View.FileImporter.register('js', {
 
         const { default: _default, decorators, theme } = (await import(filePath));
 
-        if(_default) View.register(relativeFilePathWithoutExtension, {
-            meta(){
-                this.filePaths.push(filePath);
-                if(_default) this.include(_default);
-            }
-        });
+        if(_default) {
+            View.register(relativeFilePathWithoutExtension, {
+                meta(){
+                    this.filePaths.push(filePath);
+                    if(_default) this.include(_default);
+                }
+            });
+
+            const addToClient = View.for(relativeFilePathWithoutExtension)._addToClient;
+            
+            if(addToClient) Bundle.addModule('serviceWorker', `
+                import { View } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                import { default as client } from ${JSON.stringify(filePath)};
+                View.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
+                    meta(){
+                        this.filePaths.push(${JSON.stringify(filePath)});
+                        this.include(client);
+                    }
+                });
+            `);
+        }
 
         if(decorators){
             Bundle.addModule('window', `

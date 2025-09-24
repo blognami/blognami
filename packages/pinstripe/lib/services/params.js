@@ -1,7 +1,9 @@
 
-export const client = true;
-
 export default {
+    meta(){
+        this.addToClient();
+    },
+
     create(){
         if(!this.context.hasOwnProperty('params')){
             this.context.params = {

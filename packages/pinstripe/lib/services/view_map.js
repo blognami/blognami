@@ -2,6 +2,10 @@
 import { View } from "../view.js";
 
 export default {
+    meta(){
+        this.addToClient();
+    },
+    
     create(){
         return this.defer(async () => {
             const featureFlags = await this.getNormalizedFeatureFlags();

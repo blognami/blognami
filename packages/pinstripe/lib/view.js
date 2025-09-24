@@ -40,6 +40,10 @@ export const View = Class.extend().include({
             featureFor(name){
                 if(this.featuresIsEnabledFor.includes(name)) return;
                 this.featuresIsEnabledFor.push(name);
+            },
+
+            addToClient(){
+                this._addToClient = true;
             }
         });
 

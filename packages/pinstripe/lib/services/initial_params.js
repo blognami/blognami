@@ -1,5 +1,9 @@
 
 export default {
+    meta(){
+        this.addToClient();
+    },
+    
     create(){
         if(!this.context.root.hasOwnProperty('params')){
             this.context.root.params = {
