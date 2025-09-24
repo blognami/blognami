@@ -2,6 +2,10 @@
 import { MissingResourceError } from '../missing_resource_error.js';
 
 export default {
+    meta(){
+        this.addToClient();
+    },
+    
     create(){
         return this;
     },

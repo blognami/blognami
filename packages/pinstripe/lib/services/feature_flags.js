@@ -2,6 +2,10 @@
 let cache;
 
 export default {
+    meta(){
+        this.addToClient();
+    },
+    
     create(){
         if(this.isClient) return this.defer(async () => {
             if(!this.context.root.hasOwnProperty('featureFlags')){

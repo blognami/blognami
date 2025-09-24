@@ -12,11 +12,24 @@ ServiceFactory.FileImporter.register('js', {
             async importFile(){
                 await importFile.call(this);
 
-                const { relativeFilePathWithoutExtension } = this;
+                const { filePath, relativeFilePathWithoutExtension } = this;
 
-                if(Bundle) Bundle.addModule('serviceWorker', `
+                Bundle.addModule('serviceWorker', `
                     import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
                     ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {});
+                `);
+
+                const addToClient = ServiceFactory.for(relativeFilePathWithoutExtension)._addToClient;
+
+                if(addToClient) Bundle.addModule('serviceWorker', `
+                    import { ServiceFactory } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                    import { default as _default } from ${JSON.stringify(filePath)};
+                    ServiceFactory.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
+                        meta(){
+                            this.filePaths.push(${JSON.stringify(filePath)});
+                            this.include(_default);
+                        }
+                    });
                 `);
             }
         });

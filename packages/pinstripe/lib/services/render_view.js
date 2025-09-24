@@ -2,6 +2,10 @@
 import { View } from "../view.js";
 
 export default {
+  meta(){
+        this.addToClient();
+  },
+  
   create() {
     return async (name, params = {}) => {
       const mappedName = await this.viewMap[name];

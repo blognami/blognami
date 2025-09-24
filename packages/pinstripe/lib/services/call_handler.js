@@ -2,6 +2,10 @@
 import { Workspace } from "../workspace.js";
 
 export default {
+    meta(){
+        this.addToClient();
+    },
+
     create(){
         return this;
     },
