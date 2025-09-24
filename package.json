@@ -13,7 +13,7 @@
     "test:models": "npm run test:models --workspace demo",
     "test:e2e": "npm run test:e2e --workspace demo",
     "test:cli": "npm run test:cli --workspace demo",
-    "cypress:open": "npm run cypress:open --workspace demo",
+    "playwright:open": "npm run playwright:open --workspace demo",
     "version-all": "npm version minor --workspaces",
     "publish-all": "npm publish --workspaces"
   },

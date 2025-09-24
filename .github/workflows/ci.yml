@@ -28,14 +28,24 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm install
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
       - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} MODULES="${{ matrix.modules }}" npm run test
         env:
           CI: true
-      - name: Archive videos of failed cypress tests
+      - name: Archive Playwright HTML report
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: cypress-videos
-          path: packages/demo/cypress/videos
+          name: playwright-report-${{ matrix.node }}-${{ matrix.database-adapter }}
+          path: packages/demo/playwright-report/
+          retention-days: 30
+      - name: Archive Playwright test results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results-${{ matrix.node }}-${{ matrix.database-adapter }}
+          path: packages/demo/test-results/
+          retention-days: 30
 
 
