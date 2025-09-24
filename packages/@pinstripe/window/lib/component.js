@@ -486,6 +486,7 @@ export const Component = Class.extend().include({
     },
 
     fetch(url, options = {}){
+        this.document.logChange();
         const abortController = new AbortController();
         let minimumDelayTimeout;
         let rejectMinimumDelay;
@@ -619,8 +620,7 @@ function patchAttributes(attributes){
         const currentAttributes = this.attributes;
         Object.keys(currentAttributes).forEach((key) => {
             if(attributes[key] === undefined){
-                Element.prototype.removeAttribute.call(this.node, key); // work around for https://github.com/cypress-io/cypress/issues/26206
-                // this.node.removeAttribute(key);
+                this.node.removeAttribute(key);
                 if(key == 'checked') this.node.checked = false;
             }
         })

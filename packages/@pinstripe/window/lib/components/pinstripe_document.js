@@ -26,9 +26,32 @@ Component.register('pinstripe-document', {
         window.onpopstate = (event) => {
             this.load(event.state || window.location, { replace: true });
         };
+
+        this.lastChange = Date.now();
+        this.setInterval(() => {
+            if(!this.progressBar) return;
+            const now = Date.now();
+            if(this.progressBar.startCount > 0) {
+                this.logChange();
+            } else if(now - this.lastChange > 500) {
+                this.html.addClass('idle');
+            }
+        }, 100);
+    },
+
+    logChange(){
+        this.lastChange = Date.now();
+        this.html.removeClass('idle');
     },
 
     isDocument: true,
+
+    get html(){
+        if(!this._html){
+            this._html = this.find('html');
+        }
+        return this._html;
+    },
 
     get head(){
         if(!this._head){
@@ -45,7 +68,7 @@ Component.register('pinstripe-document', {
     },
 
     get progressBar(){
-        return this.body.progressBar;
+        return this.body?.progressBar;
     },
 
     get loadCacheNamespace(){

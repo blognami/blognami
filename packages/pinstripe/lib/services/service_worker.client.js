@@ -1,10 +1,6 @@
 
 import { MissingResourceError } from '../missing_resource_error.js';
 
-const URL_PATH_BLACKLIST = [
-    /^\/__/, // Cypress
-];
-
 export default {
     create(){
         return this;
@@ -20,10 +16,6 @@ export default {
         });
     
         addEventListener("fetch", (event) => {
-            const url = new URL(event.request.url);
-
-            if(URL_PATH_BLACKLIST.some((regex) => url.pathname.match(regex))) return false;
-
             event.respondWith((async () => {
                 const request1 = event.request.clone();
                 const request2 = event.request.clone();
