@@ -1,8 +1,7 @@
 
 export default {
     meta(){
-        this.hasMany('subscriptions');
-        this.hasMany('users', { through: ['subscriptions', 'user'] });
+        this.hasMany('subscriptions', { fromKey: 'id', toKey: 'subscribableId' });
 
         this.on(['after:insert', 'after:update'], async subscribable => {
             const stripe = await subscribable.database.stripe;
