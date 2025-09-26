@@ -54,7 +54,11 @@ export default {
                 
                 if(interval.hasNext()){
                     await Workspace.run(async function(){
-                        await this.runBackgroundJob(backgroundJob.name, ...args);
+                        try {
+                            await this.runBackgroundJob(backgroundJob.name, ...args);
+                        } catch(e){
+                            console.error(e);
+                        }
                     });
                 }
             }
