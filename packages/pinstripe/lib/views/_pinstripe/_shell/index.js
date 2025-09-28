@@ -153,7 +153,7 @@ export default {
         const versionedMeta = [
             { tagName: 'link', rel: 'stylesheet', href: `/_pinstripe/_shell/styles.css?${urlSearchParams}` },
             { tagName: 'script', src: `/_pinstripe/_shell/window.js?${urlSearchParams}` },
-            { tagName: 'meta', name: 'pinstripe-service-worker-url', content: `/_pinstripe/_shell/service_worker.js?${urlSearchParams}` },
+            { tagName: 'meta', name: 'pinstripe-service-worker-url', content: `/service_worker.js?${urlSearchParams}` },
         ];
 
         return this.renderHtml`
