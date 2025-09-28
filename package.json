@@ -6,7 +6,9 @@
   "scripts": {
     "clean": "npm run clean && rm -rf ./node_modules",
     "start": "npm run start --workspace demo",
+    "start:docs": "npm run start --workspace @pinstripe/docs",
     "watch": "nodemon -e js,jsx,md,css,html --exec 'npm run start'",
+    "watch:docs": "nodemon -e js,jsx,md,css,html --exec 'npm run start:docs'",
     "test": "npm run test:unit && npm run test:services && npm run test:models && npm run test:cli && npm run test:e2e",
     "test:unit": "npm run test:unit --workspaces --if-present",
     "test:services": "npm run test:services --workspace demo",

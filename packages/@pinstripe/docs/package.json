@@ -5,5 +5,8 @@
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
+  },
+  "scripts": {
+    "start": "pinstripe start-server"
   }
 }
