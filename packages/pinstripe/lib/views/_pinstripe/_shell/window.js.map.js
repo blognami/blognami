@@ -1,8 +1,7 @@
 
 export default {
     async render(){
-        const bundle = 'window';
-        const { map } = await this.bundler.build(bundle);
+        const { map } = await this.bundler.build('window');
         return [200, { 'content-type': 'application/json'}, [ map ]];
     }
 };

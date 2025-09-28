@@ -1,8 +1,7 @@
 
 export default {
     async render(){
-        const bundle = 'window';
-        const { js } = await this.bundler.build(bundle);
-        return [200, { 'content-type': 'text/javascript' }, [ `${js}\n//# sourceMappingURL=${bundle}.js.map` ]];
+        const { js } = await this.bundler.build('window');
+        return [200, { 'content-type': 'text/javascript' }, [ `${js}\n//# sourceMappingURL=/_pinstripe/_shell/window.js.map` ]];
     }
 };
