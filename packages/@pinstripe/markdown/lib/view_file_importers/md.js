@@ -34,7 +34,7 @@ View.FileImporter.register('md', {
                 const [ frontMatter, body ] = this.extractFrontMatterAndBody(data);
                 return { 
                     ...frontMatter, 
-                    body: this.renderView('_content', {
+                    body: this.renderView('_pinstripe/_content', {
                         body: this.renderMarkdown(body, { allowHtml: true })
                     })
                 };
