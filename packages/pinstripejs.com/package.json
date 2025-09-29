@@ -8,6 +8,7 @@
     ".": "./lib/index.js"
   },
   "scripts": {
-    "start": "pinstripe start-server"
+    "start": "pinstripe start-server",
+    "build": "pinstripe generate-static-site"
   }
 }
