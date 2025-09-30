@@ -25,39 +25,39 @@ export const styles = `
     .header-container {
         max-width: 1280px;
         margin: 0 auto;
-        padding: 0 1.5rem;
+        padding: 0 2.4rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 4rem;
+        height: 6.4rem;
     }
 
     .logo {
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: 1.2rem;
         text-decoration: none;
         color: #111827;
         font-weight: 600;
-        font-size: 1.25rem;
+        font-size: 2rem;
     }
 
     .logo-icon {
-        width: 2rem;
-        height: 2rem;
+        width: 3.2rem;
+        height: 3.2rem;
         color: #35D0AC;
     }
 
     .nav {
         display: flex;
         align-items: center;
-        gap: 2rem;
+        gap: 3.2rem;
     }
 
     .nav-links {
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 2.4rem;
         list-style: none;
         margin: 0;
         padding: 0;
@@ -68,7 +68,7 @@ export const styles = `
         color: #6b7280;
         font-weight: 500;
         transition: color 0.2s ease;
-        padding: 0.5rem 0;
+        padding: 0.8rem 0;
     }
 
     .nav-link:hover {
@@ -82,13 +82,13 @@ export const styles = `
     .github-link {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.8rem;
         text-decoration: none;
         color: #6b7280;
         font-weight: 500;
-        padding: 0.5rem 1rem;
+        padding: 0.8rem 1.6rem;
         border: 1px solid #e5e7eb;
-        border-radius: 0.375rem;
+        border-radius: 0.6rem;
         transition: all 0.2s ease;
     }
 
@@ -103,31 +103,31 @@ export const styles = `
         max-width: 1280px;
         margin: 0 auto;
         width: 100%;
-        padding: 0 1.5rem;
+        padding: 0 2.4rem;
     }
 
     .sidebar {
-        width: 16rem;
-        padding: 2rem 0;
+        width: 25.6rem;
+        padding: 3.2rem 0;
         border-right: 1px solid #e5e7eb;
         position: sticky;
-        top: 4rem;
-        height: calc(100vh - 4rem);
+        top: 6.4rem;
+        height: calc(100vh - 6.4rem);
         overflow-y: auto;
-        padding-right: 1.5rem;
+        padding-right: 2.4rem;
     }
 
     .sidebar-section {
-        margin-bottom: 2rem;
+        margin-bottom: 3.2rem;
     }
 
     .sidebar-title {
-        font-size: 0.875rem;
+        font-size: 1.4rem;
         font-weight: 600;
         color: #111827;
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        margin-bottom: 0.75rem;
+        margin-bottom: 1.2rem;
     }
 
     .sidebar-links {
@@ -140,12 +140,12 @@ export const styles = `
         display: block;
         text-decoration: none;
         color: #6b7280;
-        padding: 0.375rem 0;
-        font-size: 0.875rem;
+        padding: 0.6rem 0;
+        font-size: 1.4rem;
         transition: color 0.2s ease;
         border-left: 2px solid transparent;
-        padding-left: 0.75rem;
-        margin-left: -0.75rem;
+        padding-left: 1.2rem;
+        margin-left: -1.2rem;
     }
 
     .sidebar-link:hover {
@@ -160,45 +160,45 @@ export const styles = `
 
     .content {
         flex: 1;
-        padding: 2rem 0 2rem 2rem;
+        padding: 3.2rem 0 3.2rem 3.2rem;
         max-width: none;
     }
 
     .content h1 {
-        font-size: 2.25rem;
+        font-size: 3.6rem;
         font-weight: 700;
         color: #111827;
-        margin: 0 0 1rem 0;
+        margin: 0 0 1.6rem 0;
         line-height: 1.2;
     }
 
     .content h2 {
-        font-size: 1.875rem;
+        font-size: 3rem;
         font-weight: 600;
         color: #111827;
-        margin: 2rem 0 1rem 0;
+        margin: 3.2rem 0 1.6rem 0;
         line-height: 1.3;
     }
 
     .content h3 {
-        font-size: 1.5rem;
+        font-size: 2.4rem;
         font-weight: 600;
         color: #111827;
-        margin: 1.5rem 0 0.75rem 0;
+        margin: 2.4rem 0 1.2rem 0;
         line-height: 1.4;
     }
 
     .content p {
         color: #4b5563;
-        margin-bottom: 1rem;
+        margin-bottom: 1.6rem;
         line-height: 1.7;
     }
 
     .content code {
         background-color: #f3f4f6;
         color: #e53e3e;
-        padding: 0.125rem 0.25rem;
-        border-radius: 0.25rem;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.4rem;
         font-size: 0.875em;
         font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
     }
@@ -206,12 +206,12 @@ export const styles = `
     .content pre {
         background-color: #1f2937;
         color: #f9fafb;
-        padding: 1.5rem;
-        border-radius: 0.5rem;
+        padding: 2.4rem;
+        border-radius: 0.8rem;
         overflow-x: auto;
-        margin: 1.5rem 0;
+        margin: 2.4rem 0;
         font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
-        font-size: 0.875rem;
+        font-size: 1.4rem;
         line-height: 1.5;
     }
 
@@ -224,19 +224,19 @@ export const styles = `
     }
 
     .toc {
-        width: 12rem;
-        padding: 2rem 0 2rem 2rem;
+        width: 19.2rem;
+        padding: 3.2rem 0 3.2rem 3.2rem;
         position: sticky;
-        top: 4rem;
-        height: calc(100vh - 4rem);
+        top: 6.4rem;
+        height: calc(100vh - 6.4rem);
         overflow-y: auto;
     }
 
     .toc-title {
-        font-size: 0.875rem;
+        font-size: 1.4rem;
         font-weight: 600;
         color: #111827;
-        margin-bottom: 0.75rem;
+        margin-bottom: 1.2rem;
     }
 
     .toc-links {
@@ -249,8 +249,8 @@ export const styles = `
         display: block;
         text-decoration: none;
         color: #6b7280;
-        padding: 0.25rem 0;
-        font-size: 0.75rem;
+        padding: 0.4rem 0;
+        font-size: 1.2rem;
         transition: color 0.2s ease;
     }
 
@@ -265,20 +265,20 @@ export const styles = `
     .footer {
         border-top: 1px solid #e5e7eb;
         background-color: #f9fafb;
-        padding: 3rem 0;
-        margin-top: 4rem;
+        padding: 4.8rem 0;
+        margin-top: 6.4rem;
     }
 
     .footer-container {
         max-width: 1280px;
         margin: 0 auto;
-        padding: 0 1.5rem;
+        padding: 0 2.4rem;
         text-align: center;
     }
 
     .footer-text {
         color: #6b7280;
-        font-size: 0.875rem;
+        font-size: 1.4rem;
     }
 
     @media (max-width: 1024px) {
@@ -293,15 +293,15 @@ export const styles = `
         }
         
         .main-content {
-            padding: 0 1rem;
+            padding: 0 1.6rem;
         }
         
         .content {
-            padding: 1rem 0;
+            padding: 1.6rem 0;
         }
         
         .header-container {
-            padding: 0 1rem;
+            padding: 0 1.6rem;
         }
         
         .nav-links {
