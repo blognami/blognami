@@ -47,12 +47,20 @@ Tables accessed via `database[tableName]` provide:
 - `table.delete()` - Delete matching records
 
 ### Dynamic Scopes
-Tables automatically generate query scopes for each column:
-- `table.columnNameEq(value)` - WHERE column = value
-- `table.columnNameNe(value)` - WHERE column != value
-- `table.columnNameGt(value)` - WHERE column > value
-- `table.columnNameLt(value)` - WHERE column < value
-- `table.columnNameIn(values)` - WHERE column IN (values)
+Tables automatically generate query scopes for each column that can be used within `where()` conditions:
+- `table.where({ columnName: value })` - WHERE column = value
+- `table.where({ columnNameNe: value })` - WHERE column != value
+- `table.where({ columnNameGt: value })` - WHERE column > value
+- `table.where({ columnNameLt: value })` - WHERE column < value
+- `table.where({ columnNameGe: value })` - WHERE column >= value
+- `table.where({ columnNameLe: value })` - WHERE column <= value
+- `table.where({ columnNameBeginsWith: value })` - WHERE column LIKE 'value%'
+- `table.where({ columnNameEndsWith: value })` - WHERE column LIKE '%value'
+- `table.where({ columnNameContains: value })` - WHERE column LIKE '%value%'
+
+**Array Values**: When passing an array as the value, multiple conditions are created:
+- `table.where({ columnName: [val1, val2] })` - WHERE (column = val1 OR column = val2)
+- `table.where({ columnNameNe: [val1, val2] })` - WHERE (column != val1 AND column != val2)
 
 ## Examples
 
@@ -73,7 +81,7 @@ const user = await this.database.users.insert({
 const user = await this.database.users.where({ email: 'john@example.com' }).first();
 
 // Find all admin users
-const admins = await this.database.users.roleEq('admin').all();
+const admins = await this.database.users.where({ role: 'admin' }).all();
 
 // Update user
 await this.database.users.where({ id: user.id }).update({
@@ -89,16 +97,61 @@ await this.database.users.where({ id: user.id }).delete();
 ```javascript
 // Using generated scopes for different column types
 const posts = await this.database.posts
-    .titleEq('My Post')           // WHERE title = 'My Post'
-    .statusIn(['published', 'draft'])  // WHERE status IN ('published', 'draft')
-    .createdAtGt('2023-01-01')    // WHERE createdAt > '2023-01-01'
+    .where({ title: 'My Post' })           // WHERE title = 'My Post'
+    .where({ status: ['published', 'draft'] })  // WHERE (status = 'published' OR status = 'draft')
+    .where({ createdAtGt: '2023-01-01' })    // WHERE createdAt > '2023-01-01'
     .all();
 
-// Multiple conditions
+// Multiple conditions in single where() call
 const users = await this.database.users
-    .emailNe('admin@example.com')  // WHERE email != 'admin@example.com'
-    .roleEq('user')               // AND role = 'user'
+    .where({ 
+        emailNe: 'admin@example.com',  // WHERE email != 'admin@example.com'
+        role: 'user'                   // AND role = 'user'
+    })
     .all();
+
+// Or chained where() calls
+const users2 = await this.database.users
+    .where({ emailNe: 'admin@example.com' })  // WHERE email != 'admin@example.com'
+    .where({ role: 'user' })                  // AND role = 'user'
+    .all();
+```
+
+### Real-world Dynamic Scope Examples
+
+```javascript
+// Find posts excluding current post and filtering by date
+const previousPost = await this.database.posts
+    .where({ 
+        idNe: post.id, 
+        publishedAtLt: post.publishedAt 
+    })
+    .orderBy('publishedAt', 'desc')
+    .first();
+
+const nextPost = await this.database.posts
+    .where({ 
+        idNe: post.id, 
+        publishedAtGt: post.publishedAt 
+    })
+    .orderBy('publishedAt', 'asc')
+    .first();
+
+// Find users excluding current user with admin role
+const adminUsers = await this.database.users
+    .where({ 
+        idNe: currentUserId, 
+        role: 'admin' 
+    })
+    .all();
+
+// Complex validation queries
+const duplicateSlug = await this.database.pageables
+    .where({ 
+        idNe: pageable.id, 
+        slug: pageable.slug 
+    })
+    .count();
 ```
 
 ### Pagination and Ordering
