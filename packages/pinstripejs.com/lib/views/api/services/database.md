@@ -17,7 +17,7 @@ The database service provides the following interface:
 
 ### Dynamic Table Access
 - `database[tableName]` - Access table by name (returns Table instance)
-- `database.table(name, fn)` - Create table instance with optional callback (primarily used in migrations)
+- `database.table(name, fn)` - Create table instance with optional callback (used in migrations)
 - `database.union(name)` - Create union query across multiple tables
 - `database.singleton(name)` - Access singleton record (auto-created if missing)
 
@@ -306,7 +306,7 @@ if (post) {
 ### Table Creation (Migrations)
 
 ```javascript
-// Using database.table() in migrations to reference tables that might not exist yet
+// Using database.table() in migrations for table creation and modification
 export default {
     async migrate(){
         await this.database.table('posts', async (posts) => {
@@ -317,6 +317,7 @@ export default {
     }
 };
 
+// Note: Tables are automatically created when the first column is added
 // In most other cases, use direct table access:
 // const posts = this.database.posts; // Preferred for normal operations
 ```
@@ -380,4 +381,4 @@ export default {
 - Multi-tenancy is optional and configured through the `@pinstripe/multi-tenant` package  
 - The service supports both MySQL and SQLite databases with adapter-specific optimizations
 - Schema changes require calling `database.reset()` to refresh the schema cache
-- The `database.table(name, fn)` method is primarily used in migrations for tables that may not exist yet
+- The `database.table(name, fn)` method is used in migrations; tables are automatically created when the first column is added
