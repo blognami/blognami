@@ -1,23 +1,23 @@
 # database Service
 
-The `database` service provides access to the application's database layer, offering a high-level ORM-like interface for interacting with MySQL and SQLite databases. It supports dynamic table access, relationships, migrations, transactions, and multi-tenancy.
+The `database` service provides access to the application's database layer, offering a high-level ORM-like interface for interacting with MySQL and SQLite databases. It supports dynamic table access, relationship queries through nested object syntax, migrations, transactions, and optional multi-tenancy.
 
 ## Interface
 
 The database service provides the following interface:
 
 ### Core Methods
-- `database.run(query)` - Execute raw SQL queries
+- `database.run(query)` - Execute raw SQL queries (string or array format)
 - `database.migrate()` - Run database migrations
 - `database.drop()` - Drop all database tables
-- `database.reset()` - Reset database schema cache
+- `database.reset()` - Reset database schema cache after manual schema changes
 - `database.destroy()` - Close database connection
 - `database.lock(fn)` - Execute function with database lock
 - `database.transaction(fn)` - Execute function within transaction
 
 ### Dynamic Table Access
 - `database[tableName]` - Access table by name (returns Table instance)
-- `database.table(name, fn)` - Create table instance with optional callback
+- `database.table(name, fn)` - Create table instance with optional callback (primarily used in migrations)
 - `database.union(name)` - Create union query across multiple tables
 - `database.singleton(name)` - Access singleton record (auto-created if missing)
 
@@ -27,7 +27,6 @@ The database service provides the following interface:
 
 ### Multi-tenant Support
 - `database.withoutTenantScope` - Access database without tenant filtering
-- `database.tenant` - Current tenant context (when multi-tenancy enabled)
 
 ## Table Methods
 
@@ -35,10 +34,10 @@ Tables accessed via `database[tableName]` provide:
 
 ### Query Methods
 - `table.where(conditions)` - Add WHERE conditions
-- `table.orderBy(column, direction)` - Add ORDER BY clause
-- `table.paginate(page, pageSize)` - Add pagination
+- `table.orderBy(column, direction)` - Add ORDER BY clause  
+- `table.paginate(page, pageSize, skipCount)` - Add pagination (page defaults to 1, pageSize to 10)
 - `table.all()` - Get all matching records
-- `table.first()` - Get first matching record
+- `table.first()` - Get first matching record (automatically applies LIMIT 1)
 - `table.count()` - Count matching records
 
 ### CRUD Operations
@@ -61,6 +60,9 @@ Tables automatically generate query scopes for each column that can be used with
 **Array Values**: When passing an array as the value, multiple conditions are created:
 - `table.where({ columnName: [val1, val2] })` - WHERE (column = val1 OR column = val2)
 - `table.where({ columnNameNe: [val1, val2] })` - WHERE (column != val1 AND column != val2)
+
+**Relationship Queries**: Use nested objects to query across relationships:
+- `table.where({ relationshipName: { columnName: value } })` - Join with related table and filter
 
 ## Examples
 
@@ -183,8 +185,8 @@ const results = await this.database.run(`
     GROUP BY u.id
 `);
 
-// With parameters (varies by database adapter)
-const user = await this.database.run('SELECT * FROM users WHERE email = ?', ['john@example.com']);
+// For parameterized queries, use the built-in query builder syntax
+const user = await this.database.users.where({ email: 'john@example.com' }).first();
 ```
 
 ### Transactions
@@ -225,6 +227,10 @@ await this.database.lock(async () => {
 // Access singleton record (auto-created if missing)
 const site = await this.database.site;
 
+// Access singleton properties
+const siteTitle = await this.database.site.title;
+const siteDescription = await this.database.site.description;
+
 // Update singleton
 await this.database.site.update({
     title: 'My Website',
@@ -240,11 +246,6 @@ const posts = await this.database.posts.all();  // Automatically scoped to curre
 
 // Access data without tenant scope
 const allPosts = await this.database.withoutTenantScope.posts.all();
-
-// Get current tenant
-if (this.database.tenant) {
-    console.log(`Current tenant: ${this.database.tenant.name}`);
-}
 ```
 
 ### Database Migrations
@@ -282,21 +283,42 @@ if (this.database.info.posts === 'table') {
 ### Complex Queries with Relationships
 
 ```javascript
-// Using table callback for complex operations
-await this.database.table('posts', async (posts) => {
-    return posts
-        .where({ status: 'published' })
-        .orderBy('createdAt', 'desc')
-        .paginate(1, 5)
-        .all();
-});
+// Using nested object syntax for relationship queries
+const postsWithAppleTags = await this.database.posts
+    .where({ tags: { name: 'Apple' } })
+    .all();
 
-// Joining with tag relationships
+// Multiple relationship conditions
+const postsWithMultipleTags = await this.database.posts
+    .where({ tags: { name: 'Apple' } })
+    .where({ tags: { name: 'Orange' } })
+    .all();
+
+// Accessing related data through model relationships
 const post = await this.database.posts.where({ id: postId }).first();
 if (post) {
     // Access related tags (if relationship defined in model)
     const tags = await post.tags;
+    const author = await post.user;
 }
+```
+
+### Table Creation (Migrations)
+
+```javascript
+// Using database.table() in migrations to reference tables that might not exist yet
+export default {
+    async migrate(){
+        await this.database.table('posts', async (posts) => {
+            await posts.addColumn('title', 'string');
+            await posts.addColumn('body', 'text');
+            await posts.addColumn('publishedAt', 'datetime', { index: true });
+        });
+    }
+};
+
+// In most other cases, use direct table access:
+// const posts = this.database.posts; // Preferred for normal operations
 ```
 
 ### Error Handling
@@ -320,16 +342,10 @@ try {
 // Safe database access in background jobs
 export default {
     async run() {
-        // Use lock to prevent concurrent execution
-        await this.database.lock(async () => {
-            const expiredTokens = await this.database.usedHashes
-                .where({ expiresAt: { '<': new Date() } })
-                .all();
-                
-            for (const token of expiredTokens) {
-                await token.delete();
-            }
-        });
+        // Delete expired tokens using generated scope
+        await this.database.usedHashes
+            .where({ expiresAtLt: new Date() })
+            .delete();
     }
 };
 ```
@@ -359,8 +375,9 @@ export default {
 ## Notes
 
 - The database service automatically handles connection pooling and cleanup
-- All insert/update/delete operations are wrapped in transactions
-- Column scopes are dynamically generated based on database schema
+- Insert, update, and delete operations are automatically wrapped in transactions
+- Column scopes are dynamically generated based on database schema at runtime
 - Multi-tenancy is optional and configured through the `@pinstripe/multi-tenant` package  
 - The service supports both MySQL and SQLite databases with adapter-specific optimizations
-- Schema changes require calling `database.reset()` to refresh the cache
+- Schema changes require calling `database.reset()` to refresh the schema cache
+- The `database.table(name, fn)` method is primarily used in migrations for tables that may not exist yet
