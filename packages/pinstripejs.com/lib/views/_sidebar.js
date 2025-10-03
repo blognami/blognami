@@ -139,7 +139,7 @@ export default {
             const annotations = View.for(viewName).annotations;
             if(annotations && annotations.sidebar) {
                 if(out[viewName]?.path.length <= path.length) continue;
-                out[viewName] = {path: `/${path}`, ...annotations.sidebar};
+                out[viewName] = {path: `/${path}`.replace(/\/index$/, '') || '/', ...annotations.sidebar};
             }
         }
 
