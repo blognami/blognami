@@ -12,25 +12,7 @@ export const styles = `
         flex-direction: column;
     }
 
-    .header {
-        background-color: #ffffff;
-        border-bottom: 1px solid #e5e7eb;
-        position: sticky;
-        top: 0;
-        z-index: 40;
-        backdrop-filter: blur(8px);
-        background-color: rgba(255, 255, 255, 0.95);
-    }
 
-    .header-container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 2.4rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 6.4rem;
-    }
 
 
 
@@ -124,9 +106,7 @@ export const styles = `
             padding: 1.6rem 0;
         }
         
-        .header-container {
-            padding: 0 1.6rem;
-        }
+
         
 
     }
@@ -137,12 +117,7 @@ export default {
         return this.renderView('_pinstripe/_shell', {
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">
-                    <header class="${this.cssClasses.header}">
-                        <div class="${this.cssClasses.headerContainer}">
-                            ${this.renderView('_branding')}
-                            ${this.renderView('_navbar')}
-                        </div>
-                    </header>
+                    ${this.renderView('_header')}
 
                     <div class="${this.cssClasses.mainContent}">
                         ${this.renderView('_sidebar')}
