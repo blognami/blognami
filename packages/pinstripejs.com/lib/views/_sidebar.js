@@ -1,5 +1,4 @@
 
-import { title } from 'node:process';
 import { View } from 'pinstripe';
 
 export const styles = `
@@ -65,38 +64,72 @@ export const styles = `
 export default {
     async render(){
         const items = await this.getItems();
-
-        console.dir(items, {depth: null});
+        const linksHtml = await this.renderLinks(items);
 
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
-                <div class="${this.cssClasses.section}">
-                    <h3 class="${this.cssClasses.title}">Getting Started</h3>
-                    <ul class="${this.cssClasses.links}">
-                        <li><a href="/docs/installation" class="${this.cssClasses.link} ${this.cssClasses.linkActive}">Installation</a></li>
-                        <li><a href="/docs/quick-start" class="${this.cssClasses.link}">Quick Start</a></li>
-                        <li><a href="/docs/project-structure" class="${this.cssClasses.link}">Project Structure</a></li>
-                    </ul>
-                </div>
-                <div class="${this.cssClasses.section}">
-                    <h3 class="${this.cssClasses.title}">Core Concepts</h3>
-                    <ul class="${this.cssClasses.links}">
-                        <li><a href="/docs/routing" class="${this.cssClasses.link}">Routing</a></li>
-                        <li><a href="/docs/views" class="${this.cssClasses.link}">Views</a></li>
-                        <li><a href="/docs/models" class="${this.cssClasses.link}">Models</a></li>
-                        <li><a href="/docs/controllers" class="${this.cssClasses.link}">Controllers</a></li>
-                    </ul>
-                </div>
-                <div class="${this.cssClasses.section}">
-                    <h3 class="${this.cssClasses.title}">Advanced</h3>
-                    <ul class="${this.cssClasses.links}">
-                        <li><a href="/docs/configuration" class="${this.cssClasses.link}">Configuration</a></li>
-                        <li><a href="/docs/deployment" class="${this.cssClasses.link}">Deployment</a></li>
-                        <li><a href="/docs/plugins" class="${this.cssClasses.link}">Plugins</a></li>
-                    </ul>
-                </div>
+                ${linksHtml}
             </aside>
         `;
+    },
+
+    async renderLinks(links, level = 0){
+        if (!links || links.length === 0) {
+            return this.renderHtml``;
+        }
+
+        return this.renderHtml`${links.map(link => {
+            // For level 0, create sections with h3 titles
+            if (level === 0 && link.name && link.links && link.links.length > 0) {
+                return this.renderHtml`
+                    <div class="${this.cssClasses.section}">
+                        <h3 class="${this.cssClasses.title}">${link.name}</h3>
+                        <ul class="${this.cssClasses.links}">
+                            ${link.links.map(childLink => {
+                                const isActive = this.params.path === childLink.path;
+                                const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
+                                
+                                return this.renderHtml`
+                                    <li>
+                                        ${childLink.path 
+                                            ? this.renderHtml`<a href="/${childLink.path}" class="${this.cssClasses.link}${activeClass}">${childLink.name}</a>`
+                                            : this.renderHtml`<span class="${this.cssClasses.link}">${childLink.name}</span>`
+                                        }
+                                        ${childLink.links && childLink.links.length > 0 
+                                            ? this.renderLinks(childLink.links, level + 1)
+                                            : ''
+                                        }
+                                    </li>
+                                `;
+                            })}
+                        </ul>
+                    </div>
+                `;
+            }
+            // For deeper levels, just render as nested list items
+            else if (level > 0) {
+                const isActive = this.params.path === link.path;
+                const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
+                
+                return this.renderHtml`
+                    <li>
+                        ${link.path 
+                            ? this.renderHtml`<a href="/${link.path}" class="${this.cssClasses.link}${activeClass}">${link.name}</a>`
+                            : this.renderHtml`<span class="${this.cssClasses.link}">${link.name}</span>`
+                        }
+                        ${link.links && link.links.length > 0 
+                            ? this.renderHtml`
+                                <ul class="${this.cssClasses.links}">
+                                    ${this.renderLinks(link.links, level + 1)}
+                                </ul>
+                            `
+                            : ''
+                        }
+                    </li>
+                `;
+            }
+            return this.renderHtml``;
+        })}`;
     },
 
     async getViewsWithSidebarAnnotations(){
