@@ -60,10 +60,8 @@ export default {
         return this.renderHtml`
             <nav class="${this.cssClasses.root}">
                 <ul class="${this.cssClasses.links}">
-                    <li><a href="/docs" class="${this.cssClasses.link} ${this.cssClasses.linkActive}">Docs</a></li>
-                    <li><a href="/tutorial" class="${this.cssClasses.link}">Tutorial</a></li>
-                    <li><a href="/examples" class="${this.cssClasses.link}">Examples</a></li>
-                    <li><a href="/blog" class="${this.cssClasses.link}">Blog</a></li>
+                    <li><a href="/" class="${this.cssClasses.link} ${this.cssClasses.linkActive}">Docs</a></li>
+                    <li><a href="https://blognami.com/pinstripe" class="${this.cssClasses.link}">Blog</a></li>
                 </ul>
                 <a href="https://github.com/blognami/blognami" class="${this.cssClasses.githubLink}">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
