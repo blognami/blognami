@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "cssClassesFor"]
+---
 # cssClassesFor Service
 
 The `cssClassesFor` service generates scoped CSS class names for views based on a view name identifier. It creates unique, collision-free CSS class names by combining a view name with a hash and dynamically generating property names.

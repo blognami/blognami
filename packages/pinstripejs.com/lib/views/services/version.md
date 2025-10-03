@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "version"]
+---
 # version Service
 
 The `version` service provides application version information that works seamlessly across server-side and client-side environments. It handles version retrieval, caching, and development-specific version stamping for cache busting.

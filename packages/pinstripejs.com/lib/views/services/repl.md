@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "repl"]
+---
 # repl Service
 
 The `repl` service provides an interactive Read-Eval-Print Loop (REPL) environment for debugging and exploring Pinstripe applications. It creates a Node.js REPL with all registered services automatically available in the context, enabling developers to interactively inspect and test application components.

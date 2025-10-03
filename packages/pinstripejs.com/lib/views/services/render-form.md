@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "renderForm"]
+---
 # renderForm Service
 
 ## Interface

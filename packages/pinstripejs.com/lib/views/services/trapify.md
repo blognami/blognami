@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "trapify"]
+---
 # trapify Service
 
 ## Interface

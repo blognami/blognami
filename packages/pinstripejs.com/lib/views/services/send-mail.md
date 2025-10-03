@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "sendMail"]
+---
 # sendMail Service
 
 ## Description

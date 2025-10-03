@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "renderHtml"]
+---
 # renderHtml Service
 
 The `renderHtml` service provides a safe and powerful way to render HTML content with automatic escaping, template literal support, and advanced value resolution.

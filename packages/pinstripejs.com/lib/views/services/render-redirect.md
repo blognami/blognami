@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "renderRedirect"]
+---
 # renderRedirect Service
 
 The `renderRedirect` service provides a declarative way to perform redirects in Pinstripe applications using custom web components. It generates `pinstripe-redirect` tags that are processed by the client-side framework to perform navigation.

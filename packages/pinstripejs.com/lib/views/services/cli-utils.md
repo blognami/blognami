@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "cliUtils"]
+---
 # cliUtils Service
 
 ## Interface

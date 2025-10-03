@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "runCommand"]
+---
 # runCommand Service
 
 The `runCommand` service provides programmatic execution of Pinstripe CLI commands from within the application context. It allows services, views, commands, and background jobs to execute other commands as if they were run from the command line, while maintaining proper workspace isolation and context passing.

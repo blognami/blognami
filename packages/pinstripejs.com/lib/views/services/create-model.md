@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "createModel"]
+---
 # createModel
 
 The `createModel` service creates a new model instance with custom validation rules and behaviors. It's primarily used for form validation and data processing in Pinstripe applications.

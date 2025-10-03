@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "cookies"]
+---
 # cookies Service
 
 The `cookies` service provides read-only access to HTTP cookies sent by the client. It parses the `Cookie` header from incoming requests and makes individual cookie values available as an object with key-value pairs.

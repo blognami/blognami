@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "isClient"]
+---
 # isClient Service
 
 The `isClient` service provides a simple boolean indicator to determine whether code is currently executing in a client-side (browser) or server-side (Node.js) environment. This service is essential for implementing universal/isomorphic applications where the same code needs to behave differently on client and server.

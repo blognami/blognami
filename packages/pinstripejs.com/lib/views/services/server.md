@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "server"]
+---
 # Server Service
 
 The `server` service provides HTTP server functionality for Pinstripe applications. It creates and manages HTTP servers, handles incoming requests, parses request bodies (including file uploads with image processing), and integrates with the framework's call handler system.

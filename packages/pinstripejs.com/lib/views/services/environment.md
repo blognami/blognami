@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "environment"]
+---
 # environment Service
 
 The `environment` service provides access to the current runtime environment (typically "development", "production", or "test"). It intelligently handles both server-side and client-side environments, using deferred execution to ensure consistent behavior across different execution contexts.

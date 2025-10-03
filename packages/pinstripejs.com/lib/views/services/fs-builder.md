@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "fsBuilder"]
+---
 # fsBuilder Service
 
 The `fsBuilder` service provides utilities for generating files and directories during code generation and scaffolding operations. It's primarily used by command generators to create project structure, files, and boilerplate code with user confirmation and conflict resolution.

@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "runInNewWorkspace"]
+---
 # runInNewWorkspace Service
 
 The `runInNewWorkspace` service provides **workspace isolation** by executing functions in completely fresh workspace contexts. It's essentially a convenient wrapper around `Workspace.run()` that creates a new, isolated environment for function execution without affecting the current workspace state.

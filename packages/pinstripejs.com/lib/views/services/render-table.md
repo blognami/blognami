@@ -1,4 +1,8 @@
 ````markdown
+---
+sidebar:
+    category: ["Services", "renderTable"]
+---
 # renderTable Service
 
 The `renderTable` service provides a powerful way to render data tables with built-in search, pagination, and flexible column configuration. It creates interactive, modal-based tables that integrate seamlessly with the Pinstripe framework.

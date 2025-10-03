@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "config"]
+---
 # config Service
 
 The `config` service provides centralized configuration management for Pinstripe applications. It loads and normalizes configuration from `pinstripe.config.js` files, providing defaults and validation for database, mail, server, and custom configuration options.

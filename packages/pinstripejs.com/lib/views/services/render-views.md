@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "renderViews"]
+---
 # renderViews Service
 
 ## Interface

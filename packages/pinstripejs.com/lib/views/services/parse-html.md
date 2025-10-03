@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "parseHtml"]
+---
 # parseHtml Service
 
 ## Interface

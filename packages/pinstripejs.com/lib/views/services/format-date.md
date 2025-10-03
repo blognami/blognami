@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "formatDate"]
+---
 # formatDate Service
 
 The `formatDate` service provides date formatting functionality using the Luxon DateTime library. It converts JavaScript Date objects into formatted strings using customizable format patterns, with support for internationalization and various display formats.

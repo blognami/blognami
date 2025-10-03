@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "params"]
+---
 # params Service
 
 The `params` service provides access to the current request parameters for the active workspace context. It contains URL parameters, form data, JSON payloads, and HTTP metadata extracted from incoming requests. Unlike `initialParams` which preserves the original request context, `params` reflects the current request being processed and can change as requests are handled.

@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "serviceWorker"]
+---
 # serviceWorker Service
 
 The `serviceWorker` service provides comprehensive service worker functionality for offline-first Progressive Web Applications (PWAs). It handles request interception, parameter extraction, and automatic fallback to network requests when server-side rendering is not available.

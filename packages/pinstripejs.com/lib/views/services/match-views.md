@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "matchViews"]
+---
 # matchViews Service
 
 ## Interface

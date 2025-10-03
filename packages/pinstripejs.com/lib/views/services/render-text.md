@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "renderText"]
+---
 # renderText Service
 
 ## Interface

@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "theme"]
+---
 # theme Service
 
 The `theme` service provides access to design tokens and theming utilities for styling components in Pinstripe applications. It manages a centralized theme configuration that includes colors, typography, spacing, breakpoints, and other design system values.

@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "renderTag"]
+---
 # renderTag Service
 
 The `renderTag` service provides a clean and flexible way to render HTML tags with attributes and content. It handles both self-closing and container tags, with automatic attribute formatting and content injection.

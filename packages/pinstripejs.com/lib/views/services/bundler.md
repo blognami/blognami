@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "bundler"]
+---
 # bundler Service
 
 ## Interface

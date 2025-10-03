@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "runBackgroundJob"]
+---
 # runBackgroundJob Service
 
 ## Interface

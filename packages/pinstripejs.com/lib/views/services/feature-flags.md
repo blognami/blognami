@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "featureFlags"]
+---
 # featureFlags Service
 
 The `featureFlags` service provides a system for conditionally enabling or disabling features and views in Pinstripe applications. It supports both server-side and client-side environments, allowing for dynamic feature toggling based on configuration, HTTP headers, or other runtime conditions.

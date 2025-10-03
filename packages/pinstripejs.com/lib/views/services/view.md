@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "view"]
+---
 # view Service
 
 ## Interface

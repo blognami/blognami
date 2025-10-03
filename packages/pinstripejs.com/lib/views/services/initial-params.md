@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "initialParams"]
+---
 # initialParams Service
 
 The `initialParams` service provides access to the original request parameters that were used to initialize the current workspace context. Unlike the regular `params` service which reflects the current request being processed, `initialParams` preserves the parameters from the initial request that started the workspace, making it essential for multi-tenant applications, background jobs, and maintaining context across nested operations.

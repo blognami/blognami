@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "viewMap"]
+---
 # viewMap Service
 
 The `viewMap` service provides a dynamic mapping of all available views in a Pinstripe application, filtered by feature flags. It serves as the central registry for view resolution, enabling features like conditional view availability, view filtering, and dynamic route generation.

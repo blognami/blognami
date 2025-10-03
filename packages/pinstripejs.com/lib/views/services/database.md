@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "database"]
+---
 # database Service
 
 The `database` service provides access to the application's database layer, offering a high-level ORM-like interface for interacting with MySQL and SQLite databases. It supports dynamic table access, relationship queries through nested object syntax, migrations, transactions, and optional multi-tenancy.

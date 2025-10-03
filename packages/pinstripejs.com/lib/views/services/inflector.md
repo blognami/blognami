@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "inflector"]
+---
 # inflector Service
 
 The `inflector` service provides string inflection methods for transforming words and identifiers between different naming conventions. It supports pluralization, singularization, and various case transformations commonly used in web development, database modeling, and code generation.

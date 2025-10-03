@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "project"]
+---
 # project Service
 
 The `project` service provides access to information about the current Pinstripe project, including its configuration, paths, and metadata. It acts as a bridge to the underlying `Project` class, which is a singleton that analyzes the current working directory to find and parse project information from `package.json`.
