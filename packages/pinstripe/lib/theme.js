@@ -1,3 +1,6 @@
+
+import { deepMerge } from "@pinstripe/utils";
+
 import { Class } from "./class.js";
 import { themeDefaultDesignTokens } from "./theme_default_design_tokens.js";
 
@@ -54,21 +57,6 @@ export const Theme = Class.extend().include({
 
 function remify(value) {
   return `${parseInt(value) / 16}rem`;
-}
-
-function deepMerge(target, source) {
-  for (const [key, value] of Object.entries(source)) {
-    if (typeof value == "object") {
-      if (typeof target[key] != "object") {
-        target[key] = {};
-      } else {
-        target[key] = { ...target[key] };
-      }
-      deepMerge(target[key], value);
-    } else {
-      target[key] = value;
-    }
-  }
 }
 
 function traverse(o, fn) {
