@@ -62,7 +62,9 @@ export const styles = `
 `;
 
 export default {
-    render(){
+    async render(){
+        const items = await this.getItems();
+
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
                 <div class="${this.cssClasses.section}">
@@ -116,6 +118,37 @@ export default {
     },
 
     async getItems(){
-        const 
+        const out = { links: {} };
+        const views = await this.getViewsWithSidebarAnnotations();
+        for(const view of views) {
+            const categories = view.category;
+            let current = out;
+            for(const [category, index] of Object.entries(categories)) {
+                if(!current.links[category]){
+                    current.links[category] = {
+                        links: {}
+                    };
+                }
+                current = current.links;
+                if(index == categories.length - 1){
+                    current.path = view.path;
+                }
+            }
+        }
+
+        function flatten(links){
+            const out = [];
+            for(const [name, item] of Object.entries(links || {})){
+                if(item.path){
+                    out.push({
+                        name,
+                        path: item.path,
+                        links: flatten(item.links)
+                    });
+                }
+            }
+            return out;
+        }
+        return flatten(out.links);
     }
 };
