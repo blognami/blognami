@@ -108,12 +108,14 @@ Component.register('pinstripe-document', {
 
         if(!this.url.hash) return;
 
-        const { node } = this.document.find(this.url.hash) ?? {};
-        if(!node) return;
+        const targetElement = this.document.find(this.url.hash);
+        if(!targetElement) return;
 
-        let scrollY = node.getBoundingClientRect().top + window.scrollY;
+        let scrollY = targetElement.node.getBoundingClientRect().top + window.scrollY;
 
-        const scrollTopElement = this.document.find('#pinstripe-scroll-top');
+
+        const scrollTopElementId = this.document.head.find('meta[name="pinstripe-scroll-top-element-id"]')?.params.content || 'pinstripe-scroll-top';
+        const scrollTopElement = this.document.find(`#${scrollTopElementId}`);
         if(scrollTopElement){
             scrollY -= scrollTopElement.node.getBoundingClientRect().bottom + 10;
         }
