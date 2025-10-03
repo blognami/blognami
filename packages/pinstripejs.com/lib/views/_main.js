@@ -14,50 +14,7 @@ export const styles = `
         max-width: none;
     }
 
-    .toc {
-        width: 19.2rem;
-        padding: 3.2rem 0 3.2rem 3.2rem;
-        position: sticky;
-        top: 6.4rem;
-        height: calc(100vh - 6.4rem);
-        overflow-y: auto;
-    }
 
-    .toc-title {
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: #111827;
-        margin-bottom: 1.2rem;
-    }
-
-    .toc-links {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .toc-link {
-        display: block;
-        text-decoration: none;
-        color: #6b7280;
-        padding: 0.4rem 0;
-        font-size: 1.2rem;
-        transition: color 0.2s ease;
-    }
-
-    .toc-link:hover {
-        color: #111827;
-    }
-
-    .toc-link-active {
-        color: #35D0AC;
-    }
-
-    @media (max-width: 1024px) {
-        .toc {
-            display: none;
-        }
-    }
 
     @media (max-width: 768px) {
         .root {
@@ -80,13 +37,7 @@ export default {
                     ${this.renderView('_pinstripe/_content', { body: this.params.body })}
                 </main>
 
-                <aside class="${this.cssClasses.toc}">
-                    <h4 class="${this.cssClasses.tocTitle}">On This Page</h4>
-                    <ul class="${this.cssClasses.tocLinks}">
-                        <li><a href="#quick-start" class="${this.cssClasses.tocLink} ${this.cssClasses.tocLinkActive}">Quick Start</a></li>
-                        <li><a href="#features" class="${this.cssClasses.tocLink}">Features</a></li>
-                    </ul>
-                </aside>
+                ${this.renderView('_toc')}
             </div>
         `;
     }
