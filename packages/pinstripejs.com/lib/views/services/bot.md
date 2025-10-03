@@ -1,3 +1,7 @@
+---
+sidebar:
+    category: ["Services", "bot"]
+---
 # bot Service
 
 ## Interface
