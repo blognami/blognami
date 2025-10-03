@@ -21,6 +21,12 @@ export const styles = `
         padding: 0;
     }
 
+    .links .links {
+        padding-left: 1.6rem;
+        margin-top: 0.4rem;
+        border-left: 1px solid #e5e7eb;
+    }
+
     .link {
         display: block;
         text-decoration: none;
@@ -30,12 +36,40 @@ export const styles = `
         transition: color 0.2s ease;
     }
 
+    .links .links .link {
+        font-size: 1.1rem;
+        color: #9ca3af;
+        padding: 0.3rem 0;
+        position: relative;
+    }
+
+    .links .links .link::before {
+        content: '';
+        position: absolute;
+        left: -1.6rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0.8rem;
+        height: 1px;
+        background-color: #d1d5db;
+    }
+
     .link:hover {
         color: #111827;
     }
 
+    .links .links .link:hover {
+        color: #6b7280;
+    }
+
     .link[data-active="true"] {
         color: #35D0AC;
+        font-weight: 500;
+    }
+
+    .links .links .link[data-active="true"] {
+        color: #35D0AC;
+        font-weight: 500;
     }
 
     @media (max-width: 1024px) {
@@ -100,11 +134,22 @@ export default {
             <aside class="${this.cssClasses.root}">
                 <h4 class="${this.cssClasses.title}">On This Page</h4>
                 <ul class="${this.cssClasses.links}">
-                    ${links.map(({ title, id }, index) => this.renderHtml`
-                        <li><a href="#${id}" class="${this.cssClasses.link}">${title}</a></li>
-                    `)}
+                    ${this.renderLinks(links)}
                 </ul>
             </aside>
+        `;
+    },
+
+    renderLinks(links){
+        return this.renderHtml`
+            <ul class="${this.cssClasses.links}">
+                ${links.map(({ title, id, links: subLinks }) => this.renderHtml`
+                    <li>
+                        <a href="#${id}" class="${this.cssClasses.link}">${title}</a>
+                        ${subLinks ? this.renderLinks(subLinks) : ''}
+                    </li>
+                `)}
+            </ul>
         `;
     }
 };

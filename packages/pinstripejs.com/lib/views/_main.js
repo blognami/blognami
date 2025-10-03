@@ -36,11 +36,19 @@ export default {
         const tocLinks = [];
 
         virtualDom.traverse(child => {
-            const matches = child.type.match(/^h[2-3]/)
+            const matches = child.type.match(/^h([2-3])$/)
             if(!matches) return;
+            const level = parseInt(matches[1]);
             const id = child.attributes.id;
             if(!id) return;
-            tocLinks.push({ id, title: child.text });
+            if(level === 2) {
+                tocLinks.push({ id, title: child.text, links: [] });
+                return;
+            }
+            if(level === 3 && tocLinks.length > 0) {
+                tocLinks[tocLinks.length - 1].links.push({ id, title: child.text });
+                return;
+            }
         });
 
         return this.renderHtml`
