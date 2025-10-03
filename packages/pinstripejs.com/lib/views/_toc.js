@@ -59,8 +59,16 @@ export const decorators = {
             };
         }).filter(Boolean);
 
+
+        let scrollTopOffset = 0;
+        const scrollTopElementId = this.document.head.find('meta[name="pinstripe-scroll-top-element-id"]')?.params.content || 'pinstripe-scroll-top';
+        const scrollTopElement = this.document.find(`#${scrollTopElementId}`);
+        if(scrollTopElement){
+            scrollTopOffset += scrollTopElement.node.getBoundingClientRect().bottom + 10;
+        }
+
         const handleScroll = () => {
-            const scrollY = window.scrollY;
+            const scrollY = window.scrollY + scrollTopOffset;
             let nearestLink = null;
             let nearestDistance = Infinity;
             

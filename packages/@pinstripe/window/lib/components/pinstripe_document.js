@@ -113,7 +113,6 @@ Component.register('pinstripe-document', {
 
         let scrollY = targetElement.node.getBoundingClientRect().top + window.scrollY;
 
-
         const scrollTopElementId = this.document.head.find('meta[name="pinstripe-scroll-top-element-id"]')?.params.content || 'pinstripe-scroll-top';
         const scrollTopElement = this.document.find(`#${scrollTopElementId}`);
         if(scrollTopElement){
