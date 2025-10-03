@@ -1,3 +1,6 @@
+
+import { View } from 'pinstripe';
+
 export const styles = `
     .root {
         width: 25.6rem;
@@ -89,5 +92,30 @@ export default {
                 </div>
             </aside>
         `;
+    },
+
+    async getViewsWithSidebarAnnotations(){
+        let out = {};
+        for(const [path, viewName] of await this.viewMap) {
+            const annotations = View.for(viewName).annotations;
+            if(annotations && annotations.sidebar) {
+                if(out[viewName]?.path.length <= path.length) continue;
+                out[viewName] = {path, ...annotations.sidebar};
+            }
+        }
+
+        // Convert object to array and sort by category
+        out = Object.values(out);
+        out.sort((a, b) => {
+            const aCategory = (a.category || []).join('>');
+            const bCategory = (b.category || []).join('>');
+            return aCategory.localeCompare(bCategory);
+        });
+
+        return out;
+    },
+
+    async getItems(){
+        const 
     }
 };
