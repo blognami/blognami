@@ -1,4 +1,5 @@
 
+import { title } from 'node:process';
 import { View } from 'pinstripe';
 
 export const styles = `
@@ -65,6 +66,8 @@ export default {
     async render(){
         const items = await this.getItems();
 
+        console.dir(items, {depth: null});
+
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
                 <div class="${this.cssClasses.section}">
@@ -98,7 +101,8 @@ export default {
 
     async getViewsWithSidebarAnnotations(){
         let out = {};
-        for(const [path, viewName] of await this.viewMap) {
+        const viewMap = await this.viewMap;
+        for(const [path, viewName] of Object.entries(viewMap)) {
             const annotations = View.for(viewName).annotations;
             if(annotations && annotations.sidebar) {
                 if(out[viewName]?.path.length <= path.length) continue;
@@ -108,6 +112,7 @@ export default {
 
         // Convert object to array and sort by category
         out = Object.values(out);
+        
         out.sort((a, b) => {
             const aCategory = (a.category || []).join('>');
             const bCategory = (b.category || []).join('>');
@@ -123,13 +128,14 @@ export default {
         for(const view of views) {
             const categories = view.category;
             let current = out;
-            for(const [category, index] of Object.entries(categories)) {
+            for(const [index, category] of Object.entries(categories)) {
                 if(!current.links[category]){
                     current.links[category] = {
+                        title: category,
                         links: {}
                     };
                 }
-                current = current.links;
+                current = current.links[category];
                 if(index == categories.length - 1){
                     current.path = view.path;
                 }
@@ -139,13 +145,11 @@ export default {
         function flatten(links){
             const out = [];
             for(const [name, item] of Object.entries(links || {})){
-                if(item.path){
-                    out.push({
-                        name,
-                        path: item.path,
-                        links: flatten(item.links)
-                    });
-                }
+                out.push({
+                    name,
+                    path: item.path,
+                    links: flatten(item.links)
+                });
             }
             return out;
         }
