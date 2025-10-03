@@ -1,3 +1,8 @@
+---
+sidebar:
+    category: ["Getting Started", "Introduction"]
+---
+
 # Welcome to Pinstripe JS
 
 Pinstripe JS is a modern, lightweight JavaScript web framework designed for building fast, scalable web applications with minimal configuration.
