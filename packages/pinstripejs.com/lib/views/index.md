@@ -12,10 +12,10 @@ Pinstripe JS is a modern, lightweight JavaScript web framework designed for buil
 Get started with Pinstripe JS in just a few steps:
 
 ```bash
-npm install -g pinstripe
-pinstripe create my-app
+npx pinstripe generate-project --name my-app
 cd my-app
-npm start
+npx pinstripe initialize-database
+npx pinstripe start-server
 ```
 
 ### Features
