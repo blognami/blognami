@@ -72,24 +72,7 @@ export const styles = `
         color: #35D0AC;
     }
 
-    .footer {
-        border-top: 1px solid #e5e7eb;
-        background-color: #f9fafb;
-        padding: 4.8rem 0;
-        margin-top: 6.4rem;
-    }
 
-    .footer-container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 2.4rem;
-        text-align: center;
-    }
-
-    .footer-text {
-        color: #6b7280;
-        font-size: 1.4rem;
-    }
 
     @media (max-width: 1024px) {
         .toc {
@@ -135,13 +118,7 @@ export default {
                         </aside>
                     </div>
 
-                    <footer class="${this.cssClasses.footer}">
-                        <div class="${this.cssClasses.footerContainer}">
-                            <p class="${this.cssClasses.footerText}">
-                                © 2025 Pinstripe JS. Open source JavaScript web framework.
-                            </p>
-                        </div>
-                    </footer>
+                    ${this.renderView('_footer')}
                 </div>
             `
         });
