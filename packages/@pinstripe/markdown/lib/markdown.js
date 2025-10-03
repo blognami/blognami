@@ -33,7 +33,7 @@ export const Markdown = Class.extend().include({
             const matches = heading.type.match(/^h([1-6])$/);
             if(!matches) return;
             const text = heading.text;
-            let id = inflector.dasherize(text);
+            let id = `heading-${inflector.dasherize(text)}`;
             if(id in idCounters){
                 idCounters[id]++;
                 id = `${id}-${idCounters[id]}`;
