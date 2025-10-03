@@ -29,7 +29,7 @@ export const styles = `
 export default {
     render(){
         return this.renderHtml`
-            <header class="${this.cssClasses.root}">
+            <header class="${this.cssClasses.root}" id="pinstripe-scroll-top">
                 <div class="${this.cssClasses.container}">
                     ${this.renderView('_branding')}
                     ${this.renderView('_navbar')}
