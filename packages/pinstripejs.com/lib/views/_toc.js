@@ -44,15 +44,19 @@ export const styles = `
         }
     }
 `;
-
+ 
 export default {
     render(){
+        const links = this.params.links || [];
+        if(links.length === 0) return;
+
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
                 <h4 class="${this.cssClasses.title}">On This Page</h4>
                 <ul class="${this.cssClasses.links}">
-                    <li><a href="#quick-start" class="${this.cssClasses.link} ${this.cssClasses.linkActive}">Quick Start</a></li>
-                    <li><a href="#features" class="${this.cssClasses.link}">Features</a></li>
+                    ${links.map(({ title, id }, index) => this.renderHtml`
+                        <li><a href="#${id}" class="${this.cssClasses.link}${index === 0 ? ` ${this.cssClasses.linkActive}` : ''}">${title}</a></li>
+                    `)}
                 </ul>
             </aside>
         `;

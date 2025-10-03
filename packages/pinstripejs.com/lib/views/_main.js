@@ -28,16 +28,30 @@ export const styles = `
 `;
 
 export default {
-    render(){
+    async render(){
+        const body = await this.params.body;
+        
+        const virtualDom = this.parseHtml(body);
+
+        const tocLinks = [];
+
+        virtualDom.traverse(child => {
+            const id = child.attributes.id;
+            if(!id) return;
+            const matches = id.match(/^heading-(.*)$/);
+            if(!matches) return;
+            tocLinks.push({ id, title: child.text });
+        });
+
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
                 ${this.renderView('_sidebar')}
 
                 <main class="${this.cssClasses.content}">
-                    ${this.renderView('_pinstripe/_content', { body: this.params.body })}
+                    ${this.renderView('_pinstripe/_content', { body })}
                 </main>
 
-                ${this.renderView('_toc')}
+                ${this.renderView('_toc', { links: tocLinks })}
             </div>
         `;
     }
