@@ -34,7 +34,7 @@ export const styles = `
         color: #111827;
     }
 
-    .link-active {
+    .link[data-active="true"] {
         color: #35D0AC;
     }
 
@@ -44,7 +44,45 @@ export const styles = `
         }
     }
 `;
- 
+
+export const decorators = {
+    root(){
+        const links = this.findAll('a[href^="#"]').map(link => {
+            const id = link.attributes.href;
+            const targetElement = this.document.find(id);
+
+            if(!targetElement) return null;
+
+            return {
+                element: link,
+                targetElement
+            };
+        }).filter(Boolean);
+
+        const handleScroll = () => {
+            const scrollY = window.scrollY;
+            let nearestLink = null;
+            let nearestDistance = Infinity;
+            
+            for(const link of links){
+                const distance = Math.abs(scrollY - link.targetElement.node.offsetTop);
+                if(distance < nearestDistance){
+                    nearestDistance = distance;
+                    nearestLink = link;
+                }
+            }
+
+            for(const link of links){
+                link.element.attributes['data-active'] = (link === nearestLink).toString();
+            }
+        }
+
+        handleScroll();
+
+        this.manage(this.document.on('scroll', handleScroll));
+    }
+};
+
 export default {
     render(){
         const links = this.params.links || [];
@@ -55,7 +93,7 @@ export default {
                 <h4 class="${this.cssClasses.title}">On This Page</h4>
                 <ul class="${this.cssClasses.links}">
                     ${links.map(({ title, id }, index) => this.renderHtml`
-                        <li><a href="#${id}" class="${this.cssClasses.link}${index === 0 ? ` ${this.cssClasses.linkActive}` : ''}">${title}</a></li>
+                        <li><a href="#${id}" class="${this.cssClasses.link}">${title}</a></li>
                     `)}
                 </ul>
             </aside>
