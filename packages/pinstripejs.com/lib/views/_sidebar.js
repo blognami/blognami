@@ -86,13 +86,13 @@ export default {
                         <h3 class="${this.cssClasses.title}">${link.name}</h3>
                         <ul class="${this.cssClasses.links}">
                             ${link.links.map(childLink => {
-                                const isActive = this.params.path === childLink.path;
+                                const isActive = this.initialParams._url.pathname === childLink.path;
                                 const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
                                 
                                 return this.renderHtml`
                                     <li>
                                         ${childLink.path 
-                                            ? this.renderHtml`<a href="/${childLink.path}" class="${this.cssClasses.link}${activeClass}">${childLink.name}</a>`
+                                            ? this.renderHtml`<a href="${childLink.path}" class="${this.cssClasses.link}${activeClass}">${childLink.name}</a>`
                                             : this.renderHtml`<span class="${this.cssClasses.link}">${childLink.name}</span>`
                                         }
                                         ${childLink.links && childLink.links.length > 0 
@@ -108,13 +108,13 @@ export default {
             }
             // For deeper levels, just render as nested list items
             else if (level > 0) {
-                const isActive = this.params.path === link.path;
+                const isActive = this.initialParams._url.pathname === link.path;
                 const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
                 
                 return this.renderHtml`
                     <li>
                         ${link.path 
-                            ? this.renderHtml`<a href="/${link.path}" class="${this.cssClasses.link}${activeClass}">${link.name}</a>`
+                            ? this.renderHtml`<a href="${link.path}" class="${this.cssClasses.link}${activeClass}">${link.name}</a>`
                             : this.renderHtml`<span class="${this.cssClasses.link}">${link.name}</span>`
                         }
                         ${link.links && link.links.length > 0 
@@ -139,7 +139,7 @@ export default {
             const annotations = View.for(viewName).annotations;
             if(annotations && annotations.sidebar) {
                 if(out[viewName]?.path.length <= path.length) continue;
-                out[viewName] = {path, ...annotations.sidebar};
+                out[viewName] = {path: `/${path}`, ...annotations.sidebar};
             }
         }
 
