@@ -164,65 +164,6 @@ export const styles = `
         max-width: none;
     }
 
-    .content h1 {
-        font-size: 3.6rem;
-        font-weight: 700;
-        color: #111827;
-        margin: 0 0 1.6rem 0;
-        line-height: 1.2;
-    }
-
-    .content h2 {
-        font-size: 3rem;
-        font-weight: 600;
-        color: #111827;
-        margin: 3.2rem 0 1.6rem 0;
-        line-height: 1.3;
-    }
-
-    .content h3 {
-        font-size: 2.4rem;
-        font-weight: 600;
-        color: #111827;
-        margin: 2.4rem 0 1.2rem 0;
-        line-height: 1.4;
-    }
-
-    .content p {
-        color: #4b5563;
-        margin-bottom: 1.6rem;
-        line-height: 1.7;
-    }
-
-    .content code {
-        background-color: #f3f4f6;
-        color: #e53e3e;
-        padding: 0.2rem 0.4rem;
-        border-radius: 0.4rem;
-        font-size: 0.875em;
-        font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
-    }
-
-    .content pre {
-        background-color: #1f2937;
-        color: #f9fafb;
-        padding: 2.4rem;
-        border-radius: 0.8rem;
-        overflow-x: auto;
-        margin: 2.4rem 0;
-        font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
-        font-size: 1.4rem;
-        line-height: 1.5;
-    }
-
-    .content pre code {
-        background-color: transparent;
-        color: inherit;
-        padding: 0;
-        border-radius: 0;
-        font-size: inherit;
-    }
-
     .toc {
         width: 19.2rem;
         padding: 3.2rem 0 3.2rem 3.2rem;
@@ -370,26 +311,7 @@ export default {
                         </aside>
 
                         <main class="${this.cssClasses.content}">
-                            <h1>Welcome to Pinstripe JS</h1>
-                            <p>Pinstripe JS is a modern, lightweight JavaScript web framework designed for building fast, scalable web applications with minimal configuration.</p>
-                            
-                            <h2>Quick Start</h2>
-                            <p>Get started with Pinstripe JS in just a few steps:</p>
-                            
-                            <pre><code>npm install -g pinstripe
-pinstripe create my-app
-cd my-app
-npm start</code></pre>
-                            
-                            <h3>Features</h3>
-                            <p>Pinstripe JS comes with everything you need to build modern web applications:</p>
-                            <ul>
-                                <li>File-based routing</li>
-                                <li>Server-side rendering</li>
-                                <li>Built-in styling system</li>
-                                <li>Database integration</li>
-                                <li>Multi-tenant support</li>
-                            </ul>
+                            ${this.renderView('_pinstripe/_content', { body: this.params.body })}
                         </main>
 
                         <aside class="${this.cssClasses.toc}">
