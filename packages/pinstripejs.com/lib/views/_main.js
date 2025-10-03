@@ -36,7 +36,7 @@ export default {
         const tocLinks = [];
 
         virtualDom.traverse(child => {
-            if(child.type !== 'h2') return;
+            if(child.type != 'h2') return;
             const id = child.attributes.id;
             if(!id) return;
             const matches = id.match(/^heading-(.*)$/);
