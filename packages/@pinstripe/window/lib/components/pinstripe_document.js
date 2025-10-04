@@ -104,7 +104,22 @@ Component.register('pinstripe-document', {
             }
         }
 
-        return this.constructor.for('pinstripe-frame').prototype.load.call(this, url, options);
+        await this.constructor.for('pinstripe-frame').prototype.load.call(this, url, options);
+
+        if(!this.url.hash) return;
+
+        const targetElement = this.document.find(this.url.hash);
+        if(!targetElement) return;
+
+        let scrollY = targetElement.node.getBoundingClientRect().top + window.scrollY;
+
+        const scrollTopElementId = this.document.head.find('meta[name="pinstripe-scroll-top-element-id"]')?.params.content || 'pinstripe-scroll-top';
+        const scrollTopElement = this.document.find(`#${scrollTopElementId}`);
+        if(scrollTopElement){
+            scrollY -= scrollTopElement.node.getBoundingClientRect().bottom + 10;
+        }
+    
+        window.scrollTo(0, scrollY);
     },
 
     async preload(url){

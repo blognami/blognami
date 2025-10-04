@@ -5,6 +5,7 @@ import MarkdownIt from 'markdown-it';
 import { Class } from './class.js';
 import { parseHtml } from './virtual_node.js';
 import { Html } from './html.js';
+import { inflector } from '@pinstripe/utils';
 
 export const Markdown = Class.extend().include({
     meta(){
@@ -25,6 +26,23 @@ export const Markdown = Class.extend().include({
     render(){
         const html = new MarkdownIt({ html: this.allowHtml, linkify: true }).use(injectLineNumbers).render(this.value || '');
         const virtualNode = parseHtml(html);
+
+        const idCounters = {};
+
+        virtualNode.children.forEach(heading => {
+            const matches = heading.type.match(/^h([1-6])$/);
+            if(!matches) return;
+            const text = heading.text;
+            let id = `heading-${inflector.dasherize(text)}`;
+            if(id in idCounters){
+                idCounters[id]++;
+                id = `${id}-${idCounters[id]}`;
+            } else {
+                idCounters[id] = 1;
+            }
+            heading.attributes.id = id;
+        });
+
         virtualNode.children.forEach(paragraph => {
             if(paragraph.type != 'p') return;
             const text = paragraph.children[0];

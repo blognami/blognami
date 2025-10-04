@@ -1,19 +1,22 @@
 
-import { promisify } from 'util';
-import { readFile } from 'fs';
+import { readFile } from 'fs/promises';
 import Yaml from 'js-yaml';
 
 import { View } from 'pinstripe';
 
 View.FileImporter.register('md', {
-    importFile(){
+    async importFile(){
         let extractParamsPromise;
 
         const { filePath, relativeFilePathWithoutExtension } = this;
 
+        const data = await readFile(filePath, 'utf8');
+        const [ frontMatter, body ] = this.extractFrontMatterAndBody(data);
+
         View.register(relativeFilePathWithoutExtension, {
             meta(){
                 this.filePaths.push(filePath);
+                this.annotate(frontMatter);
             },
 
             async render(){
@@ -30,28 +33,26 @@ View.FileImporter.register('md', {
             },
 
             async extractParams(){
-                const data = await promisify(readFile)(filePath, 'utf8');
-                const [ frontMatter, body ] = this.extractFrontMatterAndBody(data);
                 return { 
                     ...frontMatter, 
-                    body: this.renderView('_content', {
+                    body: this.renderView('_pinstripe/_content', {
                         body: this.renderMarkdown(body, { allowHtml: true })
                     })
                 };
             },
-
-            extractFrontMatterAndBody(data){
-                let frontMatter = {};
-                let body = '';
-                const matches = data.match(/^---+[\r\n]([\S\s]*?)[\r\n]---+([\S\s]*)$/)
-                if(matches){
-                    frontMatter = Yaml.load(matches[1]);
-                    body = matches[2];
-                } else {
-                    body = data;
-                }
-                return [ frontMatter, body ];
-            }
         });
+    },
+
+    extractFrontMatterAndBody(data){
+        let frontMatter = {};
+        let body = '';
+        const matches = data.match(/^---+[\r\n]([\S\s]*?)[\r\n]---+([\S\s]*)$/)
+        if(matches){
+            frontMatter = Yaml.load(matches[1]);
+            body = matches[2];
+        } else {
+            body = data;
+        }
+        return [ frontMatter, body ];
     }
 });

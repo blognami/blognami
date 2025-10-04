@@ -7,6 +7,7 @@ import * as crypto from 'crypto'; // pinstripe-if-client: const crypto = undefin
 import { Class } from './class.js';
 import { ImportableRegistry } from './importable_registry.js';
 import { ServiceConsumer } from './service_consumer.js';
+import { Annotatable } from './annotatable.js';
 
 export const View = Class.extend().include({
     meta(){
@@ -14,6 +15,7 @@ export const View = Class.extend().include({
 
         this.include(ImportableRegistry);
         this.include(ServiceConsumer);
+        this.include(Annotatable);
         
         this.assignProps({
             run(context, name, fn){

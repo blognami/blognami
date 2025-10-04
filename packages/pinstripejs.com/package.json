@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "pinstripejs.com",
+  "version": "0.35.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "scripts": {
+    "start": "pinstripe start-server",
+    "build": "rm -rf build && pinstripe generate-static-site"
+  }
+}

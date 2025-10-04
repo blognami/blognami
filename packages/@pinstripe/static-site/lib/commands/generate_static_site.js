@@ -1,12 +1,12 @@
 
 import { default as mimeTypes } from 'mime-types';
 
-import { View } from 'pinstripe';
 
 export default {
     async run(){
         this.pages = {};
-        const urls = View.names.filter(path => !path.match(/(^|\/)_/)).map(path => {
+
+        const urls = Object.keys(await this.viewMap).filter(path => !path.match(/(^|\/)_[^/]+$/)).map(path => {
             return new URL(path, 'http://127.0.0.1/');
         });
 
