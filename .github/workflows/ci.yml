@@ -3,11 +3,23 @@ name: CI
 on: 
   push:
   workflow_dispatch:
+    inputs:
+      run_tests:
+        description: 'Run tests'
+        required: false
+        default: true
+        type: boolean
+      deploy_site:
+        description: 'Deploy pinstripejs.com to GitHub Pages'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run_tests)
     services:
       mysql:
         image: mysql:8
@@ -53,7 +65,7 @@ jobs:
   deploy-pinstripejs-com:
     name: Deploy pinstripejs.com to GitHub Pages
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' && inputs.deploy_site
     permissions:
       contents: read
       pages: write
