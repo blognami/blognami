@@ -1,13 +1,6 @@
 name: CI
 
-on: 
-  push:
-  workflow_dispatch:
-    inputs:
-      deploy_site:
-        description: 'Deploy pinstripejs.com to GitHub Pages'
-        required: false
-        default: 'true'
+on: push
 
 jobs:
   test:
@@ -54,36 +47,5 @@ jobs:
           name: playwright-test-results-${{ matrix.node }}-${{ matrix.database-adapter }}
           path: packages/demo/test-results/
           retention-days: 30
-
-  deploy-pinstripejs-com:
-    name: Deploy pinstripejs.com to GitHub Pages
-    runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' && inputs.deploy_site == 'true'
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.x
-      - run: npm install
-      - name: Build pinstripejs.com
-        run: npm run build
-        working-directory: packages/pinstripejs.com
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: packages/pinstripejs.com/build/static
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
 
 
