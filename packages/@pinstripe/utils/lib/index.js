@@ -1,6 +1,7 @@
 export * from './async_lock.js';
 export * from './class.js';
 export * from './constants.js';
+export * from './deep_merge.js';
 export * from './defer.js';
 export * from './inflector.js';
 export * from './lru_cache.js';
