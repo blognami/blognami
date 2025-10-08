@@ -1,12 +1,26 @@
 
 export default {
+    meta(){
+        this.annotate({
+            description: 'Generates a new model file in the lib/models directory and creates an associated migration if needed.'
+        });
+        
+        this.hasParam('name', { 
+            type: 'string', 
+            alias: 'arg1', 
+            description: 'The name of the model to create (in snake_case).' 
+        });
+        
+        this.hasParam('fields', { 
+            type: 'string', 
+            optional: true, 
+            description: 'Field definitions for the model\'s table (e.g., "name:string age:integer").' 
+        });
+    },
+
     async run(){
 
-        const name = this.inflector.snakeify(this.params.name || '');
-        if(name == ''){
-            console.error('A model --name must be given.');
-            process.exit();
-        }
+        const name = this.inflector.snakeify(this.params.name);
 
         let { fields = '' } = this.params;
 

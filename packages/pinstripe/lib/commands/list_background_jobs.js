@@ -3,6 +3,12 @@ import chalk from 'chalk';
 import { BackgroundJob } from 'pinstripe';
 
 export default {
+    meta(){
+        this.annotate({
+            description: 'Lists all available background jobs in the current project.'
+        });
+    },
+
     run(){
         console.log('');
         console.log('The following background jobs are available:');

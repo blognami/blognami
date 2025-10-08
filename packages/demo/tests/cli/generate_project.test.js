@@ -8,7 +8,11 @@ import { reset, inPackagesDir, run } from './helpers.js';
 afterEach(reset);
 
 test(`pinstripe generate-project`, () => inPackagesDir(() => {
-    assert.equal(run(`npx pinstripe generate-project`).stderr, 'A project --name must be given.');
+    assert.equal(run(`npx pinstripe generate-project`).stderr, [
+        'There was an error validating the command parameters:',
+        '',
+        '  * name: Must not be blank'
+    ].join('\n'));
 }));
 
 test(`pinstripe generate-project --name generate-project-test`, () => inPackagesDir(() => {

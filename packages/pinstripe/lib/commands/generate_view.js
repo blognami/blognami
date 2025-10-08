@@ -3,13 +3,16 @@ import { View } from 'pinstripe';
 import { readFile } from 'fs/promises';
 
 export default {
+    meta(){
+        this.annotate({
+            description: 'Generates a new view file in the lib/views directory.'
+        });
+
+        this.hasParam('name', { type: 'string', description: 'The name of the view to create (has a .js file extension by default).' });
+    },
+
     async run(){
-        const { name = '' } = this.params;
-        let normalizedName = name.replace(/^\//, '');
-        if(name == ''){
-            console.error('A view --name must be given.');
-            process.exit();
-        }
+        let normalizedName = this.params.name.replace(/^\//, '');
 
         const existingFilePaths = [ ...View.for(normalizedName).filePaths ];
         const existingFilePath = existingFilePaths.pop();

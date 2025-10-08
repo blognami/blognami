@@ -9,6 +9,23 @@ export const Hookable = {
                 return this._hooks;
             },
 
+            get allHooks(){
+                let out = {};
+                let current = this;
+                while(current){
+                    if(current.hooks){
+                        for(const [name, callbacks] of Object.entries(current.hooks)){
+                            if(!out[name]){
+                                out[name] = [];
+                            }
+                            out[name] = [ ...callbacks, ...out[name] ];
+                        }
+                    }
+                    current = current.parent;
+                }
+                return out;
+            },
+
             on(events, callback){
                 const normalizedEvents = Array.isArray(events) ? events : [events];
                 for(const event of normalizedEvents){
@@ -22,7 +39,8 @@ export const Hookable = {
     },
 
     async trigger(event, ...args){
-        const callbacks = this.constructor.hooks[event] || [];
+        const hooks = this.constructor.allHooks;
+        const callbacks = hooks[event] || [];
         for(const callback of callbacks){
             await callback.call(this, this, ...args);
         }

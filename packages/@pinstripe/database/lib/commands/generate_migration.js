@@ -1,5 +1,30 @@
 
 export default {
+    meta(){
+        this.annotate({
+            description: 'Generates a new database migration file in the lib/migrations directory.'
+        });
+        
+        this.hasParam('suffix', { 
+            type: 'string', 
+            alias: 'arg1', 
+            optional: true,
+            description: 'The suffix for the migration name (in snake_case). If ending with "_to_tablename", the table name will be inferred.' 
+        });
+        
+        this.hasParam('table', { 
+            type: 'string', 
+            optional: true, 
+            description: 'The table name for the migration. Can be inferred from suffix if it ends with "_to_tablename".' 
+        });
+        
+        this.hasParam('fields', { 
+            type: 'string', 
+            optional: true, 
+            description: 'Field definitions for the migration (e.g., "name:string age:integer").' 
+        });
+    },
+
     async run(){
 
         const suffix = this.inflector.snakeify(this.params.suffix || 'migration');

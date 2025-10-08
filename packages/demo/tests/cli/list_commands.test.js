@@ -13,7 +13,11 @@ test(`pinstripe list-commands`, () => inPackagesDir(() => {
         'The following commands are available:',
         '',
         '  * generate-project',
-        '  * list-commands'
+        '  * list-commands',
+        '',
+        'For more information on a specific command, run:',
+        '',
+        '  pinstripe COMMAND_NAME --help'
     ].join('\n'));
 
     run(`npx pinstripe generate-project --name list-commands-test --with blognami`);
@@ -44,7 +48,11 @@ test(`pinstripe list-commands`, () => inPackagesDir(() => {
         '  * show-config',
         '  * show-theme',
         '  * start-repl',
-        '  * start-server'
+        '  * start-server',
+        '',
+        'For more information on a specific command, run:',
+        '',
+        '  pinstripe COMMAND_NAME --help'
         ].join('\n'));
 }));
 
@@ -53,7 +61,11 @@ test(`pinstripe`, () => inPackagesDir(() => {
         'The following commands are available:',
         '',
         '  * generate-project',
-        '  * list-commands'
+        '  * list-commands',
+        '',
+        'For more information on a specific command, run:',
+        '',
+        '  pinstripe COMMAND_NAME --help'
     ].join('\n'));
 
     run(`npx pinstripe generate-project --name list-commands-test --with blognami`);
@@ -84,6 +96,10 @@ test(`pinstripe`, () => inPackagesDir(() => {
         '  * show-config',
         '  * show-theme',
         '  * start-repl',
-        '  * start-server'
+        '  * start-server',
+        '',
+        'For more information on a specific command, run:',
+        '',
+        '  pinstripe COMMAND_NAME --help'
         ].join('\n'));
 }));

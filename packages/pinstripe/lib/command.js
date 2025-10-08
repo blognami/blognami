@@ -1,10 +1,21 @@
 
+import chalk from 'chalk';
+
 import { Class } from './class.js';
 import { inflector } from './inflector.js';
 import { ImportableRegistry } from './importable_registry.js';
 import { ServiceConsumer } from './service_consumer.js';
+import { Validateable } from './validateable.js';
+import { Annotatable } from './annotatable.js';
+
 
 const optionPattern = /^-([a-z]|-[a-z\-]+)$/;
+
+const COERCE_MAP = {
+    string: items => items.join(' '),
+    boolean: items => items.length ? items[0] === 'true' : true,
+    number: items => Number(items[0] || 0),
+};
 
 export const Command = Class.extend().include({
     meta(){
@@ -14,6 +25,17 @@ export const Command = Class.extend().include({
 
         this.include(ImportableRegistry);
         this.include(ServiceConsumer);
+        this.include(Validateable);
+        this.include(Annotatable);
+
+        this.on('validation', async command => {
+            // Validate unknown parameters
+            for(const paramName of Object.keys(command.params)){
+                if(!command.constructor.params[paramName]){
+                    command.setValidationError(paramName, `Unknown parameter`);
+                }
+            }
+        });
 
         this.assignProps({
             normalizeName(name){
@@ -22,9 +44,43 @@ export const Command = Class.extend().include({
 
             async run(context, name = 'list-commands', params = {}){
                 await context.fork().run(async context => {
-                    context.params = Array.isArray(params) ? this.extractParams(params) : params;
-                    await this.create(name, context).run();
+                    const Class = this.for(name);
+                    context.params = Array.isArray(params) ? Class.coerceParams(Class.extractParams(params)) : params;
+                    const command = Class.new(context);
+
+                    if(context.params.help || context.params.h){
+                        await command.showHelp();
+                        return;
+                    }
+
+                    await command.validate();
+                    await command.run();
                 });
+            },
+
+            get params(){
+                if(!this.hasOwnProperty('_params')){
+                    this._params = {};
+                }
+                return this._params;
+            },
+
+            hasParam(name, options = {}){
+                const { type = 'string', optional = false, ...otherParams } = options;
+
+                this.params[name] = {
+                    type,
+                    optional,
+                    ...otherParams
+                };
+
+                if(!optional) {
+                    this.on('validation', command => {
+                        if(command.isValidationError(name)) return;
+                        const value = command.params[name];
+                        if(!value) command.setValidationError(name, 'Must not be blank');
+                    });
+                }
             },
 
             extractParams(_args = []){
@@ -47,20 +103,195 @@ export const Command = Class.extend().include({
                         out[currentName].push(arg);
                     }
                 }
-                Object.keys(out).forEach(name => {
-                    const value = out[name];
-                    if(!value.length){
-                        out[name] = true;
-                    } else {
-                        out[name] = value.join(' ');
+                
+                // Handle aliases - convert alias keys to their main parameter names
+                for(const [name, { alias }] of Object.entries(this.params)){
+                    if(!alias) continue;
+
+                    const matches = alias.match(/^arg([0-9]+)$/);
+                    if(matches){
+                        const index = Number(matches[1]) - 1;
+                        if(out.args && out.args.length > index){
+                            out[name] = [ out.args[index] ];
+                            delete out.args[index];
+                        }
+                    } else if(out[alias] !== undefined){
+                        out[name] = out[alias];
+                        delete out[alias];
                     }
-                });
+                }
+
+                if(out.args){
+                    out.args = out.args.filter(Boolean);
+                    if(!out.args.length) delete out.args;
+                }
+                
+                return out;
+            },
+
+            coerceParams(params){
+                const out = { ...params };
+                for(const [name, { type }] of Object.entries(this.params)){
+                    if(out[name] !== undefined){
+                        const coerce = COERCE_MAP[type] || (v => v);
+                        out[name] = coerce(out[name]);
+                    }
+                }
                 return out;
             }
         });
     },
 
+    get params(){
+        return this.context?.params || {};
+    },
+
+    showHelp(){
+        const { description = 'No description available.' } = this.constructor.annotations;
+        const commandName = inflector.dasherize(this.constructor.name);
+        const params = this.constructor.params || {};
+        
+        console.log('');
+        console.log(chalk.bold(`${commandName} - ${description}`));
+        console.log('');
+        
+        // Build usage line with argument and option syntax
+        let usage = `Usage: ${chalk.cyan(commandName)}`;
+        const paramNames = Object.keys(params);
+        
+        if (paramNames.length > 0) {
+            const positionalArgs = [];
+            const optionalOptions = [];
+            const requiredOptions = [];
+            
+            // Categorize arguments and options
+            for(const [name, param] of Object.entries(params)) {
+                const { alias, optional = false, type = 'string' } = param;
+                
+                if(alias && alias.match(/^arg[0-9]+$/)) {
+                    // Positional argument
+                    const displayName = optional ? `[${name}]` : `<${name}>`;
+                    positionalArgs.push(displayName);
+                } else if(optional) {
+                    // Optional option
+                    const flag = alias ? `-${alias}, --${inflector.dasherize(name)}` : `--${inflector.dasherize(name)}`;
+                    const typeHint = type === 'boolean' ? '' : ` <${type}>`;
+                    optionalOptions.push(`[${flag}${typeHint}]`);
+                } else {
+                    // Required option
+                    const flag = alias ? `-${alias}, --${inflector.dasherize(name)}` : `--${inflector.dasherize(name)}`;
+                    const typeHint = type === 'boolean' ? '' : ` <${type}>`;
+                    requiredOptions.push(`${flag}${typeHint}`);
+                }
+            }
+            
+            // Add arguments and options to usage line in order
+            if(positionalArgs.length > 0) {
+                usage += ' ' + positionalArgs.join(' ');
+            }
+            if(requiredOptions.length > 0) {
+                usage += ' ' + requiredOptions.join(' ');
+            }
+            if(optionalOptions.length > 0) {
+                usage += ' ' + optionalOptions.join(' ');
+            }
+        }
+        
+        // Always show help option
+        usage += ' ' + chalk.dim('[--help]');
+        console.log(usage);
+        console.log('');
+        
+        // Show detailed arguments and options sections
+        if(paramNames.length > 0) {
+            // Group and sort arguments and options
+            const positionalArgs = [];
+            const requiredOptions = [];
+            const optionalOptions = [];
+            
+            for(const [name, param] of Object.entries(params)) {
+                const { alias, optional: isOptional = false, type = 'string', description = 'No description provided.' } = param;
+                
+                const paramInfo = {
+                    name,
+                    alias,
+                    optional: isOptional,
+                    type,
+                    description
+                };
+                
+                if(alias && alias.match(/^arg[0-9]+$/)) {
+                    positionalArgs.push(paramInfo);
+                } else if(isOptional) {
+                    optionalOptions.push(paramInfo);
+                } else {
+                    requiredOptions.push(paramInfo);
+                }
+            }
+            
+            // Display arguments section
+            if(positionalArgs.length > 0) {
+                console.log(chalk.bold('Arguments:'));
+                for(const param of positionalArgs) {
+                    const { name, type, description, optional: isOptional } = param;
+                    
+                    // Build argument name display
+                    const nameDisplay = chalk.green(name);
+                    
+                    // Build type and requirement display
+                    const typeDisplay = chalk.dim(`[${type}]`);
+                    const reqDisplay = isOptional ? chalk.dim('(optional)') : chalk.red('(required)');
+                    
+                    // Show argument line
+                    console.log(`  ${nameDisplay} ${typeDisplay} ${reqDisplay}`);
+                    console.log(`    ${description}`);
+                    console.log(`    ${chalk.dim(`Usage: ${commandName} <value> ...`)}`);
+                    console.log('');
+                }
+            }
+            
+            // Display options section
+            const allOptions = [...requiredOptions, ...optionalOptions];
+            if(allOptions.length > 0) {
+                console.log(chalk.bold('Options:'));
+                for(const param of allOptions) {
+                    const { name, alias, optional: isOptional, type, description } = param;
+                    
+                    // Build option name display
+                    let nameDisplay = chalk.green(name);
+                    if(alias && !alias.match(/^arg[0-9]+$/)) {
+                        nameDisplay += ` (${chalk.yellow(`-${alias}`)})`;
+                    }
+                    
+                    // Build type and requirement display
+                    const typeDisplay = chalk.dim(`[${type}]`);
+                    const reqDisplay = isOptional ? chalk.dim('(optional)') : chalk.red('(required)');
+                    
+                    // Show option line
+                    console.log(`  ${nameDisplay} ${typeDisplay} ${reqDisplay}`);
+                    console.log(`    ${description}`);
+                    
+                    // Show CLI usage examples
+                    const flag = alias ? `-${alias}` : `--${inflector.dasherize(name)}`;
+                    if(type === 'boolean') {
+                        console.log(`    ${chalk.dim(`Usage: ${commandName} ${flag}`)}`);
+                    } else {
+                        console.log(`    ${chalk.dim(`Usage: ${commandName} ${flag} <${type}>`)}`);
+                    }
+                    console.log('');
+                }
+            }
+        }
+        
+        // Always show global options
+        console.log(chalk.bold('Global Options:'));
+        console.log(`  ${chalk.green('help')} (${chalk.yellow('-h')}) ${chalk.dim('[boolean]')} ${chalk.dim('(optional)')}`);
+        console.log(`    Show this help message`);
+        console.log(`    ${chalk.dim(`Usage: ${commandName} --help`)}`);
+        console.log('');
+    },
+
     run(){
-        console.error(`No such command "${this.constructor.name}" exists.`);
+        throw new Error(`No such command "${this.constructor.name}" exists.`);
     }
 });

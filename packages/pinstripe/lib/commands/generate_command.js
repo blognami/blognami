@@ -1,13 +1,16 @@
 
 
 export default {
+    meta(){
+        this.annotate({
+            description: 'Generates a new command file in the lib/commands directory.'
+        });
+        
+        this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the command to create (in snake_case).' });
+    },
+
     async run(){
-        const { name = '' } = this.params;
-        const normalizedName = this.inflector.snakeify(name);
-        if(normalizedName == ''){
-            console.error('A command --name must be given.');
-            process.exit();
-        }
+        const normalizedName = this.inflector.snakeify(this.params.name);
 
         const { inProjectRootDir, generateFile } = this.fsBuilder;
     
