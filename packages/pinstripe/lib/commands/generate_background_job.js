@@ -1,13 +1,16 @@
 
 
 export default {
+    meta(){
+        this.annotate({
+            description: 'Generates a new background job file in the lib/background_jobs directory.'
+        });
+        
+        this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the background job to create (in snake_case).' });
+    },
+
     async run(){
-        const { name = '' } = this.params;
-        const normalizedName = this.inflector.snakeify(name);
-        if(normalizedName == ''){
-            console.error('A background job --name must be given.');
-            process.exit();
-        }
+        const normalizedName = this.inflector.snakeify(this.params.name);
 
         const { inProjectRootDir, generateFile } = this.fsBuilder;
     

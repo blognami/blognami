@@ -3,6 +3,12 @@ import { default as mimeTypes } from 'mime-types';
 
 
 export default {
+    meta(){
+        this.annotate({
+            description: 'Generates a static site by crawling all pages and saving them as static files in the build/static directory.'
+        });
+    },
+
     async run(){
         this.pages = {};
 

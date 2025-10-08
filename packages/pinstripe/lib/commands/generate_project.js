@@ -3,13 +3,17 @@ import { spawnSync } from 'child_process';
 import * as crypto from 'crypto';
 
 export default {
-   async run(){
-      const name = this.params.name || '';
-      if(name == ''){
-         console.error('A project --name must be given.');
-         process.exit();
-      }
+   meta(){
+      this.annotate({
+         description: 'Generates a new Pinstripe project with the specified dependencies and configuration.'
+      });
+      
+      this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the project to create.' });
+      this.hasParam('with', { type: 'string', optional: true, description: 'Additional dependencies to include (space-separated).' });
+   },
 
+   async run(){
+      const name = this.params.name;
       const { with: _with = '' } = this.params;
 
       const dependencies = ['pinstripe'];

@@ -1,11 +1,15 @@
 
 export default {
+    meta(){
+        this.annotate({
+            description: 'Runs a background job by name from the lib/background_jobs directory.'
+        });
+        
+        this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the background job to run (in snake_case).' });
+    },
+
     async run(){
-        const { name = '' } = this.params;
-        if(name == ''){
-            console.error('A background job --name must be given.');
-            process.exit();
-        }
-        this.runBackgroundJob(name);
+        const normalizedName = this.inflector.snakeify(this.params.name);
+        this.runBackgroundJob(normalizedName);
     }
 };

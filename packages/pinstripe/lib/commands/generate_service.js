@@ -1,11 +1,15 @@
 
 export default {
+    meta(){
+        this.annotate({
+            description: 'Generates a new service file in the lib/services directory.'
+        });
+        
+        this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the service to create (in snake_case).' });
+    },
+
     async run(){
-        const { name = '' } = this.params;
-        if(name == ''){
-            console.error('A service --name must be given.');
-            process.exit();
-        }
+        const name = this.params.name;
     
         const { inProjectRootDir, generateFile } = this.fsBuilder;
     
