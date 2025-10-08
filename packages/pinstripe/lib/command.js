@@ -1,5 +1,6 @@
 
 import chalk from 'chalk';
+import readline from 'readline';
 
 import { Class } from './class.js';
 import { inflector } from './inflector.js';
@@ -31,6 +32,10 @@ export const Command = Class.extend().include({
         this.on('validation', async command => {
             // Validate unknown parameters
             for(const paramName of Object.keys(command.params)){
+                // Skip global parameters that are built-in
+                if(['help', 'h', 'interactive', 'i'].includes(paramName)) {
+                    continue;
+                }
                 if(!command.constructor.params[paramName]){
                     command.setValidationError(paramName, `Unknown parameter`);
                 }
@@ -51,6 +56,16 @@ export const Command = Class.extend().include({
                     if(context.params.help || context.params.h){
                         await command.showHelp();
                         return;
+                    }
+
+                    const paramsCount = Object.keys(context.params).length;
+                    const requiredParamsCount = Object.values(Class.params).filter(p => !p.optional).length;
+                    const missingRequired = paramsCount < requiredParamsCount;
+                    const isExplicitlyInteractive = context.params.interactive || context.params.i;
+                    const isInteractiveTerminal = process.stdin.isTTY && process.stdout.isTTY;
+                    
+                    if(isExplicitlyInteractive || (missingRequired && isInteractiveTerminal)){
+                        await command.acquireParamsInteractively();
                     }
 
                     await command.validate();
@@ -289,9 +304,121 @@ export const Command = Class.extend().include({
         console.log(`    Show this help message`);
         console.log(`    ${chalk.dim(`Usage: ${commandName} --help`)}`);
         console.log('');
+        console.log(`  ${chalk.green('interactive')} (${chalk.yellow('-i')}) ${chalk.dim('[boolean]')} ${chalk.dim('(optional)')}`);
+        console.log(`    Prompt for all parameters interactively`);
+        console.log(`    ${chalk.dim(`Usage: ${commandName} --interactive`)}`);
+        console.log('');
+    },
+
+    async acquireParamsInteractively(){
+        const paramsToAcquire = this.constructor.params;
+        const commandName = this.constructor.name;
+        
+        console.log('');
+        console.log(chalk.bold(`Interactive setup for ${chalk.cyan(commandName)}`));
+        console.log('');
+        
+        // Process each parameter that needs a value
+        for(const [paramName, paramConfig] of Object.entries(paramsToAcquire)){
+            const { type = 'string', optional = false, description = '', alias } = paramConfig;
+            
+            // Skip if we already have a value for this parameter
+            if(this.params[paramName] !== undefined) {
+                continue;
+            }
+            
+            // For required parameters, always prompt
+            // For optional parameters, only prompt if explicitly in interactive mode
+            const isExplicitlyInteractive = this.params.interactive || this.params.i;
+            if(optional && !isExplicitlyInteractive) {
+                continue; // Skip optional params unless explicitly in interactive mode
+            }
+            
+            // Build the prompt
+            let prompt = chalk.green(paramName);
+            if(alias && !alias.match(/^arg[0-9]+$/)) {
+                prompt += chalk.dim(` (-${alias})`);
+            }
+            prompt += chalk.dim(` [${type}]`);
+            if(optional) {
+                prompt += chalk.dim(' (optional)');
+            }
+            if(description) {
+                prompt += chalk.dim(` - ${description}`);
+            }
+            prompt += ': ';
+            
+            // Get user input
+            const value = await promptForValue(prompt, type, optional);
+            
+            // Store the value if provided
+            if(value !== null) {
+                // Store as array format (like extractParams returns) so coerceParams can process it
+                this.params[paramName] = type === 'boolean' ? [value.toString()] : [value];
+            }
+        }
+        
+        // Coerce all the parameters to their correct types
+        const coercedParams = this.constructor.coerceParams(this.params);
+        
+        // Update the context params with the coerced values
+        Object.assign(this.context.params, coercedParams);
+        
+        console.log('');
     },
 
     run(){
         throw new Error(`No such command "${this.constructor.name}" exists.`);
     }
 });
+
+async function promptForValue(prompt, type, optional) {
+    return new Promise((resolve) => {
+        const rl = readline.createInterface({
+            input: process.stdin,
+            output: process.stdout
+        });
+        
+        rl.question(prompt, (answer) => {
+            rl.close();
+            
+            // Handle empty input
+            if (!answer.trim()) {
+                if (optional) {
+                    resolve(null); // No value for optional param
+                } else {
+                    // Required param, ask again
+                    console.log(chalk.red('  This parameter is required.'));
+                    resolve(promptForValue(prompt, type, optional));
+                    return;
+                }
+            } else {
+                // Validate based on type
+                const trimmedAnswer = answer.trim();
+                
+                if (type === 'number') {
+                    const num = Number(trimmedAnswer);
+                    if (isNaN(num)) {
+                        console.log(chalk.red('  Please enter a valid number.'));
+                        resolve(promptForValue(prompt, type, optional));
+                        return;
+                    }
+                    resolve(trimmedAnswer);
+                } else if (type === 'boolean') {
+                    const lowerAnswer = trimmedAnswer.toLowerCase();
+                    if (['true', 'false', 't', 'f', 'yes', 'no', 'y', 'n', '1', '0'].includes(lowerAnswer)) {
+                        const boolValue = ['true', 't', 'yes', 'y', '1'].includes(lowerAnswer);
+                        resolve(boolValue);
+                    } else {
+                        console.log(chalk.red('  Please enter true/false, yes/no, or y/n.'));
+                        resolve(promptForValue(prompt, type, optional));
+                        return;
+                    }
+                } else {
+                    // string type or unknown type - accept as-is
+                    resolve(trimmedAnswer);
+                }
+            }
+        });
+    });
+}
