@@ -63,7 +63,7 @@ export const styles = `
 
 export default {
     async render(){
-        const items = await this.getItems();
+        const items = this.sortItems(await this.getItems());
         const linksHtml = await this.renderLinks(items);
 
         return this.renderHtml`
@@ -187,5 +187,19 @@ export default {
             return out;
         }
         return flatten(out.links);
+    },
+
+    topLevelItemDisplayOrder: {
+        'Getting Started': 1,
+    },
+
+    sortItems(items) {
+        // assume all items have display order of 100 unless specified
+        const defaultOrder = 100;
+        return items.sort((a, b) => {
+            const aOrder = this.topLevelItemDisplayOrder[a.name] || defaultOrder;
+            const bOrder = this.topLevelItemDisplayOrder[b.name] || defaultOrder;
+            return aOrder - bOrder;
+        });   
     }
 };
