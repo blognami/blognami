@@ -11,26 +11,6 @@ export const styles = `
         display: flex;
         flex-direction: column;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @media (max-width: 768px) {
-
-        
-
-        
-
-    }
 `;
 
 export default {
