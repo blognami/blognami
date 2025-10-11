@@ -15,6 +15,3 @@ Perhaps:
         - `@blognami/comments`
         - `@blognami/home`?
         - `@blognami/site`?
-
-
-
