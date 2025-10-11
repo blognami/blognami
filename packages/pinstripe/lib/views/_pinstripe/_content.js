@@ -25,7 +25,11 @@ export const styles = ({ colors, fonts }) =>`
     }
 
     .root h1 {
-        font-size: 4.6rem;
+        font-size: 3.6rem;
+        font-weight: 700;
+        color: #111827;
+        margin: 0 0 1.6rem 0;
+        line-height: 1.2;
     }
     
     @media (max-width: 767px) {
@@ -35,11 +39,19 @@ export const styles = ({ colors, fonts }) =>`
     }
 
     .root h2 {
-        font-size: 2.8rem;
+        font-size: 3rem;
+        font-weight: 600;
+        color: #111827;
+        margin: 3.2rem 0 1.6rem 0;
+        line-height: 1.3;
     }
 
     .root h3 {
         font-size: 2.4rem;
+        font-weight: 600;
+        color: #111827;
+        margin: 2.4rem 0 1.2rem 0;
+        line-height: 1.4;
     }
 
     .root h4 {
@@ -61,6 +73,12 @@ export const styles = ({ colors, fonts }) =>`
         border: 0;
     }
 
+    .root p {
+        color: #4b5563;
+        margin-bottom: 1.6rem;
+        line-height: 1.7;
+    }
+
     .root blockquote:not([class]) {
         padding-left: 2rem;
         border-left: 4px solid ${colors.semantic.accent};
@@ -75,24 +93,41 @@ export const styles = ({ colors, fonts }) =>`
     }
 
     .root pre {
-        padding: 1.6rem 2.4rem;
-        overflow-x: scroll;
-        hyphens: none;
+        background-color: #1f2937;
+        color: #f9fafb;
+        padding: 2.4rem;
+        border-radius: 0.8rem;
+        overflow-x: auto;
+        margin: 2.4rem 0;
+        font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
+        font-size: 1.4rem;
         line-height: 1.5;
+        hyphens: none;
         white-space: pre;
-        background-color: ${colors.gray[50]};
         -webkit-overflow-scrolling: touch;
     }
 
     .root code {
-        font-family: ${fonts.mono};
-        font-size: 15px;
+        background-color: #f3f4f6;
+        color: #e53e3e;
+        padding: 0.2rem 0.4rem;
+        border-radius: 0.4rem;
+        font-size: 0.875em;
+        font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
     }
 
     .root pre > code {
         max-width: 600px;
         display: block;
         overflow: auto;
+    }
+
+    .root pre code {
+        background-color: transparent;
+        color: inherit;
+        padding: 0;
+        border-radius: 0;
+        font-size: inherit;
     }
 
     .root :not(pre) > code {
