@@ -1,75 +1,32 @@
-
-export const styles = ({ colors }) => `
+export const styles = `
     .root {
-        padding-top: 8rem;
-        padding-bottom: 8rem;
-        padding-right: 3.6rem;
-        padding-left: 3.6rem;
-        color: ${colors.semantic.secondaryText};
-    }
-    
-    @media (max-width: 767px) {
-        .root {
-            padding-right: 2rem;
-            padding-left: 2rem;
-        }
+        border-top: 1px solid #e5e7eb;
+        background-color: #f9fafb;
+        padding: 4.8rem 0;
+        margin-top: 6.4rem;
     }
 
-    .inner {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        font-size: 1.3rem;
-        max-width: 1200px;
+    .container {
+        max-width: 1280px;
         margin: 0 auto;
+        padding: 0 2.4rem;
+        text-align: center;
     }
 
-    .powered-by {
-        text-align: right;
-    }
-
-    .root a {
-        color: ${colors.semantic.secondaryText};
-    }
-
-    .root a:hover {
-        color: #000;
-        opacity: 1;
-    }
-
-    @media (max-width: 767px) {
-        .root {
-            padding-top: 6.4rem;
-            padding-bottom: 12rem;
-        }
-
-        .inner {
-            grid-template-columns: 1fr;
-            text-align: center;
-        }
-
-        .powered-by {
-            margin-top: 3.2rem;
-            text-align: center;
-        }
+    .text {
+        color: #6b7280;
+        font-size: 1.4rem;
     }
 `;
 
 export default {
-    async render(){    
-        const site = await this.database.site;
-
+    render(){
         return this.renderHtml`
-            <footer class="${this.cssClasses.root}" data-test-id="footer">
-                <div class="${this.cssClasses.inner}">
-                    <div>
-                        ${site.title} © ${new Date().getFullYear()}
-                        | <a href="/legal/terms-of-service">Terms of Service</a>
-                        | <a href="/legal/privacy-policy">Privacy Policy</a>
-                        | <a href="/legal/cookie-policy">Cookie Policy</a>
-                    </div>    
-                    <div class="${this.cssClasses.poweredBy} ">
-                        <a href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
-                    </div>
+            <footer class="${this.cssClasses.root}">
+                <div class="${this.cssClasses.container}">
+                    <p class="${this.cssClasses.text}">
+                        © 2025 Pinstripe JS. Open source JavaScript web framework.
+                    </p>
                 </div>
             </footer>
         `;
