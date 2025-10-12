@@ -56,7 +56,7 @@ export default {
                 ${this.renderView('_sidebar')}
 
                 <main class="${this.cssClasses.content}">
-                    ${this.renderView('_pinstripe/_content', { body })}
+                    ${body}
                 </main>
 
                 ${this.renderView('_toc', { links: tocLinks })}
