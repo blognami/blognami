@@ -11,18 +11,7 @@ export const styles = `
         padding-right: 2.4rem;
     }
 
-    .section {
-        margin-bottom: 3.2rem;
-    }
 
-    .title {
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: #111827;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin-bottom: 1.2rem;
-    }
 
     @media (max-width: 768px) {
         .root {
@@ -56,15 +45,7 @@ export default {
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
                 ${this.sections.map(section => {
-                    if (section.name && section.links && section.links.length > 0) {
-                        return this.renderHtml`
-                            <div class="${this.cssClasses.section}">
-                                <h3 class="${this.cssClasses.title}">${section.name}</h3>
-                                ${this.renderView('_sidebar/_links', { links: section.links })}
-                            </div>
-                        `;
-                    }
-                    return this.renderHtml``;
+                    return this.renderView('_sidebar/_section', { section });
                 })}
             </aside>
         `;
