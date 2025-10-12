@@ -41,6 +41,8 @@ export default {
 
         this.normalizeSections();
 
+        this.sortSections();
+
         if(this.sections.length === 0) return;
 
         return this.renderHtml`
@@ -56,6 +58,9 @@ export default {
         this.sections.forEach(section => {
             if (!section.partial) {
                 section.partial = '_sidebar/_links';
+            }
+            if (section.displayOrder === undefined) {
+                section.displayOrder = 100;
             }
         });
     },
