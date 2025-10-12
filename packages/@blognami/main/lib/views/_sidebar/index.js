@@ -23,6 +23,7 @@ export default {
         this.sections = [
             {
                 title: 'About',
+                partial: '_sidebar/_links',
                 links: [
                     { title: 'About', path: '/' }
                 ],
@@ -38,6 +39,8 @@ export default {
             }
         ];
 
+        this.normalizeSections();
+
         if(this.sections.length === 0) return;
 
         return this.renderHtml`
@@ -47,6 +50,14 @@ export default {
                 })}
             </aside>
         `;
+    },
+
+    normalizeSections() {
+        this.sections.forEach(section => {
+            if (!section.partial) {
+                section.partial = '_sidebar/_links';
+            }
+        });
     },
 
     // sortItems(items) {
