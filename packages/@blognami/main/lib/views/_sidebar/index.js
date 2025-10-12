@@ -26,8 +26,7 @@ export default {
                 partial: '_sidebar/_about',
                 links: [
                     { title: 'About', path: '/' }
-                ],
-                displayOrder: 10
+                ]
             },
             {
                 title: 'Posts',
