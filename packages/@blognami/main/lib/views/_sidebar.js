@@ -73,9 +73,7 @@ export default {
     },
 
     async renderLinks(links, level = 0){
-        if (!links || links.length === 0) {
-            return this.renderHtml``;
-        }
+        if (!links || links.length === 0) return;
 
         return this.renderHtml`${links.map(link => {
             // For level 0, create sections with h3 titles
