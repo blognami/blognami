@@ -63,7 +63,7 @@ export const styles = `
 
 export default {
     async render(){
-        this.items = [
+        this.sections = [
             {
                 name: 'About',
                 links: [
@@ -83,75 +83,60 @@ export default {
 
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
-                ${this.renderLinks(this.items)}
+                ${this.renderSections(this.sections)}
             </aside>
         `;
     },
 
-    async renderLinks(links, level = 0){
-        if (!links || links.length === 0) return;
+    async renderSections(sections){
+        if (!sections || sections.length === 0) return;
 
-        return this.renderHtml`${links.map(link => {
-            // For level 0, create sections with h3 titles
-            if (level === 0 && link.name && link.links && link.links.length > 0) {
+        return this.renderHtml`${sections.map(section => {
+            if (section.name && section.links && section.links.length > 0) {
                 return this.renderHtml`
                     <div class="${this.cssClasses.section}">
-                        <h3 class="${this.cssClasses.title}">${link.name}</h3>
-                        <ul class="${this.cssClasses.links}">
-                            ${link.links.map(childLink => {
-                                const isActive = this.initialParams._url.pathname === childLink.path;
-                                const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
-                                
-                                return this.renderHtml`
-                                    <li>
-                                        ${childLink.path 
-                                            ? this.renderHtml`<a href="${childLink.path}" class="${this.cssClasses.link}${activeClass}">${childLink.name}</a>`
-                                            : this.renderHtml`<span class="${this.cssClasses.link}">${childLink.name}</span>`
-                                        }
-                                        ${childLink.links && childLink.links.length > 0 
-                                            ? this.renderLinks(childLink.links, level + 1)
-                                            : ''
-                                        }
-                                    </li>
-                                `;
-                            })}
-                        </ul>
+                        <h3 class="${this.cssClasses.title}">${section.name}</h3>
+                        ${this.renderLinks(section.links)}
                     </div>
-                `;
-            }
-            // For deeper levels, just render as nested list items
-            else if (level > 0) {
-                const isActive = this.initialParams._url.pathname === link.path;
-                const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
-                
-                return this.renderHtml`
-                    <li>
-                        ${link.path 
-                            ? this.renderHtml`<a href="${link.path}" class="${this.cssClasses.link}${activeClass}">${link.name}</a>`
-                            : this.renderHtml`<span class="${this.cssClasses.link}">${link.name}</span>`
-                        }
-                        ${link.links && link.links.length > 0 
-                            ? this.renderHtml`
-                                <ul class="${this.cssClasses.links}">
-                                    ${this.renderLinks(link.links, level + 1)}
-                                </ul>
-                            `
-                            : ''
-                        }
-                    </li>
                 `;
             }
             return this.renderHtml``;
         })}`;
     },
 
-    sortItems(items) {
-        // assume all items have display order of 100 unless specified
-        const defaultDisplayOrder = 100;
-        return items.sort((a, b) => {
-            const aDisplayOrder = a.displayOrder || defaultDisplayOrder;
-            const bDisplayOrder = b.displayOrder || defaultDisplayOrder;
-            return aDisplayOrder - bDisplayOrder;
-        });   
-    }
+    async renderLinks(links){
+        if (!links || links.length === 0) return;
+
+        return this.renderHtml`
+            <ul class="${this.cssClasses.links}">
+                ${links.map(link => {
+                    const isActive = this.initialParams._url.pathname === link.path;
+                    const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
+                    
+                    return this.renderHtml`
+                        <li>
+                            ${link.path 
+                                ? this.renderHtml`<a href="${link.path}" class="${this.cssClasses.link}${activeClass}">${link.name}</a>`
+                                : this.renderHtml`<span class="${this.cssClasses.link}">${link.name}</span>`
+                            }
+                            ${link.links && link.links.length > 0 
+                                ? this.renderLinks(link.links)
+                                : ''
+                            }
+                        </li>
+                    `;
+                })}
+            </ul>
+        `;
+    },
+
+    // sortItems(items) {
+    //     // assume all items have display order of 100 unless specified
+    //     const defaultDisplayOrder = 100;
+    //     return items.sort((a, b) => {
+    //         const aDisplayOrder = a.displayOrder || defaultDisplayOrder;
+    //         const bDisplayOrder = b.displayOrder || defaultDisplayOrder;
+    //         return aDisplayOrder - bDisplayOrder;
+    //     });   
+    // }
 };
