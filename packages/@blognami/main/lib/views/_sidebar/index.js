@@ -65,13 +65,9 @@ export default {
         });
     },
 
-    // sortItems(items) {
-    //     // assume all items have display order of 100 unless specified
-    //     const defaultDisplayOrder = 100;
-    //     return items.sort((a, b) => {
-    //         const aDisplayOrder = a.displayOrder || defaultDisplayOrder;
-    //         const bDisplayOrder = b.displayOrder || defaultDisplayOrder;
-    //         return aDisplayOrder - bDisplayOrder;
-    //     });   
-    // }
+    sortSections() {
+        this.sections.sort((a, b) => {
+            return a.displayOrder - b.displayOrder;
+        });
+    }
 };
