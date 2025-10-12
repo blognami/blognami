@@ -81,27 +81,23 @@ export default {
             }
         ];
 
+        if(this.sections.length === 0) return;
+
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
-                ${this.renderSections(this.sections)}
+                ${this.sections.map(section => {
+                    if (section.name && section.links && section.links.length > 0) {
+                        return this.renderHtml`
+                            <div class="${this.cssClasses.section}">
+                                <h3 class="${this.cssClasses.title}">${section.name}</h3>
+                                ${this.renderLinks(section.links)}
+                            </div>
+                        `;
+                    }
+                    return this.renderHtml``;
+                })}
             </aside>
         `;
-    },
-
-    async renderSections(sections){
-        if (!sections || sections.length === 0) return;
-
-        return this.renderHtml`${sections.map(section => {
-            if (section.name && section.links && section.links.length > 0) {
-                return this.renderHtml`
-                    <div class="${this.cssClasses.section}">
-                        <h3 class="${this.cssClasses.title}">${section.name}</h3>
-                        ${this.renderLinks(section.links)}
-                    </div>
-                `;
-            }
-            return this.renderHtml``;
-        })}`;
     },
 
     async renderLinks(links){
