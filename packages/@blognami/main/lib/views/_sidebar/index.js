@@ -63,7 +63,23 @@ export const styles = `
 
 export default {
     async render(){
-        this.items = [];
+        this.items = [
+            {
+                name: 'About',
+                links: [
+                    { name: 'About', path: '/' }
+                ],
+                displayOrder: 10
+            },
+            {
+                name: 'Posts',
+                links: [
+                    { name: 'All Posts', path: '/posts' },
+                    { name: 'Create Post', path: '/posts/create' }
+                ],
+                displayOrder: 20
+            }
+        ];
 
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
