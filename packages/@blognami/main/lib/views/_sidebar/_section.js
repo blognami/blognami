@@ -15,16 +15,12 @@ export const styles = `
 
 export default {
     render(){
-        const section = this.params.section;
+        const { name, links } = this.params;
         
-        if (!section || !section.name || !section.links || section.links.length === 0) {
-            return this.renderHtml``;
-        }
-
         return this.renderHtml`
             <div class="${this.cssClasses.section}">
-                <h3 class="${this.cssClasses.title}">${section.name}</h3>
-                ${this.renderView('_sidebar/_links', { links: section.links })}
+                <h3 class="${this.cssClasses.title}">${name}</h3>
+                ${this.renderView('_sidebar/_links', { links })}
             </div>
         `;
     }

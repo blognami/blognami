@@ -11,8 +11,6 @@ export const styles = `
         padding-right: 2.4rem;
     }
 
-
-
     @media (max-width: 768px) {
         .root {
             display: none;
@@ -45,7 +43,7 @@ export default {
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
                 ${this.sections.map(section => {
-                    return this.renderView('_sidebar/_section', { section });
+                    return this.renderView('_sidebar/_section', section);
                 })}
             </aside>
         `;
