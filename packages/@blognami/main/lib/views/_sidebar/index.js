@@ -23,7 +23,7 @@ export default {
         this.sections = [
             {
                 title: 'About',
-                partial: '_sidebar/_links',
+                partial: '_sidebar/_about',
                 links: [
                     { title: 'About', path: '/' }
                 ],
