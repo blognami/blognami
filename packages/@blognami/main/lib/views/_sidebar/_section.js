@@ -15,11 +15,11 @@ export const styles = `
 
 export default {
     render(){
-        const { name, links } = this.params;
+        const { title, links } = this.params;
         
         return this.renderHtml`
             <div class="${this.cssClasses.section}">
-                <h3 class="${this.cssClasses.title}">${name}</h3>
+                <h3 class="${this.cssClasses.title}">${title}</h3>
                 ${this.renderView('_sidebar/_links', { links })}
             </div>
         `;

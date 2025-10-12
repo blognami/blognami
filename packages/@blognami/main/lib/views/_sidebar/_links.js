@@ -43,8 +43,8 @@ export default {
                     return this.renderHtml`
                         <li>
                             ${link.path 
-                                ? this.renderHtml`<a href="${link.path}" class="${this.cssClasses.link}${activeClass}">${link.name}</a>`
-                                : this.renderHtml`<span class="${this.cssClasses.link}">${link.name}</span>`
+                                ? this.renderHtml`<a href="${link.path}" class="${this.cssClasses.link}${activeClass}">${link.title}</a>`
+                                : this.renderHtml`<span class="${this.cssClasses.link}">${link.title}</span>`
                             }
                             ${link.links && link.links.length > 0 
                                 ? this.renderView('_sidebar/_links', { links: link.links })

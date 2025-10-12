@@ -22,17 +22,17 @@ export default {
     async render(){
         this.sections = [
             {
-                name: 'About',
+                title: 'About',
                 links: [
-                    { name: 'About', path: '/' }
+                    { title: 'About', path: '/' }
                 ],
                 displayOrder: 10
             },
             {
-                name: 'Posts',
+                title: 'Posts',
                 links: [
-                    { name: 'All Posts', path: '/posts' },
-                    { name: 'Create Post', path: '/posts/create' }
+                    { title: 'All Posts', path: '/posts' },
+                    { title: 'Create Post', path: '/posts/create' }
                 ],
                 displayOrder: 20
             }
