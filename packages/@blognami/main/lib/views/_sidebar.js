@@ -132,74 +132,13 @@ export default {
         })}`;
     },
 
-    async getViewsWithSidebarAnnotations(){
-        let out = {};
-        const viewMap = await this.viewMap;
-        for(const [path, viewName] of Object.entries(viewMap)) {
-            const annotations = View.for(viewName).annotations;
-            if(annotations && annotations.sidebar) {
-                if(out[viewName]?.path.length <= path.length) continue;
-                out[viewName] = {path: `/${path}`.replace(/\/index$/, '') || '/', ...annotations.sidebar};
-            }
-        }
-
-        // Convert object to array and sort by category
-        out = Object.values(out);
-        
-        out.sort((a, b) => {
-            const aCategory = (a.category || []).join('>');
-            const bCategory = (b.category || []).join('>');
-            return aCategory.localeCompare(bCategory);
-        });
-
-        return out;
-    },
-
-    async getItems(){
-        const out = { links: {} };
-        const views = await this.getViewsWithSidebarAnnotations();
-        for(const view of views) {
-            const categories = view.category;
-            let current = out;
-            for(const [index, category] of Object.entries(categories)) {
-                if(!current.links[category]){
-                    current.links[category] = {
-                        title: category,
-                        links: {}
-                    };
-                }
-                current = current.links[category];
-                if(index == categories.length - 1){
-                    current.path = view.path;
-                }
-            }
-        }
-
-        function flatten(links){
-            const out = [];
-            for(const [name, item] of Object.entries(links || {})){
-                out.push({
-                    name,
-                    path: item.path,
-                    links: flatten(item.links)
-                });
-            }
-            return out;
-        }
-        return flatten(out.links);
-    },
-
-    topLevelItemDisplayOrder: {
-        'Getting Started': 1,
-    },
-
     sortItems(items) {
         // assume all items have display order of 100 unless specified
-        const defaultOrder = 100;
+        const defaultDisplayOrder = 100;
         return items.sort((a, b) => {
-            const aOrder = this.topLevelItemDisplayOrder[a.name] || defaultOrder;
-            const bOrder = this.topLevelItemDisplayOrder[b.name] || defaultOrder;
-            return aOrder - bOrder;
+            const aDisplayOrder = a.displayOrder || defaultDisplayOrder;
+            const bDisplayOrder = b.displayOrder || defaultDisplayOrder;
+            return aDisplayOrder - bDisplayOrder;
         });   
     }
 };
