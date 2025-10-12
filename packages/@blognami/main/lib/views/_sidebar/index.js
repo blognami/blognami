@@ -38,7 +38,7 @@ export default {
             }
         ];
 
-        this.trigger('before::render');
+        this.trigger('before:render');
 
         this.normalizeSections();
 
