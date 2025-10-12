@@ -63,12 +63,11 @@ export const styles = `
 
 export default {
     async render(){
-        const items = this.sortItems(await this.getItems());
-        const linksHtml = await this.renderLinks(items);
+        this.items = [];
 
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
-                ${linksHtml}
+                ${this.renderLinks(this.items)}
             </aside>
         `;
     },
