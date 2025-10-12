@@ -34,10 +34,11 @@ export default {
                 links: [
                     { title: 'All Posts', path: '/posts' },
                     { title: 'Create Post', path: '/posts/create' }
-                ],
-                displayOrder: 20
+                ]
             }
         ];
+
+        this.trigger('before::render');
 
         this.normalizeSections();
 

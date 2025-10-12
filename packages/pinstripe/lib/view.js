@@ -8,6 +8,7 @@ import { Class } from './class.js';
 import { ImportableRegistry } from './importable_registry.js';
 import { ServiceConsumer } from './service_consumer.js';
 import { Annotatable } from './annotatable.js';
+import { Hookable } from './hookable.js';
 
 export const View = Class.extend().include({
     meta(){
@@ -16,7 +17,8 @@ export const View = Class.extend().include({
         this.include(ImportableRegistry);
         this.include(ServiceConsumer);
         this.include(Annotatable);
-        
+        this.include(Hookable);
+
         this.assignProps({
             run(context, name, fn){
                 return context.fork().run(async context => {
