@@ -3,26 +3,30 @@
 export default {
     meta(){
         this.on('initializeMenus', function(){
-            this.addMenuItem('navbar', { title: 'Docs', url: '/', displayOrder: 1 });
-            this.addMenuItem('navbar', { title: 'Blog', url: 'https://blognami.com/pinstripe' });
-            this.addMenuItem('navbar', { title: 'GitHub', url: 'https://github.com/blognami/blognami' });
-            this.addMenuItem('navbar', 'Your Account', { title: 'Profile', url: '/profile', displayOrder: 2 });
-            this.addMenuItem('navbar', 'Your Account', { title: 'Settings', url: '/settings', displayOrder: 1 });
-            this.addMenuItem('navbar', 'Your Account', { title: 'Logout', url: '/logout', displayOrder: 3 });
+            this.addMenuItem('navbar', { label: 'Docs', url: '/', displayOrder: 1 });
+            this.addMenuItem('navbar', { label: 'Blog', url: 'https://blognami.com/pinstripe' });
+            this.addMenuItem('navbar', { label: 'GitHub', url: 'https://github.com/blognami/blognami' });
+            this.addMenuItem('navbar', 'Your Account', { label: 'Profile', url: '/profile', displayOrder: 2 });
+            this.addMenuItem('navbar', 'Your Account', { label: 'Settings', url: '/settings', displayOrder: 1 });
+            this.addMenuItem('navbar', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 3 });
         });
     },
 
     create(){
-        this.menus = {};
+        if(!this.context.root.menus){
+            this.menus = {};
 
-        // Allow other modules to add menu items
-        this.trigger('initializeMenus');
+            // Allow other modules to add menu items
+            this.trigger('initializeMenus');
 
-        // Normalize and sort all menus
-        this.normalizeAllMenus();
-        this.sortAllMenus();
+            // Normalize and sort all menus
+            this.normalizeAllMenus();
+            this.sortAllMenus();
 
-        return this.menus;
+            this.context.root.menus = this.menus;
+        }
+
+        return this.context.root.menus;
     },
 
     addMenuItem(...args) {
