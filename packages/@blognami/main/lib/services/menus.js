@@ -14,11 +14,51 @@ export default {
         return this.menus;
     },
 
-    addMenuItem(menuName, menuItem) {
+    addMenuItem(...args) {
+        const menuName = args.shift();
+        const menuItem = args.pop();
+        const path = args;
+        
+        // Initialize the menu if it doesn't exist
         if (!this.menus[menuName]) {
             this.menus[menuName] = [];
         }
-        this.menus[menuName].push(menuItem);
+        
+        // If no path is provided, add directly to the menu
+        if (path.length === 0) {
+            this.menus[menuName].push(menuItem);
+            return;
+        }
+        
+        // Navigate to the nested location using the path
+        let currentLevel = this.menus[menuName];
+        
+        for (let i = 0; i < path.length; i++) {
+            const pathSegment = path[i];
+            
+            // Find existing menu item at this level
+            let existingItem = currentLevel.find(item => item.label === pathSegment);
+            
+            // If it doesn't exist, create it
+            if (!existingItem) {
+                existingItem = {
+                    label: pathSegment,
+                    children: []
+                };
+                currentLevel.push(existingItem);
+            }
+            
+            // Ensure children array exists
+            if (!existingItem.children) {
+                existingItem.children = [];
+            }
+            
+            // Move to the next level
+            currentLevel = existingItem.children;
+        }
+        
+        // Add the menu item to the final nested location
+        currentLevel.push(menuItem);
     },
 
     normalizeAllMenus() {
