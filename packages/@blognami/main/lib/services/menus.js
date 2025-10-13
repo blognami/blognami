@@ -1,6 +1,17 @@
 
 
 export default {
+    meta(){
+        this.on('initializeMenus', function(){
+            this.addMenuItem('navbar', { title: 'Docs', url: '/', displayOrder: 1 });
+            this.addMenuItem('navbar', { title: 'Blog', url: 'https://blognami.com/pinstripe' });
+            this.addMenuItem('navbar', { title: 'GitHub', url: 'https://github.com/blognami/blognami' });
+            this.addMenuItem('navbar', 'Your Account', { title: 'Profile', url: '/profile', displayOrder: 2 });
+            this.addMenuItem('navbar', 'Your Account', { title: 'Settings', url: '/settings', displayOrder: 1 });
+            this.addMenuItem('navbar', 'Your Account', { title: 'Logout', url: '/logout', displayOrder: 3 });
+        });
+    },
+
     create(){
         this.menus = {};
 
