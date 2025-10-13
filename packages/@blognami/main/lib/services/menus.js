@@ -14,53 +14,53 @@ export default {
         return this.menus;
     },
 
-    addMenuItem(menuName, item) {
+    addMenuItem(menuName, menuItem) {
         if (!this.menus[menuName]) {
             this.menus[menuName] = [];
         }
-        this.menus[menuName].push(item);
+        this.menus[menuName].push(menuItem);
     },
 
     normalizeAllMenus() {
         Object.keys(this.menus).forEach(menuName => {
-            this.normalizeItems(this.menus[menuName]);
+            this.normalizeMenuItems(this.menus[menuName]);
         });
     },
 
-    normalizeItems(items, path = []) {
-        if (!items || !Array.isArray(items)) {
+    normalizeMenuItems(navigationItems, path = []) {
+        if (!navigationItems || !Array.isArray(navigationItems)) {
             return;
         }
         
-        items.forEach(item => {
-            if (item.displayOrder === undefined) {
-                item.displayOrder = 100;
+        navigationItems.forEach(menuItem => {
+            if (menuItem.displayOrder === undefined) {
+                menuItem.displayOrder = 100;
             }
             
-            if (item.target === undefined) {
-                item.target = '_top';
+            if (menuItem.target === undefined) {
+                menuItem.target = '_top';
             }
             
             // Recursively normalize nested items
-            if (item.items) {
-                this.normalizeItems(item.items, [...path, item.title]);
+            if (menuItem.children) {
+                this.normalizeMenuItems(menuItem.children, [...path, menuItem.label]);
             }
         });
     },
 
     sortAllMenus() {
         Object.keys(this.menus).forEach(menuName => {
-            this.sortItems(this.menus[menuName]);
+            this.sortMenuItems(this.menus[menuName]);
         });
     },
 
-    sortItems(items) {
-        if (!items || !Array.isArray(items)) {
+    sortMenuItems(navigationItems) {
+        if (!navigationItems || !Array.isArray(navigationItems)) {
             return;
         }
         
-        // Sort current level by displayOrder, then by title
-        items.sort((a, b) => {
+        // Sort current level by displayOrder, then by label
+        navigationItems.sort((a, b) => {
             const orderA = a.displayOrder || 100;
             const orderB = b.displayOrder || 100;
             
@@ -69,16 +69,16 @@ export default {
                 return orderA - orderB;
             }
             
-            // If displayOrder is the same, sort by title
-            const titleA = (a.title || '').toLowerCase();
-            const titleB = (b.title || '').toLowerCase();
-            return titleA.localeCompare(titleB);
+            // If displayOrder is the same, sort by label
+            const labelA = (a.label || '').toLowerCase();
+            const labelB = (b.label || '').toLowerCase();
+            return labelA.localeCompare(labelB);
         });
         
         // Recursively sort nested items
-        items.forEach(item => {
-            if (item.items) {
-                this.sortItems(item.items);
+        navigationItems.forEach(menuItem => {
+            if (menuItem.children) {
+                this.sortMenuItems(menuItem.children);
             }
         });
     }
