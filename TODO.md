@@ -1,4 +1,16 @@
 
+- Implement navigation service to be able to specify the navbar / sidebar content
+    - use hooks to build the navigation
+    - initialize this.sections.navbar etc...
+
+---
+
+- Refactor navbar
+    - use hooks
+    - make partial able to handle whole nav menu.
+        - implement `expose()` feature so that partials can be directly accessible.
+    - make viewMap actually map to view classes
+
 ---
 
 Perhaps:
@@ -9,6 +21,7 @@ Perhaps:
     - Split up into smaller packages.
         - `@blognami/images`
         - `@blognami/users`
+        - `@blognami/sessions`
         - `@blognami/stripe`
         - `@blognami/newsletter`
         - `@blognami/revisions`

@@ -19,25 +19,31 @@ export const styles = `
 `;
 
 export default {
-    async render(){
-        this.sections = [
-            {
-                title: 'About',
-                partial: '_sidebar/_about',
-                links: [
-                    { title: 'About', path: '/' }
-                ]
-            },
-            {
-                title: 'Posts',
-                links: [
-                    { title: 'All Posts', path: '/posts' },
-                    { title: 'Create Post', path: '/posts/create' }
-                ]
-            }
-        ];
+    meta(){
+        this.on('initializeSections', function(){
+            this.sections.push(
+                {
+                    title: 'About',
+                    partial: '_sidebar/_about',
+                    links: [
+                        { title: 'About', path: '/' }
+                    ]
+                },
+                {
+                    title: 'Posts',
+                    links: [
+                        { title: 'All Posts', path: '/posts' },
+                        { title: 'Create Post', path: '/posts/create' }
+                    ]
+                }
+            );
+        });
+    },
 
-        this.trigger('before:render');
+    async render(){
+        this.sections = [];
+
+        this.trigger('initializeSections');
 
         this.normalizeSections();
 

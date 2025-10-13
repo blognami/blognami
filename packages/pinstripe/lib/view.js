@@ -48,6 +48,17 @@ export const View = Class.extend().include({
 
             addToClient(){
                 this._addToClient = true;
+            },
+
+            get exposed(){
+                if(!this.hasOwnProperty('_exposed')){
+                    this._exposed = this.name?.match(/(^|\/)_[^\/]+(|\/index)$/) ? false : true;
+                }
+                return this._exposed;
+            },
+
+            expose(exposed = true){
+                this._exposed = exposed;
             }
         });
 
