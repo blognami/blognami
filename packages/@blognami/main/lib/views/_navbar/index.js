@@ -45,29 +45,14 @@ export default {
     render(){
         const path = JSON.parse(this.params.path || '[]');
 
-        this.items = [
-            { title: 'Docs', href: '/', displayOrder: 1 },
-            { title: 'Blog', href: 'https://blognami.com/pinstripe' },
-            { title: 'GitHub', href: 'https://github.com/blognami/blognami' },
-            {
-                title: 'Your Account',
-                items: [
-                    { title: 'Profile', href: '/profile', displayOrder: 2 },
-                    { title: 'Settings', href: '/settings', displayOrder: 1 },
-                    { title: 'Logout', href: '/logout', displayOrder: 3 }
-                ]
-            }
-        ];
-
-        this.trigger('initializeItems');
+        // Get the navbar menu items from the menus service
+        this.items = this.menus.navbar;
         
         this.normalizeItems();
 
-        this.sortItems();
-
         let currentItems = this.items;
-        for(const title of path){
-            currentItems = currentItems.find(item => item.title === title)?.items;
+        for(const label of path){
+            currentItems = currentItems.find(item => item.label === label)?.children;
             if(!currentItems){
                 return;
             }
@@ -78,7 +63,7 @@ export default {
                 <pinstripe-popover>
                     <pinstripe-menu>
                         ${currentItems.map(item => this.renderHtml`
-                            <a href="${item.href}" target="${item.target}">${item.title}</a>
+                            <a href="${item.url}" target="${item.target}">${item.label}</a>
                         `)}
                     </pinstripe-menu>
                 </pinstripe-popover>
@@ -89,11 +74,11 @@ export default {
             <nav class="${this.cssClasses.root}">
                 <ul class="${this.cssClasses.items}">
                     ${currentItems.map(item => {
-                        const isActive = this.initialParams._url.pathname === item.href;
+                        const isActive = this.initialParams._url.pathname === item.url;
                         const activeClass = isActive ? ` ${this.cssClasses.linkActive}` : '';
                         
                         return this.renderHtml`
-                            <li><a href="${item.href}" class="${this.cssClasses.link}${activeClass}" target="${item.target}">${item.title}</a></li>
+                            <li><a href="${item.url}" class="${this.cssClasses.link}${activeClass}" target="${item.target}">${item.label}</a></li>
                         `;
                     })}
                 </ul>
@@ -107,56 +92,20 @@ export default {
         }
         
         items.forEach(item => {
-            if (item.displayOrder === undefined) {
-                item.displayOrder = 100;
-            }
-            
             if (item.partial === undefined) {
                 item.partial = '_navbar/_link';
             }
 
-            if(item.href === undefined){
-                item.href = new URL('/_navbar', this.initialParams._url);
-                item.href.searchParams.append('path', JSON.stringify([...path, item.title]));
+            // If no url is provided, create a popover link for nested items
+            if(item.url === undefined && item.children) {
+                item.url = new URL('/_navbar', this.initialParams._url);
+                item.url.searchParams.append('path', JSON.stringify([...path, item.label]));
                 item.target = '_overlay';
-            }
-
-            if(item.target === undefined){
-                item.target = '_top';
             }
             
             // Recursively normalize nested items
-            if (item.items) {
-                this.normalizeItems(item.items, [...path, item.title]);
-            }
-        });
-    },
-
-    sortItems(items = this.items) {
-        if (!items || !Array.isArray(items)) {
-            return;
-        }
-        
-        // Sort current level by displayOrder, then by title
-        items.sort((a, b) => {
-            const orderA = a.displayOrder || 100;
-            const orderB = b.displayOrder || 100;
-            
-            // First, sort by displayOrder
-            if (orderA !== orderB) {
-                return orderA - orderB;
-            }
-            
-            // If displayOrder is the same, sort by title
-            const titleA = (a.title || '').toLowerCase();
-            const titleB = (b.title || '').toLowerCase();
-            return titleA.localeCompare(titleB);
-        });
-        
-        // Recursively sort nested items
-        items.forEach(item => {
-            if (item.items) {
-                this.sortItems(item.items);
+            if (item.children) {
+                this.normalizeItems(item.children, [...path, item.label]);
             }
         });
     }
