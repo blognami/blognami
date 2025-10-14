@@ -1,11 +1,13 @@
 
 For sidebar implement:
+- index
 - _section
 - _link_group
 - _link_group/_link
 - _link_group_section
 
-For navbar implement (rename _header to _navbar)
+For navbar (rename _header to _navbar) implement:
+- index
 - _branding
 - _link
 - menu
