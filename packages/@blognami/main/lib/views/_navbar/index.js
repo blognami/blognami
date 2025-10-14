@@ -14,22 +14,6 @@ export const styles = `
         padding: 0;
     }
 
-    .link {
-        text-decoration: none;
-        color: #6b7280;
-        font-weight: 500;
-        transition: color 0.2s ease;
-        padding: 0.8rem 0;
-    }
-
-    .link:hover {
-        color: #111827;
-    }
-
-    .link-active {
-        color: #35D0AC;
-    }
-
     @media (max-width: 768px) {
         .items {
             display: none;
@@ -73,11 +57,8 @@ export default {
             <nav class="${this.cssClasses.root}">
                 <ul class="${this.cssClasses.items}">
                     ${currentItems.map(item => {
-                        const isActive = this.initialParams._url.pathname === item.url;
-                        const activeClass = isActive ? ` ${this.cssClasses.linkActive}` : '';
-                        
                         return this.renderHtml`
-                            <li><a href="${item.url}" class="${this.cssClasses.link}${activeClass}" target="${item.target}">${item.label}</a></li>
+                            <li>${this.renderView('_navbar/_link', item)}</li>
                         `;
                     })}
                 </ul>
