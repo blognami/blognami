@@ -5,10 +5,11 @@ For sidebar implement:
 - _link_group/_link
 - _link_group_section
 
-For navbar implement
+For navbar implement (rename _header to _navbar)
+- _branding
 - _link
-- _menu
-- _menu/_link
+- menu
+- menu/_link
 
 ---
 

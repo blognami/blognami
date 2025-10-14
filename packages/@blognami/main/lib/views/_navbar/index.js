@@ -66,6 +66,7 @@ export default {
         `;
     },
 
+    // this needs to be added to the menus service
     normalizeItems(items, path = []) {
         items.forEach(item => {
             if (item.partial === undefined) {
