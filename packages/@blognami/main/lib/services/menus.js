@@ -6,9 +6,16 @@ export default {
             this.addMenuItem('navbar', { label: 'Docs', url: '/', displayOrder: 1 });
             this.addMenuItem('navbar', { label: 'Blog', url: 'https://blognami.com/pinstripe' });
             this.addMenuItem('navbar', { label: 'GitHub', url: 'https://github.com/blognami/blognami' });
-            this.addMenuItem('navbar', 'Your Account', { label: 'Profile', url: '/profile', displayOrder: 2 });
-            this.addMenuItem('navbar', 'Your Account', { label: 'Settings', url: '/settings', displayOrder: 1 });
-            this.addMenuItem('navbar', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 3 });
+            this.addMenuItem('navbar', 'Your Account', { label: 'Profile', url: '/profile' });
+            this.addMenuItem('navbar', 'Your Account', { label: 'Settings', url: '/settings' });
+            this.addMenuItem('navbar', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 200 });
+
+            this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about', displayOrder: 1 });
+            this.addMenuItem('sidebar', { label: 'Posts', children: [
+                { label: 'All Posts', url: '/posts' },
+                { label: 'Create Post', url: '/posts/create' }
+            ]});
+
         });
     },
 
@@ -19,9 +26,11 @@ export default {
             // Allow other modules to add menu items
             this.trigger('initializeMenus');
 
-            // Normalize and sort all menus
             this.normalizeAllMenus();
+            this.trigger('normalizeMenus');
+
             this.sortAllMenus();
+            this.trigger('sortMenus');
 
             this.context.root.menus = this.menus;
         }
@@ -76,6 +85,11 @@ export default {
         currentLevel.push(menuItem);
     },
 
+    traverseMenuItems(menuName, fn){
+        if(!this.menus[menuName]) return;
+        traverseMenuItems.call(this, this.menus[menuName], [], fn);
+    },
+
     normalizeAllMenus() {
         Object.keys(this.menus).forEach(menuName => {
             this.normalizeMenuItems(this.menus[menuName]);
@@ -90,10 +104,6 @@ export default {
         navigationItems.forEach(menuItem => {
             if (menuItem.displayOrder === undefined) {
                 menuItem.displayOrder = 100;
-            }
-            
-            if (menuItem.target === undefined) {
-                menuItem.target = '_top';
             }
             
             // Recursively normalize nested items
@@ -137,4 +147,16 @@ export default {
             }
         });
     }
+}
+
+
+function traverseMenuItems(items, path, fn){
+    items.forEach(item => {
+        const currentPath = [...path, item];
+        fn.call(this, item, currentPath);
+
+        if (item.children) {
+            traverseMenuItems.call(this, item.children, currentPath, fn);
+        }
+    });
 }

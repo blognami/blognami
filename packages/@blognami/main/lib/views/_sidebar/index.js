@@ -19,61 +19,30 @@ export const styles = `
 `;
 
 export default {
-    meta(){
-        this.on('initializeSections', function(){
-            this.sections.push(
-                {
-                    title: 'About',
-                    partial: '_sidebar/_about',
-                    links: [
-                        { title: 'About', path: '/' }
-                    ]
-                },
-                {
-                    title: 'Posts',
-                    links: [
-                        { title: 'All Posts', path: '/posts' },
-                        { title: 'Create Post', path: '/posts/create' }
-                    ]
-                }
-            );
-        });
-    },
-
     async render(){
-        this.sections = [];
+        const sections = this.menus.sidebar || [];
 
-        this.trigger('initializeSections');
+        this.normalizeSections(sections);
 
-        this.normalizeSections();
-
-        this.sortSections();
-
-        if(this.sections.length === 0) return;
+        if(sections.length === 0) return;
 
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
-                ${this.sections.map(section => {
+                ${sections.map(section => {
                     return this.renderView('_sidebar/_section', section);
                 })}
             </aside>
         `;
     },
 
-    normalizeSections() {
-        this.sections.forEach(section => {
+    normalizeSections(sections) {
+        sections.forEach(section => {
             if (!section.partial) {
                 section.partial = '_sidebar/_links';
             }
-            if (section.displayOrder === undefined) {
-                section.displayOrder = 100;
+            if (section.children) {
+                this.normalizeSections(section.children);
             }
-        });
-    },
-
-    sortSections() {
-        this.sections.sort((a, b) => {
-            return a.displayOrder - b.displayOrder;
         });
     }
 };

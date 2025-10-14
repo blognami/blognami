@@ -30,24 +30,24 @@ export const styles = `
 
 export default {
     render(){
-        const links = this.params.links;
+        const links = this.params.children;
         
         if (!links || links.length === 0) return;
 
         return this.renderHtml`
             <ul class="${this.cssClasses.links}">
                 ${links.map(link => {
-                    const isActive = this.initialParams._url.pathname === link.path;
+                    const isActive = this.initialParams._url.pathname === link.url;
                     const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
                     
                     return this.renderHtml`
                         <li>
-                            ${link.path 
-                                ? this.renderHtml`<a href="${link.path}" class="${this.cssClasses.link}${activeClass}">${link.title}</a>`
-                                : this.renderHtml`<span class="${this.cssClasses.link}">${link.title}</span>`
+                            ${link.url 
+                                ? this.renderHtml`<a href="${link.url}" class="${this.cssClasses.link}${activeClass}">${link.label}</a>`
+                                : this.renderHtml`<span class="${this.cssClasses.link}">${link.label}</span>`
                             }
-                            ${link.links && link.links.length > 0 
-                                ? this.renderView('_sidebar/_links', { links: link.links })
+                            ${link.children && link.children.length > 0 
+                                ? this.renderView('_sidebar/_links', { link })
                                 : ''
                             }
                         </li>

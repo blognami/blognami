@@ -45,12 +45,11 @@ export default {
     render(){
         const path = JSON.parse(this.params.path || '[]');
 
-        // Get the navbar menu items from the menus service
-        this.items = this.menus.navbar;
+        const items = this.menus.navbar;
         
-        this.normalizeItems();
+        this.normalizeItems(items);
 
-        let currentItems = this.items;
+        let currentItems = items;
         for(const label of path){
             currentItems = currentItems.find(item => item.label === label)?.children;
             if(!currentItems){
@@ -86,11 +85,7 @@ export default {
         `;
     },
 
-    normalizeItems(items = this.items, path = []) {
-        if (!items || !Array.isArray(items)) {
-            return;
-        }
-        
+    normalizeItems(items, path = []) {
         items.forEach(item => {
             if (item.partial === undefined) {
                 item.partial = '_navbar/_link';
@@ -98,9 +93,14 @@ export default {
 
             // If no url is provided, create a popover link for nested items
             if(item.url === undefined && item.children) {
-                item.url = new URL('/_navbar', this.initialParams._url);
-                item.url.searchParams.append('path', JSON.stringify([...path, item.label]));
+                const url = new URL('/_navbar', 'http://localhost');
+                url.searchParams.append('path', JSON.stringify([...path, item.label]));
+                item.url = url.pathname + url.search;
                 item.target = '_overlay';
+            }
+
+            if(item.target === undefined) {
+                item.target = '_top';
             }
             
             // Recursively normalize nested items

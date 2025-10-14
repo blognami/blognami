@@ -1,4 +1,17 @@
 
+For sidebar implement:
+- _section
+- _link_group
+- _link_group/_link
+- _link_group_section
+
+For navbar implement
+- _link
+- _menu
+- _menu/_link
+
+---
+
 - Implement navigation service to be able to specify the navbar / sidebar content
     - use hooks to build the navigation
     - initialize this.sections.navbar etc...
