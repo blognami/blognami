@@ -1,5 +1,5 @@
 export const styles = `
-    .links {
+    .root {
         list-style: none;
         margin: 0;
         padding: 0;
@@ -35,19 +35,22 @@ export default {
         if (!links || links.length === 0) return;
 
         return this.renderHtml`
-            <ul class="${this.cssClasses.links}">
+            <ul class="${this.cssClasses.root}">
                 ${links.map(link => {
-                    const isActive = this.initialParams._url.pathname === link.url;
-                    const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
+                    const { url, label } = link;
                     
                     return this.renderHtml`
                         <li>
-                            ${link.url 
-                                ? this.renderHtml`<a href="${link.url}" class="${this.cssClasses.link}${activeClass}">${link.label}</a>`
-                                : this.renderHtml`<span class="${this.cssClasses.link}">${link.label}</span>`
-                            }
+                            ${() => {
+                                if (url) {
+                                    const isActive = this.initialParams._url.pathname === url;
+                                    const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
+                                    return this.renderHtml`<a href="${url}" class="${this.cssClasses.link}${activeClass}">${label}</a>`;
+                                }
+                                return this.renderHtml`<span class="${this.cssClasses.link}">${label}</span>`;
+                            }}
                             ${link.children && link.children.length > 0 
-                                ? this.renderView('_sidebar/_links', { link })
+                                ? this.renderView('_sidebar/_link_group', link)
                                 : ''
                             }
                         </li>

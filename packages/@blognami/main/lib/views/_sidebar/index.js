@@ -22,27 +22,15 @@ export default {
     async render(){
         const sections = this.menus.sidebar || [];
 
-        this.normalizeSections(sections);
-
         if(sections.length === 0) return;
 
         return this.renderHtml`
             <aside class="${this.cssClasses.root}">
                 ${sections.map(section => {
-                    return this.renderView('_sidebar/_section', section);
+                    const { partial, ...restOfSection } = section;
+                    return this.renderView(partial, restOfSection);
                 })}
             </aside>
         `;
-    },
-
-    normalizeSections(sections) {
-        sections.forEach(section => {
-            if (!section.partial) {
-                section.partial = '_sidebar/_links';
-            }
-            if (section.children) {
-                this.normalizeSections(section.children);
-            }
-        });
     }
 };

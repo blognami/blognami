@@ -1,9 +1,9 @@
 export const styles = `
-    .section {
+    .root {
         margin-bottom: 3.2rem;
     }
 
-    .title {
+    .label {
         font-size: 1.4rem;
         font-weight: 600;
         color: #111827;
@@ -15,12 +15,12 @@ export const styles = `
 
 export default {
     render(){
-        const { label, partial, ...otherParams } = this.params;
+        const { label, body, testId } = this.params;
         
         return this.renderHtml`
-            <div class="${this.cssClasses.section}">
-                <h3 class="${this.cssClasses.title}">${label}</h3>
-                ${this.renderView(partial, otherParams)}
+            <div class="${this.cssClasses.root}" ${testId ? this.renderHtml`data-test-id="${testId}"` : ''}>
+                <h2 class="${this.cssClasses.label}">${label}</h2>
+                ${body}
             </div>
         `;
     }

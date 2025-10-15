@@ -10,12 +10,42 @@ export default {
             this.addMenuItem('navbar', 'Your Account', { label: 'Settings', url: '/settings' });
             this.addMenuItem('navbar', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 200 });
 
-            this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about', displayOrder: 1 });
+            this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
             this.addMenuItem('sidebar', { label: 'Posts', children: [
                 { label: 'All Posts', url: '/posts' },
                 { label: 'Create Post', url: '/posts/create' }
             ]});
 
+        });
+
+        this.on('normalizeMenus', function(){
+            this.traverseMenuItems('navbar', (item, path) => {
+                if (item.partial === undefined) {
+                    if(path.length === 1) {
+                        item.partial = '_navbar/_link';
+                    } else {
+                        item.partial = '_navbar/menu/_link';
+                    }
+                }
+
+                // If no url is provided, create a popover link for nested items
+                if(item.url === undefined && item.children) {
+                    const url = new URL('/_navbar/menu', 'http://localhost');
+                    url.searchParams.append('path', JSON.stringify(path.map(item => item.label)));
+                    item.url = url.pathname + url.search;
+                    item.target = '_overlay';
+                }
+
+                if(item.target === undefined) {
+                    item.target = '_top';
+                }
+            });
+
+            this.traverseMenuItems('sidebar', (item, path) => {
+                if (item.partial === undefined && path.length === 1) {
+                    item.partial = '_sidebar/_link_group_section';
+                }
+            });
         });
     },
 

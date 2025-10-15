@@ -1,11 +1,31 @@
 export const styles = `
     .root {
+        background-color: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.95);
+    }
+
+    .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2.4rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 6.4rem;
+    }
+
+    .link-group {
         display: flex;
         align-items: center;
         gap: 3.2rem;
     }
 
-    .items {
+    .link-group-items {
         display: flex;
         align-items: center;
         gap: 2.4rem;
@@ -15,81 +35,35 @@ export const styles = `
     }
 
     @media (max-width: 768px) {
-        .items {
+        .container {
+            padding: 0 1.6rem;
+        }
+
+        .link-groups-items {
             display: none;
         }
     }
 `;
 
 export default {
-    meta(){
-        this.expose();
-    },
-
     render(){
-        const path = JSON.parse(this.params.path || '[]');
-
-        const items = this.menus.navbar;
-        
-        this.normalizeItems(items);
-
-        let currentItems = items;
-        for(const label of path){
-            currentItems = currentItems.find(item => item.label === label)?.children;
-            if(!currentItems){
-                return;
-            }
-        }
-
-        if(path.length > 0){
-            return this.renderHtml`
-                <pinstripe-popover>
-                    <pinstripe-menu>
-                        ${currentItems.map(item => this.renderHtml`
-                            <a href="${item.url}" target="${item.target}">${item.label}</a>
-                        `)}
-                    </pinstripe-menu>
-                </pinstripe-popover>
-            `;
-        }
+        const items = this.menus.navbar || [];
 
         return this.renderHtml`
-            <nav class="${this.cssClasses.root}">
-                <ul class="${this.cssClasses.items}">
-                    ${currentItems.map(item => {
-                        return this.renderHtml`
-                            <li>${this.renderView('_navbar/_link', item)}</li>
-                        `;
-                    })}
-                </ul>
-            </nav>
+            <header class="${this.cssClasses.root}" id="pinstripe-scroll-top">
+                <div class="${this.cssClasses.container}">
+                    ${this.renderView('_branding')}
+                    <nav class="${this.cssClasses.linkGroup}">
+                        <ul class="${this.cssClasses.linkGroupItems}">
+                            ${items.map(({ partial, ...item }) => {
+                                return this.renderHtml`
+                                    <li>${this.renderView(partial, item)}</li>
+                                `;
+                            })}
+                        </ul>
+                    </nav>
+                </div>
+            </header>
         `;
-    },
-
-    // this needs to be added to the menus service
-    normalizeItems(items, path = []) {
-        items.forEach(item => {
-            if (item.partial === undefined) {
-                item.partial = '_navbar/_link';
-            }
-
-            // If no url is provided, create a popover link for nested items
-            if(item.url === undefined && item.children) {
-                const url = new URL('/_navbar', 'http://localhost');
-                url.searchParams.append('path', JSON.stringify([...path, item.label]));
-                item.url = url.pathname + url.search;
-                item.target = '_overlay';
-            }
-
-            if(item.target === undefined) {
-                item.target = '_top';
-            }
-            
-            // Recursively normalize nested items
-            if (item.children) {
-                this.normalizeItems(item.children, [...path, item.label]);
-            }
-        });
     }
-    
 };

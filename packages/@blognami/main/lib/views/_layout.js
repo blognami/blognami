@@ -18,7 +18,7 @@ export default {
         return this.renderView('_pinstripe/_shell', {
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">
-                    ${this.renderView('_header')}
+                    ${this.renderView('_navbar')}
 
                     ${this.renderView('_main', { body: this.params.body })}
 

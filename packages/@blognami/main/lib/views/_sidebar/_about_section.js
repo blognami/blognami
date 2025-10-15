@@ -10,8 +10,8 @@ export default {
     
         const site = await this.database.site;
 
-        return this.renderView('_section', {
-            title: 'About',
+        return this.renderView('_sidebar/_section', {
+            label: 'About',
             testId: 'about-section',
             body: async () => {
                 if(isAdmin) return this.renderView('_editable_area', {
