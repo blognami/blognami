@@ -3,6 +3,7 @@
 - Implement burger menu
 - Implement footer
     - Use menus service
+- Convert about section links into `_sidebar/_link_group` partials
 
 ---
 
