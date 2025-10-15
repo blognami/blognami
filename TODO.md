@@ -1,4 +1,11 @@
 
+
+- Implement burger menu
+- Implement footer
+    - Use menus service
+
+---
+
 - Refactor navbar
     - use hooks
 
