@@ -52,7 +52,7 @@ export default {
         return this.renderHtml`
             <header class="${this.cssClasses.root}" id="pinstripe-scroll-top">
                 <div class="${this.cssClasses.container}">
-                    ${this.renderView('_branding')}
+                    ${this.renderView('_navbar/_branding')}
                     <nav class="${this.cssClasses.linkGroup}">
                         <ul class="${this.cssClasses.linkGroupItems}">
                             ${items.map(({ partial, ...item }) => {
