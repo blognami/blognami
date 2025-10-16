@@ -10,7 +10,7 @@ export default {
             this.addMenuItem('navbar', 'Your Account', { label: 'Settings', url: '/settings' });
             this.addMenuItem('navbar', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 200 });
 
-            this.addMenuItem('sidebar', { label: 'About', partial: '_navbar/burger_menu/_about_section', displayOrder: 1 });
+            this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
             this.addMenuItem('sidebar', { label: 'Posts', children: [
                 { label: 'All Posts', url: '/posts' },
                 { label: 'Create Post', url: '/posts/create' }
@@ -23,7 +23,7 @@ export default {
             this.addMenuItem('burgerMenu', 'Actions', 'Your Account', { label: 'Settings', url: '/settings' });
             this.addMenuItem('burgerMenu', 'Actions', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 200 });
 
-            this.addMenuItem('burgerMenu', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
+            this.addMenuItem('burgerMenu', { label: 'About', partial: '_navbar/burger_menu/_about_section', displayOrder: 1 });
             this.addMenuItem('burgerMenu', { label: 'Posts', children: [
                 { label: 'All Posts', url: '/posts' },
                 { label: 'Create Post', url: '/posts/create' }
