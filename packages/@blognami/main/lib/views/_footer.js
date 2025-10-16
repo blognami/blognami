@@ -1,32 +1,65 @@
-export const styles = `
+export const styles = ({ colors }) => `
     .root {
         border-top: 1px solid #e5e7eb;
         background-color: #f9fafb;
         padding: 4.8rem 0;
         margin-top: 6.4rem;
+        color: ${colors?.semantic?.secondaryText || '#6b7280'};
     }
 
     .container {
         max-width: 1280px;
         margin: 0 auto;
         padding: 0 2.4rem;
-        text-align: center;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        font-size: 1.4rem;
+        gap: 2rem;
     }
 
-    .text {
-        color: #6b7280;
-        font-size: 1.4rem;
+    .powered-by {
+        text-align: right;
+    }
+
+    .link {
+        color: ${colors?.semantic?.secondaryText || '#6b7280'};
+        text-decoration: none;
+    }
+
+    .link:hover {
+        color: #000;
+        opacity: 1;
+    }
+
+    @media (max-width: 767px) {
+        .container {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .powered-by {
+            margin-top: 2rem;
+            text-align: center;
+        }
     }
 `;
 
 export default {
-    render(){
+    async render(){    
+        const site = await this.database.site;
+
         return this.renderHtml`
-            <footer class="${this.cssClasses.root}">
+            <footer class="${this.cssClasses.root}" data-test-id="footer">
                 <div class="${this.cssClasses.container}">
-                    <p class="${this.cssClasses.text}">
-                        © 2025 Pinstripe JS. Open source JavaScript web framework.
-                    </p>
+                    <div>
+                        ${site.title} © ${new Date().getFullYear()}
+                        | <a class="${this.cssClasses.link}" href="/legal/terms-of-service">Terms of Service</a>
+                        | <a class="${this.cssClasses.link}" href="/legal/privacy-policy">Privacy Policy</a>
+                        | <a class="${this.cssClasses.link}" href="/legal/cookie-policy">Cookie Policy</a>
+                    </div>    
+                    <div class="${this.cssClasses.poweredBy}">
+                        <a class="${this.cssClasses.link}" href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
+                    </div>
                 </div>
             </footer>
         `;
