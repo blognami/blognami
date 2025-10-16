@@ -10,7 +10,7 @@ export default {
     
         const site = await this.database.site;
 
-        const body = await this.renderMarkdown(await site.description);
+        let body = await this.renderMarkdown(await site.description);
         
         const parsedBody = this.parseHtml(body);
 
@@ -22,6 +22,8 @@ export default {
             parsedBody.children[index].parent = parsedBody;
         }
 
+        body = await this.renderHtml(parsedBody.toString());
+
         return this.renderView('_sidebar/_section', {
             label: 'About',
             testId: 'about-section',
@@ -30,7 +32,7 @@ export default {
                     url: "/_actions/admin/edit_site_description",
                     body
                 });
-                return this.renderHtml(parsedBody.toString());
+                return body;
             }
         });
     },
