@@ -47,15 +47,19 @@ export const styles = ({ colors }) => `
 export default {
     async render(){    
         const site = await this.database.site;
+        const footerSections = await this.menus.footer || [];
+        
+        // Get the legal section from the menu
+        const legalSection = footerSections.find(section => section.label === 'Legal') || { children: [] };
 
         return this.renderHtml`
             <footer class="${this.cssClasses.root}" data-test-id="footer">
                 <div class="${this.cssClasses.container}">
                     <div>
                         ${site.title} © ${new Date().getFullYear()}
-                        | <a class="${this.cssClasses.link}" href="/legal/terms-of-service">Terms of Service</a>
-                        | <a class="${this.cssClasses.link}" href="/legal/privacy-policy">Privacy Policy</a>
-                        | <a class="${this.cssClasses.link}" href="/legal/cookie-policy">Cookie Policy</a>
+                        ${legalSection.children.map(child => {
+                            return this.renderHtml` | <a class="${this.cssClasses.link}" href="${child.url}">${child.label}</a>`;
+                        })}
                     </div>    
                     <div class="${this.cssClasses.poweredBy}">
                         <a class="${this.cssClasses.link}" href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>

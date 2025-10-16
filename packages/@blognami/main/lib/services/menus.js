@@ -28,6 +28,10 @@ export default {
                 { label: 'All Posts', url: '/posts' },
                 { label: 'Create Post', url: '/posts/create' }
             ]});
+
+            this.addMenuItem('footer', 'Legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });
+            this.addMenuItem('footer', 'Legal', { label: 'Privacy Policy', url: '/legal/privacy-policy' });
+            this.addMenuItem('footer', 'Legal', { label: 'Cookie Policy', url: '/legal/cookie-policy' });
         });
 
         this.on('normalizeMenus', function(){
