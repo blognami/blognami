@@ -39,15 +39,15 @@ export const styles = `
             padding: 0 1.6rem;
         }
 
-        .link-groups-items {
+        .link-group-items {
             display: none;
         }
     }
 `;
 
 export default {
-    render(){
-        const items = this.menus.navbar || [];
+    async render(){
+        const items = await this.menus.navbar || [];
 
         return this.renderHtml`
             <header class="${this.cssClasses.root}" id="pinstripe-scroll-top">
@@ -61,6 +61,7 @@ export default {
                                 `;
                             })}
                         </ul>
+                        ${this.renderView('_navbar/_burger_link')}
                     </nav>
                 </div>
             </header>

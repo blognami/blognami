@@ -20,7 +20,7 @@ export const styles = `
 
 export default {
     async render(){
-        const sections = this.menus.sidebar || [];
+        const sections = await this.menus.sidebar || [];
 
         if(sections.length === 0) return;
 

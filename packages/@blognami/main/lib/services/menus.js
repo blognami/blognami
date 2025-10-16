@@ -10,12 +10,24 @@ export default {
             this.addMenuItem('navbar', 'Your Account', { label: 'Settings', url: '/settings' });
             this.addMenuItem('navbar', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 200 });
 
-            this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
+            this.addMenuItem('sidebar', { label: 'About', partial: '_navbar/burger_menu/_about_section', displayOrder: 1 });
             this.addMenuItem('sidebar', { label: 'Posts', children: [
                 { label: 'All Posts', url: '/posts' },
                 { label: 'Create Post', url: '/posts/create' }
             ]});
 
+            this.addMenuItem('burgerMenu', 'Actions', { label: 'Docs', url: '/', displayOrder: 1 });
+            this.addMenuItem('burgerMenu', 'Actions', { label: 'Blog', url: 'https://blognami.com/pinstripe' });
+            this.addMenuItem('burgerMenu', 'Actions', { label: 'GitHub', url: 'https://github.com/blognami/blognami' });
+            this.addMenuItem('burgerMenu', 'Actions', 'Your Account', { label: 'Profile', url: '/profile' });
+            this.addMenuItem('burgerMenu', 'Actions', 'Your Account', { label: 'Settings', url: '/settings' });
+            this.addMenuItem('burgerMenu', 'Actions', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 200 });
+
+            this.addMenuItem('burgerMenu', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
+            this.addMenuItem('burgerMenu', { label: 'Posts', children: [
+                { label: 'All Posts', url: '/posts' },
+                { label: 'Create Post', url: '/posts/create' }
+            ]});
         });
 
         this.on('normalizeMenus', function(){
@@ -46,26 +58,38 @@ export default {
                     item.partial = '_sidebar/_link_group_section';
                 }
             });
+
+            this.traverseMenuItems('burgerMenu', (item, path) => {
+                if (item.partial === undefined && path.length === 1) {
+                    item.partial = '_navbar/burger_menu/_link_group_section';
+                }
+
+                if(item.target === undefined) {
+                    item.target = '_top';
+                }
+            });
         });
     },
 
     create(){
-        if(!this.context.root.menus){
-            this.menus = {};
+        return this.defer(async () => {
+            if(!this.context.root.menus){
+                this.menus = {};
 
-            // Allow other modules to add menu items
-            this.trigger('initializeMenus');
+                // Allow other modules to add menu items
+                await this.trigger('initializeMenus');
 
-            this.normalizeAllMenus();
-            this.trigger('normalizeMenus');
+                this.normalizeAllMenus();
+                await this.trigger('normalizeMenus');
 
-            this.sortAllMenus();
-            this.trigger('sortMenus');
+                this.sortAllMenus();
+                await this.trigger('sortMenus');
 
-            this.context.root.menus = this.menus;
-        }
+                this.context.root.menus = this.menus;
+            }
 
-        return this.context.root.menus;
+            return this.context.root.menus;
+        });
     },
 
     addMenuItem(...args) {

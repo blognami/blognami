@@ -1,7 +1,4 @@
 
-
-- Implement burger menu
-
 - Implement footer
     - Use menus service
 

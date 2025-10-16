@@ -1,10 +1,10 @@
 
 
 export default {
-    render(){
+    async render(){
         const path = JSON.parse(this.params.path || '[]');
 
-        const items = this.menus.navbar || [];
+        const items = await this.menus.navbar || [];
 
         let currentItems = items;
         for(const label of path){
