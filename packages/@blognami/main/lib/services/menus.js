@@ -51,12 +51,41 @@ export default {
 
             // Your Account menu (shows for any signed in user)
             if (await this.isSignedIn) {
+                const user = await this.user;
+                
                 this.addMenuItem('navbar', 'Your Account', { 
                     label: 'Profile', 
                     url: `/${await this.user.slug}`, 
                     target: '_top',
                     testId: 'profile'
                 });
+
+                // Notification preferences
+                this.addMenuItem('navbar', 'Your Account', { 
+                    label: 'Notification preferences', 
+                    url: '/_actions/user/edit_user_notification_preferences', 
+                    target: '_overlay',
+                    testId: 'edit-user-notification-preferences'
+                });
+
+                // Newsletter subscription (only show if user is subscribed)
+                if (await user.isSubscribedToNewsletter()) {
+                    const isPaid = await user.isSubscribedToNewsletter({ tier: 'paid' });
+                    const confirmMessage = isPaid ? (
+                        `Are you sure you want to unsubscribe? You will lose access to members only content, and any remaining subscription time will be lost.`
+                    ) : (
+                        `Are you sure you want to unsubscribe? You will lose access to members only content.`
+                    );
+
+                    this.addMenuItem('navbar', 'Your Account', { 
+                        label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`, 
+                        url: `/_actions/user/unsubscribe?subscribableId=${this.database.newsletter.id}`, 
+                        target: '_overlay',
+                        testId: 'unsubscribe',
+                        dataConfirm: confirmMessage
+                    });
+                }
+
                 this.addMenuItem('navbar', 'Your Account', { 
                     label: 'Sign out', 
                     url: '/_actions/guest/sign_out', 
@@ -115,6 +144,14 @@ export default {
 
                 if(item.target === undefined) {
                     item.target = '_top';
+                }
+
+                // Handle data-confirm attribute
+                if (item.dataConfirm !== undefined) {
+                    if (!item.dataAttributes) {
+                        item.dataAttributes = {};
+                    }
+                    item.dataAttributes.confirm = item.dataConfirm;
                 }
             });
 
