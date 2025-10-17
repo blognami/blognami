@@ -35,7 +35,7 @@ The `matchViews` service is a view discovery and filtering mechanism that:
 3. **Normalizes patterns** by converting string patterns to regular expressions for efficient matching
 4. **Supports both inclusion and exclusion** patterns for precise view selection
 5. **Returns sorted view names** ordered by `displayOrder` metadata, then alphabetically
-6. **Powers higher-level services** like `renderViews` by providing the list of views to render
+6. **Powers higher-level services** by providing the list of views to render
 
 The service is essential for dynamic view discovery in modular architectures where views are organized by naming conventions and need to be discovered at runtime.
 
@@ -246,22 +246,6 @@ export default {
 ```
 
 ## Integration with Other Services
-
-### Used by renderViews Service
-```javascript
-// renderViews internally uses matchViews
-export default {
-    async renderViews(...args) {
-        const lastArg = args[args.length - 1];
-        const params = typeof lastArg == 'object' && !Array.isArray(lastArg) ? args.pop() : {};
-        const out = [];
-        for(const name of await this.matchViews(...args)){
-            out.push(await this.renderView(name, params));
-        }
-        return out;
-    }
-}
-```
 
 ### Service Creation Pattern
 ```javascript
