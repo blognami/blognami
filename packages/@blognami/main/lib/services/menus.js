@@ -2,13 +2,63 @@
 
 export default {
     meta(){
-        this.on('initializeMenus', function(){
-            this.addMenuItem('navbar', { label: 'Docs', url: '/', displayOrder: 1 });
-            this.addMenuItem('navbar', { label: 'Blog', url: 'https://blognami.com/pinstripe' });
-            this.addMenuItem('navbar', { label: 'GitHub', url: 'https://github.com/blognami/blognami' });
-            this.addMenuItem('navbar', 'Your Account', { label: 'Profile', url: '/profile' });
-            this.addMenuItem('navbar', 'Your Account', { label: 'Settings', url: '/settings' });
-            this.addMenuItem('navbar', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 200 });
+        this.on('initializeMenus', async function(){
+            // Sign In link (shows when signed out)
+            if (await this.isSignedOut) {
+                this.addMenuItem('navbar', { 
+                    label: 'Sign in', 
+                    url: '/_actions/guest/sign_in', 
+                    target: '_overlay',
+                    displayOrder: 1000
+                });
+            }
+
+            // Admin-only links (shows for admin users when signed in)
+            if (await this.isSignedIn && await this.user.role === 'admin') {
+                // Add Content link
+                this.addMenuItem('navbar', { 
+                    label: 'Add', 
+                    displayOrder: 0,
+                    children: [
+                        { label: 'User', url: '/_actions/admin/add_user', target: '_overlay' }
+                    ]
+                });
+
+                // Find Content link
+                this.addMenuItem('navbar', { 
+                    label: 'Find', 
+                    displayOrder: 0,
+                    children: [
+                        { label: 'User', url: '/_actions/admin/find_user', target: '_overlay' }
+                    ]
+                });
+
+                // Edit Settings link
+                this.addMenuItem('navbar', { 
+                    label: 'Settings', 
+                    displayOrder: 100,
+                    children: [
+                        { label: 'Site', url: '/_actions/admin/edit_site_meta', target: '_overlay' },
+                        { label: 'Newsletter', url: '/_actions/admin/edit_newsletter', target: '_overlay' },
+                        { label: 'Stripe', url: '/_actions/admin/edit_stripe', target: '_overlay' }
+                    ]
+                });
+            }
+
+            // Your Account menu (shows for any signed in user)
+            if (await this.isSignedIn) {
+                this.addMenuItem('navbar', 'Your Account', { 
+                    label: 'Profile', 
+                    url: `/${await this.user.slug}`, 
+                    target: '_top'
+                });
+                this.addMenuItem('navbar', 'Your Account', { 
+                    label: 'Sign out', 
+                    url: '/_actions/guest/sign_out', 
+                    target: '_overlay',
+                    displayOrder: 200
+                });
+            }
 
             this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
             this.addMenuItem('sidebar', { label: 'Posts', children: [
