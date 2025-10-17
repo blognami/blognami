@@ -39,11 +39,17 @@ export const Hookable = {
     },
 
     async trigger(event, ...args){
+        let out = [];
         const hooks = this.constructor.allHooks;
         const callbacks = hooks[event] || [];
         for(const callback of callbacks){
-            await callback.call(this, this, ...args);
+            out.push(await callback.call(this, this, ...args));
         }
-        return this;
+        out.sort((a, b) => {
+            const aOrder = (typeof a === 'object' && a !== null && 'displayOrder' in a) ? a.displayOrder : 100;
+            const bOrder = (typeof b === 'object' && b !== null && 'displayOrder' in b) ? b.displayOrder : 100;
+            return aOrder - bOrder;
+        });
+        return out;
     }
 };

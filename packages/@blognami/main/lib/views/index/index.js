@@ -9,8 +9,8 @@ export default {
     
         return this.renderView('_layout', {
             meta,
-            body: this.renderViews('index/_*', this.params)
+            // body: this.renderViews('index/_*', this.params)
+            body: this.trigger('body')
         });
     }
 }
-

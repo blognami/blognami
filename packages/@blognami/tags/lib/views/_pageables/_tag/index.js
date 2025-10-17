@@ -9,7 +9,8 @@ export default {
     
         return this.renderView('_layout', {
             meta,
-            body: this.renderViews('_pageables/_tag/_*', this.params)
+            // this.renderViews('_pageables/_tag/_*', this.params)
+            body: this.trigger('renderBody')
         });
     }
 };
