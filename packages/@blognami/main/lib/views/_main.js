@@ -55,7 +55,7 @@ export default {
             <div class="${this.cssClasses.root}">
                 ${this.renderView('_sidebar')}
 
-                <main class="${this.cssClasses.content}">
+                <main class="${this.cssClasses.content}" data-test-id="main">
                     ${body}
                 </main>
 
