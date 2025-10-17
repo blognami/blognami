@@ -36,7 +36,7 @@ export default {
                         body: 'Delete this Tag!'
                     })
                 })}
-            `;
+            `.assignProps({ displayOrder: 200 });
         });
     },
 
