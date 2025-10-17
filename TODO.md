@@ -1,7 +1,4 @@
-
-- Refactor sidebar
-    - featured section
-    - tags section
+- Implement burger nav
 
 ---
 
