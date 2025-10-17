@@ -20,7 +20,28 @@ export default {
                 });
             }
 
-            this.addMenuItem('sidebar', { label: 'Featured', partial: '_sidebar/_featured_posts_section' });
+            let user;
+            if(await this.session){
+                user = await this.session.user;
+            }
+
+            const isAdmin = user?.role == 'admin';
+            
+            let posts = this.database.posts;
+            if(isAdmin){
+                posts = posts.orderBy('published', 'asc')
+            } else {
+                posts = posts.where({ published: true });
+            }
+        
+            posts = posts.orderBy('publishedAt', 'desc');
+        
+            const featuredPosts = await posts.where({ featured: true }).all();
+            
+            for (const post of featuredPosts) {
+                this.addMenuItem('sidebar', 'Featured', { label: post.title, url: `/${post.slug}` });
+            }
+            
             this.addMenuItem('sidebar', { label: 'Tags', partial: '_sidebar/_tags_section' });
         });
     }
