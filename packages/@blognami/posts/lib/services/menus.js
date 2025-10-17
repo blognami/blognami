@@ -42,7 +42,19 @@ export default {
                 this.addMenuItem('sidebar', 'Featured', { label: post.title, url: `/${post.slug}` });
             }
             
-            this.addMenuItem('sidebar', { label: 'Tags', partial: '_sidebar/_tags_section' });
+            // Add individual tags with post count badges
+            const tags = await this.database.posts.tags.orderBy('name').all();
+            
+            for (const tag of tags) {
+                const count = await this.database.posts.where({ tags: { name: tag.name } }).count();
+                const badgeText = count === 1 ? '1 post' : `${count} posts`;
+                
+                this.addMenuItem('sidebar', 'Tags', { 
+                    label: tag.name, 
+                    url: `/${tag.slug}`,
+                    badge: badgeText
+                });
+            }
         });
     }
 };
