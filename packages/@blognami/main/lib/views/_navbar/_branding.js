@@ -19,7 +19,7 @@ export const styles = `
 export default {
     render(){
         return this.renderHtml`
-            <a href="/" class="${this.cssClasses.root}">
+            <a href="/" class="${this.cssClasses.root}" data-test-id="title">
                 ${this.database.site.title}
             </a>
         `;
