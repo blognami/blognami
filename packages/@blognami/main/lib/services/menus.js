@@ -52,8 +52,14 @@ export default {
             // Your Account menu (shows for any signed in user)
             if (await this.isSignedIn) {
                 const user = await this.user;
+
+                this.addMenuItem('navbar', {
+                    label: user.name,
+                    testId: 'your-account',
+                    displayOrder: 300
+                });
                 
-                this.addMenuItem('navbar', 'Your Account', { 
+                this.addMenuItem('navbar', user.name, { 
                     label: 'Profile', 
                     url: `/${await this.user.slug}`, 
                     target: '_top',
@@ -61,7 +67,7 @@ export default {
                 });
 
                 // Notification preferences
-                this.addMenuItem('navbar', 'Your Account', { 
+                this.addMenuItem('navbar', user.name, { 
                     label: 'Notification preferences', 
                     url: '/_actions/user/edit_user_notification_preferences', 
                     target: '_overlay',
@@ -77,7 +83,7 @@ export default {
                         `Are you sure you want to unsubscribe? You will lose access to members only content.`
                     );
 
-                    this.addMenuItem('navbar', 'Your Account', { 
+                    this.addMenuItem('navbar', user.name, { 
                         label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`, 
                         url: `/_actions/user/unsubscribe?subscribableId=${this.database.newsletter.id}`, 
                         target: '_overlay',
@@ -86,7 +92,7 @@ export default {
                     });
                 }
 
-                this.addMenuItem('navbar', 'Your Account', { 
+                this.addMenuItem('navbar', user.name, { 
                     label: 'Sign out', 
                     url: '/_actions/guest/sign_out', 
                     target: '_overlay',
@@ -260,6 +266,10 @@ export default {
         navigationItems.forEach(menuItem => {
             if (menuItem.displayOrder === undefined) {
                 menuItem.displayOrder = 100;
+            }
+
+            if(menuItem.testId === undefined) {
+                menuItem.testId = this.inflector.dasherize(menuItem.label);
             }
             
             // Recursively normalize nested items
