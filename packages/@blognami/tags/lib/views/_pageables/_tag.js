@@ -49,7 +49,6 @@ export default {
     
         return this.renderView('_layout', {
             meta,
-            // this.renderViews('_pageables/_tag/_*', this.params)
             body: this.trigger('renderBody')
         });
     }
