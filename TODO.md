@@ -1,5 +1,9 @@
+- Replicate navbar
+- Replicate sidebar
 
-- Convert about section links into `_sidebar/_link_group` partials
+---
+
+- Get tests to pass
 
 ---
 
