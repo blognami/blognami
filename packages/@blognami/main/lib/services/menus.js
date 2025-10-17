@@ -9,7 +9,9 @@ export default {
                     label: 'Sign in', 
                     url: '/_actions/guest/sign_in', 
                     target: '_overlay',
-                    displayOrder: 1000
+                    displayOrder: 1000,
+                    preload: true,
+                    testId: 'sign-in'
                 });
             }
 
@@ -19,8 +21,10 @@ export default {
                 this.addMenuItem('navbar', { 
                     label: 'Add', 
                     displayOrder: 0,
+                    preload: true,
+                    testId: 'add-content',
                     children: [
-                        { label: 'User', url: '/_actions/admin/add_user', target: '_overlay' }
+                        { label: 'User', url: '/_actions/admin/add_user', target: '_overlay', testId: 'add-user' }
                     ]
                 });
 
@@ -28,8 +32,10 @@ export default {
                 this.addMenuItem('navbar', { 
                     label: 'Find', 
                     displayOrder: 0,
+                    preload: true,
+                    testId: 'find-content',
                     children: [
-                        { label: 'User', url: '/_actions/admin/find_user', target: '_overlay' }
+                        { label: 'User', url: '/_actions/admin/find_user', target: '_overlay', testId: 'find-user' }
                     ]
                 });
 
@@ -37,26 +43,32 @@ export default {
                 this.addMenuItem('navbar', { 
                     label: 'Settings', 
                     displayOrder: 100,
+                    preload: true,
+                    testId: 'edit-settings',
                     children: [
-                        { label: 'Site', url: '/_actions/admin/edit_site_meta', target: '_overlay' },
-                        { label: 'Newsletter', url: '/_actions/admin/edit_newsletter', target: '_overlay' },
-                        { label: 'Stripe', url: '/_actions/admin/edit_stripe', target: '_overlay' }
+                        { label: 'Site', url: '/_actions/admin/edit_site_meta', target: '_overlay', testId: 'edit-site-meta' },
+                        { label: 'Newsletter', url: '/_actions/admin/edit_newsletter', target: '_overlay', testId: 'edit-site-membership' },
+                        { label: 'Stripe', url: '/_actions/admin/edit_stripe', target: '_overlay', testId: 'edit-stripe' }
                     ]
                 });
             }
 
             // Your Account menu (shows for any signed in user)
             if (await this.isSignedIn) {
+                // Note: The parent "Your Account" menu will get preload and testId="your-account" 
+                // automatically when normalized since it has children
                 this.addMenuItem('navbar', 'Your Account', { 
                     label: 'Profile', 
                     url: `/${await this.user.slug}`, 
-                    target: '_top'
+                    target: '_top',
+                    testId: 'profile'
                 });
                 this.addMenuItem('navbar', 'Your Account', { 
                     label: 'Sign out', 
                     url: '/_actions/guest/sign_out', 
                     target: '_overlay',
-                    displayOrder: 200
+                    displayOrder: 200,
+                    testId: 'sign-out'
                 });
             }
 
@@ -100,6 +112,12 @@ export default {
                     url.searchParams.append('path', JSON.stringify(path.map(item => item.label)));
                     item.url = url.pathname + url.search;
                     item.target = '_overlay';
+                    
+                    // Add data attributes for specific parent menu items
+                    if (item.label === 'Your Account') {
+                        item.preload = true;
+                        item.testId = 'your-account';
+                    }
                 }
 
                 if(item.target === undefined) {
