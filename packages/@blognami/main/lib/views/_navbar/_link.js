@@ -18,11 +18,18 @@ export const styles = `
 
 export default {
     render(){
-        const isActive = this.initialParams._url.pathname === this.params.url;
+        const { url, target, label, testId, preload } = this.params;
+
+        const isActive = this.initialParams._url.pathname === url;
         const activeClass = isActive ? ` ${this.cssClasses.linkActive}` : '';
-        
-        return this.renderHtml`
-            <a href="${this.params.url}" class="${this.cssClasses.link}${activeClass}" target="${this.params.target}">${this.params.label}</a>
-        `;
+
+        return this.renderTag('a', {
+            href: url,
+            class: `${this.cssClasses.link}${activeClass}`,
+            target: target,
+            'data-test-id': testId,
+            'data-preload': preload ? 'true' : null,
+            body: label
+        });
     }
 };

@@ -108,9 +108,8 @@ export default {
                     item.target = '_overlay';
                     
                     // Add data attributes for specific parent menu items
-                    if (item.label === 'Your Account') {
+                    if (!item.preload) {
                         item.preload = true;
-                        item.testId = 'your-account';
                     }
                 }
 
