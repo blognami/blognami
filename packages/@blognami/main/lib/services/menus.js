@@ -21,7 +21,6 @@ export default {
                 this.addMenuItem('navbar', { 
                     label: 'Add', 
                     displayOrder: 0,
-                    preload: true,
                     testId: 'add-content',
                     children: [
                         { label: 'User', url: '/_actions/admin/add_user', target: '_overlay', testId: 'add-user' }
@@ -32,7 +31,6 @@ export default {
                 this.addMenuItem('navbar', { 
                     label: 'Find', 
                     displayOrder: 0,
-                    preload: true,
                     testId: 'find-content',
                     children: [
                         { label: 'User', url: '/_actions/admin/find_user', target: '_overlay', testId: 'find-user' }
@@ -42,8 +40,6 @@ export default {
                 // Edit Settings link
                 this.addMenuItem('navbar', { 
                     label: 'Settings', 
-                    displayOrder: 100,
-                    preload: true,
                     testId: 'edit-settings',
                     children: [
                         { label: 'Site', url: '/_actions/admin/edit_site_meta', target: '_overlay', testId: 'edit-site-meta' },
@@ -55,8 +51,6 @@ export default {
 
             // Your Account menu (shows for any signed in user)
             if (await this.isSignedIn) {
-                // Note: The parent "Your Account" menu will get preload and testId="your-account" 
-                // automatically when normalized since it has children
                 this.addMenuItem('navbar', 'Your Account', { 
                     label: 'Profile', 
                     url: `/${await this.user.slug}`, 
