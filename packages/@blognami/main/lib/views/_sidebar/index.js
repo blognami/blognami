@@ -25,7 +25,7 @@ export default {
         if(sections.length === 0) return;
 
         return this.renderHtml`
-            <aside class="${this.cssClasses.root}">
+            <aside class="${this.cssClasses.root}" data-test-id="sidebar">
                 ${sections.map(section => {
                     const { partial, ...restOfSection } = section;
                     return this.renderView(partial, restOfSection);

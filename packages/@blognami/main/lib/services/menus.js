@@ -102,10 +102,6 @@ export default {
             }
 
             this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
-            this.addMenuItem('sidebar', { label: 'Posts', children: [
-                { label: 'All Posts', url: '/posts' },
-                { label: 'Create Post', url: '/posts/create' }
-            ]});
 
             this.addMenuItem('burgerMenu', 'Actions', { label: 'Docs', url: '/', displayOrder: 1 });
             this.addMenuItem('burgerMenu', 'Actions', { label: 'Blog', url: 'https://blognami.com/pinstripe' });

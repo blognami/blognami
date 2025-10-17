@@ -19,9 +19,8 @@ export default {
     
         const featuredPosts = posts.where({ featured: true });
 
-        if(await featuredPosts.count() > 0) return this.renderView('_section', {
-            title: 'Featured',
-            level: 3,
+        if(await featuredPosts.count() > 0) return this.renderView('_sidebar/_section', {
+            label: 'Featured',
             testId: 'featured-section',
             body: this.renderView('_posts', { posts: featuredPosts, compact: true })
         });

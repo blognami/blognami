@@ -19,6 +19,9 @@ export default {
                     testId: 'find-post' 
                 });
             }
+
+            this.addMenuItem('sidebar', { label: 'Featured', partial: '_sidebar/_featured_posts_section' });
+            this.addMenuItem('sidebar', { label: 'Tags', partial: '_sidebar/_tags_section' });
         });
     }
 };

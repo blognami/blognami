@@ -28,10 +28,9 @@ export const styles = ({ colors }) =>`
 export default {
     async render(){
         const tags = this.database.posts.tags.orderBy('name');
-        
-        if(await tags.count() > 0) return this.renderView('_section', {
-            title: 'Tags',
-            level: 3,
+
+        if(await tags.count() > 0) return this.renderView('_sidebar/_section', {
+            label: 'Tags',
             testId: 'tags-section',
             body: tags.all().map(({ name, slug }) => this.renderHtml`
                 <a class="${this.cssClasses.tagsItem}" href="/${slug}">
