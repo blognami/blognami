@@ -1,9 +1,7 @@
-- Replicate navbar
-- Replicate sidebar
 
----
-
-- Get tests to pass
+- Refactor sidebar
+    - featured section
+    - tags section
 
 ---
 
