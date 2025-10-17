@@ -14,8 +14,20 @@ export const styles = `
 `;
 
 export default {
-    render(){
+   async render(){
+        const { params } = this;
+        const { meta = [], body } = params;
+
+        let user;
+        if(await this.session){
+            user = await this.session.user;
+        }
+
         return this.renderView('_pinstripe/_shell', {
+            meta: [
+                { name: 'pinstripe-load-cache-namespace', content: user ? 'signed-in' : 'signed-out' },
+                ...meta
+            ],
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">
                     ${this.renderView('_navbar')}
