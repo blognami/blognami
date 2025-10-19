@@ -3,22 +3,86 @@ export const styles = `
         list-style: none;
         margin: 0;
         padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .item {
+        border-radius: 8px;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .item:hover {
+        background-color: #f8fafc;
     }
 
     .link {
-        display: block;
+        display: flex;
+        align-items: center;
         text-decoration: none;
-        color: #6b7280;
-        padding: 0.6rem 0;
-        font-size: 1.4rem;
-        transition: color 0.2s ease;
-        border-left: 2px solid transparent;
-        padding-left: 1.2rem;
-        margin-left: -1.2rem;
+        color: #374151;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 8px;
+        position: relative;
+        line-height: 1.4;
+        width: 100%;
+        box-sizing: border-box;
+        word-wrap: break-word;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .link::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+        border-radius: 1px;
+        transition: width 0.2s ease;
     }
 
     .link:hover {
-        color: #111827;
+        color: #1f2937;
+        background-color: rgba(59, 130, 246, 0.05);
+    }
+
+    .link:hover::before {
+        width: 3px;
+    }
+
+    .link:active {
+        transform: scale(0.98);
+    }
+
+    /* Nested links styling */
+    .root .root {
+        margin-top: 0.5rem;
+        margin-left: 1rem;
+        padding-left: 1rem;
+        border-left: 2px solid #f1f5f9;
+    }
+
+    .root .root .link {
+        font-size: 0.875rem;
+        padding: 0.5rem 0.75rem;
+        color: #6b7280;
+    }
+
+    .root .root .link:hover {
+        color: #374151;
     }
 `;
 
@@ -34,7 +98,7 @@ export default {
                     const { url, target, label } = link;
                     
                     return this.renderHtml`
-                        <li>
+                        <li class="${this.cssClasses.item}">
                             ${() => {
                                 if (url) {
                                     return this.renderHtml`<a href="${url}" class="${this.cssClasses.link}" target="${target}">${label}</a>`;
