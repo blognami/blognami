@@ -19,7 +19,7 @@ export default {
             }
         });
 
-        this.on('before:validation', function(){
+        this.on('beforeValidation', function(){
             if(!this.createdAt){
                 this.createdAt = new Date();
             }

@@ -3,7 +3,7 @@ import { inflector } from '@pinstripe/utils';
 
 export default {
     meta(){
-        this.on('before:validation', async function(){
+        this.on('beforeValidation', async function(){
             const slug = `${this.slug || ''}`.trim();
             if(slug == ''){
                 let n = 1;

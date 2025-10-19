@@ -7,7 +7,7 @@ export default {
         this.mustNotBeBlank('userId');
         this.mustNotBeBlank('name');
 
-        this.on('before:validation', function(){
+        this.on('beforeValidation', function(){
             if(!this.createdAt){
                 this.createdAt = new Date();
             }

@@ -127,7 +127,7 @@ export const Row = Model.extend().include({
 
             if(this._exists) this.id = this._initialFields.id;
             
-            await (this._exists ? this.trigger('before:update') : this.trigger('before:insert'));
+            await (this._exists ? this.trigger('beforeUpdate') : this.trigger('beforeInsert'));
 
             await this.validate({ validateWith});
 
@@ -215,7 +215,7 @@ export const Row = Model.extend().include({
                 this._exists = true;
             }
 
-            await (exists ? this.trigger('after:update') : this.trigger('after:insert'));
+            await (exists ? this.trigger('afterUpdate') : this.trigger('afterInsert'));
 
             return this;
         });
@@ -223,7 +223,7 @@ export const Row = Model.extend().include({
 
     async delete(){
         return this.database.transaction(async () => {
-            await this.trigger('before:delete');
+            await this.trigger('afterDelete');
 
             const tableReference = TableReference.new(this.constructor.collectionName);
 
@@ -243,7 +243,7 @@ export const Row = Model.extend().include({
                 }
             });
 
-            await this.trigger('after:delete');
+            await this.trigger('afterDelete');
 
             return this;
         });
@@ -308,7 +308,7 @@ function defineRelationship({ name, type, collectionName, fromKey, toKey, cascad
     });
 
     if(cascadeDelete) {
-        this.on('before:delete', async function(){
+        this.on('afterDelete', async function(){
             await this[name].delete();
         });
     }
