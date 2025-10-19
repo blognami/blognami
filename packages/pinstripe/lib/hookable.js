@@ -26,7 +26,7 @@ export const Hookable = {
                 return out;
             },
 
-            on(events, callback){
+            addHook(events, callback){
                 const normalizedEvents = Array.isArray(events) ? events : [events];
                 for(const event of normalizedEvents){
                     if(!this.hooks[event]){
@@ -38,7 +38,7 @@ export const Hookable = {
         });
     },
 
-    async trigger(event, ...args){
+    async runHook(event, ...args){
         let out = [];
         const hooks = this.constructor.allHooks;
         const callbacks = hooks[event] || [];
