@@ -16,7 +16,7 @@ export default {
             }
         });
 
-        this.on(['beforeInsert', 'beforeUpdate'], async function(){
+        this.addHook(['beforeInsert', 'beforeUpdate'], async function(){
             if(!this.revisionUserId) return;
             this._revisedFields = {};
             this.constructor.revisableFields.forEach(name => {
@@ -26,7 +26,7 @@ export default {
             });
         });
 
-        this.on(['afterInsert', 'afterUpdate'], async function(){
+        this.addHook(['afterInsert', 'afterUpdate'], async function(){
             if(!this.revisionUserId) return;
             for(let name in this._revisedFields){
                 await this.database.revisions.insert({

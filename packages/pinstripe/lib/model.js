@@ -10,7 +10,7 @@ export const Model = Class.extend().include({
         this.assignProps({
             mustNotBeBlank(name, options = {}){
                 const { message = 'Must not be blank', when = () => true } = options;
-                return this.on('validation', async validateable => {
+                return this.addHook('validation', async validateable => {
                     if(validateable.isValidationError(name)) return;
                     if(! await when.call(validateable, validateable)) return;
                     const value = `${validateable[name] || ''}`.trim();
@@ -22,7 +22,7 @@ export const Model = Class.extend().include({
 
             mustMatchPattern(name, pattern, options = {}){
                 const { message = 'Must match pattern', when = () => true } = options;
-                return this.on('validation', async validateable => {
+                return this.addHook('validation', async validateable => {
                     if(validateable.isValidationError(name)) return;
                     if(! await when.call(validateable, validateable)) return;
                     const value = `${validateable[name] || ''}`.trim();

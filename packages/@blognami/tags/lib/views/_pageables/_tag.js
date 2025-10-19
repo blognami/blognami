@@ -1,7 +1,7 @@
 
 export default {
     meta(){
-        this.on('renderBody', async function(){
+        this.addHook('renderBody', async function(){
             const { tag } = this.params;
             let user;
             if(await this.session){

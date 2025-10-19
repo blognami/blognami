@@ -1,6 +1,6 @@
 export default {
     meta(){
-        this.on('initializeMenus', async function(){
+        this.addHook('initializeMenus', async function(){
             // Admin-only post links (shows for admin users when signed in)
             if (await this.isSignedIn && await this.user.role === 'admin') {
                 // Add Post to the Add Content menu

@@ -29,7 +29,7 @@ export const Command = Class.extend().include({
         this.include(Validateable);
         this.include(Annotatable);
 
-        this.on('validation', async command => {
+        this.addHook('validation', async command => {
             // Validate unknown parameters
             for(const paramName of Object.keys(command.params)){
                 // Skip global parameters that are built-in
@@ -90,7 +90,7 @@ export const Command = Class.extend().include({
                 };
 
                 if(!optional) {
-                    this.on('validation', command => {
+                    this.addHook('validation', command => {
                         if(command.isValidationError(name)) return;
                         const value = command.params[name];
                         if(!value) command.setValidationError(name, 'Must not be blank');

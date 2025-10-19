@@ -86,7 +86,7 @@ export const Row = Model.extend().include({
 
             mustBeUnique(name, options = {}){
                 const { message = 'Must be unique', collection = this.collectionName } = options;
-                return this.on('validation', async row => {
+                return this.addHook('validation', async row => {
                     if(row.isValidationError(name)) return;
                     const value = row[name];
                     const alreadyExists = await row.database[collection].where({ [name]: value, idNe: row.id }).count() > 0;
@@ -308,7 +308,7 @@ function defineRelationship({ name, type, collectionName, fromKey, toKey, cascad
     });
 
     if(cascadeDelete) {
-        this.on('afterDelete', async function(){
+        this.addHook('afterDelete', async function(){
             await this[name].delete();
         });
     }

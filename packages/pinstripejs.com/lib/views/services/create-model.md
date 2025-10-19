@@ -66,7 +66,7 @@ this.mustBeAValidEmail('contactEmail', { message: 'Please enter a valid email ad
 Custom validation logic that runs during the validation process.
 
 ```javascript
-this.on('validation', function() {
+this.addHook('validation', function() {
     if (!this.isValidationError('password') && this.password.length < 8) {
         this.setValidationError('password', 'Password must be at least 8 characters');
     }
@@ -77,7 +77,7 @@ this.on('validation', function() {
 Runs before validation starts, useful for data preprocessing.
 
 ```javascript
-this.on('beforeValidation', function() {
+this.addHook('beforeValidation', function() {
     this.email = (this.email || '').toLowerCase().trim();
 });
 ```
@@ -117,7 +117,7 @@ this.createModel({
         this.mustNotBeBlank('email');
         this.mustBeAValidEmail('email');
         
-        this.on('validation', function() {
+        this.addHook('validation', function() {
             if (!this.isValidationError('legal') && this.legal != 'true') {
                 this.setValidationError('legal', 'You must agree to the terms of service.');
             }
@@ -133,7 +133,7 @@ this.createModel({
     meta() {
         this.mustNotBeBlank('password');
         
-        this.on('validation', async function() {
+        this.addHook('validation', async function() {
             if (!this.isValidationError('password')) {
                 const user = await that.database.users.where({ email }).first();
                 if (user && !await user.verifyPassword(this.password)) {
@@ -154,7 +154,7 @@ this.createModel({
         this.mustNotBeBlank('content');
         this.mustMatchPattern('slug', /^[a-z0-9-]+$/);
         
-        this.on('beforeValidation', function() {
+        this.addHook('beforeValidation', function() {
             // Auto-generate slug from title if not provided
             if (!this.slug && this.title) {
                 this.slug = this.title.toLowerCase()
@@ -163,7 +163,7 @@ this.createModel({
             }
         });
         
-        this.on('validation', async function() {
+        this.addHook('validation', async function() {
             // Check for duplicate slugs
             if (!this.isValidationError('slug')) {
                 const existing = await that.database.posts.where({ slug: this.slug }).first();
@@ -188,7 +188,7 @@ this.createModel({
             when: function() { return this.isNewUser; }
         });
         
-        this.on('validation', function() {
+        this.addHook('validation', function() {
             if (this.subscriptionType === 'premium' && !this.paymentMethod) {
                 this.setValidationError('paymentMethod', 'Payment method required for premium subscription.');
             }
@@ -202,7 +202,7 @@ this.createModel({
 ```javascript
 this.createModel({
     meta() {
-        this.on('beforeValidation', function() {
+        this.addHook('beforeValidation', function() {
             // Normalize email
             this.email = (this.email || '').toLowerCase().trim();
             

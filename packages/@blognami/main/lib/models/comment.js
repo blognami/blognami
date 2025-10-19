@@ -11,7 +11,7 @@ export default {
         this.mustNotBeBlank('userId');
         this.mustNotBeBlank('body');
 
-        this.on('validation', async function(){
+        this.addHook('validation', async function(){
             const rootCommentable = await this.rootCommentable;
             if(typeof rootCommentable.enableComments != 'boolean') return;
             if(!rootCommentable.enableComments && !this.isValidationError('general')){
@@ -19,7 +19,7 @@ export default {
             }
         });
 
-        this.on('beforeValidation', function(){
+        this.addHook('beforeValidation', function(){
             if(!this.createdAt){
                 this.createdAt = new Date();
             }

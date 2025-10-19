@@ -7,12 +7,12 @@ export default {
   meta() {
     this.include("singleton");
 
-    this.on("beforeInsert", function () {
+    this.addHook("beforeInsert", function () {
       if (this.webhookSecret) return;
       this.webhookSecret = crypto.randomUUID();
     });
 
-    this.on("syncWithSubscribable", async (stripe, subscribable) => {
+    this.addHook("syncWithSubscribable", async (stripe, subscribable) => {
       if(!await stripe.isConfiguredCorrectly()) return;
       await stripe
         .delegateTo(subscribable, SubscribableHandler)

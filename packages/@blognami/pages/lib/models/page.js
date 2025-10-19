@@ -9,7 +9,7 @@ export default {
         this.mustNotBeBlank('userId');
         this.mustNotBeBlank('title');
 
-        this.on('beforeValidation', function(){
+        this.addHook('beforeValidation', function(){
             if(this.published && !this.publishedAt){
                 this.publishedAt = new Date();
             }

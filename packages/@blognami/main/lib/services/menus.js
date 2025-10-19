@@ -2,7 +2,7 @@
 
 export default {
     meta(){
-        this.on('initializeMenus', async function(){
+        this.addHook('initializeMenus', async function(){
             // Sign In link (shows when signed out)
             if (await this.isSignedOut) {
                 this.addMenuItem('navbar', { 
@@ -121,7 +121,7 @@ export default {
             this.addMenuItem('footer', 'Legal', { label: 'Cookie Policy', url: '/legal/cookie-policy' });
         });
 
-        this.on('normalizeMenus', function(){
+        this.addHook('normalizeMenus', function(){
             this.traverseMenuItems('navbar', (item, path) => {
                 if (item.partial === undefined) {
                     if(path.length === 1) {
