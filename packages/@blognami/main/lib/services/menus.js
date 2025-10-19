@@ -103,18 +103,106 @@ export default {
 
             this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
 
-            this.addMenuItem('burgerMenu', 'Actions', { label: 'Docs', url: '/', displayOrder: 1 });
-            this.addMenuItem('burgerMenu', 'Actions', { label: 'Blog', url: 'https://blognami.com/pinstripe' });
-            this.addMenuItem('burgerMenu', 'Actions', { label: 'GitHub', url: 'https://github.com/blognami/blognami' });
-            this.addMenuItem('burgerMenu', 'Actions', 'Your Account', { label: 'Profile', url: '/profile' });
-            this.addMenuItem('burgerMenu', 'Actions', 'Your Account', { label: 'Settings', url: '/settings' });
-            this.addMenuItem('burgerMenu', 'Actions', 'Your Account', { label: 'Logout', url: '/logout', displayOrder: 200 });
+            // Sign In link for burger menu (shows when signed out)
+            if (await this.isSignedOut) {
+                this.addMenuItem('burgerMenu', 'Account', { 
+                    label: 'Sign in', 
+                    url: '/_actions/guest/sign_in', 
+                    target: '_overlay',
+                    displayOrder: 1000,
+                    preload: true,
+                    testId: 'sign-in'
+                });
+            }
 
+            // Admin-only links for burger menu (shows for admin users when signed in)
+            if (await this.isSignedIn && await this.user.role === 'admin') {
+                // Add Content link
+                this.addMenuItem('burgerMenu', 'Account', { 
+                    label: 'Add', 
+                    displayOrder: 0,
+                    testId: 'add-content',
+                    children: [
+                        { label: 'User', url: '/_actions/admin/add_user', target: '_overlay', testId: 'add-user' }
+                    ]
+                });
+
+                // Find Content link
+                this.addMenuItem('burgerMenu', 'Account', { 
+                    label: 'Find', 
+                    displayOrder: 0,
+                    testId: 'find-content',
+                    children: [
+                        { label: 'User', url: '/_actions/admin/find_user', target: '_overlay', testId: 'find-user' }
+                    ]
+                });
+
+                // Edit Settings link
+                this.addMenuItem('burgerMenu', 'Account', { 
+                    label: 'Settings', 
+                    testId: 'edit-settings',
+                    children: [
+                        { label: 'Site', url: '/_actions/admin/edit_site_meta', target: '_overlay', testId: 'edit-site-meta' },
+                        { label: 'Newsletter', url: '/_actions/admin/edit_newsletter', target: '_overlay', testId: 'edit-site-membership' },
+                        { label: 'Stripe', url: '/_actions/admin/edit_stripe', target: '_overlay', testId: 'edit-stripe' }
+                    ]
+                });
+            }
+
+            // Your Account menu for burger menu (shows for any signed in user)
+            if (await this.isSignedIn) {
+                const user = await this.user;
+
+                this.addMenuItem('burgerMenu', 'Account', {
+                    label: user.name,
+                    testId: 'your-account',
+                    displayOrder: 300
+                });
+                
+                this.addMenuItem('burgerMenu', 'Account', user.name, { 
+                    label: 'Profile', 
+                    url: `/${await this.user.slug}`, 
+                    target: '_top',
+                    testId: 'profile'
+                });
+
+                // Notification preferences
+                this.addMenuItem('burgerMenu', 'Account', user.name, { 
+                    label: 'Notification preferences', 
+                    url: '/_actions/user/edit_user_notification_preferences', 
+                    target: '_overlay',
+                    testId: 'edit-user-notification-preferences'
+                });
+
+                // Newsletter subscription (only show if user is subscribed)
+                if (await user.isSubscribedToNewsletter()) {
+                    const isPaid = await user.isSubscribedToNewsletter({ tier: 'paid' });
+                    const confirmMessage = isPaid ? (
+                        `Are you sure you want to unsubscribe? You will lose access to members only content, and any remaining subscription time will be lost.`
+                    ) : (
+                        `Are you sure you want to unsubscribe? You will lose access to members only content.`
+                    );
+
+                    this.addMenuItem('burgerMenu', 'Account', user.name, { 
+                        label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`, 
+                        url: `/_actions/user/unsubscribe?subscribableId=${this.database.newsletter.id}`, 
+                        target: '_overlay',
+                        testId: 'unsubscribe',
+                        dataConfirm: confirmMessage
+                    });
+                }
+
+                this.addMenuItem('burgerMenu', 'Account', user.name, { 
+                    label: 'Sign out', 
+                    url: '/_actions/guest/sign_out', 
+                    target: '_overlay',
+                    displayOrder: 200,
+                    testId: 'sign-out'
+                });
+            }
+
+            // Add sidebar content to burger menu
             this.addMenuItem('burgerMenu', { label: 'About', partial: '_navbar/burger_menu/_about_section', displayOrder: 1 });
-            this.addMenuItem('burgerMenu', { label: 'Posts', children: [
-                { label: 'All Posts', url: '/posts' },
-                { label: 'Create Post', url: '/posts/create' }
-            ]});
 
             this.addMenuItem('footer', 'Legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });
             this.addMenuItem('footer', 'Legal', { label: 'Privacy Policy', url: '/legal/privacy-policy' });
