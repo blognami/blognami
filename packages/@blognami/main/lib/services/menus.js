@@ -181,13 +181,13 @@ export default {
                 this.menus = {};
 
                 // Allow other modules to add menu items
-                await this.trigger('initializeMenus');
+                await this.runHook('initializeMenus');
 
                 this.normalizeAllMenus();
-                await this.trigger('normalizeMenus');
+                await this.runHook('normalizeMenus');
 
                 this.sortAllMenus();
-                await this.trigger('sortMenus');
+                await this.runHook('sortMenus');
 
                 this.context.root.menus = this.menus;
             }

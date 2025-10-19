@@ -32,7 +32,7 @@ export default {
     
         return this.renderView('_layout', {
             meta,
-            body: this.trigger('renderBody')
+            body: this.runHook('renderBody')
         });
     }
 }

@@ -5,7 +5,7 @@ export default {
 
         this.addHook(['afterInsert', 'afterUpdate'], async subscribable => {
             const stripe = await subscribable.database.stripe;
-            await stripe.trigger('syncWithSubscribable', subscribable);
+            await stripe.runHook('syncWithSubscribable', subscribable);
         });
     }
 }
