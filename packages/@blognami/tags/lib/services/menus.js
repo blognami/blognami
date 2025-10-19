@@ -18,6 +18,21 @@ export default {
                     target: '_overlay', 
                     testId: 'find-tag' 
                 });
+
+                // Add corresponding burger menu items under Account section
+                this.addMenuItem('burgerMenu', 'Account', 'Add', { 
+                    label: 'Tag', 
+                    url: '/_actions/admin/add_tag', 
+                    target: '_overlay', 
+                    testId: 'add-tag' 
+                });
+
+                this.addMenuItem('burgerMenu', 'Account', 'Find', { 
+                    label: 'Tag', 
+                    url: '/_actions/admin/find_tag', 
+                    target: '_overlay', 
+                    testId: 'find-tag' 
+                });
             }
         });
     }

@@ -18,6 +18,21 @@ export default {
                     target: '_overlay', 
                     testId: 'find-post' 
                 });
+
+                // Add corresponding burger menu items under Account section
+                this.addMenuItem('burgerMenu', 'Account', 'Add', { 
+                    label: 'Post', 
+                    url: '/_actions/admin/add_post', 
+                    target: '_overlay', 
+                    testId: 'add-post' 
+                });
+
+                this.addMenuItem('burgerMenu', 'Account', 'Find', { 
+                    label: 'Post', 
+                    url: '/_actions/admin/find_post', 
+                    target: '_overlay', 
+                    testId: 'find-post' 
+                });
             }
 
             let user;
@@ -40,6 +55,8 @@ export default {
             
             for (const post of featuredPosts) {
                 this.addMenuItem('sidebar', 'Featured', { label: post.title, url: `/${post.slug}` });
+                // Also add to burger menu Featured section
+                this.addMenuItem('burgerMenu', 'Featured', { label: post.title, url: `/${post.slug}` });
             }
             
             // Add individual tags with post count badges
@@ -50,6 +67,13 @@ export default {
                 const badgeText = count === 1 ? '1 post' : `${count} posts`;
                 
                 this.addMenuItem('sidebar', 'Tags', { 
+                    label: tag.name, 
+                    url: `/${tag.slug}`,
+                    badge: badgeText
+                });
+                
+                // Also add to burger menu Tags section
+                this.addMenuItem('burgerMenu', 'Tags', { 
                     label: tag.name, 
                     url: `/${tag.slug}`,
                     badge: badgeText
