@@ -5,7 +5,7 @@ export const styles = `
         padding: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.4rem;
         width: 100%;
         overflow: hidden;
     }
@@ -26,8 +26,8 @@ export const styles = `
         align-items: center;
         text-decoration: none;
         color: #374151;
-        padding: 0.75rem 1rem;
-        font-size: 0.95rem;
+        padding: 1.2rem 1.6rem;
+        font-size: 1.52rem;
         font-weight: 500;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         border-radius: 8px;
@@ -69,15 +69,15 @@ export const styles = `
 
     /* Nested links styling */
     .root .root {
-        margin-top: 0.5rem;
-        margin-left: 1rem;
-        padding-left: 1rem;
+        margin-top: 0.8rem;
+        margin-left: 1.6rem;
+        padding-left: 1.6rem;
         border-left: 2px solid #f1f5f9;
     }
 
     .root .root .link {
-        font-size: 0.875rem;
-        padding: 0.5rem 0.75rem;
+        font-size: 1.4rem;
+        padding: 0.8rem 1.2rem;
         color: #6b7280;
     }
 

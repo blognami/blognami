@@ -2,13 +2,13 @@
 export const styles = `
     .aboutContent {
         color: #4b5563;
-        font-size: 0.875rem;
+        font-size: 1.4rem;
         line-height: 1.6;
         margin: 0;
     }
 
     .aboutContent p {
-        margin: 0 0 1rem 0;
+        margin: 0 0 1.6rem 0;
     }
 
     .aboutContent p:last-child {

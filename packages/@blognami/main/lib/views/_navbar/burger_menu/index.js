@@ -4,13 +4,13 @@ export const styles = `
         background-color: #ffffff;
         border-radius: 16px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
-        padding: 2rem;
+        padding: 3.2rem;
         max-width: 420px;
         width: 100%;
         margin: 0 auto;
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: 3.2rem;
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         animation: slideInUp 0.3s ease-out;
@@ -31,7 +31,7 @@ export const styles = `
 
     @media (max-width: 767px) {
         .root {
-            padding: 1.5rem;
+            padding: 2.4rem;
             border-radius: 12px;
             margin: 0;
             width: 100%;
@@ -41,7 +41,7 @@ export const styles = `
 
     @media (min-width: 768px) {
         .root {
-            margin: 1rem auto;
+            margin: 1.6rem auto;
             width: 100%;
             max-width: 420px;
         }
