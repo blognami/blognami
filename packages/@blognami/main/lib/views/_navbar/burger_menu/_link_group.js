@@ -41,26 +41,9 @@ export const styles = `
         white-space: nowrap;
     }
 
-    .link::before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 0;
-        height: 2px;
-        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-        border-radius: 1px;
-        transition: width 0.2s ease;
-    }
-
     .link:hover {
         color: #1f2937;
-        background-color: rgba(59, 130, 246, 0.05);
-    }
-
-    .link:hover::before {
-        width: 3px;
+        background-color: #f8fafc;
     }
 
     .link:active {

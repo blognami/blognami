@@ -16,18 +16,6 @@ export const styles = `
         margin-bottom: 1.6rem;
         padding-bottom: 0.8rem;
         border-bottom: 2px solid #f3f4f6;
-        position: relative;
-    }
-
-    .label::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        width: 3.2rem;
-        height: 2px;
-        background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-        border-radius: 1px;
     }
 `;
 

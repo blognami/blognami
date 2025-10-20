@@ -16,14 +16,14 @@ export const styles = `
     }
 
     .aboutContent a {
-        color: #3b82f6;
+        color: #374151;
         text-decoration: none;
         font-weight: 500;
         transition: color 0.2s ease;
     }
 
     .aboutContent a:hover {
-        color: #1d4ed8;
+        color: #1f2937;
         text-decoration: underline;
     }
 `;
