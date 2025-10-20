@@ -2,7 +2,6 @@
 export const styles = ({ colors }) => `
     .article {
         max-width: 650px;
-        margin: 0 auto 0 auto;
     }
 
     .header {
