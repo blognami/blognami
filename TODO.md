@@ -5,6 +5,8 @@
 - Refactor navbar
     - use hooks
 
+- Remove `expose()` feature.
+
 ---
 
 - Extract out the `pinstripejs.com` layout into `@pinstripe/main`
