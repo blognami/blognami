@@ -210,7 +210,7 @@ export default {
                                     ${(() => {
                                         if(previousPost) return this.renderHtml`
                                             <a class="${this.cssClasses.navigationLink}" href="/${previousPost.slug}" data-test-id="previous-post">
-                                                <span class="${this.cssClasses.navigationLabel}">Previous issue</span>
+                                                <span class="${this.cssClasses.navigationLabel}">Previous post</span>
                                                 <h4 class="${this.cssClasses.navigationTitle}">${previousPost.title}</h4>
                                             </a>
                                         `;
@@ -223,7 +223,7 @@ export default {
                                     ${(() => {
                                         if(nextPost) return this.renderHtml`
                                             <a class="${this.cssClasses.navigationLink}" href="/${nextPost.slug}" data-test-id="next-post">
-                                                <span class="${this.cssClasses.navigationLabel}">Next issue</span>
+                                                <span class="${this.cssClasses.navigationLabel}">Next post</span>
                                                 <h4 class="${this.cssClasses.navigationTitle}">${nextPost.title}</h4>
                                             </a>
                                         `;
