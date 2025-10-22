@@ -1,52 +1,7 @@
 
 export const styles = ({ colors }) => `
-    .article {
-        max-width: 650px;
-    }
-
-    .header {
-        margin-bottom: 4rem;
-    }
-    
-    .status-bar {
-        margin-bottom: 2rem;
-        text-align: right;
-    }
-
     .tag {
         color: ${colors.semantic.accent};
-    }
-
-    .meta {
-        display: block;
-        margin-bottom: 2rem;
-        font-size: 1.2rem;
-        font-weight: 500;
-        line-height: 1;
-        color: ${colors.semantic.secondaryText};
-        text-transform: uppercase;
-    }
-
-    .meta a {
-        font-weight: 600;
-    }
-
-    .title {
-        font-size: 7.4rem;
-        font-weight: 600;
-        line-height: 1;
-    }
-
-    .footer {
-        padding-top: 3.2rem;
-        margin-top: 8rem;
-        border-top: 1px solid ${colors.gray[200]};
-    }
-
-    @media (max-width: 767px) {
-        .title {
-            font-size: 4.2rem;
-        }
     }
 
     .navigation {
@@ -150,151 +105,137 @@ export default {
             meta,
             body: this.renderHtml`
                 <section>
-                    <article class="${this.cssClasses.article}">
-                        ${() => {
+                    ${this.renderView('_article', {
+                        statusBar: (() => {
                             if(!isAdmin) return;
                             
-                            if(post.published) return this.renderHtml`
-                                <div class="${this.cssClasses.statusBar}">
-                                    ${this.renderView('_button', {
-                                        tagName: 'a',
-                                        href: `/_actions/admin/unpublish_post?id=${post.id}`,
-                                        target: '_overlay',
-                                        ['data-test-id']: 'unpublish-post',
-                                        ['data-method']: 'post',
-                                        ['data-confirm']: 'Are you really sure you want to unpublish this post?',
-                                        body: 'Unpublish'
-                                    })}
-                                </div>
-                            `;
+                            if(post.published) return this.renderView('_button', {
+                                tagName: 'a',
+                                href: `/_actions/admin/unpublish_post?id=${post.id}`,
+                                target: '_overlay',
+                                ['data-test-id']: 'unpublish-post',
+                                ['data-method']: 'post',
+                                ['data-confirm']: 'Are you really sure you want to unpublish this post?',
+                                body: 'Unpublish'
+                            });
 
-                            return this.renderHtml`
-                                <div class="${this.cssClasses.statusBar}">
-                                    ${this.renderView('_button', {
-                                        tagName: 'a',
-                                        href: `/_actions/admin/publish_post?id=${post.id}`,
-                                        target: '_overlay',
-                                        ['data-test-id']: 'publish-post',
-                                        body: 'Publish'
-                                    })}
-                                </div>
-                            `;
-                        }}
-                        <header class="${this.cssClasses.header}">
-                            <span class="${this.cssClasses.meta}">
-                                By <a href="/${postUser.slug}">${postUser.name}</a>
-                                
-                                ${async () => {
-                                    if(await post.tags.count() > 0) return this.renderHtml`
-                                        in
-                                        ${post.tags.all().map(({ slug, name }, i) => this.renderHtml`${i > 0 ? ', ' : ''}<a class="${this.cssClasses.tag}" href="/${slug}">${name}</a>`)}
-                                    `;
-                                }}
-                                ${() => {
-                                    if(post.publishedAt) return this.renderHtml`
-                                        —
-                                        <time datetime="${this.formatDate(post.publishedAt, 'yyyy-MM-dd')}" data-test-id="post-published-at">${this.formatDate(post.publishedAt)}</time>
-                                    `;
-                                }}
-                            </span>
+                            return this.renderView('_button', {
+                                tagName: 'a',
+                                href: `/_actions/admin/publish_post?id=${post.id}`,
+                                target: '_overlay',
+                                ['data-test-id']: 'publish-post',
+                                body: 'Publish'
+                            });
+                        })(),
+                        meta: this.renderHtml`
+                            By <a href="/${postUser.slug}">${postUser.name}</a>
                             
-                            ${() => {
-                                if(isAdmin) return this.renderView('_editable_area', {
-                                    url: `/_actions/admin/edit_post_title?id=${post.id}`,
-                                    body: this.renderHtml`<h1 class="${this.cssClasses.title}" data-test-id="post-title">${post.title}</h1>`,
-                                    linkTestId: "edit-post-title"
-                                });
-                                return this.renderHtml`
-                                    <h1 class="${this.cssClasses.title}" data-test-id="post-title">${post.title}</h1>
+                            ${async () => {
+                                if(await post.tags.count() > 0) return this.renderHtml`
+                                    in
+                                    ${post.tags.all().map(({ slug, name }, i) => this.renderHtml`${i > 0 ? ', ' : ''}<a class="${this.cssClasses.tag}" href="/${slug}">${name}</a>`)}
                                 `;
                             }}
-    
-                        </header>
-
-                        ${() => {
+                            ${(() => {
+                                if(post.publishedAt) return this.renderHtml`
+                                    —
+                                    <time datetime="${this.formatDate(post.publishedAt, 'yyyy-MM-dd')}" data-test-id="post-published-at">${this.formatDate(post.publishedAt)}</time>
+                                `;
+                            })()}
+                        `,
+                        title: (() => {
                             if(isAdmin) return this.renderView('_editable_area', {
-                                url: `/_actions/admin/edit_post_body?id=${post.id}`,
-                                body: this.renderView('_content', {
+                                url: `/_actions/admin/edit_post_title?id=${post.id}`,
+                                body: this.renderHtml`<span data-test-id="post-title">${post.title}</span>`,
+                                linkTestId: "edit-post-title"
+                            });
+                            return this.renderHtml`<span data-test-id="post-title">${post.title}</span>`;
+                        })(),
+                        body: this.renderHtml`
+                            ${(() => {
+                                if(isAdmin) return this.renderView('_editable_area', {
+                                    url: `/_actions/admin/edit_post_body?id=${post.id}`,
+                                    body: this.renderView('_content', {
+                                        body: this.renderMarkdown(post.body),
+                                        testId: 'post-body'
+                                    }),
+                                    linkTestId: "edit-post-body"
+                                });
+                                if(!userHasAccess) return this.renderView('_subscription_cta', {
+                                    access: post.access,
+                                });
+                                return this.renderView('_content', {
                                     body: this.renderMarkdown(post.body),
                                     testId: 'post-body'
-                                }),
-                                linkTestId: "edit-post-body"
-                            });
-                            if(!userHasAccess) return this.renderView('_subscription_cta', {
-                                access: post.access,
-                            });
-                            return this.renderView('_content', {
-                                body: this.renderMarkdown(post.body),
-                                testId: 'post-body'
-                            });
-                        }}
-    
-                        ${() => {
-                            if(isAdmin) return this.renderHtml`
-                                ${this.renderView('_edit_tagable_tags', { tagable: post })}
+                                });
+                            })()}
 
-                                ${this.renderView('_editable_area', {
-                                    url: `/_actions/admin/edit_post_meta?id=${post.id}`,
-                                    body: this.renderHtml`
-                                        <p><b>Access:</b> ${post.access}</p>
-                                        <p><b>Meta title:</b> ${post.metaTitle}</p>
-                                        <p><b>Meta description:</b> ${post.metaDescription}</p>
-                                        <p><b>Slug:</b> ${post.slug}</p>
-                                        <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
-                                        <p><b>Enable comments:</b> ${post.enableComments ? 'true' : 'false'}</p>
-                                    `,
-                                    linkTestId: "edit-post-meta",
-                                    bodyTestId: "post-meta"
-                                })}
+                            ${(() => {
+                                if(isAdmin) return this.renderHtml`
+                                    ${this.renderView('_edit_tagable_tags', { tagable: post })}
 
-                                ${this.renderView('_danger_area', {
-                                    body: this.renderView('_button', {
-                                        tagName: 'a',
-                                        href: `/_actions/admin/delete_post?id=${post.id}`,
-                                        target: '_overlay',
-                                        isDangerous: true,
-                                        isFullWidth: true,
-                                        ['data-method']: 'post',
-                                        ['data-confirm']: 'Are you really sure you want to delete this post?',
-                                        ['data-test-id']: 'delete-post',
-                                        body: 'Delete this Post!'
-                                    })
-                                })}
-                            `;
-                        }}
-                        
-                        ${() => {
-                            if(userHasAccess && post.enableComments) return this.renderView('_comments', { commentable: post })
-                        }}
-    
-                        <footer class="${this.cssClasses.footer}">
+                                    ${this.renderView('_editable_area', {
+                                        url: `/_actions/admin/edit_post_meta?id=${post.id}`,
+                                        body: this.renderHtml`
+                                            <p><b>Access:</b> ${post.access}</p>
+                                            <p><b>Meta title:</b> ${post.metaTitle}</p>
+                                            <p><b>Meta description:</b> ${post.metaDescription}</p>
+                                            <p><b>Slug:</b> ${post.slug}</p>
+                                            <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
+                                            <p><b>Enable comments:</b> ${post.enableComments ? 'true' : 'false'}</p>
+                                        `,
+                                        linkTestId: "edit-post-meta",
+                                        bodyTestId: "post-meta"
+                                    })}
+
+                                    ${this.renderView('_danger_area', {
+                                        body: this.renderView('_button', {
+                                            tagName: 'a',
+                                            href: `/_actions/admin/delete_post?id=${post.id}`,
+                                            target: '_overlay',
+                                            isDangerous: true,
+                                            isFullWidth: true,
+                                            ['data-method']: 'post',
+                                            ['data-confirm']: 'Are you really sure you want to delete this post?',
+                                            ['data-test-id']: 'delete-post',
+                                            body: 'Delete this Post!'
+                                        })
+                                    })}
+                                `;
+                            })()}
+                            
+                            ${(() => {
+                                if(userHasAccess && post.enableComments) return this.renderView('_comments', { commentable: post })
+                            })()}
+                        `,
+                        footer: this.renderHtml`
                             <nav class="${this.cssClasses.navigation}">
                                 <div class="${this.cssClasses.navigationPrevious}">
-                                    ${() => {
+                                    ${(() => {
                                         if(previousPost) return this.renderHtml`
                                             <a class="${this.cssClasses.navigationLink}" href="/${previousPost.slug}" data-test-id="previous-post">
                                                 <span class="${this.cssClasses.navigationLabel}">Previous issue</span>
                                                 <h4 class="${this.cssClasses.navigationTitle}">${previousPost.title}</h4>
                                             </a>
                                         `;
-                                    }}
+                                    })()}
                                 </div>
-    
+
                                 <div class="${this.cssClasses.navigationMiddle}"></div>
-    
+
                                 <div class="${this.cssClasses.navigationNext}">
-                                    ${() => {
+                                    ${(() => {
                                         if(nextPost) return this.renderHtml`
                                             <a class="${this.cssClasses.navigationLink}" href="/${nextPost.slug}" data-test-id="next-post">
                                                 <span class="${this.cssClasses.navigationLabel}">Next issue</span>
                                                 <h4 class="${this.cssClasses.navigationTitle}">${nextPost.title}</h4>
                                             </a>
                                         `;
-                                    }}
+                                    })()}
                                 </div>
                             </nav>
-                        </footer>
-                    </article>
+                        `
+                    })}
                 </section>
             `
         });

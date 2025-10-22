@@ -13,10 +13,6 @@ export const styles = ({ colors }) => `
         text-align: right;
     }
 
-    .tag {
-        color: ${colors.semantic.accent};
-    }
-
     .meta {
         display: block;
         margin-bottom: 2rem;
