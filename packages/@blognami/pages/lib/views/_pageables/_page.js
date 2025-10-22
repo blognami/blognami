@@ -1,8 +1,4 @@
 
-export const styles = ({ colors }) => `
-
-`;
-
 export default {
     async render() {
         const { page } = this.params;
