@@ -1,38 +1,6 @@
 
 export const styles = ({ colors }) => `
-    .article {
-        max-width: 650px;
-    }
 
-    .header {
-        margin-bottom: 4rem;
-    }
-
-    .meta {
-        display: block;
-        margin-bottom: 2rem;
-        font-size: 1.2rem;
-        font-weight: 500;
-        line-height: 1;
-        color: ${colors.semantic.secondaryText};
-        text-transform: uppercase;
-    }
-
-    .meta a {
-        font-weight: 600;
-    }
-
-    .title {
-        font-size: 7.4rem;
-        font-weight: 600;
-        line-height: 1;
-    }
-
-    @media (max-width: 767px) {
-        .title {
-            font-size: 4.2rem;
-        }
-    }
 `;
 
 export default {
@@ -59,47 +27,33 @@ export default {
             meta,
             body: this.renderHtml`
                 <section>
-                    <article class="${this.cssClasses.article}">
-                        <header class="${this.cssClasses.header}">
-                            <span class="${this.cssClasses.meta}">
-                                By <a href="/${pageUser.slug}">${pageUser.name}</a>
-                                —
-                                <time datetime="${this.formatDate(page.publishedAt, 'yyyy-MM-dd')}" data-test-id="page-published-at">${this.formatDate(page.publishedAt)}</time>
-                            </span>
-                            
-                            ${() => {
-                                if(isAdmin) return this.renderView('_editable_area', {
-                                    url: `/_actions/admin/edit_page_title?id=${page.id}`,
-                                    body: this.renderHtml`<h1 class="${this.cssClasses.title}" data-test-id="page-title">${page.title}</h1>`,
-                                    linkTestId: "edit-page-title"
-                                });
-                                return this.renderHtml`
-                                    <h1 class="${this.cssClasses.title}" data-test-id="page-title">${page.title}</h1>
-                                `;
-                            }}
-    
-                        </header>
-                        
-                        ${() => {
-                            if(isAdmin) return this.renderView('_editable_area', {
+                    ${this.renderView('_article', {
+                        meta: this.renderHtml`
+                            By <a href="/${pageUser.slug}">${pageUser.name}</a>
+                            —
+                            <time datetime="${this.formatDate(page.publishedAt, 'yyyy-MM-dd')}" data-test-id="page-published-at">${this.formatDate(page.publishedAt)}</time>
+                        `,
+                        title: isAdmin ? this.renderView('_editable_area', {
+                            url: `/_actions/admin/edit_page_title?id=${page.id}`,
+                            body: this.renderHtml`<span data-test-id="page-title">${page.title}</span>`,
+                            linkTestId: "edit-page-title"
+                        }) : this.renderHtml`<span data-test-id="page-title">${page.title}</span>`,
+                        body: this.renderHtml`
+                            ${isAdmin ? this.renderView('_editable_area', {
                                 url: `/_actions/admin/edit_page_body?id=${page.id}`,
                                 body: this.renderView('_content', {
                                     body: this.renderMarkdown(page.body),
                                     testId: 'page-body'
                                 }),
                                 linkTestId: "edit-page-body"
-                            });
-                            if(!userHasAccess) return this.renderView('_subscription_cta', {
+                            }) : !userHasAccess ? this.renderView('_subscription_cta', {
                                 access: page.access,
-                            });
-                            return this.renderView('_content', {
+                            }) : this.renderView('_content', {
                                 body: this.renderMarkdown(page.body),
                                 testId: 'page-body'
-                            });
-                        }}
-    
-                        ${() => {
-                            if(isAdmin) return this.renderHtml`
+                            })}
+
+                            ${isAdmin ? this.renderHtml`
                                 ${this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_page_meta?id=${page.id}`,
                                     body: this.renderHtml`
@@ -126,10 +80,9 @@ export default {
                                         body: 'Delete this Page!'
                                     })
                                 })}
-                            `;
-                        }}
-                            
-                    </article>
+                            ` : ''}
+                        `
+                    })}
                 </section>
             `
         });
