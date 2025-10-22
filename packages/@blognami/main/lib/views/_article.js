@@ -27,6 +27,11 @@ export const styles = ({ colors }) => `
         font-weight: 600;
     }
 
+    .meta em {
+        color: ${colors.semantic.accent};
+        font-style: normal;
+    }
+
     .title {
         font-size: 7.4rem;
         font-weight: 600;

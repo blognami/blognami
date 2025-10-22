@@ -1,9 +1,5 @@
 
 export const styles = ({ colors }) => `
-    .tag {
-        color: ${colors.semantic.accent};
-    }
-
     .navigation {
         display: grid;
         grid-template-columns: 1fr auto 1fr;
@@ -133,7 +129,7 @@ export default {
                             ${async () => {
                                 if(await post.tags.count() > 0) return this.renderHtml`
                                     in
-                                    ${post.tags.all().map(({ slug, name }, i) => this.renderHtml`${i > 0 ? ', ' : ''}<a class="${this.cssClasses.tag}" href="/${slug}">${name}</a>`)}
+                                    ${post.tags.all().map(({ slug, name }, i) => this.renderHtml`${i > 0 ? ', ' : ''}<a href="/${slug}"><em>${name}</em></a>`)}
                                 `;
                             }}
                             ${(() => {
