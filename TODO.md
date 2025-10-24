@@ -1,9 +1,10 @@
 
 Refactor and remove `_article`:
- - Add max-width to `_layout`
- - Add footer styles to `_pageables/_post`
- - Add status-bar styles to `_pageables/_post`
- - Create `_meta_bar`
+- Add max-width to `_layout`
+  - We can probably remove the max width off a lot of child elements. 
+- Add footer styles to `_pageables/_post`
+- Add status-bar styles to `_pageables/_post`
+- Create `_meta_bar`
 
 ---
 
