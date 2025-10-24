@@ -205,7 +205,7 @@ export function describeApp(role) {
               const tagNames = ["Apple", "Pear", "Plum"];
               
               for (const name of tagNames) {
-                await page.getByTestId("navbar").getByTestId("add-content").click();
+                await page.getByTestId("navbar").getByTestId("add").click();
                 await helpers.topPopover().getByTestId("add-tag").click();
                 await expect(helpers.topModal()).toContainText("Add tag");
                 await helpers.submitForm({ name });
@@ -624,7 +624,7 @@ export function describeApp(role) {
             await helpers.topModal().getByText("OK").click();
             await expect(page.getByTestId("main").getByTestId("user-meta")).toBeVisible();
 
-            await page.getByTestId("navbar").getByTestId("add-content").click();
+            await page.getByTestId("navbar").getByTestId("add").click();
             await helpers.topPopover().getByTestId("add-user").click();
             await expect(helpers.topModal()).toContainText("Add user");
             await helpers.submitForm({
@@ -651,8 +651,8 @@ function describeNavbar(role) {
     test(`should have the correct contents`, async ({ page, helpers }) => {
       await expect(page.getByTestId("navbar").getByTestId("title")).toContainText("Lorem ipsum");
       if (role === "admin") {
-        await expect(page.getByTestId("navbar").getByTestId("find-content")).toContainText("Find");
-        await expect(page.getByTestId("navbar").getByTestId("add-content")).toContainText("Add");
+        await expect(page.getByTestId("navbar").getByTestId("find")).toContainText("Find");
+        await expect(page.getByTestId("navbar").getByTestId("add")).toContainText("Add");
         await expect(page.getByTestId("navbar").getByTestId("edit-settings")).toContainText("Settings");
         await expect(page.getByTestId("navbar").getByTestId("your-account")).toContainText("Admin");
       } else {
@@ -662,7 +662,7 @@ function describeNavbar(role) {
 
     if (role === "admin") {
       test(`should have an interface to allow the user to add a page`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("add-content").click();
+        await page.getByTestId("navbar").getByTestId("add").click();
         await helpers.topPopover().getByTestId("add-page").click();
         await expect(helpers.topModal()).toContainText("Add page");
         await helpers.submitForm({ title: "Apple plum" });
@@ -670,7 +670,7 @@ function describeNavbar(role) {
       });
 
       test(`should have an interface to allow the user to add a post`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("add-content").click();
+        await page.getByTestId("navbar").getByTestId("add").click();
         await helpers.topPopover().getByTestId("add-post").click();
         await expect(helpers.topModal()).toContainText("Add post");
         await helpers.submitForm({ title: "Apple pear" });
@@ -678,7 +678,7 @@ function describeNavbar(role) {
       });
 
       test(`should have an interface to allow the user to add a tag`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("add-content").click();
+        await page.getByTestId("navbar").getByTestId("add").click();
         await helpers.topPopover().getByTestId("add-tag").click();
         await expect(helpers.topModal()).toContainText("Add tag");
         await helpers.submitForm({ name: "Apple peach" });
@@ -686,7 +686,7 @@ function describeNavbar(role) {
       });
 
       test(`should have an interface to allow the user to add a user`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("add-content").click();
+        await page.getByTestId("navbar").getByTestId("add").click();
         await helpers.topPopover().getByTestId("add-user").click();
         await expect(helpers.topModal()).toContainText("Add user");
         await helpers.submitForm({
@@ -697,7 +697,7 @@ function describeNavbar(role) {
       });
 
       test(`should have an interface to allow the user to find a post`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("find-content").click();
+        await page.getByTestId("navbar").getByTestId("find").click();
         await helpers.topPopover().getByTestId("find-post").click();
         await expect(helpers.topModal()).toContainText("Posts");
         await expect(helpers.topModal()).not.toContainText("Graham Place");

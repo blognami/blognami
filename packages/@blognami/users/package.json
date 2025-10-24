@@ -1,20 +1,19 @@
 {
   "type": "module",
-  "name": "@blognami/pages",
-  "description": "Implements pages in the main app.",
+  "name": "@blognami/users",
+  "description": "Implements user functionality in the main app.",
   "version": "0.35.0",
+  "author": "Jody Salt",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "@blognami/images": "^0.35.0",
-    "@blognami/main": "^0.35.0",
-    "@blognami/users": "^0.35.0"
+    "@blognami/main": "^0.35.0"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/blognami/blognami.git",
-    "directory": "packages/@blognami/pages"
+    "directory": "packages/@blognami/users"
   }
 }

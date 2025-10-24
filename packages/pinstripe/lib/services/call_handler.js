@@ -1,6 +1,5 @@
 
 import { Workspace } from "../workspace.js";
-import { View } from '../view.js';
 
 export default {
     meta(){
@@ -30,7 +29,7 @@ export default {
         let out = await this.renderGuardViews(viewName, this.params);
         if(out) return out;
 
-        if(View.for(await this.viewMap[viewName]).exposed){
+        if(!viewName.match(/(^|\/)_[^\/]+(|\/index)$/)){
             out = await this.renderView(viewName, this.params);
             if(out) return out;
         }
