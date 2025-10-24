@@ -1,4 +1,12 @@
 
+Refactor and remove `_article`.
+ - Add max-width to `_layout`
+ - Add footer styles to `_pageables/_post`
+ - Add status-bar styles to `_pageables/_post`
+ - Create `_meta_bar`
+
+---
+
 - Extract out the `pinstripejs.com` layout into `@pinstripe/main`
     - Make blognami more static aware.
     - Split up into smaller packages.
