@@ -1,5 +1,5 @@
 
-Refactor and remove `_article`.
+Refactor and remove `_article`:
  - Add max-width to `_layout`
  - Add footer styles to `_pageables/_post`
  - Add status-bar styles to `_pageables/_post`
