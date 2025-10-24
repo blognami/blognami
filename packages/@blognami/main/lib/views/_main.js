@@ -14,8 +14,6 @@ export const styles = `
         max-width: none;
     }
 
-
-
     @media (max-width: 768px) {
         .root {
             padding: 0 1.6rem;
