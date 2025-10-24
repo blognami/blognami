@@ -43,12 +43,13 @@ Identify and move ALL related components:
 - Menu Items: Extract [feature] menu items from lib/services/menus.js
 
 **File Importers - CRITICAL:**
-- Only create _file_importer.js at TOP LEVEL directories (models/, services/, views/, migrations/)
+- Only create _file_importer.js at TOP LEVEL directories (models/, services/, views/, migrations/, background_jobs/)
 - Each _file_importer.js should ONLY export the base class:
   - models/_file_importer.js: `export { Row as default } from '@pinstripe/database';`
   - services/_file_importer.js: `export { ServiceFactory as default } from 'pinstripe';`
   - views/_file_importer.js: `export { View as default } from 'pinstripe';`
   - migrations/_file_importer.js: `export { Migration as default } from '@pinstripe/database';`
+  - background_jobs/_file_importer.js: `export { BackgroundJob as default } from 'pinstripe';`
 - DO NOT create _file_importer.js in subdirectories like _actions/admin/, _actions/user/, etc.
 
 **Views Selection:**
