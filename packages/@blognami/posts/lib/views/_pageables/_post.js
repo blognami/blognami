@@ -217,11 +217,10 @@ export default {
                                 `;
                             })()}
                             
-                            ${(() => {
+                            ${() => {
                                 if(userHasAccess && post.enableComments) return this.renderView('_comments', { commentable: post })
-                            })()}
-                        `,
-                        footer: this.renderHtml`
+                            }}
+                        
                             <nav class="${this.cssClasses.navigation}">
                                 <div class="${this.cssClasses.navigationPrevious}">
                                     ${(() => {
@@ -247,7 +246,7 @@ export default {
                                     })()}
                                 </div>
                             </nav>
-                        `
+                        `,
                     })}
                 </section>
             `
