@@ -1,9 +1,5 @@
 
 export const styles = ({ colors }) => `
-    .article {
-        
-    }
-
     .header {
         margin-bottom: 4rem;
     }
