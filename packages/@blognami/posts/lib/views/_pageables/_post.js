@@ -126,14 +126,6 @@ export default {
                                 `;
                             })()}
                         `,
-                        title: (() => {
-                            if(isAdmin) return this.renderView('_editable_area', {
-                                url: `/_actions/admin/edit_post_title?id=${post.id}`,
-                                body: this.renderHtml`<span data-test-id="post-title">${post.title}</span>`,
-                                linkTestId: "edit-post-title"
-                            });
-                            return this.renderHtml`<span data-test-id="post-title">${post.title}</span>`;
-                        })(),
                         body: this.renderHtml`
                             ${() => {
                                 if(!isAdmin) return;
@@ -162,23 +154,31 @@ export default {
                                     </div>
                                 `;
                             }}
-                            ${(() => {
-                                if(isAdmin) return this.renderView('_editable_area', {
-                                    url: `/_actions/admin/edit_post_body?id=${post.id}`,
-                                    body: this.renderView('_content', {
-                                        body: this.renderMarkdown(post.body),
-                                        testId: 'post-body'
-                                    }),
-                                    linkTestId: "edit-post-body"
-                                });
-                                if(!userHasAccess) return this.renderView('_subscription_cta', {
-                                    access: post.access,
-                                });
-                                return this.renderView('_content', {
-                                    body: this.renderMarkdown(post.body),
-                                    testId: 'post-body'
-                                });
-                            })()}
+
+                            ${this.renderView('_content', {
+                                body: this.renderHtml`
+                                    ${() => {
+                                        if(isAdmin) return this.renderView('_editable_area', {
+                                            url: `/_actions/admin/edit_post_title?id=${post.id}`,
+                                            body: this.renderHtml`<h1>${post.title}</h1>`,
+                                            linkTestId: "edit-post-title"
+                                        });
+                                        return this.renderHtml`<h1>${post.title}</h1>`;
+                                    }}
+
+                                    ${() => {
+                                        if(isAdmin) return this.renderView('_editable_area', {
+                                            url: `/_actions/admin/edit_post_body?id=${post.id}`,
+                                            body: this.renderMarkdown(post.body),
+                                            linkTestId: "edit-post-body"
+                                        });
+                                        if(!userHasAccess) return this.renderView('_subscription_cta', {
+                                            access: post.access,
+                                        });
+                                        return this.renderMarkdown(post.body);
+                                    }}
+                                `
+                            })}
 
                             ${(() => {
                                 if(isAdmin) return this.renderHtml`
