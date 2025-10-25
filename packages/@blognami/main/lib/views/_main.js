@@ -11,7 +11,7 @@ export const styles = `
     .content {
         flex: 1;
         padding: 3.2rem 0 3.2rem 3.2rem;
-        max-width: none;
+        max-width: 650px;
     }
 
     @media (max-width: 768px) {

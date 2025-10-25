@@ -1,7 +1,7 @@
 
 export const styles = ({ colors }) => `
     .article {
-        max-width: 650px;
+        
     }
 
     .header {
