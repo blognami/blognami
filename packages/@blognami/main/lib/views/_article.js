@@ -3,11 +3,6 @@ export const styles = ({ colors }) => `
     .header {
         margin-bottom: 4rem;
     }
-    
-    .status-bar {
-        margin-bottom: 2rem;
-        text-align: right;
-    }
 
     .meta {
         display: block;

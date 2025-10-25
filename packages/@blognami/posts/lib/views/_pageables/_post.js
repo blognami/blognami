@@ -1,5 +1,10 @@
 
 export const styles = ({ colors }) => ` 
+    .status-bar {
+        margin-bottom: 2rem;
+        text-align: right;
+    }
+
     .navigation {
         padding-top: 3.2rem;
         margin-top: 8rem;
@@ -105,27 +110,6 @@ export default {
             body: this.renderHtml`
                 <section>
                     ${this.renderView('_article', {
-                        statusBar: (() => {
-                            if(!isAdmin) return;
-                            
-                            if(post.published) return this.renderView('_button', {
-                                tagName: 'a',
-                                href: `/_actions/admin/unpublish_post?id=${post.id}`,
-                                target: '_overlay',
-                                ['data-test-id']: 'unpublish-post',
-                                ['data-method']: 'post',
-                                ['data-confirm']: 'Are you really sure you want to unpublish this post?',
-                                body: 'Unpublish'
-                            });
-
-                            return this.renderView('_button', {
-                                tagName: 'a',
-                                href: `/_actions/admin/publish_post?id=${post.id}`,
-                                target: '_overlay',
-                                ['data-test-id']: 'publish-post',
-                                body: 'Publish'
-                            });
-                        })(),
                         meta: this.renderHtml`
                             By <a href="/${postUser.slug}">${postUser.name}</a>
                             
@@ -151,6 +135,33 @@ export default {
                             return this.renderHtml`<span data-test-id="post-title">${post.title}</span>`;
                         })(),
                         body: this.renderHtml`
+                            ${() => {
+                                if(!isAdmin) return;
+
+                                return this.renderHtml`
+                                    <div class="${this.cssClasses.statusBar}">
+                                        ${() => {
+                                            if(post.published) return this.renderView('_button', {
+                                                tagName: 'a',
+                                                href: `/_actions/admin/unpublish_post?id=${post.id}`,
+                                                target: '_overlay',
+                                                ['data-test-id']: 'unpublish-post',
+                                                ['data-method']: 'post',
+                                                ['data-confirm']: 'Are you really sure you want to unpublish this post?',
+                                                body: 'Unpublish'
+                                            });
+
+                                            return this.renderView('_button', {
+                                                tagName: 'a',
+                                                href: `/_actions/admin/publish_post?id=${post.id}`,
+                                                target: '_overlay',
+                                                ['data-test-id']: 'publish-post',
+                                                body: 'Publish'
+                                            });
+                                        }}
+                                    </div>
+                                `;
+                            }}
                             ${(() => {
                                 if(isAdmin) return this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_post_body?id=${post.id}`,
