@@ -34,12 +34,6 @@ export const styles = ({ colors }) => `
         line-height: 1;
     }
 
-    .footer {
-        padding-top: 3.2rem;
-        margin-top: 8rem;
-        border-top: 1px solid ${colors.gray[200]};
-    }
-
     @media (max-width: 767px) {
         .title {
             font-size: 4.2rem;

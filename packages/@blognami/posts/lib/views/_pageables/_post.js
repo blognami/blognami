@@ -1,6 +1,9 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ colors }) => ` 
     .navigation {
+        padding-top: 3.2rem;
+        margin-top: 8rem;
+        border-top: 1px solid ${colors.gray[200]};
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         column-gap: 2.4rem;
