@@ -1,7 +1,7 @@
 export const styles = `
     .root {
         width: 19.2rem;
-        padding: 3.2rem 0 3.2rem 3.2rem;
+        padding: 3.2rem 0 3.2rem 0;
         position: sticky;
         top: 6.4rem;
         height: calc(100vh - 6.4rem);

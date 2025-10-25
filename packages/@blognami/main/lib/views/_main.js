@@ -6,11 +6,12 @@ export const styles = `
         margin: 0 auto;
         width: 100%;
         padding: 0 2.4rem;
+        gap: 3.2rem;
     }
 
     .content {
         flex: 1;
-        padding: 3.2rem 0 3.2rem 3.2rem;
+        padding: 3.2rem 0 3.2rem 0;
         max-width: 650px;
     }
 
