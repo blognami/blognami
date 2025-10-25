@@ -158,24 +158,27 @@ export default {
                             ${this.renderView('_content', {
                                 body: this.renderHtml`
                                     ${() => {
+                                        const content = this.renderHtml`<h1 data-test-id="post-title">${post.title}</h1>`;
+
                                         if(isAdmin) return this.renderView('_editable_area', {
                                             url: `/_actions/admin/edit_post_title?id=${post.id}`,
-                                            body: this.renderHtml`<h1>${post.title}</h1>`,
+                                            body: content,
                                             linkTestId: "edit-post-title"
                                         });
-                                        return this.renderHtml`<h1>${post.title}</h1>`;
+                                        return content;
                                     }}
 
                                     ${() => {
+                                        const content = this.renderHtml`<div data-test-id="post-body">${this.renderMarkdown(post.body)}</div>`;
                                         if(isAdmin) return this.renderView('_editable_area', {
                                             url: `/_actions/admin/edit_post_body?id=${post.id}`,
-                                            body: this.renderMarkdown(post.body),
+                                            body: content,
                                             linkTestId: "edit-post-body"
                                         });
                                         if(!userHasAccess) return this.renderView('_subscription_cta', {
                                             access: post.access,
                                         });
-                                        return this.renderMarkdown(post.body);
+                                        return content;
                                     }}
                                 `
                             })}
