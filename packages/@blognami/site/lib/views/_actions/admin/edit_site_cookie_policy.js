@@ -1,10 +1,9 @@
-
 export default {
     async render(){
         return this.renderForm(this.database.site, {
             fields: [
                 {  
-                    name: 'privacyPolicy',
+                    name: 'cookiePolicy',
                     type: '_markdown_editor'
                 }
             ],

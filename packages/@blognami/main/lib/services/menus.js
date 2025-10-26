@@ -42,7 +42,6 @@ export default {
                     label: 'Settings', 
                     testId: 'edit-settings',
                     children: [
-                        { label: 'Site', url: '/_actions/admin/edit_site_meta', target: '_overlay', testId: 'edit-site-meta' },
                         { label: 'Newsletter', url: '/_actions/admin/edit_newsletter', target: '_overlay', testId: 'edit-site-membership' },
                         { label: 'Stripe', url: '/_actions/admin/edit_stripe', target: '_overlay', testId: 'edit-stripe' }
                     ]
@@ -53,7 +52,6 @@ export default {
                     label: 'Settings', 
                     testId: 'edit-settings',
                     children: [
-                        { label: 'Site', url: '/_actions/admin/edit_site_meta', target: '_overlay', testId: 'edit-site-meta' },
                         { label: 'Newsletter', url: '/_actions/admin/edit_newsletter', target: '_overlay', testId: 'edit-site-membership' },
                         { label: 'Stripe', url: '/_actions/admin/edit_stripe', target: '_overlay', testId: 'edit-stripe' }
                     ]
@@ -65,9 +63,7 @@ export default {
             // Add sidebar content to burger menu
             this.addMenuItem('burgerMenu', { label: 'About', partial: '_navbar/burger_menu/_about_section', displayOrder: 1 });
 
-            this.addMenuItem('footer', 'Legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });
-            this.addMenuItem('footer', 'Legal', { label: 'Privacy Policy', url: '/legal/privacy-policy' });
-            this.addMenuItem('footer', 'Legal', { label: 'Cookie Policy', url: '/legal/cookie-policy' });
+
         });
 
         this.addHook('normalizeMenus', function(){

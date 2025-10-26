@@ -1,4 +1,3 @@
-
 export default {
     async render(){
         const { title } = this.params;

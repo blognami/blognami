@@ -12,7 +12,6 @@
     "clean": "rm -rf ./node_modules"
   },
   "dependencies": {
-    "@blognami/revisions": "^0.35.0",
     "@pinstripe/database": "^0.35.0",
     "@pinstripe/markdown": "^0.35.0",
     "@pinstripe/one-time-token": "^0.35.0",
