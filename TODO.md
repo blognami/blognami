@@ -6,7 +6,7 @@
         - ~~`@blognami/users`~~
         - ~~`@blognami/sessions`~~
         - ~~`@blognami/stripe`~~
-        - `@blognami/newsletter`
+        - ~~`@blognami/newsletter`~~
         - ~~`@blognami/revisions`~~
         - ~~`@blognami/comments`~~
         - ~~`@blognami/home`?~~
