@@ -23,7 +23,6 @@ export default {
             meta,
             body: this.renderHtml`
                 <section>
-
                     ${this.renderView('_meta_bar', {
                         body: this.renderHtml`
                             By <a href="/${pageUser.slug}">${pageUser.name}</a>
