@@ -1,33 +1,3 @@
-
-export const styles = `
-    .aboutContent {
-        color: #4b5563;
-        font-size: 1.4rem;
-        line-height: 1.6;
-        margin: 0;
-    }
-
-    .aboutContent p {
-        margin: 0 0 1.6rem 0;
-    }
-
-    .aboutContent p:last-child {
-        margin-bottom: 0;
-    }
-
-    .aboutContent a {
-        color: #374151;
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.2s ease;
-    }
-
-    .aboutContent a:hover {
-        color: #1f2937;
-        text-decoration: underline;
-    }
-`;
-
 export default {
     async render(){    
         let user;
@@ -46,24 +16,22 @@ export default {
         for(const [index, child] of Object.entries(parsedBody.children)) {
             if(child.type != 'ul') continue;
             const children = this.extractListItems(child);
-            const html = await this.renderView('_navbar/burger_menu/_link_group', { children });
+            const html = await this.renderView('_sidebar/_link_group_section', { children });
             parsedBody.children[index] = this.parseHtml(html);
             parsedBody.children[index].parent = parsedBody;
         }
 
         body = await this.renderHtml(parsedBody.toString());
 
-        const wrappedContent = this.renderHtml`<div class="${this.cssClasses.aboutContent}">${body}</div>`;
-
-        return this.renderView('_navbar/burger_menu/_section', {
+        return this.renderView('_sidebar/_section', {
             label: 'About',
             testId: 'about-section',
             body: async () => {
                 if(isAdmin) return this.renderView('_editable_area', {
                     url: "/_actions/admin/edit_site_description",
-                    body: wrappedContent
+                    body
                 });
-                return wrappedContent;
+                return body;
             }
         });
     },
@@ -79,7 +47,6 @@ export default {
             if(a){
                 item.label = a.children.map(c => c.type === '#text' ? c.attributes.value : '').join('').trim();
                 item.url = a.attributes.href;
-                item.target = '_top';
             } else {
                 item.label = li.children.map(c => c.type === '#text' ? c.attributes.value : '').join('').trim();
             }

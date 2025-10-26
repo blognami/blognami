@@ -20,11 +20,6 @@ export default {
                 });
             }
 
-            this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
-
-            // Add sidebar content to burger menu
-            this.addMenuItem('burgerMenu', { label: 'About', partial: '_navbar/burger_menu/_about_section', displayOrder: 1 });
-
         });
 
         this.addHook('normalizeMenus', function(){
