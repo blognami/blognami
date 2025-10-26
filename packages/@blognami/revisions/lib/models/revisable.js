@@ -1,4 +1,3 @@
-
 export default {
     meta(){
         this.hasMany('revisions',  { fromKey: 'id', toKey: 'revisableId' });

@@ -1,5 +1,6 @@
 
 import { importAll } from 'pinstripe';
+import '@blognami/revisions';
 import '@pinstripe/database';
 import '@pinstripe/markdown';
 import '@pinstripe/one-time-token';

@@ -6,7 +6,10 @@
   "author": "Jody Salt", 
   "license": "MIT",
   "exports": { ".": "./lib/index.js" },
-  "dependencies": { "@blognami/main": "^0.35.0" },
+  "dependencies": { 
+    "@blognami/main": "^0.35.0",
+    "@blognami/revisions": "^0.35.0"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/blognami/blognami.git",
