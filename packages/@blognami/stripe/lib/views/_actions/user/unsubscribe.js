@@ -1,4 +1,3 @@
-
 export default {
     async render(){
         const user = await this.session.user;

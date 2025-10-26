@@ -4,6 +4,7 @@ import '@blognami/images';
 import '@blognami/main';
 import '@blognami/revisions';
 import '@blognami/site';
+import '@blognami/stripe';
 import '@blognami/users';
 
 import { importAll } from 'pinstripe';

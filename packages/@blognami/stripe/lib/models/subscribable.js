@@ -1,4 +1,3 @@
-
 export default {
     meta(){
         this.hasMany('subscriptions', { fromKey: 'id', toKey: 'subscribableId' });
