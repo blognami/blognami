@@ -1,4 +1,3 @@
-
 export const styles = ({ colors }) => `
     .comments {
         margin-top: 2em;

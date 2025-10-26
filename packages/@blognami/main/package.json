@@ -21,6 +21,6 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/blognami/blognami.git",
-    "directory": "packages/pinstripe-main"
+    "directory": "packages/@blognami/main"
   }
 }

@@ -1,4 +1,3 @@
-
 import { defer } from '@pinstripe/utils';
 
 export default {

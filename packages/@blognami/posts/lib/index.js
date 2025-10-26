@@ -1,4 +1,5 @@
 
+import '@blognami/comments';
 import '@blognami/images';
 import '@blognami/main';
 import '@blognami/tags';
