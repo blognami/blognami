@@ -9,7 +9,7 @@
         - `@blognami/newsletter`
         - ~~`@blognami/revisions`~~
         - ~~`@blognami/comments`~~
-        - `@blognami/home`?
+        - ~~`@blognami/home`?~~
         - ~~`@blognami/site`?~~
 
 - Use `@pinstripe/main` to act as base for `pinstripejs.com`
