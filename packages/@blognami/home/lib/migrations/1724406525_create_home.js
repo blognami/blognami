@@ -1,4 +1,3 @@
-
 export default {
     async migrate(){
         await this.database.table('homes', async homes => {
