@@ -2,6 +2,7 @@
 import '@blognami/home';
 import '@blognami/images';
 import '@blognami/main';
+import '@blognami/newsletter';
 import '@blognami/revisions';
 import '@blognami/site';
 import '@blognami/stripe';

@@ -9,18 +9,14 @@ export default {
                 this.addMenuItem('navbar', { 
                     label: 'Settings', 
                     testId: 'edit-settings',
-                    children: [
-                        { label: 'Newsletter', url: '/_actions/admin/edit_newsletter', target: '_overlay', testId: 'edit-site-membership' }
-                    ]
+                    children: []
                 });
 
                 // Edit Settings link for burger menu
                 this.addMenuItem('burgerMenu', 'Account', { 
                     label: 'Settings', 
                     testId: 'edit-settings',
-                    children: [
-                        { label: 'Newsletter', url: '/_actions/admin/edit_newsletter', target: '_overlay', testId: 'edit-site-membership' }
-                    ]
+                    children: []
                 });
             }
 
