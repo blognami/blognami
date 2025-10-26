@@ -4,25 +4,6 @@ export const styles = ({ colors }) => `
         margin-bottom: 4rem;
     }
 
-    .meta {
-        display: block;
-        margin-bottom: 2rem;
-        font-size: 1.2rem;
-        font-weight: 500;
-        line-height: 1;
-        color: ${colors.semantic.secondaryText};
-        text-transform: uppercase;
-    }
-
-    .meta a {
-        font-weight: 600;
-    }
-
-    .meta em {
-        color: ${colors.semantic.accent};
-        font-style: normal;
-    }
-
     .title {
         font-size: 7.4rem;
         font-weight: 600;

@@ -110,22 +110,6 @@ export default {
             body: this.renderHtml`
                 <section>
                     ${this.renderView('_article', {
-                        meta: this.renderHtml`
-                            By <a href="/${postUser.slug}">${postUser.name}</a>
-                            
-                            ${async () => {
-                                if(await post.tags.count() > 0) return this.renderHtml`
-                                    in
-                                    ${post.tags.all().map(({ slug, name }, i) => this.renderHtml`${i > 0 ? ', ' : ''}<a href="/${slug}"><em>${name}</em></a>`)}
-                                `;
-                            }}
-                            ${(() => {
-                                if(post.publishedAt) return this.renderHtml`
-                                    —
-                                    <time datetime="${this.formatDate(post.publishedAt, 'yyyy-MM-dd')}" data-test-id="post-published-at">${this.formatDate(post.publishedAt)}</time>
-                                `;
-                            })()}
-                        `,
                         body: this.renderHtml`
                             ${() => {
                                 if(!isAdmin) return;
@@ -154,6 +138,25 @@ export default {
                                     </div>
                                 `;
                             }}
+
+                            ${this.renderView('_meta_bar', {
+                                body: this.renderHtml`
+                                    By <a href="/${postUser.slug}">${postUser.name}</a>
+                                    
+                                    ${async () => {
+                                        if(await post.tags.count() > 0) return this.renderHtml`
+                                            in
+                                            ${post.tags.all().map(({ slug, name }, i) => this.renderHtml`${i > 0 ? ', ' : ''}<a href="/${slug}"><em>${name}</em></a>`)}
+                                        `;
+                                    }}
+                                    ${(() => {
+                                        if(post.publishedAt) return this.renderHtml`
+                                            —
+                                            <time datetime="${this.formatDate(post.publishedAt, 'yyyy-MM-dd')}" data-test-id="post-published-at">${this.formatDate(post.publishedAt)}</time>
+                                        `;
+                                    })()}
+                                `
+                            })}
 
                             ${this.renderView('_content', {
                                 body: this.renderHtml`
