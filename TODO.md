@@ -4,7 +4,7 @@
     - Split up into smaller packages.
         - ~~`@blognami/images`~~
         - ~~`@blognami/users`~~
-        - `@blognami/sessions`
+        - ~~`@blognami/sessions`~~
         - `@blognami/stripe`
         - `@blognami/newsletter`
         - `@blognami/revisions`
