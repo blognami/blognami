@@ -13,23 +13,24 @@ export default {
 
         const isAdmin = user?.role == 'admin';
 
+        const content = this.renderHtml`<div data-test-id="${testId}-body">${this.renderMarkdown(await this.database.site[fieldName])}</div>`;
+
         return this.renderView('_layout', {
             title,
             body: this.renderHtml`
                 <section>
-                    ${this.renderView('_article', {
-                        title: title,
-                        body: isAdmin ? this.renderView('_editable_area', {
-                            url: `/_actions/admin/edit_site_${this.inflector.snakeify(title)}`,
-                            body: this.renderView('_content', {
-                                body: this.renderMarkdown(await this.database.site[fieldName]),
-                                testId
-                            }),
-                            linkTestId: `edit-${testId}`
-                        }) : this.renderView('_content', {
-                            body: this.renderMarkdown(await this.database.site[fieldName]),
-                            testId
-                        })
+                    ${this.renderView('_content', {
+                        body: this.renderHtml`
+                            <h1 data-test-id="${testId}-title">${title}</h1>
+                            ${() => {
+                                if(isAdmin) return this.renderView('_editable_area', {
+                                    url: `/_actions/admin/edit_site_${this.inflector.snakeify(title)}`,
+                                    body: content,
+                                    linkTestId: `edit-${testId}-body`
+                                });
+                                return content;
+                            }}
+                        `
                     })}
                 </section>
             `
