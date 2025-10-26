@@ -8,7 +8,7 @@
         - `@blognami/stripe`
         - `@blognami/newsletter`
         - `@blognami/revisions`
-        - `@blognami/comments`
+        - ~~`@blognami/comments`~~
         - `@blognami/home`?
         - `@blognami/site`?
 
