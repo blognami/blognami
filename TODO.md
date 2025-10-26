@@ -5,7 +5,7 @@
         - ~~`@blognami/images`~~
         - ~~`@blognami/users`~~
         - ~~`@blognami/sessions`~~
-        - `@blognami/stripe`
+        - ~~`@blognami/stripe`~~
         - `@blognami/newsletter`
         - ~~`@blognami/revisions`~~
         - ~~`@blognami/comments`~~
