@@ -2,8 +2,8 @@
 - Extract out the `pinstripejs.com` layout into `@pinstripe/main`
     - Make blognami more static aware.
     - Split up into smaller packages.
-        - `@blognami/images`
-        - `@blognami/users`
+        - ~~`@blognami/images`~~
+        - ~~`@blognami/users`~~
         - `@blognami/sessions`
         - `@blognami/stripe`
         - `@blognami/newsletter`
@@ -24,7 +24,7 @@
 **Prompt for extracting functionality from `@blognami/main` into smaller packages:**
 
 ```
-I need to refactor `@blognami/main` to extract [FEATURE_NAME] functionality into a new `@blognami/[PACKAGE_NAME]` package.
+I need to refactor `@blognami/main` to extract [PACKAGE_NAME] functionality into a new `@blognami/[PACKAGE_NAME]` package.
 
 CRITICAL GUIDELINES from previous refactoring:
 
@@ -36,11 +36,11 @@ CRITICAL GUIDELINES from previous refactoring:
 
 **What to Move:**
 Identify and move ALL related components:
-- Models: Look for [feature] models in lib/models/
-- Services: Check lib/services/ for [feature] services (including is_*, has_*, etc.)
-- Migrations: Find migration files related to [feature] tables
-- Views: Search for [feature] views in lib/views/_actions/, lib/views/_pageables/
-- Menu Items: Extract [feature] menu items from lib/services/menus.js
+- Models: Look for [PACKAGE_NAME] models in lib/models/
+- Services: Check lib/services/ for [PACKAGE_NAME] services (including is_*, has_*, etc.)
+- Migrations: Find migration files related to [PACKAGE_NAME] tables
+- Views: Search for [PACKAGE_NAME] views in lib/views/_actions/, lib/views/_pageables/
+- Menu Items: Extract [PACKAGE_NAME] menu items from lib/services/menus.js
 
 **File Importers - CRITICAL:**
 - Only create _file_importer.js at TOP LEVEL directories (models/, services/, views/, migrations/, background_jobs/)
@@ -53,14 +53,14 @@ Identify and move ALL related components:
 - DO NOT create _file_importer.js in subdirectories like _actions/admin/, _actions/user/, etc.
 
 **Views Selection:**
-- Only move views that directly manage/create/edit the [feature] entity
+- Only move views that directly manage/create/edit the [PACKAGE_NAME] entity
 - Guards belong with their feature (user guards → @blognami/users, etc.)
 - Comment/subscription management stays where the feature belongs
-- Be selective - not every view that references [feature] should move
+- Be selective - not every view that references [PACKAGE_NAME] should move
 
 **Menu Service Pattern:**
 - Create lib/services/menus.js in new package
-- Extract ONLY [feature]-related menu items from main menus.js
+- Extract ONLY [PACKAGE_NAME]-related menu items from main menus.js
 - Use same hook pattern: `this.addHook('initializeMenus', async function(){...})`
 - Include both navbar and burgerMenu variants
 - Remove moved menu items from main package menus.js
@@ -81,7 +81,7 @@ Identify and move ALL related components:
 {
   "type": "module",
   "name": "@blognami/[PACKAGE_NAME]",
-  "description": "Implements [feature] functionality in the main app.",
+  "description": "Implements [PACKAGE_NAME] functionality in the main app.",
   "version": "0.35.0",
   "author": "Jody Salt", 
   "license": "MIT",
@@ -102,5 +102,5 @@ import { importAll } from 'pinstripe';
 importAll(import.meta.url);
 ```
 
-You will need to analyze the current structure of @blognami/main to identify all [FEATURE_NAME]-related components before starting the extraction.
+You will need to analyze the current structure of @blognami/main to identify all [PACKAGE_NAME]-related components before starting the extraction.
 ```
