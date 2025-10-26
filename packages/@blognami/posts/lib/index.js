@@ -1,6 +1,7 @@
 
 import '@blognami/images';
 import '@blognami/main';
+import '@blognami/sessions';
 import '@blognami/tags';
 import '@blognami/users';
 
