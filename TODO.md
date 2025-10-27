@@ -1,4 +1,9 @@
 
+- Remove initialize-project command
+- Remove site references from main
+
+---
+
 - Extract out the `pinstripejs.com` layout into `@pinstripe/main`
     - Make blognami more static aware.
     - Split up into smaller packages.
@@ -11,11 +16,15 @@
         - ~~`@blognami/comments`~~
         - ~~`@blognami/home`?~~
         - ~~`@blognami/site`?~~
+        - @blognami/pageables
+          - Remove database dependency from main
 
+- Be able to populate the menus using annotations/frontmatter
 - Use `@pinstripe/main` to act as base for `pinstripejs.com`
-
 -  Remove `@blognami/docs`:
     - Merge content into `blognami.com`
+- Allow `include` to define hooks by convention e.g.:
+  - `beforeValidate__anythingYouWant(){...}`
 
 ---
 

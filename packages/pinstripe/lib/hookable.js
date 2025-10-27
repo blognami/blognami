@@ -1,6 +1,9 @@
 
 export const Hookable = {
     meta(){
+
+        const { include } = this;
+
         this.assignProps({
             get hooks(){
                 if(!this.hasOwnProperty('_hooks')){
@@ -34,6 +37,20 @@ export const Hookable = {
                     }
                     this.hooks[event].push(callback);
                 }
+            },
+
+            include(...includes){
+                const out = include.call(this, ...includes);
+                for(const include of includes){
+                    for(const name in include){
+                        const matches = name.match(/^(.+?)__.+$/);
+                        if(!matches) continue;
+                        this.addHook(matches[1], function(...args){
+                            return this[name](...args);
+                        });
+                    }
+                }
+                return out;
             }
         });
     },

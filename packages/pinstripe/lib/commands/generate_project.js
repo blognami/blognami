@@ -36,7 +36,7 @@ export default {
 
          this.installDependencies();
 
-         this.initializeProject();
+         await this.initializeProject();
       });
    },
 
@@ -171,7 +171,7 @@ export default {
          stdio: 'inherit',
          env: {
             ...process.env,
-            PINSTRIPE_KEEP_INITIALIZE_PROJECT_COMMAND: 'true',
+            PINSTRIPE_KEEP_ALL_COMMANDS: 'true',
          }
       });
    }
