@@ -1,6 +1,10 @@
 
 export default {
-   async run__generateSeedDatabaseCommand(){
+   meta(){
+      this.addHook('run', 'generateSeedDatabaseCommand');
+   },
+
+   async generateSeedDatabaseCommand(){
       const { inProjectRootDir, generateFile } = this.fsBuilder;
 
       await inProjectRootDir(async () => {
