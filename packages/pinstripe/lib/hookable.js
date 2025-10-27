@@ -1,9 +1,6 @@
 
 export const Hookable = {
     meta(){
-
-        const { include } = this;
-
         this.assignProps({
             get hooks(){
                 if(!this.hasOwnProperty('_hooks')){
@@ -31,26 +28,15 @@ export const Hookable = {
 
             addHook(events, callback){
                 const normalizedEvents = Array.isArray(events) ? events : [events];
+                const normalizedCallback = typeof callback === 'function' ? callback : function(...args){
+                    return this[callback](...args);
+                };
                 for(const event of normalizedEvents){
                     if(!this.hooks[event]){
                         this.hooks[event] = [];
                     }
-                    this.hooks[event].push(callback);
+                    this.hooks[event].push(normalizedCallback);
                 }
-            },
-
-            include(...includes){
-                const out = include.call(this, ...includes);
-                for(const include of includes){
-                    for(const name in include){
-                        const matches = name.match(/^(.+?)__.+$/);
-                        if(!matches) continue;
-                        this.addHook(matches[1], function(...args){
-                            return this[name](...args);
-                        });
-                    }
-                }
-                return out;
             }
         });
     },
