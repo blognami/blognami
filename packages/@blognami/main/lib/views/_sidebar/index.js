@@ -21,6 +21,8 @@ export const styles = `
 export default {
     async render(){
         const sections = await this.menus.sidebar || [];
+        
+        console.dir({sections}, { depth: null });
 
         if(sections.length === 0) return;
 
