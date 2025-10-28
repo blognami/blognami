@@ -1,4 +1,3 @@
-
 import { inflector } from '@pinstripe/utils';
 
 export default {
