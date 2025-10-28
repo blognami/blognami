@@ -2,26 +2,6 @@
 
 export default {
     meta(){
-        this.addHook('initializeMenus', async function(){
-            // Admin-only Settings (shows for admin users when signed in)
-            if (await this.isSignedIn && await this.user.role === 'admin') {
-                // Edit Settings link
-                this.addMenuItem('navbar', { 
-                    label: 'Settings', 
-                    testId: 'edit-settings',
-                    children: []
-                });
-
-                // Edit Settings link for burger menu
-                this.addMenuItem('burgerMenu', 'Account', { 
-                    label: 'Settings', 
-                    testId: 'edit-settings',
-                    children: []
-                });
-            }
-
-        });
-
         this.addHook('normalizeMenus', function(){
             this.traverseMenuItems('navbar', (item, path) => {
                 if (item.partial === undefined) {

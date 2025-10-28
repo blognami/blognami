@@ -17,10 +17,14 @@ export const styles = `
 `;
 
 export default {
-    render(){
+    async render(){
+        this.title = await this.config.title;
+
+        await this.runHook('beforeRender');
+
         return this.renderHtml`
             <a href="/" class="${this.cssClasses.root}" data-test-id="title">
-                ${this.database.site.title}
+                ${this.title}
             </a>
         `;
     }

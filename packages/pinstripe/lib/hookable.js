@@ -26,33 +26,53 @@ export const Hookable = {
                 return out;
             },
 
-            addHook(events, callback){
-                const normalizedEvents = Array.isArray(events) ? events : [events];
+            addHook(names, callback){
+                const normalizedEvents = Array.isArray(names) ? names : [names];
                 const normalizedCallback = typeof callback === 'function' ? callback : function(...args){
                     return this[callback](...args);
                 };
-                for(const event of normalizedEvents){
-                    if(!this.hooks[event]){
-                        this.hooks[event] = [];
+                for(const name of normalizedEvents){
+                    if(!this.hooks[name]){
+                        this.hooks[name] = [];
                     }
-                    this.hooks[event].push(normalizedCallback);
+                    this.hooks[name].push(normalizedCallback);
                 }
             }
         });
     },
 
-    async runHook(event, ...args){
-        let out = [];
+    async runHook(name, options = {}){
+        const {
+            args = [],
+            stopIf = () => false,
+            beforeEach = undefined,
+            betweenEach = undefined,
+            afterEach = undefined,
+            ifNone = undefined,
+            filter = () => true,
+            sort = (a, b) => {
+                const aOrder = (typeof a === 'object' && a !== null && 'displayOrder' in a) ? a.displayOrder : 100;
+                const bOrder = (typeof b === 'object' && b !== null && 'displayOrder' in b) ? b.displayOrder : 100;
+                return aOrder - bOrder;
+            }
+        } = options;
+
+        const out = [];
         const hooks = this.constructor.allHooks;
-        const callbacks = hooks[event] || [];
+        const callbacks = hooks[name] || [];
         for(const callback of callbacks){
-            out.push(await callback.call(this, this, ...args));
+            if(typeof beforeEach === 'function') await beforeEach.call(this, ...args);
+            if(out.length > 0 && typeof betweenEach === 'function') out.push(await betweenEach.call(this, ...args));
+            const item = await callback.call(this, ...args);
+            out.push(item);
+            if(typeof afterEach === 'function') await afterEach.call(this, ...args);
+            if(await stopIf(item)) break;
         }
-        out.sort((a, b) => {
-            const aOrder = (typeof a === 'object' && a !== null && 'displayOrder' in a) ? a.displayOrder : 100;
-            const bOrder = (typeof b === 'object' && b !== null && 'displayOrder' in b) ? b.displayOrder : 100;
-            return aOrder - bOrder;
-        });
-        return out;
+
+        if(out.length === 0 && typeof ifNone === 'function'){
+            out.push(await ifNone.call(this, ...args));
+        }
+
+        return out.filter(filter).sort(sort);
     }
 };

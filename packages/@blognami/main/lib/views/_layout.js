@@ -15,24 +15,15 @@ export const styles = `
 
 export default {
    async render(){
-        const { params } = this;
-        const { meta = [], body } = params;
-
-        let user;
-        if(await this.session){
-            user = await this.session.user;
-        }
+        const { meta = [], body } = this.params;
 
         return this.renderView('_pinstripe/_shell', {
-            meta: [
-                { name: 'pinstripe-load-cache-namespace', content: user ? 'signed-in' : 'signed-out' },
-                ...meta
-            ],
+            meta,
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">
                     ${this.renderView('_navbar')}
 
-                    ${this.renderView('_main', { body: this.params.body })}
+                    ${this.renderView('_main', { body })}
 
                     ${this.renderView('_footer')}
                 </div>

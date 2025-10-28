@@ -45,18 +45,19 @@ export const styles = ({ colors }) => `
 `;
 
 export default {
-    async render(){    
-        const site = await this.database.site;
+    async render(){
+        this.title = await this.config.title;
+
+        await this.runHook('beforeRender');
+
         const footerSections = await this.menus.footer || [];
-        
-        // Get the legal section from the menu
         const legalSection = footerSections.find(section => section.label === 'Legal') || { children: [] };
 
         return this.renderHtml`
             <footer class="${this.cssClasses.root}" data-test-id="footer">
                 <div class="${this.cssClasses.container}">
                     <div>
-                        ${site.title} © ${new Date().getFullYear()}
+                        ${this.title} © ${new Date().getFullYear()}
                         ${legalSection.children.map(child => {
                             return this.renderHtml` | <a class="${this.cssClasses.link}" href="${child.url}">${child.label}</a>`;
                         })}

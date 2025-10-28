@@ -20,21 +20,15 @@ export default {
             line(`export default {`);
             indent(({ line, indent }) => {
                line('async run(){');
-               indent(({ line, indent }) => {
-                  line(`await this.database.site.update({`);
-                  indent(async ({ line }) => {
-                     line(`title: '${this.inflector.capitalize(await this.project.name)}'`);
-                  });
-                  line(`});`);
-                  line();
-                  line(`this.user = await this.database.users.insert({`);
-                  indent(({ line }) => {
-                     line(`name: 'Admin',`);
-                     line(`email: 'admin@example.com',`);
-                     line(`role: 'admin'`);
-                  });
-                  line('});')
-               });
+               indent(async (...args) => this.runHook('generateSeedData', { 
+                  args,
+                  betweenEach({ line }){
+                     line();
+                  },
+                  ifNone({ line }){
+                     line('// Generate seed data here');
+                  }
+               }));
                line('}');
             });
             line('};');

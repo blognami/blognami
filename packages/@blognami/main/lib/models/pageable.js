@@ -18,9 +18,9 @@ export default {
             }
         });
 
-        this.addHook('validation', async pageable => {
-            if(!pageable.isValidationError('slug') && await pageable.database.pageables.where({ idNe: pageable.id, slug: pageable.slug }).count()){
-                pageable.setValidationError('slug', 'Must be unique');
+        this.addHook('validation', async function(){
+            if(!this.isValidationError('slug') && await this.database.pageables.where({ idNe: this.id, slug: this.slug }).count()){
+                this.setValidationError('slug', 'Must be unique');
             }
         });
     },

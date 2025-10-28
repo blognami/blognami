@@ -12,10 +12,10 @@ export default {
       this.webhookSecret = crypto.randomUUID();
     });
 
-    this.addHook("syncWithSubscribable", async (stripe, subscribable) => {
-      if(!await stripe.isConfiguredCorrectly()) return;
-      await stripe
-        .delegateTo(subscribable, SubscribableHandler)
+    this.addHook("syncWithSubscribable", async function (){
+      if(!await this.isConfiguredCorrectly()) return;
+      await this
+        .delegateTo(this, SubscribableHandler)
         .syncStripeWithSubscribable();
     });
   },

@@ -86,11 +86,11 @@ export const Row = Model.extend().include({
 
             mustBeUnique(name, options = {}){
                 const { message = 'Must be unique', collection = this.collectionName } = options;
-                return this.addHook('validation', async row => {
-                    if(row.isValidationError(name)) return;
-                    const value = row[name];
-                    const alreadyExists = await row.database[collection].where({ [name]: value, idNe: row.id }).count() > 0;
-                    if(alreadyExists) row.setValidationError(name, message);
+                return this.addHook('validation', async function(){
+                    if(this.isValidationError(name)) return;
+                    const value = this[name];
+                    const alreadyExists = await this.database[collection].where({ [name]: value, idNe: this.id }).count() > 0;
+                    if(alreadyExists) this.setValidationError(name, message);
                 });
             }
         });
