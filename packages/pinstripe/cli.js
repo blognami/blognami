@@ -23,6 +23,7 @@ import { inflector } from '@pinstripe/utils';
     if(process.env.PINSTRIPE_KEEP_ALL_COMMANDS != 'true') {
         if(exists){
             Command.unregister('generate-project');
+            Command.unregister('initialize-project');
         } else {
             Command.names.forEach(commandName => {
                 if(commandName == 'list-commands' || commandName == 'generate-project') return;
