@@ -55,8 +55,6 @@ export default {
         const { method, url, headers } = request;
         const _url = new URL(url, baseUrl);
 
-        console.log('URL:', request.url);
-
         const urlParams = {};
         _url.searchParams.forEach((value, key) => {
             urlParams[key] = value;
