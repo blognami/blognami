@@ -653,7 +653,7 @@ function describeNavbar(role) {
       if (role === "admin") {
         await expect(page.getByTestId("navbar").getByTestId("find")).toContainText("Find");
         await expect(page.getByTestId("navbar").getByTestId("add")).toContainText("Add");
-        await expect(page.getByTestId("navbar").getByTestId("edit-settings")).toContainText("Settings");
+        await expect(page.getByTestId("navbar").getByTestId("settings")).toContainText("Settings");
         await expect(page.getByTestId("navbar").getByTestId("your-account")).toContainText("Admin");
       } else {
         await expect(page.getByTestId("navbar").getByTestId("sign-in")).toContainText("Sign in");
@@ -709,7 +709,7 @@ function describeNavbar(role) {
       test(`should have an interface to allow the user to edit the site settings`, async ({ page, helpers }) => {
         await expect(page.getByTestId("navbar")).toContainText("Lorem ipsum");
         await expect(page.getByTestId("navbar")).not.toContainText("Apple peach");
-        await page.getByTestId("navbar").getByTestId("edit-settings").click();
+        await page.getByTestId("navbar").getByTestId("settings").click();
         await helpers.topPopover().getByTestId("edit-site-meta").click();
         await expect(helpers.topModal()).toContainText("Edit site");
         await helpers.submitForm({ title: "Apple peach" });
