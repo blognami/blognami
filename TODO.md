@@ -11,7 +11,7 @@
         - ~~`@blognami/comments`~~
         - ~~`@blognami/home`?~~
         - ~~`@blognami/site`?~~
-        - @blognami/pageables
+        - ~~@blognami/pageables~~
           - Remove database dependency from main
 
 - Be able to populate the menus using annotations/frontmatter
