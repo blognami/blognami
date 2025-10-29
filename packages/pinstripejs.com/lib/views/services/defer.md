@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "defer"]
+menus:
+    sidebar: ["Services", "defer"]
 ---
 # defer Service
 

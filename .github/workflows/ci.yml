@@ -19,8 +19,8 @@ jobs:
         node: [18.x, 20.x]
         database-adapter: [mysql, sqlite]
         modules:
-          - '@blognami/pages, @blognami/posts, @blognami/tags'
-          - '@pinstripe/multi-tenant, @blognami/pages, @blognami/posts, @blognami/tags'
+          - '@blognami/pages, @blognami/posts, @blognami/tags, @blognami/home, @blognami/newsletter, @blognami/images'
+          - '@pinstripe/multi-tenant, @blognami/pages, @blognami/posts, @blognami/tags, @blognami/home, @blognami/newsletter, @blognami/images'
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node }}

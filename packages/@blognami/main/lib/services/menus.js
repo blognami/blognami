@@ -1,59 +1,12 @@
 
+import { View } from 'pinstripe';
 
 export default {
     meta(){
-        this.addHook('normalizeMenus', function(){
-            this.traverseMenuItems('navbar', (item, path) => {
-                if (item.partial === undefined) {
-                    if(path.length === 1) {
-                        item.partial = '_navbar/_link';
-                    } else {
-                        item.partial = '_navbar/menu/_link';
-                    }
-                }
-
-                // If no url is provided, create a popover link for nested items
-                if(item.url === undefined && item.children) {
-                    const url = new URL('/_navbar/menu', 'http://localhost');
-                    url.searchParams.append('path', JSON.stringify(path.map(item => item.label)));
-                    item.url = url.pathname + url.search;
-                    item.target = '_overlay';
-                    
-                    // Add data attributes for specific parent menu items
-                    if (!item.preload) {
-                        item.preload = true;
-                    }
-                }
-
-                if(item.target === undefined) {
-                    item.target = '_top';
-                }
-
-                // Handle data-confirm attribute
-                if (item.dataConfirm !== undefined) {
-                    if (!item.dataAttributes) {
-                        item.dataAttributes = {};
-                    }
-                    item.dataAttributes.confirm = item.dataConfirm;
-                }
-            });
-
-            this.traverseMenuItems('sidebar', (item, path) => {
-                if (item.partial === undefined && path.length === 1) {
-                    item.partial = '_sidebar/_link_group_section';
-                }
-            });
-
-            this.traverseMenuItems('burgerMenu', (item, path) => {
-                if (item.partial === undefined && path.length === 1) {
-                    item.partial = '_navbar/burger_menu/_link_group_section';
-                }
-
-                if(item.target === undefined) {
-                    item.target = '_top';
-                }
-            });
-        });
+        this.addHook('initializeMenus', 'loadMenuItemsFromAnnotations');
+        this.addHook('normalizeMenus', 'normalizeNavbarMenu');
+        this.addHook('normalizeMenus', 'normalizeSidebarMenu');
+        this.addHook('normalizeMenus', 'normalizeBurgerMenu');
     },
 
     create(){
@@ -189,9 +142,90 @@ export default {
                 this.sortMenuItems(menuItem.children);
             }
         });
-    }
-}
+    },
 
+    async loadMenuItemsFromAnnotations(){
+        const cacheKey = `menuItemsFromAnnotations:${JSON.stringify(await this.featureFlags)}`;
+
+        if(!View.cache[cacheKey]){
+            const out = [];
+            const viewMap = await this.viewMap;
+            for(const [path, viewName] of Object.entries(viewMap)) {
+                const annotations = View.for(viewName).annotations;
+                if(annotations && annotations.menus) {
+                    for(const [menuName, _menuPath] of Object.entries(annotations.menus)) {
+                        const menuPath = [..._menuPath];
+                        const label = menuPath.pop();
+                        out.push([menuName, ...menuPath, {
+                            label,
+                            url: `/${path}`.replace(/\/index$/, '') || '/'
+                        }]);
+                    }
+                }
+            }
+            View.cache[cacheKey] = out;
+        }
+        View.cache[cacheKey].forEach(args => this.addMenuItem(...args));
+    },
+
+    normalizeNavbarMenu(){
+        this.traverseMenuItems('navbar', (item, path) => {
+            if (item.partial === undefined) {
+                if(path.length === 1) {
+                    item.partial = '_navbar/_link';
+                } else {
+                    item.partial = '_navbar/menu/_link';
+                }
+            }
+
+            // If no url is provided, create a popover link for nested items
+            if(item.url === undefined && item.children) {
+                const url = new URL('/_navbar/menu', 'http://localhost');
+                url.searchParams.append('path', JSON.stringify(path.map(item => item.label)));
+                item.url = url.pathname + url.search;
+                item.target = '_overlay';
+                
+                // Add data attributes for specific parent menu items
+                if (!item.preload) {
+                    item.preload = true;
+                }
+            }
+
+            if(item.target === undefined) {
+                item.target = '_top';
+            }
+
+            // Handle data-confirm attribute
+            if (item.dataConfirm !== undefined) {
+                if (!item.dataAttributes) {
+                    item.dataAttributes = {};
+                }
+                item.dataAttributes.confirm = item.dataConfirm;
+            }
+        });
+    },
+
+    normalizeSidebarMenu(){
+        this.traverseMenuItems('sidebar', (item, path) => {
+            if (item.partial === undefined && path.length === 1) {
+                item.partial = '_sidebar/_link_group_section';
+            }
+        });
+    },
+
+    normalizeBurgerMenu(){
+        this.traverseMenuItems('burgerMenu', (item, path) => {
+            if (item.partial === undefined && path.length === 1) {
+                item.partial = '_navbar/burger_menu/_link_group_section';
+            }
+
+            if(item.target === undefined) {
+                item.target = '_top';
+            }
+        });
+    }
+
+}
 
 function traverseMenuItems(items, path, fn){
     items.forEach(item => {

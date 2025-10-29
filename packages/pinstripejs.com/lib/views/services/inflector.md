@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "inflector"]
+menus:
+    sidebar: ["Services", "inflector"]
 ---
 # inflector Service
 

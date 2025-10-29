@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "list-commands"]
+menus:
+    sidebar: ["Commands", "list-commands"]
 ---
 # list-commands Command
 

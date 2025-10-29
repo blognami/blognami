@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "parseHtml"]
+menus:
+    sidebar: ["Services", "parseHtml"]
 ---
 # parseHtml Service
 

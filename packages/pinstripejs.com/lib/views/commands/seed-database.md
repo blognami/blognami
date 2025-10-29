@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "seed-database"]
+menus:
+    sidebar: ["Commands", "seed-database"]
 ---
 # seed-database Command
 

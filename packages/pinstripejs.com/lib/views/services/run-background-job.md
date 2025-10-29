@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "runBackgroundJob"]
+menus:
+    sidebar: ["Services", "runBackgroundJob"]
 ---
 # runBackgroundJob Service
 

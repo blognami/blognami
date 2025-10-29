@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "trapify"]
+menus:
+    sidebar: ["Services", "trapify"]
 ---
 # trapify Service
 

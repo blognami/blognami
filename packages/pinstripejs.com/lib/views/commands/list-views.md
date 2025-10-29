@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "list-views"]
+menus:
+    sidebar: ["Commands", "list-views"]
 ---
 # list-views Command
 

@@ -9,16 +9,13 @@
   },
   "dependencies": {
     "@blognami/comments": "^0.35.0",
-    "@blognami/home": "^0.35.0",
-    "@blognami/images": "^0.35.0",
     "@blognami/main": "^0.35.0",
-    "@blognami/newsletter": "^0.35.0",
     "@blognami/pageables": "^0.35.0",
     "@blognami/revisions": "^0.35.0",
-    "@blognami/site": "^0.35.0",
-    "@blognami/stripe": "^0.35.0",
     "@blognami/tags": "^0.35.0",
-    "@blognami/users": "^0.35.0"
+    "@blognami/users": "^0.35.0",
+    "@pinstripe/database": "^0.35.0",
+    "@pinstripe/markdown": "^0.35.0"
   },
   "repository": {
     "type": "git",

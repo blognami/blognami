@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "generate-view"]
+menus:
+    sidebar: ["Commands", "generate-view"]
 ---
 # generate-view Command
 

@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "version"]
+menus:
+    sidebar: ["Services", "version"]
 ---
 # version Service
 

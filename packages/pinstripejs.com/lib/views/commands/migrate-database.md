@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "migrate-database"]
+menus:
+    sidebar: ["Commands", "migrate-database"]
 ---
 # migrate-database Command
 

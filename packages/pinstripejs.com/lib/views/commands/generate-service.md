@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "generate-service"]
+menus:
+    sidebar: ["Commands", "generate-service"]
 ---
 # generate-service Command
 

@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "start-repl"]
+menus:
+    sidebar: ["Commands", "start-repl"]
 ---
 # start-repl Command
 

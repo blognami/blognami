@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "start-server"]
+menus:
+    sidebar: ["Commands", "start-server"]
 ---
 # start-server Command
 

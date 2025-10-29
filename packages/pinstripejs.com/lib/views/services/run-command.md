@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "runCommand"]
+menus:
+    sidebar: ["Services", "runCommand"]
 ---
 # runCommand Service
 

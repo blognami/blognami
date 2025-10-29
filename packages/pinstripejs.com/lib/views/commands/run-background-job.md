@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "run-background-job"]
+menus:
+    sidebar: ["Commands", "run-background-job"]
 ---
 # run-background-job Command
 

@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "database"]
+menus:
+    sidebar: ["Services", "database"]
 ---
 # database Service
 

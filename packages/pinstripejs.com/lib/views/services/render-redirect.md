@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "renderRedirect"]
+menus:
+    sidebar: ["Services", "renderRedirect"]
 ---
 # renderRedirect Service
 

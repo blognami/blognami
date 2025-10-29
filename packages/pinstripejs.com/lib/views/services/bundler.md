@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "bundler"]
+menus:
+    sidebar: ["Services", "bundler"]
 ---
 # bundler Service
 

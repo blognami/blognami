@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "show-theme"]
+menus:
+    sidebar: ["Commands", "show-theme"]
 ---
 # show-theme Command
 

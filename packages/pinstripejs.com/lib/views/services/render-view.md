@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "renderView"]
+menus:
+    sidebar: ["Services", "renderView"]
 ---
 # renderView Service
 

@@ -1,7 +1,6 @@
-````markdown
 ---
-sidebar:
-    category: ["Services", "renderTable"]
+menus:
+    sidebar: ["Services", "renderTable"]
 ---
 # renderTable Service
 

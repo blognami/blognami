@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "viewMap"]
+menus:
+    sidebar: ["Services", "viewMap"]
 ---
 # viewMap Service
 

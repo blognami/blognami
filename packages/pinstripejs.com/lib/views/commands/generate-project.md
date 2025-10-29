@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "generate-project"]
+menus:
+    sidebar: ["Commands", "generate-project"]
 ---
 # generate-project Command
 
