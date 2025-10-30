@@ -1,3 +1,4 @@
+
 export const styles = `
     .root {
         display: flex;
@@ -18,7 +19,7 @@ export const styles = `
 
 export default {
     async render(){
-        this.title = await this.config.title;
+        this.title = await this.database.site.title;
 
         await this.runHook('beforeRender');
 

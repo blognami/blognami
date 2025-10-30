@@ -1,4 +1,4 @@
-import '@blognami/users';
+import '@blognami/main';
 import { importAll } from 'pinstripe';
 import '@pinstripe/database';
 

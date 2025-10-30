@@ -1,6 +1,6 @@
 import '@pinstripe/database';
 import '@blognami/stripe';
-import '@blognami/users';
+import '@blognami/main';
 
 import { importAll } from 'pinstripe';
 

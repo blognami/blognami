@@ -1,3 +1,4 @@
+
 export const styles = ({ colors }) => `
     .root {
         border-top: 1px solid #e5e7eb;
@@ -46,7 +47,7 @@ export const styles = ({ colors }) => `
 
 export default {
     async render(){
-        this.title = await this.config.title;
+        this.title = await this.database.site.title;
 
         await this.runHook('beforeRender');
 

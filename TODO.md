@@ -91,3 +91,61 @@ importAll(import.meta.url);
 
 You will need to analyze the current structure of @blognami/main to identify all [PACKAGE_NAME]-related components before starting the extraction.
 ```
+
+---
+
+## Package Merging Template
+
+**Prompt for merging functionality from `@blognami/[PACKAGE_NAME]` back into `@blognami/main`:**
+
+```
+I need to merge the `@blognami/[PACKAGE_NAME]` package back into `@blognami/main` to reduce package fragmentation.
+
+CRITICAL GUIDELINES from previous merging:
+
+**Analysis Phase:**
+- Examine the structure of `@blognami/[PACKAGE_NAME]` package
+- Check `@blognami/[PACKAGE_NAME]/package.json` for dependencies
+- Identify all files in `@blognami/[PACKAGE_NAME]/lib/` directory structure
+- Find which packages currently import `@blognami/[PACKAGE_NAME]`
+
+**Move Files to Main:**
+Move ALL files from `@blognami/[PACKAGE_NAME]/lib/` to `@blognami/main/lib/`:
+- **Models:** Copy model files to `@blognami/main/lib/models/`
+- **Views:** Copy view files to `@blognami/main/lib/views/` (including _actions/, _pageables/)
+- **Services:** Copy service files to `@blognami/main/lib/services/`
+- **Migrations:** Copy migration files to `@blognami/main/lib/migrations/`
+- **Background Jobs:** Copy background job files to `@blognami/main/lib/background_jobs/`
+- **File Importers:** Create `_file_importer.js` files in new directories if they don't exist
+
+**Update Main Package:**
+- Add dependencies from `@blognami/[PACKAGE_NAME]` to `@blognami/main/package.json`
+- Update `@blognami/main/lib/index.js` to include any new import statements from the merged package
+- Handle conflicts (like existing default.js) by merging functionality or replacing with more sophisticated version
+
+**Remove Dependencies:**
+Remove `@blognami/[PACKAGE_NAME]` from all packages that imported it:
+- **package.json:** Remove from dependencies section
+- **lib/index.js:** Remove import statement
+- **Add main import:** Add `import '@blognami/main';` to packages that need the merged functionality
+
+**Common packages that import features:**
+- `blognami` package (main app)
+- `@blognami/posts` 
+- `@blognami/pages`
+- `@blognami/tags`
+- `@blognami/images`
+
+**Cleanup:**
+- Delete the entire `@blognami/[PACKAGE_NAME]` directory
+- Run `npm install` to update package-lock.json
+- If package-lock.json still has references, delete it and run `npm install` again
+- Verify no references to `@blognami/[PACKAGE_NAME]` remain with grep search
+
+**Verification:**
+- Check that merged files exist in `@blognami/main/lib/`
+- Confirm no broken imports or missing dependencies
+- Ensure functionality is preserved in the main package
+
+This process consolidates packages back into main to reduce complexity while preserving all functionality.
+```

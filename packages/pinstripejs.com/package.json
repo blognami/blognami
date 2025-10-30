@@ -9,6 +9,6 @@
   },
   "scripts": {
     "start": "pinstripe start-server",
-    "build": "rm -rf build && pinstripe generate-static-site"
+    "build": "rm -rf build && pinstripe reset-database && pinstripe generate-static-site"
   }
 }

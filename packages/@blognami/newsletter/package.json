@@ -11,7 +11,6 @@
   "dependencies": {
     "@blognami/main": "^0.35.0",
     "@blognami/stripe": "^0.35.0",
-    "@blognami/users": "^0.35.0",
     "@pinstripe/database": "^0.35.0"
   },
   "repository": {
