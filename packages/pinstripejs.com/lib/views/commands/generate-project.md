@@ -117,7 +117,7 @@ mail: {
 --with "@blognami/main @blognami/posts @blognami/pages @blognami/tags"
 
 # Full-featured blog with documentation
---with "@blognami/main @blognami/posts @blognami/pages @blognami/tags @blognami/docs"
+--with "@blognami/main @blognami/posts @blognami/pages @blognami/tags"
 ```
 
 ### Application Projects

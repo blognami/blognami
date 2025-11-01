@@ -1,5 +1,4 @@
 
-import '@blognami/docs';
 import '@blognami/main';
 import '@blognami/newsletter';
 import '@blognami/pages';

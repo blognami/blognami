@@ -9,7 +9,6 @@
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "@blognami/docs": "^0.35.0",
     "@blognami/main": "^0.35.0",
     "@blognami/newsletter": "^0.35.0",
     "@blognami/pages": "^0.35.0",

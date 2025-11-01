@@ -1,8 +1,6 @@
 
 - Be able to populate the menus using annotations/frontmatter
 - Use `@pinstripe/main` to act as base for `pinstripejs.com`
--  Remove `@blognami/docs`:
-    - Merge content into `blognami.com`
 
 ---
 
