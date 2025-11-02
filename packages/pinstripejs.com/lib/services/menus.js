@@ -31,6 +31,8 @@ export default {
                 label: 'GitHub',
                 url: 'https://github.com/blognami/blognami'
             });
+
+            this.menus.footer = [];
         });
     }
 };
