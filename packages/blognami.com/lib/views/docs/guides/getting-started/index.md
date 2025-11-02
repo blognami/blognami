@@ -1,4 +1,7 @@
-
+---
+menus:
+  sidebar: ['Getting Started', 'Introduction']
+---
 # 🚀 Getting Started with Blognami
 
 > **Welcome aboard!** 🎉
