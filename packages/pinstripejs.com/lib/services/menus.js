@@ -16,6 +16,13 @@ export default {
                 partial: '_navbar/_github_link',
             });
 
+            this.menus.sidebar = this.menus.sidebar.filter(item => item.label != 'About').map(item => {
+                if(item.label == 'Getting Started'){
+                    item.displayOrder = 1;
+                }
+                return item;
+            });
+
 
             this.menus.burgerMenu = [];
             this.addMenuItem('burgerMenu', 'Info', {
