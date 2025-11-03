@@ -9,6 +9,7 @@ import { ImportableRegistry } from './importable_registry.js';
 import { ServiceConsumer } from './service_consumer.js';
 import { Annotatable } from './annotatable.js';
 import { Hookable } from './hookable.js';
+import { inflector } from '@pinstripe/utils';
 
 export const View = Class.extend().include({
     meta(){
@@ -23,7 +24,13 @@ export const View = Class.extend().include({
 
         this.assignProps({
             register(name, ...args){
-                console.log(`Registering view: ${name}`);
+                for(const part of name.split(/\/+/)){
+                    const matches = part.match(/^.*?--(.*)$/);
+                    if(!matches) continue;
+                    for(const featureFlag of matches[1].split('--')){
+                        this.featureFor(featureFlag);
+                    }
+                }
                 return register.call(this, name, ...args);
             },
 
@@ -49,8 +56,9 @@ export const View = Class.extend().include({
             },
 
             featureFor(name){
-                if(this.featuresIsEnabledFor.includes(name)) return;
-                this.featuresIsEnabledFor.push(name);
+                const normalizedName = inflector.camelize(name);
+                if(this.featuresIsEnabledFor.includes(normalizedName)) return;
+                this.featuresIsEnabledFor.push(normalizedName);
             },
 
             addToClient(){
