@@ -19,7 +19,8 @@
     "test:services": "cd tests/services && node --test",
     "test:cli": "cd tests/cli && node --test --test-concurrency 1",
     "playwright:run": "playwright test",
-    "playwright:open": "playwright test --ui"
+    "playwright:open": "playwright test --ui",
+    "reset-database": "pinstripe reset-database"
   },
   "dependencies": {
     "pinstripe": "^0.35.0"

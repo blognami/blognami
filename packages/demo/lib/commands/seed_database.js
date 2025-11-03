@@ -5,7 +5,7 @@ import Yaml from 'js-yaml';
 
 export default {
     async run(){
-        const defaultModules = '@blognami/pages, @blognami/posts, @blognami/tags, @blognami/newsletter, @blognami/main';
+        const defaultModules = '@blognami/pages, @blognami/posts, @blognami/tags, @blognami/main';
         this.modules = (process.env.MODULES ?? defaultModules).split(/\s*,\s*/).filter(Boolean);
 
         if(this.modules.includes('@pinstripe/multi-tenant')){

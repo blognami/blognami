@@ -19,7 +19,8 @@
     "test:cli": "npm run test:cli --workspace demo",
     "playwright:open": "npm run playwright:open --workspace demo",
     "version-all": "npm version minor --workspaces",
-    "publish-all": "npm publish --workspaces"
+    "publish-all": "npm publish --workspaces",
+    "reset-databases": "npm run reset-database --workspaces --if-present"
   },
   "dependencies": {
     "nodemon": "^3.1.4"

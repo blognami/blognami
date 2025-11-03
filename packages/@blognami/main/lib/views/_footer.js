@@ -47,7 +47,7 @@ export const styles = ({ colors }) => `
 
 export default {
     async render(){
-        this.title = await this.database.site.title;
+        this.copyrightOwner = await this.database.site.copyrightOwner || await this.database.site.title;
 
         await this.runHook('beforeRender');
 
@@ -58,7 +58,7 @@ export default {
             <footer class="${this.cssClasses.root}" data-test-id="footer">
                 <div class="${this.cssClasses.container}">
                     <div>
-                        ${this.title} © ${new Date().getFullYear()}
+                        ${this.copyrightOwner} © ${new Date().getFullYear()}
                         ${legalSection.children.map(child => {
                             return this.renderHtml` | <a class="${this.cssClasses.link}" href="${child.url}">${child.label}</a>`;
                         })}
