@@ -28,7 +28,11 @@ export const View = Class.extend().include({
                     const matches = part.match(/^.*?--(.*)$/);
                     if(!matches) continue;
                     for(const featureFlag of matches[1].split('--')){
-                        this.featureFor(featureFlag);
+                        register.call(this, name, {
+                            meta(){
+                                this.featureFor(featureFlag);
+                            }
+                        });
                     }
                 }
                 return register.call(this, name, ...args);

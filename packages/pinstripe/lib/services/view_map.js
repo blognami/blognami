@@ -56,7 +56,14 @@ export default {
                 const overrideName = viewName.replace(/\/index$/, '');
                 out[overrideName] ??= out[viewName];
             }
+
+            const matches = viewName.match(/^(.*?)(--.*)$/);
+            if(matches){
+                const baseName = matches[1];
+                out[baseName] = out[viewName];
+            }
         }
+        
 
         return out;
     }
