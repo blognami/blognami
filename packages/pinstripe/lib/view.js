@@ -19,7 +19,14 @@ export const View = Class.extend().include({
         this.include(Annotatable);
         this.include(Hookable);
 
+        const { register } = this;
+
         this.assignProps({
+            register(name, ...args){
+                console.log(`Registering view: ${name}`);
+                return register.call(this, name, ...args);
+            },
+
             run(context, name, fn){
                 return context.fork().run(async context => {
                     context.view = await this.create(name, context);
