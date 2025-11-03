@@ -374,7 +374,19 @@ export default {
         if(!View.cache[cacheKey]){
             const out = [];
             const viewMap = await this.viewMap;
+            const reversedViewMap = {};
             for(const [path, viewName] of Object.entries(viewMap)) {
+                reversedViewMap[viewName] ??= [];
+                reversedViewMap[viewName].push(path);
+            }
+            const normalizedViewMap = {};
+            for(const [viewName, paths] of Object.entries(reversedViewMap)) {
+                // Choose the shortest path as the canonical one
+                paths.sort((a, b) => a.length - b.length);
+                normalizedViewMap[paths[0]] = viewName;
+            }
+
+            for(const [path, viewName] of Object.entries(normalizedViewMap)) {
                 const annotations = View.for(viewName).annotations;
                 if(annotations && annotations.menus) {
                     for(const [menuName, _menuPath] of Object.entries(annotations.menus)) {
