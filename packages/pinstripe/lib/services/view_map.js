@@ -63,7 +63,6 @@ export default {
                 out[baseName] = out[viewName];
             }
         }
-        
 
         return out;
     }
