@@ -57,6 +57,7 @@ export default {
                 out[overrideName] ??= out[viewName];
             }
 
+            // TODO: take into account the order of feature flags when multiple are present
             const matches = viewName.match(/^(.*?)(--.*)$/);
             if(matches){
                 const baseName = matches[1];
