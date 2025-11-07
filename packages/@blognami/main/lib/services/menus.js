@@ -173,6 +173,21 @@ export default {
             });
         }
 
+        this.addMenuItem('sidebar', { label: 'Introduction', displayOrder: 1, children: [
+            {
+                label: 'Latest Posts',
+                url: '/',
+            }
+        ]});
+
+        // Add sidebar content to burger menu
+        this.addMenuItem('burgerMenu', { label: 'Introduction', displayOrder: 1, children: [
+            {
+                label: 'Home',
+                url: '/',
+            }
+        ]});
+
         // Legal footer menu items
         this.addMenuItem('footer', 'Legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });
         this.addMenuItem('footer', 'Legal', { label: 'Privacy Policy', url: '/legal/privacy-policy' });
