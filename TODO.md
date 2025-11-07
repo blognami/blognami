@@ -2,6 +2,7 @@
 - Implement `_sidebar/_sections_from_html`
   - Takes a html body and formats into navigation.
   - Come up with a better name
+- Convert `site.description` to `site.navigation`
 
 ---
 
