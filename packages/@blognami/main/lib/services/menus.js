@@ -173,15 +173,14 @@ export default {
             });
         }
 
-        this.addMenuItem('sidebar', { label: 'Introduction', displayOrder: 1, children: [
+        this.addMenuItem('sidebar', { label: 'Top', displayOrder: 1, children: [
             {
-                label: 'Latest Posts',
+                label: 'Home',
                 url: '/',
             }
         ]});
 
-        // Add sidebar content to burger menu
-        this.addMenuItem('burgerMenu', { label: 'Introduction', displayOrder: 1, children: [
+        this.addMenuItem('burgerMenu', { label: 'Top', displayOrder: 1, children: [
             {
                 label: 'Home',
                 url: '/',
