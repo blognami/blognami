@@ -31,9 +31,9 @@ if(modules.includes('@pinstripe/multi-tenant')){
             title: 'Foo'
         });
 
-        await expectItemCollectionCountsToBeCorrect(tenant, { commentables: 1, pageables: 2, posts: 1, revisables: 2, sites: 1, tagables: 1, users: 1 });
+        await expectItemCollectionCountsToBeCorrect(tenant, { commentables: 1, pageables: 2, posts: 1, revisables: 1, sites: 1, tagables: 1, users: 1 });
 
-        await expectItemCollectionCountsToBeCorrect(database, { commentables: 1, pageables: 2, posts: 1, revisables: 2, sites: 1, tagables: 1, users: 1 });
+        await expectItemCollectionCountsToBeCorrect(database, { commentables: 1, pageables: 2, posts: 1, revisables: 1, sites: 1, tagables: 1, users: 1 });
 
         await tenant.delete();
 
