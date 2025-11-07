@@ -173,11 +173,11 @@ export default {
             });
         }
 
-        // About section menu items
-        this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
+        // Top section menu items
+        this.addMenuItem('sidebar', { label: 'Top', partial: '_sidebar/_top_section', displayOrder: 1 });
 
         // Add sidebar content to burger menu
-        this.addMenuItem('burgerMenu', { label: 'About', partial: '_navbar/burger_menu/_about_section', displayOrder: 1 });
+        this.addMenuItem('burgerMenu', { label: 'Top', partial: '_navbar/burger_menu/_top_section', displayOrder: 1 });
 
         // Legal footer menu items
         this.addMenuItem('footer', 'Legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });

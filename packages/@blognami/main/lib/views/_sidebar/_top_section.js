@@ -24,8 +24,8 @@ export default {
         body = await this.renderHtml(parsedBody.toString());
 
         return this.renderView('_sidebar/_section', {
-            label: 'About',
-            testId: 'about-section',
+            label: 'Top',
+            testId: 'top-section',
             body: async () => {
                 if(isAdmin) return this.renderView('_editable_area', {
                     url: "/_actions/admin/edit_site_description",

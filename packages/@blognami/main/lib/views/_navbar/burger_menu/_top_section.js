@@ -55,8 +55,8 @@ export default {
         const wrappedContent = this.renderHtml`<div class="${this.cssClasses.aboutContent}">${body}</div>`;
 
         return this.renderView('_navbar/burger_menu/_section', {
-            label: 'About',
-            testId: 'about-section',
+            label: 'Top',
+            testId: 'top-section',
             body: async () => {
                 if(isAdmin) return this.renderView('_editable_area', {
                     url: "/_actions/admin/edit_site_description",
