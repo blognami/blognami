@@ -322,7 +322,7 @@ export function describeApp(role) {
 
     test.describe("a basic page", () => {
       test.beforeEach(async ({ page, helpers }) => {
-        await page.getByTestId("sidebar").getByText("Osinski Extensions").click();
+        await page.goto("/osinski-extensions");
         await expect(page.getByTestId("main").locator("h1")).toContainText("Osinski Extensions");
       });
 

@@ -18,11 +18,7 @@ export default {
         if(process.env.SKIP_FIXTURES == 'true') return;
     
         await this.database.site.update({
-            title: 'Lorem ipsum',
-            description: [
-                'Provident itaque iste.',
-                '  * [Osinski Extensions](/osinski-extensions)'
-            ].join('\n')
+            title: 'Lorem ipsum'
         });
     
         this.user = await this.database.users.insert({
