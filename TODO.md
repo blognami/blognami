@@ -1,4 +1,10 @@
 
+- Implement `_sidebar/_sections_from_html`
+  - Takes a html body and formats into navigation.
+  - Come up with a better name
+
+---
+
 - Create new homepage make it more opensource orientated (like Pinstripe)
 - Replicate navbar
   - branding
