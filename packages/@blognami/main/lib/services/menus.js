@@ -2,235 +2,11 @@ import { View } from 'pinstripe';
 
 export default {
     meta(){
+        this.addHook('initializeMenus', 'initializeMenus');
         this.addHook('initializeMenus', 'loadMenuItemsFromAnnotations');
         this.addHook('normalizeMenus', 'normalizeNavbarMenu');
         this.addHook('normalizeMenus', 'normalizeSidebarMenu');
         this.addHook('normalizeMenus', 'normalizeBurgerMenu');
-        
-        // Add user menu items hook
-        this.addHook('initializeMenus', async function(){
-            // Sign In link (shows when signed out)
-            if (await this.isSignedOut) {
-                this.addMenuItem('navbar', { 
-                    label: 'Sign in', 
-                    url: '/_actions/guest/sign_in', 
-                    target: '_overlay',
-                    displayOrder: 1000,
-                    preload: true,
-                    testId: 'sign-in'
-                });
-            }
-
-            // Admin-only user links (shows for admin users when signed in)
-            if (await this.isSignedIn && await this.user.role === 'admin') {
-                // Add User to the Add Content menu
-                this.addMenuItem('navbar', 'Add', { 
-                    label: 'User', 
-                    url: '/_actions/admin/add_user', 
-                    target: '_overlay', 
-                    testId: 'add-user' 
-                });
-
-                // Add User to the Find Content menu
-                this.addMenuItem('navbar', 'Find', { 
-                    label: 'User', 
-                    url: '/_actions/admin/find_user', 
-                    target: '_overlay', 
-                    testId: 'find-user' 
-                });
-
-                // Add corresponding burger menu items under Account section
-                this.addMenuItem('burgerMenu', 'Account', 'Add', { 
-                    label: 'User', 
-                    url: '/_actions/admin/add_user', 
-                    target: '_overlay', 
-                    testId: 'add-user' 
-                });
-
-                this.addMenuItem('burgerMenu', 'Account', 'Find', { 
-                    label: 'User', 
-                    url: '/_actions/admin/find_user', 
-                    target: '_overlay', 
-                    testId: 'find-user' 
-                });
-            }
-
-            // Your Account menu (shows for any signed in user)
-            if (await this.isSignedIn) {
-                const user = await this.user;
-
-                this.addMenuItem('navbar', {
-                    label: user.name,
-                    testId: 'your-account',
-                    displayOrder: 300
-                });
-                
-                this.addMenuItem('navbar', user.name, { 
-                    label: 'Profile', 
-                    url: `/${await this.user.slug}`, 
-                    target: '_top',
-                    testId: 'profile'
-                });
-
-                // Notification preferences
-                this.addMenuItem('navbar', user.name, { 
-                    label: 'Notification preferences', 
-                    url: '/_actions/user/edit_user_notification_preferences', 
-                    target: '_overlay',
-                    testId: 'edit-user-notification-preferences'
-                });
-
-                this.addMenuItem('navbar', user.name, { 
-                    label: 'Sign out', 
-                    url: '/_actions/guest/sign_out', 
-                    target: '_overlay',
-                    displayOrder: 200,
-                    testId: 'sign-out'
-                });
-
-                // Burger menu equivalents
-                this.addMenuItem('burgerMenu', 'Account', {
-                    label: user.name,
-                    testId: 'your-account',
-                    displayOrder: 300
-                });
-                
-                this.addMenuItem('burgerMenu', 'Account', user.name, { 
-                    label: 'Profile', 
-                    url: `/${await this.user.slug}`, 
-                    target: '_top',
-                    testId: 'profile'
-                });
-
-                // Notification preferences
-                this.addMenuItem('burgerMenu', 'Account', user.name, { 
-                    label: 'Notification preferences', 
-                    url: '/_actions/user/edit_user_notification_preferences', 
-                    target: '_overlay',
-                    testId: 'edit-user-notification-preferences'
-                });
-
-                this.addMenuItem('burgerMenu', 'Account', user.name, { 
-                    label: 'Sign out', 
-                    url: '/_actions/guest/sign_out', 
-                    target: '_overlay',
-                    displayOrder: 200,
-                    testId: 'sign-out'
-                });
-            }
-
-            // Sign In link for burger menu (shows when signed out)
-            if (await this.isSignedOut) {
-                this.addMenuItem('burgerMenu', 'Account', { 
-                    label: 'Sign in', 
-                    url: '/_actions/guest/sign_in', 
-                    target: '_overlay',
-                    displayOrder: 1000,
-                    preload: true,
-                    testId: 'sign-in'
-                });
-            }
-
-            // Site-specific menu items (merged from @blognami/site)
-            // Admin-only Site Settings (shows for admin users when signed in)
-            if (await this.isSignedIn && await this.user.role === 'admin') {
-                // Site settings in Settings menu
-                this.addMenuItem('navbar', 'Settings', { 
-                    label: 'Site', 
-                    url: '/_actions/admin/edit_site_meta', 
-                    target: '_overlay', 
-                    testId: 'edit-site-meta' 
-                });
-
-                // Site settings in burger menu Settings
-                this.addMenuItem('burgerMenu', 'Account', 'Settings', { 
-                    label: 'Site', 
-                    url: '/_actions/admin/edit_site_meta', 
-                    target: '_overlay', 
-                    testId: 'edit-site-meta' 
-                });
-            }
-
-            // About section menu items
-            this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
-
-            // Add sidebar content to burger menu
-            this.addMenuItem('burgerMenu', { label: 'About', partial: '_navbar/burger_menu/_about_section', displayOrder: 1 });
-
-            // Legal footer menu items
-            this.addMenuItem('footer', 'Legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });
-            this.addMenuItem('footer', 'Legal', { label: 'Privacy Policy', url: '/legal/privacy-policy' });
-            this.addMenuItem('footer', 'Legal', { label: 'Cookie Policy', url: '/legal/cookie-policy' });
-
-            // Stripe subscription menu items (merged from @blognami/stripe)
-            // Newsletter subscription menu (shows for any signed in user)
-            if (await this.isSignedIn) {
-                const user = await this.user;
-
-                // Newsletter subscription (only show if user is subscribed)
-                if (await user.isSubscribedToNewsletter()) {
-                    const isPaid = await user.isSubscribedToNewsletter({ tier: 'paid' });
-                    const confirmMessage = isPaid ? (
-                        `Are you sure you want to unsubscribe? You will lose access to members only content, and any remaining subscription time will be lost.`
-                    ) : (
-                        `Are you sure you want to unsubscribe? You will lose access to members only content.`
-                    );
-
-                    this.addMenuItem('navbar', user.name, { 
-                        label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`, 
-                        url: `/_actions/user/unsubscribe?subscribableId=${this.database.newsletter.id}`, 
-                        target: '_overlay',
-                        testId: 'unsubscribe',
-                        dataConfirm: confirmMessage
-                    });
-
-                    // Newsletter subscription for burger menu
-                    this.addMenuItem('burgerMenu', 'Account', user.name, { 
-                        label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`, 
-                        url: `/_actions/user/unsubscribe?subscribableId=${this.database.newsletter.id}`, 
-                        target: '_overlay',
-                        testId: 'unsubscribe',
-                        dataConfirm: confirmMessage
-                    });
-                }
-            }
-
-            // Admin-only Stripe Settings (shows for admin users when signed in)
-            if (await this.isSignedIn && await this.user.role === 'admin') {
-                // Edit Stripe link for navbar
-                this.addMenuItem('navbar', 'Settings', { 
-                    label: 'Stripe', 
-                    url: '/_actions/admin/edit_stripe', 
-                    target: '_overlay', 
-                    testId: 'edit-stripe' 
-                });
-
-                // Edit Stripe link for burger menu
-                this.addMenuItem('burgerMenu', 'Account', 'Settings', { 
-                    label: 'Stripe', 
-                    url: '/_actions/admin/edit_stripe', 
-                    target: '_overlay', 
-                    testId: 'edit-stripe' 
-                });
-
-                // Newsletter settings (merged from @blognami/newsletter)
-                // Add Newsletter settings to navbar Settings menu
-                this.addMenuItem('navbar', 'Settings', { 
-                    label: 'Newsletter', 
-                    url: '/_actions/admin/edit_newsletter', 
-                    target: '_overlay', 
-                    testId: 'edit-site-membership' 
-                });
-
-                // Add Newsletter settings to burger menu Settings
-                this.addMenuItem('burgerMenu', 'Account', 'Settings', { 
-                    label: 'Newsletter', 
-                    url: '/_actions/admin/edit_newsletter', 
-                    target: '_overlay', 
-                    testId: 'edit-site-membership' 
-                });
-            }
-        });
     },
 
     create(){
@@ -252,6 +28,230 @@ export default {
 
             return this.context.root.menus;
         });
+    },
+
+    async initializeMenus(){
+        // Sign In link (shows when signed out)
+        if (await this.isSignedOut) {
+            this.addMenuItem('navbar', { 
+                label: 'Sign in', 
+                url: '/_actions/guest/sign_in', 
+                target: '_overlay',
+                displayOrder: 1000,
+                preload: true,
+                testId: 'sign-in'
+            });
+        }
+
+        // Admin-only user links (shows for admin users when signed in)
+        if (await this.isSignedIn && await this.user.role === 'admin') {
+            // Add User to the Add Content menu
+            this.addMenuItem('navbar', 'Add', { 
+                label: 'User', 
+                url: '/_actions/admin/add_user', 
+                target: '_overlay', 
+                testId: 'add-user' 
+            });
+
+            // Add User to the Find Content menu
+            this.addMenuItem('navbar', 'Find', { 
+                label: 'User', 
+                url: '/_actions/admin/find_user', 
+                target: '_overlay', 
+                testId: 'find-user' 
+            });
+
+            // Add corresponding burger menu items under Account section
+            this.addMenuItem('burgerMenu', 'Account', 'Add', { 
+                label: 'User', 
+                url: '/_actions/admin/add_user', 
+                target: '_overlay', 
+                testId: 'add-user' 
+            });
+
+            this.addMenuItem('burgerMenu', 'Account', 'Find', { 
+                label: 'User', 
+                url: '/_actions/admin/find_user', 
+                target: '_overlay', 
+                testId: 'find-user' 
+            });
+        }
+
+        // Your Account menu (shows for any signed in user)
+        if (await this.isSignedIn) {
+            const user = await this.user;
+
+            this.addMenuItem('navbar', {
+                label: user.name,
+                testId: 'your-account',
+                displayOrder: 300
+            });
+            
+            this.addMenuItem('navbar', user.name, { 
+                label: 'Profile', 
+                url: `/${await this.user.slug}`, 
+                target: '_top',
+                testId: 'profile'
+            });
+
+            // Notification preferences
+            this.addMenuItem('navbar', user.name, { 
+                label: 'Notification preferences', 
+                url: '/_actions/user/edit_user_notification_preferences', 
+                target: '_overlay',
+                testId: 'edit-user-notification-preferences'
+            });
+
+            this.addMenuItem('navbar', user.name, { 
+                label: 'Sign out', 
+                url: '/_actions/guest/sign_out', 
+                target: '_overlay',
+                displayOrder: 200,
+                testId: 'sign-out'
+            });
+
+            // Burger menu equivalents
+            this.addMenuItem('burgerMenu', 'Account', {
+                label: user.name,
+                testId: 'your-account',
+                displayOrder: 300
+            });
+            
+            this.addMenuItem('burgerMenu', 'Account', user.name, { 
+                label: 'Profile', 
+                url: `/${await this.user.slug}`, 
+                target: '_top',
+                testId: 'profile'
+            });
+
+            // Notification preferences
+            this.addMenuItem('burgerMenu', 'Account', user.name, { 
+                label: 'Notification preferences', 
+                url: '/_actions/user/edit_user_notification_preferences', 
+                target: '_overlay',
+                testId: 'edit-user-notification-preferences'
+            });
+
+            this.addMenuItem('burgerMenu', 'Account', user.name, { 
+                label: 'Sign out', 
+                url: '/_actions/guest/sign_out', 
+                target: '_overlay',
+                displayOrder: 200,
+                testId: 'sign-out'
+            });
+        }
+
+        // Sign In link for burger menu (shows when signed out)
+        if (await this.isSignedOut) {
+            this.addMenuItem('burgerMenu', 'Account', { 
+                label: 'Sign in', 
+                url: '/_actions/guest/sign_in', 
+                target: '_overlay',
+                displayOrder: 1000,
+                preload: true,
+                testId: 'sign-in'
+            });
+        }
+
+        // Site-specific menu items (merged from @blognami/site)
+        // Admin-only Site Settings (shows for admin users when signed in)
+        if (await this.isSignedIn && await this.user.role === 'admin') {
+            // Site settings in Settings menu
+            this.addMenuItem('navbar', 'Settings', { 
+                label: 'Site', 
+                url: '/_actions/admin/edit_site_meta', 
+                target: '_overlay', 
+                testId: 'edit-site-meta' 
+            });
+
+            // Site settings in burger menu Settings
+            this.addMenuItem('burgerMenu', 'Account', 'Settings', { 
+                label: 'Site', 
+                url: '/_actions/admin/edit_site_meta', 
+                target: '_overlay', 
+                testId: 'edit-site-meta' 
+            });
+        }
+
+        // About section menu items
+        this.addMenuItem('sidebar', { label: 'About', partial: '_sidebar/_about_section', displayOrder: 1 });
+
+        // Add sidebar content to burger menu
+        this.addMenuItem('burgerMenu', { label: 'About', partial: '_navbar/burger_menu/_about_section', displayOrder: 1 });
+
+        // Legal footer menu items
+        this.addMenuItem('footer', 'Legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });
+        this.addMenuItem('footer', 'Legal', { label: 'Privacy Policy', url: '/legal/privacy-policy' });
+        this.addMenuItem('footer', 'Legal', { label: 'Cookie Policy', url: '/legal/cookie-policy' });
+
+        // Stripe subscription menu items (merged from @blognami/stripe)
+        // Newsletter subscription menu (shows for any signed in user)
+        if (await this.isSignedIn) {
+            const user = await this.user;
+
+            // Newsletter subscription (only show if user is subscribed)
+            if (await user.isSubscribedToNewsletter()) {
+                const isPaid = await user.isSubscribedToNewsletter({ tier: 'paid' });
+                const confirmMessage = isPaid ? (
+                    `Are you sure you want to unsubscribe? You will lose access to members only content, and any remaining subscription time will be lost.`
+                ) : (
+                    `Are you sure you want to unsubscribe? You will lose access to members only content.`
+                );
+
+                this.addMenuItem('navbar', user.name, { 
+                    label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`, 
+                    url: `/_actions/user/unsubscribe?subscribableId=${this.database.newsletter.id}`, 
+                    target: '_overlay',
+                    testId: 'unsubscribe',
+                    dataConfirm: confirmMessage
+                });
+
+                // Newsletter subscription for burger menu
+                this.addMenuItem('burgerMenu', 'Account', user.name, { 
+                    label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`, 
+                    url: `/_actions/user/unsubscribe?subscribableId=${this.database.newsletter.id}`, 
+                    target: '_overlay',
+                    testId: 'unsubscribe',
+                    dataConfirm: confirmMessage
+                });
+            }
+        }
+
+        // Admin-only Stripe Settings (shows for admin users when signed in)
+        if (await this.isSignedIn && await this.user.role === 'admin') {
+            // Edit Stripe link for navbar
+            this.addMenuItem('navbar', 'Settings', { 
+                label: 'Stripe', 
+                url: '/_actions/admin/edit_stripe', 
+                target: '_overlay', 
+                testId: 'edit-stripe' 
+            });
+
+            // Edit Stripe link for burger menu
+            this.addMenuItem('burgerMenu', 'Account', 'Settings', { 
+                label: 'Stripe', 
+                url: '/_actions/admin/edit_stripe', 
+                target: '_overlay', 
+                testId: 'edit-stripe' 
+            });
+
+            // Newsletter settings (merged from @blognami/newsletter)
+            // Add Newsletter settings to navbar Settings menu
+            this.addMenuItem('navbar', 'Settings', { 
+                label: 'Newsletter', 
+                url: '/_actions/admin/edit_newsletter', 
+                target: '_overlay', 
+                testId: 'edit-site-membership' 
+            });
+
+            // Add Newsletter settings to burger menu Settings
+            this.addMenuItem('burgerMenu', 'Account', 'Settings', { 
+                label: 'Newsletter', 
+                url: '/_actions/admin/edit_newsletter', 
+                target: '_overlay', 
+                testId: 'edit-site-membership' 
+            });
+        }
     },
 
     addMenuItem(...args) {
