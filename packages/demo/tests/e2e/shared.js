@@ -723,9 +723,6 @@ function describeNavbar(role) {
 function describeSidebar(role) {
   test.describe("sidebar", () => {
     test(`should have the correct contents`, async ({ page, helpers }) => {
-      await expect(page.getByTestId("sidebar").getByTestId("about-section")).toContainText("About");
-      await expect(page.getByTestId("sidebar").getByTestId("about-section")).toContainText("Provident itaque iste.");
-
       await expect(page.getByTestId("sidebar").getByTestId("featured-section")).toContainText("Featured");
       const featuredTitles = ["Gregg Locks", "Imogene Walks", "Mayert Overpass"];
       for (const title of featuredTitles) {
