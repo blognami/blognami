@@ -1,6 +1,6 @@
 ---
 menus:
-  sidebar: ['Getting Started', 'Introduction']
+  # sidebar: ['Getting Started', 'Introduction']
 ---
 # 🚀 Getting Started with Blognami
 
