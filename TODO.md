@@ -1,6 +1,18 @@
 
-- ~~Fix menu item duplication bug where there is more than one route to a view.~~
-- ~~Use `@pinstripe/main` to act as base for `pinstripejs.com`.~~
-  - ~~Update copyrightOwner to Blognami LTD.~~
-- ~~Implement view naming convention where `view_name--feature-flag` will map to `view_name` when `feature-flag` is enabled.~~
-- ~~Enable portal flag for `blognami.com` and move `docs` to `docs--portal` and create `index--portal`.~~
+- Create new homepage make it more opensource orientated (like Pinstripe)
+- Replicate navbar
+  - branding
+  - links
+- Replicate footer
+  - copyright
+  - Legal pages
+- Fix proofOfWorkProgress
+
+---
+
+## Revamp
+
+- get rid of about section
+  - Link to home page on sidebar under "Getting Started > Introduction" or "Introduction > [Home title]"
+- Add `body` to `home`
+- Add `body` to `tag`
