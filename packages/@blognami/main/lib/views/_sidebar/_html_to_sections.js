@@ -7,25 +7,25 @@ export default {
         for(const child of body.children) {
             if(child.type === 'h2') {
                 currentSection = child.text;
-                return;
+                continue;
             }
             sections[currentSection] ??= [];
             if(child.type = 'ul'){
                 sections[currentSection].push(
-                    this.renderView('_navbar/_link_group', {
+                    this.renderView('_sidebar/_link_group', {
                         children: this.extractListItems(child)
                     })
                 );
-                return;
+                continue;
             }
             sections[currentSection].push(
                 this.renderHtml(child.toString())
             );
         }
         const out = [];
-        for(const [ label, body ] of Object.entries[sections]){
+        for(const [ label, body ] of Object.entries(sections)){
             out.push(
-                this.renderView('_navbar/_section', { label, body })
+                this.renderView('_sidebar/_section', { label, body })
             );
         }
         return out;

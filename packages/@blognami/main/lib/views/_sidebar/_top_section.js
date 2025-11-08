@@ -1,5 +1,23 @@
 export default {
-    async render(){    
+
+    async render(){
+        let user;
+        if(await this.session){
+            user = await this.session.user;
+        }
+
+        const isAdmin = user?.role == 'admin';
+    
+        const site = await this.database.site;
+
+        let body = await this.renderMarkdown(await site.description);
+
+        return this.renderView('_sidebar/_html_to_sections', {
+            body
+        });
+    },
+
+    async _render(){    
         let user;
         if(await this.session){
             user = await this.session.user;
