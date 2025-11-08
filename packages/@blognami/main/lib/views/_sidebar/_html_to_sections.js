@@ -10,7 +10,25 @@ export default {
                 return;
             }
             sections[currentSection] ??= [];
+            if(child.type = 'ul'){
+                sections[currentSection].push(
+                    this.renderView('_navbar/_link_group', {
+                        children: this.extractListItems(child)
+                    })
+                );
+                return;
+            }
+            sections[currentSection].push(
+                this.renderHtml(child.toString())
+            );
         }
+        const out = [];
+        for(const [ label, body ] of Object.entries[sections]){
+            out.push(
+                this.renderView('_navbar/_section', { label, body })
+            );
+        }
+        return out;
     },
 
     extractListItems(ul) {
