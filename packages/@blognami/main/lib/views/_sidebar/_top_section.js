@@ -7,51 +7,50 @@ export default {
         }
 
         const isAdmin = user?.role == 'admin';
-    
-        const site = await this.database.site;
 
-        let body = await this.renderMarkdown(await site.description);
+        const out = await this.renderSections();
 
-        return this.renderView('_sidebar/_html_to_sections', {
-            body
+        if(isAdmin) return this.renderView('_editable_area', {
+            url: "/_actions/admin/edit_site_description",
+            body: out
         });
+
+        return out;
     },
 
-    async _render(){    
-        let user;
-        if(await this.session){
-            user = await this.session.user;
-        }
-
-        const isAdmin = user?.role == 'admin';
-    
-        const site = await this.database.site;
-
-        let body = await this.renderMarkdown(await site.description);
-        
-        const parsedBody = this.parseHtml(body);
-
-        for(const [index, child] of Object.entries(parsedBody.children)) {
-            if(child.type != 'ul') continue;
-            const children = this.extractListItems(child);
-            const html = await this.renderView('_sidebar/_link_group_section', { children });
-            parsedBody.children[index] = this.parseHtml(html);
-            parsedBody.children[index].parent = parsedBody;
-        }
-
-        body = await this.renderHtml(parsedBody.toString());
-
-        return this.renderView('_sidebar/_section', {
-            label: 'Top',
-            testId: 'top-section',
-            body: async () => {
-                if(isAdmin) return this.renderView('_editable_area', {
-                    url: "/_actions/admin/edit_site_description",
-                    body
-                });
-                return body;
+    async renderSections(){
+        const body = this.parseHtml(
+            await this.renderMarkdown(
+                await this.database.site.description
+            )
+        );
+        const sections = {};
+        let currentSection = 'Top';
+        for(const child of body.children) {
+            if(child.type === 'h2') {
+                currentSection = child.text;
+                continue;
             }
-        });
+            sections[currentSection] ??= [];
+            if(child.type == 'ul'){
+                sections[currentSection].push(
+                    this.renderView('_sidebar/_link_group', {
+                        children: this.extractListItems(child)
+                    })
+                );
+                continue;
+            }
+            sections[currentSection].push(
+                this.renderHtml(child)
+            );
+        }
+        const out = [];
+        for(const [ label, body ] of Object.entries(sections)){
+            out.push(
+                this.renderView('_sidebar/_section', { label, body })
+            );
+        }
+        return out;
     },
 
     extractListItems(ul) {
