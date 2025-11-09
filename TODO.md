@@ -6,7 +6,7 @@
 
 ---
 
-Can probably get rid of "featured" posts
+Can probably get rid of "featured" posts and sidebar section.
 
 ---
 
