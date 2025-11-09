@@ -10,7 +10,7 @@ export default {
         const out = await this.renderSections();
 
         if(isAdmin) return this.renderView('_editable_area', {
-            url: "/_actions/admin/edit_site_description",
+            url: "/_actions/admin/edit_site_navigation",
             body: out
         });
 
@@ -20,7 +20,7 @@ export default {
     async renderSections(){
         const body = this.parseHtml(
             await this.renderMarkdown(
-                await this.database.site.description
+                await this.database.site.navigation
             )
         );
         const sections = {};

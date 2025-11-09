@@ -6,7 +6,7 @@ export default {
             fields: [
                 { name: 'revisionUserId', type: 'forced', value: this.session.user.id },
                 {  
-                    name: 'description',
+                    name: 'navigation',
                     type: '_markdown_editor',
                     overlayLinks: [ { href: `/_actions/admin/revisions?revisableId=${site.id}&name=description`, 'data-test-id': 'revisions', body: 'Revisions' } ]
                 }

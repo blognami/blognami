@@ -19,7 +19,7 @@ export default {
     
         await this.database.site.update({
             title: 'Lorem ipsum',
-            description: [
+            navigation: [
                 'Provident itaque iste.',
                 '  * [Osinski Extensions](/osinski-extensions)'
             ].join('\n')

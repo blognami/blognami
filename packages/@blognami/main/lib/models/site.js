@@ -12,7 +12,7 @@ export default {
             this.salt = crypto.randomUUID();
         });
 
-        this.trackRevisionsFor('description');
+        this.trackRevisionsFor('navigation');
     },
 
     async generatePassword(salt){
