@@ -24,7 +24,7 @@ export default {
             )
         );
         const sections = {};
-        let currentSection = '';
+        let currentSection = 'Top';
         for(const child of body.children) {
             if(child.type === 'h2') {
                 currentSection = child.text;
