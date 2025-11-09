@@ -1,5 +1,4 @@
 export default {
-
     async render(){
         let user;
         if(await this.session){
