@@ -195,7 +195,6 @@ export default {
                                     <p><b>Meta title:</b> ${post.metaTitle}</p>
                                     <p><b>Meta description:</b> ${post.metaDescription}</p>
                                     <p><b>Slug:</b> ${post.slug}</p>
-                                    <p><b>Featured:</b> ${post.featured ? 'true' : 'false'}</p>
                                     <p><b>Enable comments:</b> ${post.enableComments ? 'true' : 'false'}</p>
                                 `,
                                 linkTestId: "edit-post-meta",

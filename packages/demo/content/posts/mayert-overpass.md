@@ -1,6 +1,5 @@
 ---
 title: Mayert Overpass
-featured: true
 published: true
 publishedAt: 2023-07-01 12:37
 ---

@@ -276,21 +276,6 @@ export function describeApp(role) {
               await expect(page).toHaveURL(/\/foo-bar/);
             });
 
-            test(`should have an interface to allow the user to edit the featured flag`, async ({ page, helpers }) => {
-              await expect(page.getByTestId("sidebar").getByTestId("featured-section")).not.toContainText("Alexandra Burgs");
-              await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Featured: false");
-
-              await page.getByTestId("main").getByTestId("edit-post-meta").click();
-              await helpers.submitForm({ featured: true });
-              await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Featured: true");
-              await expect(page.getByTestId("sidebar").getByTestId("featured-section")).toContainText("Alexandra Burgs");
-
-              await page.getByTestId("main").getByTestId("edit-post-meta").click();
-              await helpers.submitForm({ featured: false });
-              await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Featured: false");
-              await expect(page.getByTestId("sidebar").getByTestId("featured-section")).not.toContainText("Alexandra Burgs");
-            });
-
             test(`should have an interface to allow the user to edit the enableComments flag`, async ({ page, helpers }) => {
               await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Enable comments: true");
               await expect(page.getByTestId("main").getByTestId("add-comment")).toBeVisible();
@@ -725,12 +710,6 @@ function describeSidebar(role) {
     test(`should have the correct contents`, async ({ page, helpers }) => {
       await expect(page.getByTestId("sidebar").getByTestId("top-section")).toContainText("Top");
       await expect(page.getByTestId("sidebar").getByTestId("top-section")).toContainText("Provident itaque iste.");
-
-      await expect(page.getByTestId("sidebar").getByTestId("featured-section")).toContainText("Featured");
-      const featuredTitles = ["Gregg Locks", "Imogene Walks", "Mayert Overpass"];
-      for (const title of featuredTitles) {
-        await expect(page.getByTestId("sidebar").getByTestId("featured-section")).toContainText(title);
-      }
 
       await expect(page.getByTestId("sidebar").getByTestId("tags-section")).toContainText("Tags");
       const tagTitles = ["Excepturi Corporis", "34 posts"];

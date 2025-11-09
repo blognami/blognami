@@ -50,14 +50,6 @@ export default {
             }
         
             posts = posts.orderBy('publishedAt', 'desc');
-        
-            const featuredPosts = await posts.where({ featured: true }).all();
-            
-            for (const post of featuredPosts) {
-                this.addMenuItem('sidebar', 'Featured', { label: post.title, url: `/${post.slug}` });
-                // Also add to burger menu Featured section
-                this.addMenuItem('burgerMenu', 'Featured', { label: post.title, url: `/${post.slug}` });
-            }
             
             // Add individual tags with post count badges
             const tags = await this.database.posts.tags.orderBy('name').all();

@@ -17,7 +17,7 @@ export default {
         };
 
         return this.renderForm(this.database.posts.where({ id: this.params.id }).first(), {
-            fields: [accessField, 'metaTitle', 'metaDescription', 'slug', 'featured', 'enableComments'],
+            fields: [accessField, 'metaTitle', 'metaDescription', 'slug', 'enableComments'],
             success({ slug }){
                 return that.renderRedirect({
                     url: `/${slug}`,
