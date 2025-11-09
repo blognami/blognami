@@ -6,6 +6,10 @@
 
 ---
 
+Can probably get rid of "featured" posts
+
+---
+
 - Create new homepage make it more opensource orientated (like Pinstripe)
 - Replicate navbar
   - branding
