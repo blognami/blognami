@@ -6,7 +6,8 @@ export default {
             copyrightOwner: 'Blognami Ltd',
             navigation: [
                 '## Getting Started',
-                '- [Introduction](/)'
+                '- [Introduction](/)',
+                '- [Blog](/blog)'
             ].join('\n')
         });
     }
