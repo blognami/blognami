@@ -3,7 +3,4 @@
 - Replicate navbar
   - branding
   - links
-- Replicate footer
-  - copyright
-  - Legal pages
 - Fix proofOfWorkProgress
