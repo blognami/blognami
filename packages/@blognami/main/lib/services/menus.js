@@ -283,6 +283,7 @@ export default {
             if (!existingItem) {
                 existingItem = {
                     label: pathSegment,
+                    testId: this.inflector.dasherize(pathSegment),
                     children: []
                 };
                 currentLevel.push(existingItem);

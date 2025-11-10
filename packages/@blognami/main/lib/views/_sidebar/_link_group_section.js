@@ -1,11 +1,11 @@
 
 export default {
     render(){
-        const { label, children: links } = this.params;
+        const { label, testId, children: links } = this.params;
 
         return this.renderView('_sidebar/_section', {
             label,
-            testId: `${this.inflector.dasherize(label)}-section`,   
+            testId,   
             body: this.renderView('_sidebar/_link_group', { children: links })
         });
     }

@@ -1,3 +1,4 @@
+
 export default {
     async render(){
         let user;
@@ -46,7 +47,11 @@ export default {
         const out = [];
         for(const [ label, body ] of Object.entries(sections)){
             out.push(
-                this.renderView('_sidebar/_section', { label, body })
+                this.renderView('_sidebar/_section', {
+                    label,
+                    testId: this.inflector.dasherize(label),
+                    body
+                })
             );
         }
         return out;

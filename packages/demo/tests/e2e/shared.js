@@ -215,7 +215,7 @@ export function describeApp(role) {
               }
               
               for (const title of tagNames) {
-                await expect(page.getByTestId("sidebar").getByTestId("tags-section")).not.toContainText(title);
+                await expect(page.getByTestId("sidebar").getByTestId("tags")).not.toContainText(title);
               }
               
               await expect(page.getByTestId("main").getByTestId("tagable-tags")).toContainText("Tags: none");
@@ -230,7 +230,7 @@ export function describeApp(role) {
               await expect(page.getByTestId("main").getByTestId("tagable-tags")).toContainText('Tags: "Apple", "Pear", "Plum"');
               
               for (const title of tagNames) {
-                await expect(page.getByTestId("sidebar").getByTestId("tags-section")).toContainText(title);
+                await expect(page.getByTestId("sidebar").getByTestId("tags")).toContainText(title);
               }
             });
           });
@@ -708,13 +708,13 @@ function describeNavbar(role) {
 function describeSidebar(role) {
   test.describe("sidebar", () => {
     test(`should have the correct contents`, async ({ page, helpers }) => {
-      await expect(page.getByTestId("sidebar").getByTestId("top-section")).toContainText("Top");
-      await expect(page.getByTestId("sidebar").getByTestId("top-section")).toContainText("Provident itaque iste.");
+      await expect(page.getByTestId("sidebar").getByTestId("top")).toContainText("Top");
+      await expect(page.getByTestId("sidebar").getByTestId("top")).toContainText("Provident itaque iste.");
 
-      await expect(page.getByTestId("sidebar").getByTestId("tags-section")).toContainText("Tags");
+      await expect(page.getByTestId("sidebar").getByTestId("tags")).toContainText("Tags");
       const tagTitles = ["Excepturi Corporis", "34 posts"];
       for (const title of tagTitles) {
-        await expect(page.getByTestId("sidebar").getByTestId("tags-section")).toContainText(title);
+        await expect(page.getByTestId("sidebar").getByTestId("tags")).toContainText(title);
       }
     });
   });
