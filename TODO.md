@@ -3,4 +3,5 @@
 - Replicate navbar
   - branding
   - links
+- Move blog home to /blog
 - Fix proofOfWorkProgress
