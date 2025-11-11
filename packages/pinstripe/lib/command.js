@@ -29,15 +29,15 @@ export const Command = Class.extend().include({
         this.include(Validateable);
         this.include(Annotatable);
 
-        this.on('validation', async command => {
+        this.addHook('validation', async function(){
             // Validate unknown parameters
-            for(const paramName of Object.keys(command.params)){
+            for(const paramName of Object.keys(this.params)){
                 // Skip global parameters that are built-in
                 if(['help', 'h', 'interactive', 'i'].includes(paramName)) {
                     continue;
                 }
-                if(!command.constructor.params[paramName]){
-                    command.setValidationError(paramName, `Unknown parameter`);
+                if(!this.constructor.params[paramName]){
+                    this.setValidationError(paramName, `Unknown parameter`);
                 }
             }
         });
@@ -90,10 +90,10 @@ export const Command = Class.extend().include({
                 };
 
                 if(!optional) {
-                    this.on('validation', command => {
-                        if(command.isValidationError(name)) return;
-                        const value = command.params[name];
-                        if(!value) command.setValidationError(name, 'Must not be blank');
+                    this.addHook('validation', function(){
+                        if(this.isValidationError(name)) return;
+                        const value = this.params[name];
+                        if(!value) this.setValidationError(name, 'Must not be blank');
                     });
                 }
             },

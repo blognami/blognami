@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "list-models"]
+menus:
+    sidebar: ["Commands", "list-models"]
 ---
 # list-models Command
 

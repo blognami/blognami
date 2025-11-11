@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "featureFlags"]
+menus:
+    sidebar: ["Services", "featureFlags"]
 ---
 # featureFlags Service
 

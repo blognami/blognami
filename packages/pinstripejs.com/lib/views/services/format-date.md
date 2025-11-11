@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "formatDate"]
+menus:
+    sidebar: ["Services", "formatDate"]
 ---
 # formatDate Service
 

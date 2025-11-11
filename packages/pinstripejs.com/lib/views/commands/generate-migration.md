@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "generate-migration"]
+menus:
+    sidebar: ["Commands", "generate-migration"]
 ---
 # generate-migration Command
 

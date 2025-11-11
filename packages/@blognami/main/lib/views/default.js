@@ -1,4 +1,3 @@
-
 export default {
     async render(){
         const { _url, ...otherParams } = this.params;

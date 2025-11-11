@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "bot"]
+menus:
+    sidebar: ["Services", "bot"]
 ---
 # bot Service
 

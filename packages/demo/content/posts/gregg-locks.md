@@ -1,6 +1,5 @@
 ---
 title: Gregg Locks
-featured: true
 published: true
 publishedAt: 2023-07-01 13:10
 tags:

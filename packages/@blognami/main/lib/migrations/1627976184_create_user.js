@@ -14,6 +14,10 @@ export default {
             await users.addColumn('emailNotificationFrequency', 'string', { default: 'asap' });
             await users.addColumn('emailNotificationLastSentAt', 'datetime');
             await users.addColumn('emailNotificationScheduledAt', 'datetime');
-        });  
+        });
+
+        await this.database.table('sessions', async sessions => {
+            await sessions.addColumn('userId', 'foreign_key');
+        });
     }
 };

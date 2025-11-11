@@ -1,4 +1,3 @@
-
 export default {
     async render(){
         const home = await this.database.home;

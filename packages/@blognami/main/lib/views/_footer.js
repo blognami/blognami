@@ -1,74 +1,70 @@
 
 export const styles = ({ colors }) => `
     .root {
-        padding-top: 8rem;
-        padding-bottom: 8rem;
-        padding-right: 3.6rem;
-        padding-left: 3.6rem;
-        color: ${colors.semantic.secondaryText};
-    }
-    
-    @media (max-width: 767px) {
-        .root {
-            padding-right: 2rem;
-            padding-left: 2rem;
-        }
+        border-top: 1px solid #e5e7eb;
+        background-color: #f9fafb;
+        padding: 4.8rem 0;
+        margin-top: 6.4rem;
+        color: ${colors?.semantic?.secondaryText || '#6b7280'};
     }
 
-    .inner {
+    .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2.4rem;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        font-size: 1.3rem;
-        max-width: 1200px;
-        margin: 0 auto;
+        font-size: 1.4rem;
+        gap: 2rem;
     }
 
     .powered-by {
         text-align: right;
     }
 
-    .root a {
-        color: ${colors.semantic.secondaryText};
+    .link {
+        color: ${colors?.semantic?.secondaryText || '#6b7280'};
+        text-decoration: none;
     }
 
-    .root a:hover {
+    .link:hover {
         color: #000;
         opacity: 1;
     }
 
     @media (max-width: 767px) {
-        .root {
-            padding-top: 6.4rem;
-            padding-bottom: 12rem;
-        }
-
-        .inner {
+        .container {
             grid-template-columns: 1fr;
             text-align: center;
         }
 
         .powered-by {
-            margin-top: 3.2rem;
+            margin-top: 2rem;
             text-align: center;
         }
     }
 `;
 
 export default {
-    async render(){    
-        const site = await this.database.site;
+    async render(){
+        this.copyrightOwner = await this.database.site.copyrightOwner || await this.database.site.title;
+
+        await this.runHook('beforeRender');
+
+        const footerSections = await this.menus.footer || [];
+        const legalSection = footerSections.find(section => section.label === 'Legal') || { children: [] };
 
         return this.renderHtml`
             <footer class="${this.cssClasses.root}" data-test-id="footer">
-                <div class="${this.cssClasses.inner}">
+                <div class="${this.cssClasses.container}">
                     <div>
-                        ${site.title} © ${new Date().getFullYear()}
-                        | <a href="/legal/terms-of-service">Terms of Service</a>
-                        | <a href="/legal/privacy-policy">Privacy Policy</a>
-                        | <a href="/legal/cookie-policy">Cookie Policy</a>
+                        ${this.copyrightOwner} © ${new Date().getFullYear()}
+                        ${legalSection.children.map(child => {
+                            return this.renderHtml` | <a class="${this.cssClasses.link}" href="${child.url}">${child.label}</a>`;
+                        })}
                     </div>    
-                    <div class="${this.cssClasses.poweredBy} ">
-                        <a href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
+                    <div class="${this.cssClasses.poweredBy}">
+                        <a class="${this.cssClasses.link}" href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
                     </div>
                 </div>
             </footer>

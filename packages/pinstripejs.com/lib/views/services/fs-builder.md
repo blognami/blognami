@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "fsBuilder"]
+menus:
+    sidebar: ["Services", "fsBuilder"]
 ---
 # fsBuilder Service
 

@@ -19,9 +19,11 @@ export default {
 
     async getNormalizedFeatureFlags(){
         const out = {};
+        const availableFeatureFlags = this.getAvailableFlags();
         const featureFlags = await this.featureFlags;
-        for(let name of this.getAvailableFlags()){
-            out[name] = featureFlags[name] ?? false;
+        for(const name in featureFlags){
+            if(!availableFeatureFlags.includes(name)) continue;
+            out[name] = featureFlags[name];
         }
         return out;
     },
@@ -49,6 +51,17 @@ export default {
             const isEnabled = featuresIsEnabledFor.length > 0 ? featuresIsEnabledFor.some(name => featureFlags[name]) : true;
             if(!isEnabled) continue;
             out[name] = name;
+        }
+
+        for(const [name, isEnabled] of Object.entries(featureFlags)){
+            if(!isEnabled) continue;
+            for(let viewName of View.names){
+                const mappedName = viewName.replace(/--[^/]+/g, '');
+                if(mappedName == viewName) continue;
+                const featureNames = View.for(viewName).featuresIsEnabledFor;
+                if(!featureNames.includes(name)) continue;
+                out[mappedName] = out[viewName];
+            }
         }
 
         for(let viewName of Object.keys(out)){

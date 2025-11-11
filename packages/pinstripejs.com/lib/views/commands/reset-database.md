@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "reset-database"]
+menus:
+    sidebar: ["Commands", "reset-database"]
 ---
 # reset-database Command
 

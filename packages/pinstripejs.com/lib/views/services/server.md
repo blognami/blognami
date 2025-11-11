@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "server"]
+menus:
+    sidebar: ["Services", "server"]
 ---
 # Server Service
 

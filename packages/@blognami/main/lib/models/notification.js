@@ -1,4 +1,3 @@
-
 import * as crypto from 'crypto';
 
 export default {
@@ -13,7 +12,7 @@ export default {
             return this.where({ bodyHash });
         });
 
-        this.on('before:validation', function(){
+        this.addHook('beforeValidation', function(){
             const now = new Date();
 
             if(!this.createdAt){
@@ -26,7 +25,7 @@ export default {
             this.bodyHash = crypto.createHash('sha1').update(this.body || '').digest('base64');
         });
 
-        this.on('before:update', function(){
+        this.addHook('beforeUpdate', function(){
             this.updatedAt = new Date();
         });
     }

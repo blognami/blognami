@@ -1,9 +1,8 @@
-
 export default {
     meta(){
-        this.belongsTo('user')
+        this.belongsTo('user');
 
-        this.mustNotBeBlank('passString')
-        this.mustNotBeBlank('userId')
+        this.mustNotBeBlank('userId');
+        this.mustNotBeBlank('passString');
     }
 };

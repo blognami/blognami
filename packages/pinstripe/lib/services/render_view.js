@@ -7,10 +7,10 @@ export default {
   },
   
   create() {
-    return async (name, params = {}) => {
+    return (name, params = {}) => this.defer(async () => {
       const mappedName = await this.viewMap[name];
       if (!mappedName) return;
       return View.render(this.context, mappedName, params);
-    };
+    });
   },
 };

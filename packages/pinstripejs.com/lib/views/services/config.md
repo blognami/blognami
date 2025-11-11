@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "config"]
+menus:
+    sidebar: ["Services", "config"]
 ---
 # config Service
 

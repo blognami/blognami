@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "initialParams"]
+menus:
+    sidebar: ["Services", "initialParams"]
 ---
 # initialParams Service
 

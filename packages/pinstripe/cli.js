@@ -20,17 +20,16 @@ import { inflector } from '@pinstripe/utils';
 
     await importAll();
 
-    if(exists){
-        Command.unregister('generate-project');
-    } else {
-        Command.names.forEach(commandName => {
-            if(commandName == 'list-commands' || commandName == 'generate-project') return;
-            Command.unregister(commandName);
-        });
-    }
-
-    if(process.env.PINSTRIPE_KEEP_INITIALIZE_PROJECT_COMMAND != 'true'){
-        Command.unregister('initialize-project');
+    if(process.env.PINSTRIPE_KEEP_ALL_COMMANDS != 'true') {
+        if(exists){
+            Command.unregister('generate-project');
+            Command.unregister('initialize-project');
+        } else {
+            Command.names.forEach(commandName => {
+                if(commandName == 'list-commands' || commandName == 'generate-project') return;
+                Command.unregister(commandName);
+            });
+        }
     }
     
     try {

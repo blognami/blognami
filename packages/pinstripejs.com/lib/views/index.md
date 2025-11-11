@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Getting Started", "Introduction"]
+menus:
+    sidebar: ["Getting Started", "Introduction"]
 ---
 
 # Welcome to Pinstripe JS

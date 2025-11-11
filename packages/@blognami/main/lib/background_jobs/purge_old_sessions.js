@@ -1,4 +1,3 @@
-
 export default {
     meta(){
         this.schedule('*/5 * * * *');

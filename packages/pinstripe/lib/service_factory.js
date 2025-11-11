@@ -2,12 +2,14 @@
 import { Class } from './class.js';
 import { Inflector } from './inflector.js';
 import { ImportableRegistry } from './importable_registry.js';
+import { Hookable } from './hookable.js';
 
 export const ServiceFactory = Class.extend().include({
     meta(){
         this.assignProps({ name: 'ServiceFactory' });
 
         this.include(ImportableRegistry);
+        this.include(Hookable);
 
         this.assignProps({
             normalizeName(name){

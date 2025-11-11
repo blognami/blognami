@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "renderForm"]
+menus:
+    sidebar: ["Services", "renderForm"]
 ---
 # renderForm Service
 

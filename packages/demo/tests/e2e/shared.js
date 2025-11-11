@@ -205,7 +205,7 @@ export function describeApp(role) {
               const tagNames = ["Apple", "Pear", "Plum"];
               
               for (const name of tagNames) {
-                await page.getByTestId("navbar").getByTestId("add-content").click();
+                await page.getByTestId("navbar").getByTestId("add").click();
                 await helpers.topPopover().getByTestId("add-tag").click();
                 await expect(helpers.topModal()).toContainText("Add tag");
                 await helpers.submitForm({ name });
@@ -215,7 +215,7 @@ export function describeApp(role) {
               }
               
               for (const title of tagNames) {
-                await expect(page.getByTestId("sidebar").getByTestId("tags-section")).not.toContainText(title);
+                await expect(page.getByTestId("sidebar").getByTestId("tags")).not.toContainText(title);
               }
               
               await expect(page.getByTestId("main").getByTestId("tagable-tags")).toContainText("Tags: none");
@@ -230,7 +230,7 @@ export function describeApp(role) {
               await expect(page.getByTestId("main").getByTestId("tagable-tags")).toContainText('Tags: "Apple", "Pear", "Plum"');
               
               for (const title of tagNames) {
-                await expect(page.getByTestId("sidebar").getByTestId("tags-section")).toContainText(title);
+                await expect(page.getByTestId("sidebar").getByTestId("tags")).toContainText(title);
               }
             });
           });
@@ -274,21 +274,6 @@ export function describeApp(role) {
               await expect(page).not.toHaveURL(/\/alexandra-burgs/);
               await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Slug: foo-bar");
               await expect(page).toHaveURL(/\/foo-bar/);
-            });
-
-            test(`should have an interface to allow the user to edit the featured flag`, async ({ page, helpers }) => {
-              await expect(page.getByTestId("sidebar").getByTestId("featured-section")).not.toContainText("Alexandra Burgs");
-              await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Featured: false");
-
-              await page.getByTestId("main").getByTestId("edit-post-meta").click();
-              await helpers.submitForm({ featured: true });
-              await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Featured: true");
-              await expect(page.getByTestId("sidebar").getByTestId("featured-section")).toContainText("Alexandra Burgs");
-
-              await page.getByTestId("main").getByTestId("edit-post-meta").click();
-              await helpers.submitForm({ featured: false });
-              await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Featured: false");
-              await expect(page.getByTestId("sidebar").getByTestId("featured-section")).not.toContainText("Alexandra Burgs");
             });
 
             test(`should have an interface to allow the user to edit the enableComments flag`, async ({ page, helpers }) => {
@@ -624,7 +609,7 @@ export function describeApp(role) {
             await helpers.topModal().getByText("OK").click();
             await expect(page.getByTestId("main").getByTestId("user-meta")).toBeVisible();
 
-            await page.getByTestId("navbar").getByTestId("add-content").click();
+            await page.getByTestId("navbar").getByTestId("add").click();
             await helpers.topPopover().getByTestId("add-user").click();
             await expect(helpers.topModal()).toContainText("Add user");
             await helpers.submitForm({
@@ -651,9 +636,9 @@ function describeNavbar(role) {
     test(`should have the correct contents`, async ({ page, helpers }) => {
       await expect(page.getByTestId("navbar").getByTestId("title")).toContainText("Lorem ipsum");
       if (role === "admin") {
-        await expect(page.getByTestId("navbar").getByTestId("find-content")).toContainText("Find");
-        await expect(page.getByTestId("navbar").getByTestId("add-content")).toContainText("Add");
-        await expect(page.getByTestId("navbar").getByTestId("edit-settings")).toContainText("Settings");
+        await expect(page.getByTestId("navbar").getByTestId("find")).toContainText("Find");
+        await expect(page.getByTestId("navbar").getByTestId("add")).toContainText("Add");
+        await expect(page.getByTestId("navbar").getByTestId("settings")).toContainText("Settings");
         await expect(page.getByTestId("navbar").getByTestId("your-account")).toContainText("Admin");
       } else {
         await expect(page.getByTestId("navbar").getByTestId("sign-in")).toContainText("Sign in");
@@ -662,7 +647,7 @@ function describeNavbar(role) {
 
     if (role === "admin") {
       test(`should have an interface to allow the user to add a page`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("add-content").click();
+        await page.getByTestId("navbar").getByTestId("add").click();
         await helpers.topPopover().getByTestId("add-page").click();
         await expect(helpers.topModal()).toContainText("Add page");
         await helpers.submitForm({ title: "Apple plum" });
@@ -670,7 +655,7 @@ function describeNavbar(role) {
       });
 
       test(`should have an interface to allow the user to add a post`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("add-content").click();
+        await page.getByTestId("navbar").getByTestId("add").click();
         await helpers.topPopover().getByTestId("add-post").click();
         await expect(helpers.topModal()).toContainText("Add post");
         await helpers.submitForm({ title: "Apple pear" });
@@ -678,7 +663,7 @@ function describeNavbar(role) {
       });
 
       test(`should have an interface to allow the user to add a tag`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("add-content").click();
+        await page.getByTestId("navbar").getByTestId("add").click();
         await helpers.topPopover().getByTestId("add-tag").click();
         await expect(helpers.topModal()).toContainText("Add tag");
         await helpers.submitForm({ name: "Apple peach" });
@@ -686,7 +671,7 @@ function describeNavbar(role) {
       });
 
       test(`should have an interface to allow the user to add a user`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("add-content").click();
+        await page.getByTestId("navbar").getByTestId("add").click();
         await helpers.topPopover().getByTestId("add-user").click();
         await expect(helpers.topModal()).toContainText("Add user");
         await helpers.submitForm({
@@ -697,7 +682,7 @@ function describeNavbar(role) {
       });
 
       test(`should have an interface to allow the user to find a post`, async ({ page, helpers }) => {
-        await page.getByTestId("navbar").getByTestId("find-content").click();
+        await page.getByTestId("navbar").getByTestId("find").click();
         await helpers.topPopover().getByTestId("find-post").click();
         await expect(helpers.topModal()).toContainText("Posts");
         await expect(helpers.topModal()).not.toContainText("Graham Place");
@@ -709,7 +694,7 @@ function describeNavbar(role) {
       test(`should have an interface to allow the user to edit the site settings`, async ({ page, helpers }) => {
         await expect(page.getByTestId("navbar")).toContainText("Lorem ipsum");
         await expect(page.getByTestId("navbar")).not.toContainText("Apple peach");
-        await page.getByTestId("navbar").getByTestId("edit-settings").click();
+        await page.getByTestId("navbar").getByTestId("settings").click();
         await helpers.topPopover().getByTestId("edit-site-meta").click();
         await expect(helpers.topModal()).toContainText("Edit site");
         await helpers.submitForm({ title: "Apple peach" });
@@ -723,19 +708,13 @@ function describeNavbar(role) {
 function describeSidebar(role) {
   test.describe("sidebar", () => {
     test(`should have the correct contents`, async ({ page, helpers }) => {
-      await expect(page.getByTestId("sidebar").getByTestId("about-section")).toContainText("About");
-      await expect(page.getByTestId("sidebar").getByTestId("about-section")).toContainText("Provident itaque iste.");
+      await expect(page.getByTestId("sidebar").getByTestId("top")).toContainText("Top");
+      await expect(page.getByTestId("sidebar").getByTestId("top")).toContainText("Provident itaque iste.");
 
-      await expect(page.getByTestId("sidebar").getByTestId("featured-section")).toContainText("Featured");
-      const featuredTitles = ["Gregg Locks", "Imogene Walks", "Mayert Overpass"];
-      for (const title of featuredTitles) {
-        await expect(page.getByTestId("sidebar").getByTestId("featured-section")).toContainText(title);
-      }
-
-      await expect(page.getByTestId("sidebar").getByTestId("tags-section")).toContainText("Tags");
+      await expect(page.getByTestId("sidebar").getByTestId("tags")).toContainText("Tags");
       const tagTitles = ["Excepturi Corporis", "34 posts"];
       for (const title of tagTitles) {
-        await expect(page.getByTestId("sidebar").getByTestId("tags-section")).toContainText(title);
+        await expect(page.getByTestId("sidebar").getByTestId("tags")).toContainText(title);
       }
     });
   });

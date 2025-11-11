@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "callHandler"]
+menus:
+    sidebar: ["Services", "callHandler"]
 ---
 # callHandler Service
 
