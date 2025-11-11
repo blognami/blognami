@@ -1,4 +1,3 @@
-
 export default {
     meta(){
         this.hasMany('revisions',  { fromKey: 'id', toKey: 'revisableId' });
@@ -16,7 +15,7 @@ export default {
             }
         });
 
-        this.on(['before:insert', 'before:update'], async function(){
+        this.addHook(['beforeInsert', 'beforeUpdate'], async function(){
             if(!this.revisionUserId) return;
             this._revisedFields = {};
             this.constructor.revisableFields.forEach(name => {
@@ -26,7 +25,7 @@ export default {
             });
         });
 
-        this.on(['after:insert', 'after:update'], async function(){
+        this.addHook(['afterInsert', 'afterUpdate'], async function(){
             if(!this.revisionUserId) return;
             for(let name in this._revisedFields){
                 await this.database.revisions.insert({

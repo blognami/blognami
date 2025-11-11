@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "database"]
+menus:
+    sidebar: ["Services", "database"]
 ---
 # database Service
 
@@ -233,7 +233,7 @@ const site = await this.database.site;
 
 // Access singleton properties
 const siteTitle = await this.database.site.title;
-const siteDescription = await this.database.site.description;
+const siteDescription = await this.database.site.navigation;
 
 // Update singleton
 await this.database.site.update({

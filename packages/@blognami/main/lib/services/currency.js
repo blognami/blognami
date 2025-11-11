@@ -1,4 +1,3 @@
-
 const CURRENCIES = (() => {
     const currencies = [
         {isoCode: 'USD', name: 'United States dollar'},

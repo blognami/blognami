@@ -1,9 +1,5 @@
 
 export const styles = ({ colors }) =>`
-    .root {
-        max-width: 720px;
-    }
-
     .root:not(:first-child){
         margin-top: 2em;
     }

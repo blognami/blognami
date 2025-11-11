@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "renderView"]
+menus:
+    sidebar: ["Services", "renderView"]
 ---
 # renderView Service
 
@@ -241,7 +241,9 @@ export default {
                     
                     <div class="content-wrapper">
                         <aside>
-                            ${this.renderViews('_sidebar/_*')}
+                            ${this.renderView('_sidebar/_navigation')}
+                            ${this.renderView('_sidebar/_recent_posts')}
+                            ${this.renderView('_sidebar/_categories')}
                         </aside>
                         
                         <main>

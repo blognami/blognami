@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "renderText"]
+menus:
+    sidebar: ["Services", "renderText"]
 ---
 # renderText Service
 

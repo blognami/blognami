@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "environment"]
+menus:
+    sidebar: ["Services", "environment"]
 ---
 # environment Service
 

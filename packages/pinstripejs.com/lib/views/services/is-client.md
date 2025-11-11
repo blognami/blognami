@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "isClient"]
+menus:
+    sidebar: ["Services", "isClient"]
 ---
 # isClient Service
 

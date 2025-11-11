@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "generate-command"]
+menus:
+    sidebar: ["Commands", "generate-command"]
 ---
 # generate-command Command
 

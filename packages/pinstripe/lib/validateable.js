@@ -28,12 +28,12 @@ export const Validateable = {
 
     async validate(options = {}){
         const { validateWith = () => {} } = options;
-        await this.trigger('before:validation');
+        await this.runHook('beforeValidation');
         this._validationErrors = {};
-        await this.trigger('validation');
+        await this.runHook('validation');
         await validateWith.call(this, this);
         this.throwValidationErrors();
-        await this.trigger('after:validation');
+        await this.runHook('afterValidation');
         return this;
     },
 

@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "renderTag"]
+menus:
+    sidebar: ["Services", "renderTag"]
 ---
 # renderTag Service
 

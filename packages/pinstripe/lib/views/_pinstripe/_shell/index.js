@@ -156,11 +156,15 @@ export default {
             { tagName: 'meta', name: 'pinstripe-service-worker-url', content: `/service_worker.js?${urlSearchParams}` },
         ];
 
+        this.meta = [ ...this.defaultMeta, ...versionedMeta, ...meta ];
+
+        await this.runHook('beforeRender');
+
         return this.renderHtml`
             <!DOCTYPE html>
             <html lang="${language}">
                 <head>
-                    ${this.mergeMeta([ ...this.defaultMeta, ...versionedMeta, ...meta ]).map(attributes => this.renderTag(attributes))}
+                    ${this.mergeMeta(this.meta).map(attributes => this.renderTag(attributes))}
                 </head>
                 <body>
                     ${body}
@@ -172,7 +176,7 @@ export default {
     defaultMeta: [
         { tagName: 'meta', charset: 'utf-8' },
         { tagName: 'meta', name: 'viewport', content: 'width=device-width, initial-scale=1' },
-        { tagName: 'meta', name: 'pinstripe-load-cache-namespace', content: 'default' },
+        { tagName: 'meta', name: 'pinstripe-load-cache-namespace', content: 'guest' },
     ],
 
     mergeMeta(meta){

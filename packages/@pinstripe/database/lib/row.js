@@ -86,11 +86,11 @@ export const Row = Model.extend().include({
 
             mustBeUnique(name, options = {}){
                 const { message = 'Must be unique', collection = this.collectionName } = options;
-                return this.on('validation', async row => {
-                    if(row.isValidationError(name)) return;
-                    const value = row[name];
-                    const alreadyExists = await row.database[collection].where({ [name]: value, idNe: row.id }).count() > 0;
-                    if(alreadyExists) row.setValidationError(name, message);
+                return this.addHook('validation', async function(){
+                    if(this.isValidationError(name)) return;
+                    const value = this[name];
+                    const alreadyExists = await this.database[collection].where({ [name]: value, idNe: this.id }).count() > 0;
+                    if(alreadyExists) this.setValidationError(name, message);
                 });
             }
         });
@@ -127,7 +127,7 @@ export const Row = Model.extend().include({
 
             if(this._exists) this.id = this._initialFields.id;
             
-            await (this._exists ? this.trigger('before:update') : this.trigger('before:insert'));
+            await (this._exists ? this.runHook('beforeUpdate') : this.runHook('beforeInsert'));
 
             await this.validate({ validateWith});
 
@@ -215,7 +215,7 @@ export const Row = Model.extend().include({
                 this._exists = true;
             }
 
-            await (exists ? this.trigger('after:update') : this.trigger('after:insert'));
+            await (exists ? this.runHook('afterUpdate') : this.runHook('afterInsert'));
 
             return this;
         });
@@ -223,7 +223,7 @@ export const Row = Model.extend().include({
 
     async delete(){
         return this.database.transaction(async () => {
-            await this.trigger('before:delete');
+            await this.runHook('afterDelete');
 
             const tableReference = TableReference.new(this.constructor.collectionName);
 
@@ -243,7 +243,7 @@ export const Row = Model.extend().include({
                 }
             });
 
-            await this.trigger('after:delete');
+            await this.runHook('afterDelete');
 
             return this;
         });
@@ -308,7 +308,7 @@ function defineRelationship({ name, type, collectionName, fromKey, toKey, cascad
     });
 
     if(cascadeDelete) {
-        this.on('before:delete', async function(){
+        this.addHook('afterDelete', async function(){
             await this[name].delete();
         });
     }

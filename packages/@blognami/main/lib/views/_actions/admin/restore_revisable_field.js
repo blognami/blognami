@@ -1,4 +1,3 @@
-
 export default {
     async render(){
         const { name, value } = await this.database.revisions.where({ id: this.params.id }).first();

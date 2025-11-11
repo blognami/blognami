@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "sendMail"]
+menus:
+    sidebar: ["Services", "sendMail"]
 ---
 # sendMail Service
 

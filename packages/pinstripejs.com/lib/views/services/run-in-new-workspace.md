@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "runInNewWorkspace"]
+menus:
+    sidebar: ["Services", "runInNewWorkspace"]
 ---
 # runInNewWorkspace Service
 

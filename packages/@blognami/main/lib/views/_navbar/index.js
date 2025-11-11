@@ -1,94 +1,71 @@
 
-export const styles = ({ colors }) => `
+export const styles = `
     .root {
-        border-width: 0 0 0.1rem 0;
-        border-style: solid;
-        border-color: ${colors.gray[200]};
-        padding-left: 1em;
-        padding-right: 1em;
+        background-color: #ffffff;
+        border-bottom: 1px solid #e5e7eb;
+        position: sticky;
+        top: 0;
+        z-index: 40;
+        backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.95);
     }
-    
-    .inner {
-        max-width: 1200px;
+
+    .container {
+        max-width: 1280px;
         margin: 0 auto;
-        display: flex;
-        min-height: 3em;
-    }
-    
-    .branding {
-        flex: 0 0 auto;
+        padding: 0 2.4rem;
         display: flex;
         align-items: center;
-        font-weight: 600;
+        justify-content: space-between;
+        height: 6.4rem;
     }
-    
-    .links {
-        flex: 1 1 100%;
+
+    .link-group {
         display: flex;
         align-items: center;
-        justify-content: flex-end;
-        gap: 1em;
+        gap: 3.2rem;
     }
-    
-    .burger {
-        display: none;
-        flex-direction: column;
-        justify-content: center;
+
+    .link-group-items {
+        display: flex;
         align-items: center;
-        width: 2em;
-        height: 2em;
-        cursor: pointer;
-        gap: 0.3em;
-        background: none;
-        border: none;
+        gap: 2.4rem;
+        list-style: none;
+        margin: 0;
         padding: 0;
     }
 
-    .burger > span {
-        display: block;
-        width: 1.5em;
-        height: 0.2em;
-        background: ${colors.gray[700]};
-        border-radius: 2px;
-        transition: all 0.3s;
-    }
-
     @media (max-width: 768px) {
-        .links > * {
-            display: none;
+        .container {
+            padding: 0 1.6rem;
         }
-        
-        .burger {
-            display: flex;
+
+        .link-group-items {
+            display: none;
         }
     }
 `;
 
 export default {
-    render(){
+    async render(){
+        const items = await this.menus.navbar || [];
+
         return this.renderHtml`
-            <div class="${this.cssClasses.root}" data-test-id="navbar">
-                <div class="${this.cssClasses.inner}">
-                    <div class="${this.cssClasses.branding}">
-                        ${this.renderView('_navbar/_branding')}
-                    </div>
-                    <div class="${this.cssClasses.links}">
-                        ${this.renderView('_navbar/_links')}
-                        <a class="${this.cssClasses.burger}" href="/_navbar/burger_menu" target="_overlay" data-test-id="navbar-burger">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </a>
-                    </div>
+            <header class="${this.cssClasses.root}" id="pinstripe-scroll-top" data-test-id="navbar">
+                <div class="${this.cssClasses.container}">
+                    ${this.renderView('_navbar/_branding')}
+                    <nav class="${this.cssClasses.linkGroup}">
+                        <ul class="${this.cssClasses.linkGroupItems}">
+                            ${items.map(({ partial, ...item }) => {
+                                return this.renderHtml`
+                                    <li>${this.renderView(partial, item)}</li>
+                                `;
+                            })}
+                        </ul>
+                        ${this.renderView('_navbar/_burger_link')}
+                    </nav>
                 </div>
-            </div>
+            </header>
         `;
     }
 };
-
-
-// ${links.map(({ body, href, target = '_top', preload, testId}) => {
-//     return this.renderHtml`
-//         <a class="${this.cssClasses.item}" href="${href}" target="${target}" ${preload ? 'data-preload' : ''} data-test-id="${testId}">${body}</a>
-//     `;
-// })}

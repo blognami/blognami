@@ -1,4 +1,3 @@
-
 export default {
     async render(){
         let { subscribableId, plan, returnUrl } = this.params;

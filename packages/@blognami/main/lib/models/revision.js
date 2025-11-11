@@ -1,4 +1,3 @@
-
 export default {
     meta(){
         this.belongsTo('revisable');
@@ -7,7 +6,7 @@ export default {
         this.mustNotBeBlank('userId');
         this.mustNotBeBlank('name');
 
-        this.on('before:validation', function(){
+        this.addHook('beforeValidation', function(){
             if(!this.createdAt){
                 this.createdAt = new Date();
             }

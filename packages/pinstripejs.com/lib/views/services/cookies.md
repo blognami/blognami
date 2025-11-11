@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "cookies"]
+menus:
+    sidebar: ["Services", "cookies"]
 ---
 # cookies Service
 

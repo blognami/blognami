@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "view"]
+menus:
+    sidebar: ["Services", "view"]
 ---
 # view Service
 

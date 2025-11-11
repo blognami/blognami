@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "generate-background-job"]
+menus:
+    sidebar: ["Commands", "generate-background-job"]
 ---
 # generate-background-job Command
 

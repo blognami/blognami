@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "initialize-database"]
+menus:
+    sidebar: ["Commands", "initialize-database"]
 ---
 # initialize-database Command
 

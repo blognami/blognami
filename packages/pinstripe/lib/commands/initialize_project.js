@@ -1,6 +1,6 @@
 
 export default {
     async run(){
-        // do nothing
+        await this.runHook('run');
     }
 };

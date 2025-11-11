@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "params"]
+menus:
+    sidebar: ["Services", "params"]
 ---
 # params Service
 

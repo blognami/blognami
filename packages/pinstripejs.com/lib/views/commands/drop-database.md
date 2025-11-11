@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "drop-database"]
+menus:
+    sidebar: ["Commands", "drop-database"]
 ---
 # drop-database Command
 

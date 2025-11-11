@@ -1,4 +1,3 @@
-
 export const SubscribableHandler = {
   initialize(stripe, subscribable) {
     this.stripe = stripe;

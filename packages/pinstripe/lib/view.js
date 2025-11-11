@@ -8,6 +8,8 @@ import { Class } from './class.js';
 import { ImportableRegistry } from './importable_registry.js';
 import { ServiceConsumer } from './service_consumer.js';
 import { Annotatable } from './annotatable.js';
+import { Hookable } from './hookable.js';
+import { inflector } from '@pinstripe/utils';
 
 export const View = Class.extend().include({
     meta(){
@@ -16,8 +18,26 @@ export const View = Class.extend().include({
         this.include(ImportableRegistry);
         this.include(ServiceConsumer);
         this.include(Annotatable);
-        
+        this.include(Hookable);
+
+        const { register } = this;
+
         this.assignProps({
+            register(name, ...args){
+                for(const part of name.split(/\/+/)){
+                    const matches = part.match(/^.*?--(.*)$/);
+                    if(!matches) continue;
+                    for(const featureFlag of matches[1].split('--')){
+                        register.call(this, name, {
+                            meta(){
+                                this.featureFor(featureFlag);
+                            }
+                        });
+                    }
+                }
+                return register.call(this, name, ...args);
+            },
+
             run(context, name, fn){
                 return context.fork().run(async context => {
                     context.view = await this.create(name, context);
@@ -40,8 +60,9 @@ export const View = Class.extend().include({
             },
 
             featureFor(name){
-                if(this.featuresIsEnabledFor.includes(name)) return;
-                this.featuresIsEnabledFor.push(name);
+                const normalizedName = inflector.camelize(name);
+                if(this.featuresIsEnabledFor.includes(normalizedName)) return;
+                this.featuresIsEnabledFor.push(normalizedName);
             },
 
             addToClient(){

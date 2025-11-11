@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "repl"]
+menus:
+    sidebar: ["Services", "repl"]
 ---
 # repl Service
 

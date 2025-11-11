@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@blognami/main": "^0.35.0",
-    "@blognami/tags": "^0.35.0"
+    "@blognami/tags": "^0.35.0",
+    "@pinstripe/database": "^0.35.0",
+    "@pinstripe/markdown": "^0.35.0"
   },
   "repository": {
     "type": "git",

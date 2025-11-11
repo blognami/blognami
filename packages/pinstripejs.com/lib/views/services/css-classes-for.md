@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "cssClassesFor"]
+menus:
+    sidebar: ["Services", "cssClassesFor"]
 ---
 # cssClassesFor Service
 

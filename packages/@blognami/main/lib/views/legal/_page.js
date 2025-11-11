@@ -1,21 +1,3 @@
-
-export const styles = `
-    .article {
-        max-width: 650px;
-        margin: 0 auto 0 auto;
-    }
-    
-    .header {
-        margin-bottom: 4rem;
-    }
-
-    .title {
-        font-size: 7.4rem;
-        font-weight: 600;
-        line-height: 1;
-    }
-`;
-
 export default {
     async render(){
         const { title } = this.params;
@@ -30,29 +12,25 @@ export default {
 
         const isAdmin = user?.role == 'admin';
 
+        const content = this.renderHtml`<div data-test-id="${testId}-body">${this.renderMarkdown(await this.database.site[fieldName])}</div>`;
+
         return this.renderView('_layout', {
             title,
             body: this.renderHtml`
                 <section>
-                    <article class="${this.cssClasses.article}">
-                        <header class="${this.cssClasses.header}">
-                            <h1>${title}</h1>
-                        </header>
-                        ${async () => {
-                            if(isAdmin) return this.renderView('_editable_area', {
-                                url: `/_actions/admin/edit_site_${this.inflector.snakeify(title)}`,
-                                body:  this.renderView('_content', {
-                                    body: this.renderMarkdown(await this.database.site[fieldName]),
-                                    testId
-                                }),
-                                linkTestId: `edit-${testId}`
-                            });
-                            return this.renderView('_content', {
-                                body: this.renderMarkdown(await this.database.site[fieldName]),
-                                testId
-                            });
-                        }}
-                    </article>
+                    ${this.renderView('_content', {
+                        body: this.renderHtml`
+                            <h1 data-test-id="${testId}-title">${title}</h1>
+                            ${() => {
+                                if(isAdmin) return this.renderView('_editable_area', {
+                                    url: `/_actions/admin/edit_site_${this.inflector.snakeify(title)}`,
+                                    body: content,
+                                    linkTestId: `edit-${testId}-body`
+                                });
+                                return content;
+                            }}
+                        `
+                    })}
                 </section>
             `
         });

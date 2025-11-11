@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "show-config"]
+menus:
+    sidebar: ["Commands", "show-config"]
 ---
 # show-config Command
 

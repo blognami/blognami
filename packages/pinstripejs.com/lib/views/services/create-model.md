@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "createModel"]
+menus:
+    sidebar: ["Services", "createModel"]
 ---
 # createModel
 
@@ -66,23 +66,23 @@ this.mustBeAValidEmail('contactEmail', { message: 'Please enter a valid email ad
 Custom validation logic that runs during the validation process.
 
 ```javascript
-this.on('validation', function() {
+this.addHook('validation', function() {
     if (!this.isValidationError('password') && this.password.length < 8) {
         this.setValidationError('password', 'Password must be at least 8 characters');
     }
 });
 ```
 
-### `on('before:validation', callback)`
+### `on('beforeValidation', callback)`
 Runs before validation starts, useful for data preprocessing.
 
 ```javascript
-this.on('before:validation', function() {
+this.addHook('beforeValidation', function() {
     this.email = (this.email || '').toLowerCase().trim();
 });
 ```
 
-### `on('after:validation', callback)`
+### `on('afterValidation', callback)`
 Runs after validation completes successfully.
 
 ## Error Handling Methods
@@ -117,7 +117,7 @@ this.createModel({
         this.mustNotBeBlank('email');
         this.mustBeAValidEmail('email');
         
-        this.on('validation', function() {
+        this.addHook('validation', function() {
             if (!this.isValidationError('legal') && this.legal != 'true') {
                 this.setValidationError('legal', 'You must agree to the terms of service.');
             }
@@ -133,7 +133,7 @@ this.createModel({
     meta() {
         this.mustNotBeBlank('password');
         
-        this.on('validation', async function() {
+        this.addHook('validation', async function() {
             if (!this.isValidationError('password')) {
                 const user = await that.database.users.where({ email }).first();
                 if (user && !await user.verifyPassword(this.password)) {
@@ -154,7 +154,7 @@ this.createModel({
         this.mustNotBeBlank('content');
         this.mustMatchPattern('slug', /^[a-z0-9-]+$/);
         
-        this.on('before:validation', function() {
+        this.addHook('beforeValidation', function() {
             // Auto-generate slug from title if not provided
             if (!this.slug && this.title) {
                 this.slug = this.title.toLowerCase()
@@ -163,7 +163,7 @@ this.createModel({
             }
         });
         
-        this.on('validation', async function() {
+        this.addHook('validation', async function() {
             // Check for duplicate slugs
             if (!this.isValidationError('slug')) {
                 const existing = await that.database.posts.where({ slug: this.slug }).first();
@@ -188,7 +188,7 @@ this.createModel({
             when: function() { return this.isNewUser; }
         });
         
-        this.on('validation', function() {
+        this.addHook('validation', function() {
             if (this.subscriptionType === 'premium' && !this.paymentMethod) {
                 this.setValidationError('paymentMethod', 'Payment method required for premium subscription.');
             }
@@ -202,7 +202,7 @@ this.createModel({
 ```javascript
 this.createModel({
     meta() {
-        this.on('before:validation', function() {
+        this.addHook('beforeValidation', function() {
             // Normalize email
             this.email = (this.email || '').toLowerCase().trim();
             
@@ -288,7 +288,7 @@ The model handles all validation automatically, and the `success` callback only 
 2. **Use descriptive error messages** - Provide clear feedback to users about what went wrong
 3. **Leverage built-in validators** - Use `mustNotBeBlank`, `mustBeAValidEmail`, etc. before writing custom validation
 4. **Handle async validation carefully** - Use async/await properly in validation hooks
-5. **Preprocess data in before:validation** - Normalize and clean data before validation runs
+5. **Preprocess data in beforeValidation** - Normalize and clean data before validation runs
 6. **Use conditional validation** - Apply validation rules only when they're relevant
 7. **Group related validations** - Keep related validation logic together for maintainability
 

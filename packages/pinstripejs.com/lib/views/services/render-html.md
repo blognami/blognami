@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "renderHtml"]
+menus:
+    sidebar: ["Services", "renderHtml"]
 ---
 # renderHtml Service
 

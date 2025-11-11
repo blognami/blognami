@@ -1,4 +1,3 @@
-
 export const decorators = {
     button(){
         this.attributes.href = `${this.attributes.href}&returnUrl=${encodeURIComponent(window.location.href)}`;

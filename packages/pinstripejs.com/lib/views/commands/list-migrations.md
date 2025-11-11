@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Commands", "list-migrations"]
+menus:
+    sidebar: ["Commands", "list-migrations"]
 ---
 # list-migrations Command
 

@@ -1,25 +1,35 @@
-
-
 export const styles = `
-    .root {
-        position: relative;
-        padding: 0.375rem 1rem 0.375rem 0;
-        white-space: nowrap;
-        cursor: pointer;
-        padding: 6px;
-        border-radius: 6px;
+    .link {
+        text-decoration: none;
+        color: #6b7280;
+        font-weight: 500;
+        transition: color 0.2s ease;
+        padding: 0.8rem 0;
     }
 
-    .root[data-active="true"] {
-        background-color: #f9f9f9;
+    .link:hover {
+        color: #111827;
+    }
+
+    .link-active {
+        color: #35D0AC;
     }
 `;
 
 export default {
     render(){
+        const { url, target, label, testId, preload } = this.params;
+
+        const isActive = this.initialParams._url.pathname === url;
+        const activeClass = isActive ? ` ${this.cssClasses.linkActive}` : '';
+
         return this.renderTag('a', {
-            class: this.cssClasses.root,
-            ...this.params
+            href: url,
+            class: `${this.cssClasses.link}${activeClass}`,
+            target: target,
+            'data-test-id': testId,
+            'data-preload': preload ? 'true' : null,
+            body: label
         });
     }
 };

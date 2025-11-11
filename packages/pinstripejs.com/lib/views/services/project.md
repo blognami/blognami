@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "project"]
+menus:
+    sidebar: ["Services", "project"]
 ---
 # project Service
 

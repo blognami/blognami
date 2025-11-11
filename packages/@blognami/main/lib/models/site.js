@@ -1,4 +1,3 @@
-
 import * as crypto from 'crypto';
 
 const passwordTimeToLiveInMinutes = 3;
@@ -8,12 +7,12 @@ export default {
         this.include('singleton');
         this.include('revisable');
 
-        this.on('before:insert', function(){
+        this.addHook('beforeInsert', function(){
             if(this.salt) return;
             this.salt = crypto.randomUUID();
         });
 
-        this.trackRevisionsFor('description');
+        this.trackRevisionsFor('navigation');
     },
 
     async generatePassword(salt){

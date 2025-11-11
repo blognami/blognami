@@ -5,7 +5,7 @@ import Yaml from 'js-yaml';
 
 export default {
     async run(){
-        const defaultModules = '@blognami/pages, @blognami/posts, @blognami/tags';
+        const defaultModules = '@blognami/pages, @blognami/posts, @blognami/tags, @blognami/main';
         this.modules = (process.env.MODULES ?? defaultModules).split(/\s*,\s*/).filter(Boolean);
 
         if(this.modules.includes('@pinstripe/multi-tenant')){
@@ -19,7 +19,7 @@ export default {
     
         await this.database.site.update({
             title: 'Lorem ipsum',
-            description: [
+            navigation: [
                 'Provident itaque iste.',
                 '  * [Osinski Extensions](/osinski-extensions)'
             ].join('\n')

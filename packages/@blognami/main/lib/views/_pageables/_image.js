@@ -1,4 +1,3 @@
-
 export default {
     render(){
         const { type, data } = this.params.image;

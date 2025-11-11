@@ -1,6 +1,6 @@
 ---
-sidebar:
-    category: ["Services", "viewMap"]
+menus:
+    sidebar: ["Services", "viewMap"]
 ---
 # viewMap Service
 
@@ -432,7 +432,6 @@ The service provides graceful error handling:
 
 ## Related Services
 
-- **`matchViews`**: Uses `viewMap` to filter and sort views by patterns
 - **`renderView`**: Uses `viewMap` to resolve view names before rendering
 - **`featureFlags`**: Provides the feature flag data used for view filtering
 - **`View`**: The underlying view registry that provides the raw view data
