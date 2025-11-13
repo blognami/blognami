@@ -1,7 +1,7 @@
 
 import { ValidationError } from '../validation_error.js';
 import { Inflector } from '../inflector.js';
-import { verifyProofOfWork } from '../proof_of_work.js';
+import { verifyProofOfWork } from '@pinstripe/window';
 
 export default {
     create(){

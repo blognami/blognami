@@ -1,6 +1,4 @@
 
-import { generateProofOfWork } from '../../proof_of_work.js';
-
 export const styles = `
     .form {
         display: block;
@@ -120,39 +118,10 @@ export const styles = `
 `;
 
 export const decorators = {
-    proofOfWorkInput(){
-        this.assignProps({
-            value: {
-                then: async resolve => {
-                    const { node: formNode } = this.form;
-                    const values = this.form.values;
-
-                    delete values._proofOfWork;
-                    for(const [name, value] of Object.entries(values)){
-                       values[name] = `${await value}`;
-                    }
-
-                    const abortController = new AbortController();
-
-                    Object.assign(abortController, {
-                        destroy(){
-                            abortController.abort();
-                        }
-                    });
-
-                    this.frame.manage(abortController);
-
-                    resolve(await generateProofOfWork(values, { 
-                        abortSignal: abortController.signal,
-                        onProgress: progress => this.constructor.instanceFor(formNode).trigger('proofOfWorkProgress', { data: progress, bubbles: false })
-                    }));
-                }
-            }
-        })
-    },
     proofOfWorkProgress(){
-        this.form.on('proofOfWorkProgress', e => {
+        this.frame.on('proofOfWorkProgress', e => {
             const progress = e.detail;
+            // console.log('Proof of work progress:', progress);
             this.patch({
                 ...this.attributes,
                 value: progress
@@ -190,6 +159,7 @@ export default {
                     ${unsavedChangesConfirm && method == 'POST' ? this.renderHtml`data-has-unsaved-changes="true"` : undefined}
                     data-placeholder="&_placeholder=true"
                     ${isPlaceholder ? this.renderHtml`disabled` : ''}
+                    ${requiresProofOfWork ? this.renderHtml`data-requires-proof-of-work="true"` : undefined}
                 >
                     ${this.renderView('_pinstripe/_panel', {
                         title,
@@ -300,11 +270,8 @@ export default {
                                     if(!requiresProofOfWork) return;
                                     if(isPlaceholder) return this.renderHtml`
                                         <span class="${this.cssClasses.loadingIndicator}">
-                                            Generating anti-spam code <progress class="${this.cssClasses.proofOfWorkProgress}" max="100">0.0 %</progress>
+                                            Generating anti-spam code <progress class="${this.cssClasses.proofOfWorkProgress}" value="" max="100">0.0 %</progress>
                                         </span>
-                                    `;
-                                    return this.renderHtml`
-                                        <input class="${this.cssClasses.proofOfWorkInput}" type="hidden" name="_proofOfWork">
                                     `;
                                 }}
                             </div>

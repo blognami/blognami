@@ -1,5 +1,5 @@
 
-import crypto from 'crypto'; // pinstripe-if-client: const crypto = window.crypto;
+import crypto from 'crypto'; // pinstripe-if-client: const crypto = typeof window != 'undefined' ? window.crypto : self.crypto;
 
 import { Class } from './class.js';
 import { Singleton } from './singleton.js';
@@ -30,6 +30,7 @@ export const ProofOfWork = Class.extend().include({
                 if(integers[0] <= target) break;
             }
             solution.push(counter);
+            await new Promise(resolve => setTimeout(resolve, 0));
             const progressPercentage = Math.floor(i * (100 / steps) * 100) / 100;
             onProgress(progressPercentage);
         }
