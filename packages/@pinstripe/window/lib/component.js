@@ -4,6 +4,7 @@ import { TEXT_ONLY_TAGS } from './constants.js';
 import { VirtualNode } from './virtual_node.js';
 import { Registry } from './registry.js';
 import { ComponentEvent } from './component_event.js';
+import { generateProofOfWork } from './proof_of_work.js'
 
 export const Component = Class.extend().include({
     meta(){
@@ -499,6 +500,20 @@ export const Component = Class.extend().include({
             
             try {
                 otherOptions.body = await otherOptions.body;
+
+                if(options.requiresProofOfWork){
+                    if(otherOptions.body instanceof FormData){
+                        const values = {};
+                        for(const [name, value] of otherOptions.body.entries()){
+                            values[name] = value;
+                        }
+                        const proofOfWork = await generateProofOfWork(values, { 
+                            abortSignal: abortController.signal,
+                            onProgress: progress => this.trigger('proofOfWorkProgress', { data: progress, bubbles: false })
+                        });
+                        otherOptions.body.append('_proofOfWork', proofOfWork);
+                    }
+                }
 
                 const promises = [
                     fetch(normalizedUrl, { signal: abortController.signal, ...otherOptions }), 

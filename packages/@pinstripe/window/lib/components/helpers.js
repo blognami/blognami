@@ -3,7 +3,7 @@ import { LruCache } from '../lru_cache.js';
 
 export const loadCache = LruCache.new();
 
-export function loadFrame({ confirm, target, method, url, placeholderUrl, values = this.values }){
+export function loadFrame({ confirm, target, method, url, placeholderUrl, values = this.values, requiresProofOfWork = false } = {}){
     if(confirm && !window.confirm(confirm)){
         return;
     }
@@ -35,9 +35,9 @@ export function loadFrame({ confirm, target, method, url, placeholderUrl, values
             for(const name in values) out.append(name, await values[name]);
             return out;
         })();
-        frame.load(url, { method, body, placeholderUrl });
+        frame.load(url, { method, body, placeholderUrl, requiresProofOfWork  });
     } else {
-        frame.load(url, { method, placeholderUrl });
+        frame.load(url, { method, placeholderUrl, requiresProofOfWork  });
     }    
 }
 

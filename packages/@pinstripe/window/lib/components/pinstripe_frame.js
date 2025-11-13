@@ -68,7 +68,6 @@ Component.register('pinstripe-frame', {
         }
         try {
             this._pendingResponse = this.fetch(this.url, { minimumDelay, ...options });
-
             const response = await this._pendingResponse;
             
             const html = await response.text();

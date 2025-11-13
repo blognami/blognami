@@ -6,7 +6,7 @@ Component.register('pinstripe-form', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
-        const { confirm, target = '_self', method = 'GET', action, placeholder, disabled } = this.params;
+        const { confirm, target = '_self', method = 'GET', action, placeholder, disabled, requiresProofOfWork } = this.params;
         const frame = target == '_overlay' ? this.frame : getFrame.call(this, target);
 
         this.on('submit', (event) => {
@@ -22,7 +22,7 @@ Component.register('pinstripe-form', {
             delete frame._previousHash;
             this._watchInterval?.destroy();
             
-            loadFrame.call(this, { confirm, target, method, url: action, placeholderUrl: placeholder });
+            loadFrame.call(this, { confirm, target, method, url: action, placeholderUrl: placeholder, requiresProofOfWork: requiresProofOfWork == 'true' });
         });
 
         if(this.isFromPlaceholderHtml) return;
