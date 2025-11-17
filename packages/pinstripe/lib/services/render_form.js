@@ -72,6 +72,18 @@ export default {
             }
         });
 
+        const acceptHeader = this.params._headers.accept || 'text/html';
+        const isJsonRequest = acceptHeader.match(/application\/json/i) != null;
+        if(isJsonRequest){
+            return this.renderJson({
+                values: fields.reduce((out, field) => {
+                    out[field.name] = field.value;
+                    return out;
+                }, {}),
+                errors,
+            }).toResponseArray(Object.keys(errors).length ? 400 : 200);
+        }
+
         return this.renderView('_pinstripe/_form', {
             requiresProofOfWork,
             isPlaceholder: this.params._placeholder == 'true',

@@ -44,8 +44,11 @@ Component.register('pinstripe-frame', {
         await clearEventLoop();
         this.status = 'loading';
         this.url = url;
-        const { method = 'GET', placeholderUrl, useCache = this.params.useCache == 'true' } = options;
-        const cachedHtml = method == 'GET' ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
+        const { method = 'GET', placeholderUrl, useCache = this.params.useCache == 'true', headers = {} } = options;
+        const normalizedHeaders = headers instanceof Headers ? headers : new Headers(headers);
+        const acceptHeader = normalizedHeaders.get('Accept') || '*/*';
+        const isJsonRequest = acceptHeader.match(/application\/json/i);
+        const cachedHtml = method == 'GET' && !isJsonRequest ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
         if(cachedHtml) {
             if(useCache){
                 this.status = 'complete';
@@ -58,7 +61,7 @@ Component.register('pinstripe-frame', {
             this.patch(cachedHtml);
         }
         let minimumDelay = 0;
-        if(!cachedHtml && placeholderUrl){
+        if(!cachedHtml && placeholderUrl && !isJsonRequest) {
             const placeholderHtml = loadCache.get(`${this.document.loadCacheNamespace}:${placeholderUrl}`);
             if(placeholderHtml) {
                 this.status = 'using-placeholder-html';
@@ -69,11 +72,22 @@ Component.register('pinstripe-frame', {
         try {
             this._pendingResponse = this.fetch(this.url, { minimumDelay, ...options });
             const response = await this._pendingResponse;
-            
-            const html = await response.text();
-            this.status = 'complete';
-            this.patch(html);
-            if(html != cachedHtml && method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
+            const contentTypeHeader = response.headers.get('Content-Type') || '';
+            let body;
+            if(contentTypeHeader.match(/text\/html/i)) {
+                const html = await response.text();
+                this.status = 'complete';
+                this.patch(html);
+                if(html != cachedHtml && method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
+                body = html;
+            } else if(contentTypeHeader.match(/application\/json/i)){
+                body = await response.json();
+                this.status = 'complete';
+            } else {
+                body = await response.text();
+                this.status = 'complete';
+            }
+            this.trigger('load',  { bubbles: false, data: { status: response.status, headers: response.headers, body } });
         } catch(e) {
             if(e != 'Request aborted') console.log(e);
         }
