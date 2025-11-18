@@ -103,7 +103,7 @@ export default {
         meta.push({ title: post.metaTitle || post.title });
         if(post.metaDescription) meta.push({ name: 'description', content: post.metaDescription });
 
-        const userHasAccess = post.access == 'public' || await user?.isSubscribedToNewsletter({ tier: post.access });
+        const userHasAccess = post.access == 'public' || await this.database.newsletter.isSubscribed(user, { tier: post.access });
 
         return this.renderView('_layout', {
             meta,

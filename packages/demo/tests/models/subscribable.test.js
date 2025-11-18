@@ -33,22 +33,22 @@ test(`subscribable`, () => Workspace.run(async _ => {
     });
 
 
-    assert.equal(await user1.isSubscribedToNewsletter(), false);
-    assert.equal(await user2.isSubscribedToNewsletter(), false);
+    assert.equal(await newsletter.isSubscribed(user1), false);
+    assert.equal(await newsletter.isSubscribed(user2), false);
 
-    await user1.subscribeTo(newsletter);
+    await newsletter.subscribe(user1);
     assert.equal(await subscriptions.count(), 1);
-    assert.equal(await user1.isSubscribedToNewsletter(), true);
+    assert.equal(await newsletter.isSubscribed(user1), true);
 
-    await user2.subscribeTo(newsletter);
+    await newsletter.subscribe(user2);
     assert.equal(await subscriptions.count(), 2);
-    assert.equal(await user2.isSubscribedToNewsletter(), true);
+    assert.equal(await newsletter.isSubscribed(user2), true);
 
-    await user1.unsubscribeFrom(newsletter);
+    await newsletter.unsubscribe(user1);
     assert.equal(await subscriptions.count(), 1);
-    assert.equal(await user1.isSubscribedToNewsletter(), false);
+    assert.equal(await newsletter.isSubscribed(user1), false);
 
-    await user2.unsubscribeFrom(newsletter);
+    await newsletter.unsubscribe(user2);
     assert.equal(await subscriptions.count(), 0);
-    assert.equal(await user2.isSubscribedToNewsletter(), false);
+    assert.equal(await newsletter.isSubscribed(user2), false);
 }));
