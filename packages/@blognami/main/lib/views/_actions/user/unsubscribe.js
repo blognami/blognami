@@ -4,7 +4,7 @@ export default {
         const subscribable = await this.database.subscribables.where({ id: this.params.subscribableId }).first();
         if(!user || !subscribable) return;
 
-        await user.unsubscribeFrom(subscribable);
+        await subscribable.unsubscribe(user);
 
         return this.renderRedirect({ target: '_top' });
     }

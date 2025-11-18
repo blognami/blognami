@@ -190,8 +190,8 @@ export default {
             const user = await this.user;
 
             // Newsletter subscription (only show if user is subscribed)
-            if (await user.isSubscribedToNewsletter()) {
-                const isPaid = await user.isSubscribedToNewsletter({ tier: 'paid' });
+            if (await this.database.newsletter.isSubscribed(user)) {
+                const isPaid = await this.database.newsletter.isSubscribed(user, { tier: 'paid' });
                 const confirmMessage = isPaid ? (
                     `Are you sure you want to unsubscribe? You will lose access to members only content, and any remaining subscription time will be lost.`
                 ) : (

@@ -24,7 +24,7 @@ export default {
                 if(user){
                     if(type == 'created'){
                         const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
-                        if(subscribable) await user.subscribeTo(subscribable, { tier: 'paid' });
+                        if(subscribable) await subscribable.subscribe(user, { tier: 'paid' });
                     } else {
                         await this.database.subscriptions.where({ userId, subscribableId }).delete();
                     }

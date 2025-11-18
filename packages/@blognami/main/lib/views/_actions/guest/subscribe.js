@@ -77,17 +77,17 @@ export default {
             </script>
         `;
 
-        if(await user.isSubscribedTo(subscribable, { tier: 'paid' })) return reloadHtml;
+        if(await subscribable.isSubscribed(user, { tier: 'paid' })) return reloadHtml;
 
         if(plan == 'free'){
-            await user.subscribeTo(subscribable);
+            await subscribable.subscribe(user);
 
             return reloadHtml;
         }
 
         return this.renderHtml`
             <script type="pinstripe">
-                window.location.href = ${this.renderHtml(JSON.stringify(await user.createSubscribeUrl(subscribable, { interval: plan, returnUrl })))};
+                window.location.href = ${this.renderHtml(JSON.stringify(await subscribable.createSubscribeUrl(user, { interval: plan, returnUrl })))};
             </script>
         `;
     },
