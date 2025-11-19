@@ -3,6 +3,7 @@ export default {
     render(){
         const { name, value, error, cssClasses, hasSaveChangesButton = false } = this.params;
 
+        // convert this to renderTag?
         return this.renderHtml`
             <textarea
                 name="${name}"
