@@ -44,28 +44,28 @@ Component.register('pinstripe-frame', {
         await clearEventLoop();
         this.status = 'loading';
         this.url = url;
-        const { method = 'GET', placeholderUrl, useCache = this.params.useCache == 'true', headers = {} } = options;
+        const { method = 'GET', headers = {}, placeholderUrl, useCache = this.params.useCache == 'true', skipPatch = this.params.skipPatch == 'true' } = options;
         const normalizedHeaders = headers instanceof Headers ? headers : new Headers(headers);
         const acceptHeader = normalizedHeaders.get('Accept') || '*/*';
-        const isJsonRequest = acceptHeader.match(/application\/json/i);
-        const cachedHtml = method == 'GET' && !isJsonRequest ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
+        const isHtmlRequest = acceptHeader.match(/text\/html|\*\/\*/i);
+        const cachedHtml = method == 'GET' && isHtmlRequest ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
         if(cachedHtml) {
             if(useCache){
                 this.status = 'complete';
-                this.patch(cachedHtml);
+                if(!skipPatch) this.patch(cachedHtml);
                 await clearEventLoop();
                 progressBar.stop();
                 return;
             }
             this.status = 'using-cached-html';
-            this.patch(cachedHtml);
+            if(!skipPatch) this.patch(cachedHtml);
         }
         let minimumDelay = 0;
-        if(!cachedHtml && placeholderUrl && !isJsonRequest) {
+        if(!cachedHtml && placeholderUrl && isHtmlRequest) {
             const placeholderHtml = loadCache.get(`${this.document.loadCacheNamespace}:${placeholderUrl}`);
             if(placeholderHtml) {
                 this.status = 'using-placeholder-html';
-                this.patch(placeholderHtml);
+                if(!skipPatch) this.patch(placeholderHtml);
                 minimumDelay = 300;
             }
         }
@@ -77,7 +77,7 @@ Component.register('pinstripe-frame', {
             if(contentTypeHeader.match(/text\/html/i)) {
                 const html = await response.text();
                 this.status = 'complete';
-                this.patch(html);
+                if(!skipPatch) this.patch(html);
                 if(html != cachedHtml && method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
                 body = html;
             } else if(contentTypeHeader.match(/application\/json/i)){
@@ -87,7 +87,7 @@ Component.register('pinstripe-frame', {
                 body = await response.text();
                 this.status = 'complete';
             }
-            this.trigger('load',  { bubbles: false, data: { status: response.status, headers: response.headers, body } });
+            this.trigger('load',  { bubbles: false, data: { status: response.status, headers: response.headers, body, patched: !skipPatch } });
         } catch(e) {
             if(e != 'Request aborted') console.log(e);
         }

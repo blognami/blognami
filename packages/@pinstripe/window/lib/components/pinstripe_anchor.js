@@ -6,11 +6,11 @@ Component.register('pinstripe-anchor', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
         this.on('click', (event) => {
-            const { confirm, target = '_self', method = 'GET', href, placeholder } = this.params;
+            const { confirm, target = '_self', method = 'GET', href, placeholder, skipPatch } = this.params;
             if(target == '_blank') return;
             if(normalizeUrl(href, window.location.href).host != window.location.host) return;
             event.preventDefault();
-            loadFrame.call(this, { confirm, target, method, url: href, placeholderUrl: placeholder });
+            loadFrame.call(this, { confirm, target, method, url: href, placeholderUrl: placeholder, skipPatch: skipPatch == 'true' });
         });
 
         const { target = '_self', method = 'GET', href, placeholder, preload } = this.params;

@@ -1,8 +1,4 @@
 export const styles = `
-    .root {
-        margin-bottom: 3.2rem;
-    }
-
     .label {
         font-size: 1.4rem;
         font-weight: 600;

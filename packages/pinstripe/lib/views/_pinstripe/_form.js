@@ -118,10 +118,27 @@ export const styles = `
 `;
 
 export const decorators = {
+    root(){
+        this.manage(this.frame.on('load', (event) => {
+            const { patched, status, body } = event.detail;
+            if(patched) return;
+            if(status < 400) {
+                this.frame.successHtml = body;
+                return;
+            }
+            this.patch(body);
+        }));
+
+        this.on('close', (event) => {
+            if(!this.frame.successHtml) return;
+            event.stopPropagation();
+            this.frame.patch(this.frame.successHtml);
+        });
+    },
+
     proofOfWorkProgress(){
         this.frame.on('proofOfWorkProgress', e => {
             const progress = e.detail;
-            // console.log('Proof of work progress:', progress);
             this.patch({
                 ...this.attributes,
                 value: progress
@@ -149,7 +166,7 @@ export default {
         } = this.params;
 
         return this.renderHtml`
-            <pinstripe-modal width="${width}" height="${height}">
+            <pinstripe-modal width="${width}" height="${height}" class="${this.cssClasses.root}">
                 <form
                     class="${this.cssClasses.form}${_class ? ` ${_class}` : ''}"
                     method="post"

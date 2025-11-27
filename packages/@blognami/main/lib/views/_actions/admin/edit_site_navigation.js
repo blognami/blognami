@@ -8,7 +8,8 @@ export default {
                 {  
                     name: 'navigation',
                     type: '_markdown_editor',
-                    overlayLinks: [ { href: `/_actions/admin/revisions?revisableId=${site.id}&name=description`, 'data-test-id': 'revisions', body: 'Revisions' } ]
+                    overlayLinks: [ { href: `/_actions/admin/revisions?revisableId=${site.id}&name=navigation`, 'data-test-id': 'revisions', body: 'Revisions' } ],
+                    hasSaveChangesButton: true
                 }
             ]
         });

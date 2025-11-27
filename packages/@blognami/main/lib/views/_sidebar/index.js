@@ -9,6 +9,9 @@ export const styles = `
         height: calc(100vh - 6.4rem);
         overflow-y: auto;
         padding-right: 2.4rem;
+        display: flex;
+        flex-direction: column;
+        gap: 3.2rem;
     }
 
     @media (max-width: 768px) {
