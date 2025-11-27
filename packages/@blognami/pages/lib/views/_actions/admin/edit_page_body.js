@@ -9,7 +9,8 @@ export default {
                 { 
                     name: 'body',
                     type: '_markdown_editor',
-                    overlayLinks: [ { href: `/_actions/admin/revisions?revisableId=${page.id}&name=body`, 'data-test-id': 'revisions', body: 'Revisions' } ]
+                    overlayLinks: [ { href: `/_actions/admin/revisions?revisableId=${page.id}&name=body`, 'data-test-id': 'revisions', body: 'Revisions' } ],
+                    hasSaveChangesButton: true
                 }
             ]
         });

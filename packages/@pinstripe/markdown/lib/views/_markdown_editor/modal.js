@@ -33,25 +33,60 @@ export const styles = `
         font-family: monospace;
     }
     .preview-pane {
+        position: relative;
         overflow-y: auto;
         padding: 1em;
     }
-    .preview-pane > * + * {
+    
+    .preview-pane pinstripe-frame > * + * {
         margin-top: 2rem;
+    }
+    
+    .actions {
+        position: absolute;
+        top: 0.8rem;
+        right: 0.8rem;
+        z-index: 10;
+    }
+    .actions button {
+        display: none;
+        background: rgba(255, 255, 255, 0.95);
+        border: 0.1rem solid rgb(220, 220, 220);
+        border-radius: 0.3rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 1.2rem;
+        color: rgb(60, 60, 60);
+        cursor: pointer;
+        box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.08);
+        transition: all 0.2s ease;
+    }
+    .actions button[data-display="true"] {
+        display: block;
+    }
+    .actions button:hover {
+        background: rgb(255, 255, 255);
+        border-color: rgb(180, 180, 180);
+        box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.15);
+    }
+    .actions button:active {
+        transform: translateY(0.1rem);
+        box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1);
     }
 `;
 
 export const decorators = {
     modal(){
         const anchorTextarea = this.frame.parent;
-        const editorTextarea = this.descendants.find(n => n.is('[data-part="editor-textarea"]'));
+        const editorTextarea = this.find('[data-part="editor-textarea"]');
+        const saveChangesButton = this.find('[data-part="save-changes-button"]');
+        const hasSaveChangesButton = anchorTextarea.params.hasSaveChangesButton === 'true';
     
         editorTextarea.value = anchorTextarea.value;
         editorTextarea.focus();
         editorTextarea.selectionStart = anchorTextarea.selectionStart;
         editorTextarea.selectionEnd = anchorTextarea.selectionEnd;
         
-        const previewFrame = this.frame.descendants.find(n => n.is('[data-part="editor-preview-pane"]'));
+        const previewFrame = this.frame.find('[data-part="editor-preview-pane"] pinstripe-frame');
     
         previewFrame.observe((current) => {
             while(current.parent && current.parent != previewFrame) {
@@ -69,13 +104,16 @@ export const decorators = {
         };
 
         updatePreview();
-
+        
         let previousValue = editorTextarea.value;
         this.setInterval(() => {
             const { value } = editorTextarea;
             if(previousValue != value){
                 previousValue = value;
                 updatePreview();
+                if(hasSaveChangesButton){
+                    saveChangesButton.attributes['data-display'] = 'true';
+                }
             }
         }, 100);
 
@@ -89,6 +127,11 @@ export const decorators = {
                 editorTextarea.node.selectionStart = position;
                 editorTextarea.node.selectionEnd = position;
             }
+        });
+
+        saveChangesButton.on('click', () => {
+            this.form.submit({ skipPatch: true });
+            saveChangesButton.attributes['data-display'] = 'false';
         });
     },
 
@@ -110,7 +153,12 @@ export default {
                     <div class="${this.cssClasses.textPane}">
                         <textarea name="value" data-part="editor-textarea">${this.params.value}</textarea>
                     </div>
-                    <div class="${this.cssClasses.previewPane}" data-part="editor-preview-pane" data-url="/_markdown_editor/preview" data-component="pinstripe-frame" load-on-init="false"></div>
+                    <div class="${this.cssClasses.previewPane}" data-part="editor-preview-pane">
+                        <div class="${this.cssClasses.actions}">
+                            <button data-part="save-changes-button">Save Changes</button>
+                        </div>
+                        <pinstripe-frame url="/_markdown_editor/preview" load-on-init="false"></pinstripe-frame>
+                    </div>
                 </div>
             </pinstripe-modal>
         `;

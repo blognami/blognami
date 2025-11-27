@@ -352,12 +352,14 @@ export const Component = Class.extend().include({
             } else {
                 return fn.call(this, eventWrapper, ...args);
             }
-        }
+        };
 
         this.node.addEventListener(name, wrapperFn);
 
         return this.manage({
-            destroy: () => this.node.removeEventListener(name, wrapperFn)
+            destroy: () => {
+                this.node.removeEventListener(name, wrapperFn)
+            }
         });
     },
     
@@ -566,16 +568,14 @@ const matchesSelector = (() => {
 })();
 
 function cleanChildren(){
-    if(this.node.shadowRoot){
-        this.shadow.children.forEach(child => clean.call(child));
-    }
+    if(this.node.shadowRoot) clean.call(this.shadow);
     this.children.forEach(child => clean.call(child));
 }
 
 function clean(){
     this.trigger('clean', { bubbles: false });
-
-    [...this.node.childNodes].forEach(node => node._component && clean.call(node._component));
+    
+    cleanChildren.call(this);
 
     while(this._managedResources.length){
         this._managedResources.pop().destroy();

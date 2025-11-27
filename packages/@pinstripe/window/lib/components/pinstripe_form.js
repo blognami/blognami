@@ -6,28 +6,30 @@ Component.register('pinstripe-form', {
     initialize(...args){
         this.constructor.parent.prototype.initialize.call(this, ...args);
 
-        const { confirm, target = '_self', method = 'GET', action, placeholder, disabled, requiresProofOfWork } = this.params;
+        const { confirm, target = '_self', method = 'GET', action, placeholder, disabled, requiresProofOfWork, skipPatch } = this.params;
         const frame = target == '_overlay' ? this.frame : getFrame.call(this, target);
 
         this.on('submit', (event) => {
             event.preventDefault();
             event.stopPropagation();
-            if(disabled !== undefined) return;           
-            
-            this.patch({
-                ...this.attributes,
-                [this.params.component ? 'data-loading' : 'loading']: 'true'
-            });
+            if(disabled !== undefined) return;
 
             delete frame._previousHash;
             this._watchInterval?.destroy();
+
+            const options = event.detail || {};
             
-            loadFrame.call(this, { confirm, target, method, url: action, placeholderUrl: placeholder, requiresProofOfWork: requiresProofOfWork == 'true' });
+            loadFrame.call(this, { confirm, target, method, url: action, placeholderUrl: placeholder, requiresProofOfWork: requiresProofOfWork == 'true', skipPatch: skipPatch == 'true', ...options });
         });
 
         if(this.isFromPlaceholderHtml) return;
 
         this._initialHash = JSON.stringify(this.values);
+        this.manage(this.frame.on('load', (event) => {
+            const { status } = event.detail;
+            if(status >= 400) return;
+            this._initialHash = JSON.stringify(this.values);
+        }));
         
         if(placeholder != undefined) this.document.preload(normalizeUrl(placeholder, frame.url));
         
@@ -48,6 +50,10 @@ Component.register('pinstripe-form', {
         
     get hasUnsavedChanges(){
         return this.params.hasUnsavedChanges == 'true' || JSON.stringify(this.values) != this._initialHash;
+    },
+
+    submit(options = {}){
+        this.trigger('submit', { data: options });
     }
 });
 
