@@ -129,6 +129,95 @@ export default {
 - Use `this.renderHtml` tagged template for HTML output
 - CSS classes are auto-scoped via `this.cssClasses`
 
+#### Responsive Styles with Theme
+
+For responsive styles, use a function that receives the theme and use `breakpointFor` for mobile-first media queries:
+
+```javascript
+export const styles = ({ colors, breakpointFor }) => `
+    .root {
+        padding: 1.6rem;
+        color: ${colors.gray[700]};
+    }
+
+    ${breakpointFor('md')} {
+        .root {
+            padding: 2.4rem;
+        }
+    }
+`;
+```
+
+Available breakpoints: `sm` (40rem), `md` (48rem), `lg` (64rem), `xl` (80rem), `2xl` (96rem)
+
+### Theme System
+
+The theme provides centralized design tokens for consistent styling across the app.
+
+#### How Styles Receive Theme
+
+When `styles` is a function, it receives the resolved theme object:
+
+```javascript
+export const styles = ({ colors, fonts, breakpointFor }) => `
+    .root {
+        font-family: ${fonts.sans};
+        color: ${colors.semantic.primaryText};
+        background: ${colors.gray[50]};
+    }
+`;
+```
+
+#### Key Theme Properties
+
+- **colors**: Color palettes (gray, red, blue, etc.) with shades 50-950, plus `colors.semantic` for theme-aware colors
+- **fonts**: `sans`, `serif`, `mono`
+- **breakpoints**: `sm`, `md`, `lg`, `xl`, `2xl`
+- **spacing**, **radius**, **shadow**: Design tokens for consistent spacing/styling
+- **breakpointFor(name)**: Returns `@media (min-width: ...)` for mobile-first responsive design
+
+#### View-Specific Theme Tokens
+
+Views can define component-specific tokens that reference global theme values:
+
+```javascript
+export const theme = {
+    colors: {
+        primaryBackground: '@colors.lime.500',
+        primaryHoverBackground: '@colors.lime.600',
+    }
+};
+
+export const styles = ({ views }) => `
+    .root {
+        background: ${views['_my-view'].colors.primaryBackground};
+    }
+`;
+```
+
+#### CSS Class Scoping
+
+CSS classes are automatically scoped per-view using a hash of the view name:
+- `.root` in view `_navbar` becomes `.view-abc123-root`
+- Access via `this.cssClasses.root` in the render method
+- Prevents style conflicts between views
+
+#### Theme Configuration
+
+Override theme values in `pinstripe.config.js`:
+
+```javascript
+export default {
+    theme: {
+        colors: {
+            semantic: {
+                accent: '@colors.blue.500'
+            }
+        }
+    }
+};
+```
+
 ### Services (in `lib/services/`)
 
 Services are singletons with a `create()` method:
