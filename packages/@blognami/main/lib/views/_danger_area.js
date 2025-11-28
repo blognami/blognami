@@ -1,7 +1,7 @@
 
-export const styles = `
+export const styles = ({ remify }) => `
     .root {
-        border-width: 0.1rem;
+        border-width: ${remify(1)};
         border-style: dashed;
     }
 
@@ -20,8 +20,8 @@ export const styles = `
     }
     .root[data-is-open="true"] .title { color: #c70000; }
 
-    .body, .header { padding: 0.7rem; }
-    
+    .body, .header { padding: ${remify(7)}; }
+
     .open, .close { cursor: pointer; }
 
     .open { display: block; }
@@ -33,7 +33,7 @@ export const styles = `
     .body { display: none; }
     .root[data-is-open="true"] .body { display: block; }
 
-    .body > * + * { margin-top: 2rem; }
+    .body > * + * { margin-top: ${remify(20)}; }
 `;
 
 export const decorators = {

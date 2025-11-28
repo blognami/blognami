@@ -1,7 +1,7 @@
 
-export const styles = ({ colors, fonts, breakpointFor }) => `
+export const styles = ({ colors, fonts, breakpointFor, remify }) => `
     .post + .post {
-        margin-top: 6.4rem;
+        margin-top: ${remify(64)};
     }
 
     .post-link {
@@ -13,7 +13,7 @@ export const styles = ({ colors, fonts, breakpointFor }) => `
     }
 
     .post-title {
-        font-size: 3.4rem;
+        font-size: ${remify(34)};
         font-weight: 600;
     }
 
@@ -22,15 +22,15 @@ export const styles = ({ colors, fonts, breakpointFor }) => `
     }
 
     .post-excerpt {
-        margin-top: 1.2rem;
-        font-size: 1.8rem;
+        margin-top: ${remify(12)};
+        font-size: ${remify(18)};
         line-height: 1.5;
         letter-spacing: -0.01em;
     }
 
     .post-meta {
-        margin-top: 2rem;
-        font-size: 1.2rem;
+        margin-top: ${remify(20)};
+        font-size: ${remify(12)};
         font-weight: 500;
         line-height: 1;
         color: ${colors.semantic.secondaryText};
@@ -47,18 +47,18 @@ export const styles = ({ colors, fonts, breakpointFor }) => `
     }
 
     .compact .post + .post {
-        margin-top: 2.8rem;
+        margin-top: ${remify(28)};
     }
 
     .compact .post-title {
-        font-size: 1.9rem;
+        font-size: ${remify(19)};
         font-weight: 600;
         line-height: 1.25;
         letter-spacing: -0.01em;
     }
 
     .compact .post-excerpt {
-        margin-top: 0.8rem;
+        margin-top: ${remify(8)};
         font-family: ${fonts.sans};
         font-size: inherit;
         line-height: 1.55;
@@ -67,12 +67,12 @@ export const styles = ({ colors, fonts, breakpointFor }) => `
     }
 
     .compact .post-meta {
-        margin-top: 1.6rem;
+        margin-top: ${remify(16)};
     }
 
     ${breakpointFor('md')} {
         .post + .post {
-            margin-top: 8rem;
+            margin-top: ${remify(80)};
         }
     }
 `;

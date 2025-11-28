@@ -127,13 +127,9 @@ export const styles = ({ colors, fonts }) => `
         }
     }
 
-    html {
-        font-size: 62.5%;
-    }
-
     body {
         font-family: ${fonts.sans};
-        font-size: 1.6rem;
+        font-size: 1rem;
         line-height: 1.6;
         color: ${colors.semantic.primaryText};
         background-color: ${colors.white};

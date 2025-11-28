@@ -1,5 +1,5 @@
 
-export const styles = ({ colors, breakpointFor }) => `
+export const styles = ({ colors, breakpointFor, remify }) => `
     .root {
         display: none;
     }
@@ -7,16 +7,16 @@ export const styles = ({ colors, breakpointFor }) => `
     ${breakpointFor('md')} {
         .root {
             display: flex;
-            width: 25.6rem;
-            padding: 3.2rem 0;
-            border-right: 1px solid ${colors.gray[200]};
+            width: ${remify(256)};
+            padding: ${remify(32)} 0;
+            border-right: ${remify(1)} solid ${colors.gray[200]};
             position: sticky;
-            top: 6.4rem;
-            height: calc(100vh - 6.4rem);
+            top: ${remify(64)};
+            height: calc(100vh - ${remify(64)});
             overflow-y: auto;
-            padding-right: 2.4rem;
+            padding-right: ${remify(24)};
             flex-direction: column;
-            gap: 3.2rem;
+            gap: ${remify(32)};
         }
     }
 `;

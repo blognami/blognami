@@ -1,15 +1,15 @@
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .root {
         display: flex;
-        gap: 16px;
-        min-height: calc(100vh - 300px);
+        gap: ${remify(16)};
+        min-height: calc(100vh - ${remify(300)});
     }
 
     .option {
-        border: 1px solid ${colors.gray[300]};
+        border: ${remify(1)} solid ${colors.gray[300]};
         flex: 1 1 0;
-        padding: 16px;
-        border-radius: 12px;
+        padding: ${remify(16)};
+        border-radius: ${remify(12)};
         display: flex;
         flex-direction: column;
     }
@@ -20,7 +20,7 @@ export const styles = ({ colors }) => `
     }
 
     .price {
-        margin-bottom: 16px;
+        margin-bottom: ${remify(16)};
         font-size: 0.8em;
     }
 

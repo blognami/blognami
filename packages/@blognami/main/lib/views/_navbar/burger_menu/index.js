@@ -1,18 +1,18 @@
 
-export const styles = ({ colors, shadow, breakpointFor }) => `
+export const styles = ({ colors, shadow, breakpointFor, remify }) => `
     .root {
         background-color: ${colors.white};
-        border-radius: 12px;
+        border-radius: ${remify(12)};
         box-shadow: ${shadow.xl};
-        padding: 2.4rem;
+        padding: ${remify(24)};
         width: 100%;
         max-width: none;
         margin: 0;
         display: flex;
         flex-direction: column;
-        gap: 3.2rem;
-        backdrop-filter: blur(10px);
-        border: 1px solid color-mix(in oklch, ${colors.white} 20%, transparent);
+        gap: ${remify(32)};
+        backdrop-filter: blur(${remify(10)});
+        border: ${remify(1)} solid color-mix(in oklch, ${colors.white} 20%, transparent);
         animation: slideInUp 0.3s ease-out;
         box-sizing: border-box;
         overflow: hidden;
@@ -21,7 +21,7 @@ export const styles = ({ colors, shadow, breakpointFor }) => `
     @keyframes slideInUp {
         from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(${remify(20)});
         }
         to {
             opacity: 1;
@@ -31,10 +31,10 @@ export const styles = ({ colors, shadow, breakpointFor }) => `
 
     ${breakpointFor('md')} {
         .root {
-            padding: 3.2rem;
-            border-radius: 16px;
-            margin: 1.6rem auto;
-            max-width: 420px;
+            padding: ${remify(32)};
+            border-radius: ${remify(16)};
+            margin: ${remify(16)} auto;
+            max-width: ${remify(420)};
         }
     }
 `;

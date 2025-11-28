@@ -1,10 +1,10 @@
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .link {
         text-decoration: none;
         color: ${colors.gray[500]};
         font-weight: 500;
         transition: color 0.2s ease;
-        padding: 0.8rem 0;
+        padding: ${remify(8)} 0;
     }
 
     .link:hover {

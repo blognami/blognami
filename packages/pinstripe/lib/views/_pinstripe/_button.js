@@ -11,7 +11,7 @@ export const theme = {
     }
 };
 
-export const styles = ({ views, colors, shadow }) =>`
+export const styles = ({ views, colors, shadow, remify }) =>`
     .root {
         /* Reset & Layout */
         appearance: none;
@@ -22,7 +22,7 @@ export const styles = ({ views, colors, shadow }) =>`
 
         /* Typography */
         font-family: inherit;
-        font-size: 1.4rem;
+        font-size: ${remify(14)};
         font-weight: 500;
         line-height: 1.5;
         text-align: center;
@@ -30,16 +30,16 @@ export const styles = ({ views, colors, shadow }) =>`
         white-space: nowrap;
 
         /* Spacing */
-        height: 4rem;
-        padding: 0 1.6rem;
+        height: ${remify(40)};
+        padding: 0 ${remify(16)};
 
         /* Colors */
         background-color: ${colors.white};
-        border: 0.1rem solid ${colors.gray[300]};
+        border: ${remify(1)} solid ${colors.gray[300]};
         color: ${colors.gray[700]};
 
         /* Border & Shape */
-        border-radius: 0.6rem;
+        border-radius: ${remify(6)};
 
         /* Interaction */
         cursor: pointer;
@@ -55,13 +55,13 @@ export const styles = ({ views, colors, shadow }) =>`
     .root:hover {
         border-color: ${colors.gray[400]};
         box-shadow: ${shadow.xs};
-        transform: translateY(-0.05rem);
+        transform: translateY(-${remify(0.5)});
     }
 
     .root:focus {
         outline: none;
         border-color: ${views['_pinstripe/_button'].colors.focusRing};
-        box-shadow: 0 0 0 0.3rem color-mix(in oklch, ${views['_pinstripe/_button'].colors.focusRing} 15%, transparent);
+        box-shadow: 0 0 0 ${remify(3)} color-mix(in oklch, ${views['_pinstripe/_button'].colors.focusRing} 15%, transparent);
     }
 
     .root:active {
@@ -77,33 +77,33 @@ export const styles = ({ views, colors, shadow }) =>`
     }
 
     .root:not(:last-child) {
-        margin-right: 0.8rem;
+        margin-right: ${remify(8)};
     }
 
     .root.is-primary {
         background-color: ${views['_pinstripe/_button'].colors.primaryBackground};
         border-color: ${views['_pinstripe/_button'].colors.primaryBackground};
         color: ${views['_pinstripe/_button'].colors.primaryText};
-        box-shadow: 0 0.2rem 0.4rem color-mix(in oklch, ${views['_pinstripe/_button'].colors.primaryBackground} 20%, transparent);
+        box-shadow: 0 ${remify(2)} ${remify(4)} color-mix(in oklch, ${views['_pinstripe/_button'].colors.primaryBackground} 20%, transparent);
     }
 
     .root.is-primary:hover {
         background-color: ${views['_pinstripe/_button'].colors.primaryHoverBackground};
         border-color: ${views['_pinstripe/_button'].colors.primaryHoverBackground};
-        box-shadow: 0 0.4rem 0.8rem color-mix(in oklch, ${views['_pinstripe/_button'].colors.primaryBackground} 30%, transparent);
+        box-shadow: 0 ${remify(4)} ${remify(8)} color-mix(in oklch, ${views['_pinstripe/_button'].colors.primaryBackground} 30%, transparent);
     }
 
     .root.is-dangerous {
         background-color: ${views['_pinstripe/_button'].colors.dangerBackground};
         border-color: ${views['_pinstripe/_button'].colors.dangerBackground};
         color: ${views['_pinstripe/_button'].colors.dangerText};
-        box-shadow: 0 0.2rem 0.4rem color-mix(in oklch, ${views['_pinstripe/_button'].colors.dangerBackground} 20%, transparent);
+        box-shadow: 0 ${remify(2)} ${remify(4)} color-mix(in oklch, ${views['_pinstripe/_button'].colors.dangerBackground} 20%, transparent);
     }
 
     .root.is-dangerous:hover {
         background-color: ${views['_pinstripe/_button'].colors.dangerHoverBackground};
         border-color: ${views['_pinstripe/_button'].colors.dangerHoverBackground};
-        box-shadow: 0 0.4rem 0.8rem color-mix(in oklch, ${views['_pinstripe/_button'].colors.dangerBackground} 30%, transparent);
+        box-shadow: 0 ${remify(4)} ${remify(8)} color-mix(in oklch, ${views['_pinstripe/_button'].colors.dangerBackground} 30%, transparent);
     }
 
     .root.is-full-width {
@@ -111,15 +111,15 @@ export const styles = ({ views, colors, shadow }) =>`
     }
 
     .root.is-small {
-        font-size: 1.2rem;
-        height: 3.2rem;
-        padding: 0 1.2rem;
+        font-size: ${remify(12)};
+        height: ${remify(32)};
+        padding: 0 ${remify(12)};
     }
 
     .root.is-large {
-        font-size: 1.6rem;
-        height: 4.8rem;
-        padding: 0 2.4rem;
+        font-size: ${remify(16)};
+        height: ${remify(48)};
+        padding: 0 ${remify(24)};
     }
 `;
 

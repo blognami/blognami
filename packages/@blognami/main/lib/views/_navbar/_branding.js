@@ -1,18 +1,18 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .root {
         display: flex;
         align-items: center;
-        gap: 1.2rem;
+        gap: ${remify(12)};
         text-decoration: none;
         color: ${colors.gray[900]};
         font-weight: 600;
-        font-size: 2rem;
+        font-size: ${remify(20)};
     }
 
     .icon {
-        width: 3.2rem;
-        height: 3.2rem;
+        width: ${remify(32)};
+        height: ${remify(32)};
         color: ${colors.semantic.accent};
     }
 `;

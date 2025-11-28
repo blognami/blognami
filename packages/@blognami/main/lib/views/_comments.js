@@ -1,4 +1,4 @@
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .comments {
         margin-top: 2em;
         display: flex;
@@ -13,20 +13,20 @@ export const styles = ({ colors }) => `
     .comment {
         display: flex;
         gap: 1em;
-        min-height: 150px;
+        min-height: ${remify(150)};
     }
 
     .comment-main {
         flex: 1 1 0;
         border-style: solid;
-        border-width: 0 0 0 2px;
+        border-width: 0 0 0 ${remify(2)};
         border-color: ${colors.gray[200]};
         padding-left: 1em;
     }
 
     .comment-meta {
         border-style: solid;
-        border-width: 0 0 2px 0;
+        border-width: 0 0 ${remify(2)} 0;
         border-color: ${colors.gray[200]};
         padding-bottom: 1em;
     }
@@ -36,7 +36,7 @@ export const styles = ({ colors }) => `
     }
 
     .comment-created-at {
-        font-size: 12px;
+        font-size: ${remify(12)};
         font-weight: 500;
     }
 
@@ -51,7 +51,7 @@ export const styles = ({ colors }) => `
     }
 
     .action {
-        font-size: 12px;
+        font-size: ${remify(12)};
         font-weight: 500;
         color: ${colors.semantic.accent};
     }

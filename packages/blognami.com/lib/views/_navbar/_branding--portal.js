@@ -1,8 +1,8 @@
 
 
-export const styles = `
+export const styles = ({ remify }) => `
     .navbar-logo {
-        max-height: 32px;
+        max-height: ${remify(32)};
     }
 `;
 
