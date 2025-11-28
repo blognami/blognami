@@ -1,26 +1,26 @@
 
-export const styles = ({ colors, breakpointFor }) => `
+export const styles = ({ colors, breakpointFor, remify }) => `
     .root {
-        border-top: 1px solid ${colors.gray[200]};
+        border-top: ${remify(1)} solid ${colors.gray[200]};
         background-color: ${colors.gray[50]};
-        padding: 4.8rem 0;
-        margin-top: 6.4rem;
+        padding: ${remify(48)} 0;
+        margin-top: ${remify(64)};
         color: ${colors.semantic.secondaryText};
     }
 
     .container {
-        max-width: 1280px;
+        max-width: ${remify(1280)};
         margin: 0 auto;
-        padding: 0 2.4rem;
+        padding: 0 ${remify(24)};
         display: grid;
         grid-template-columns: 1fr;
         text-align: center;
-        font-size: 1.4rem;
-        gap: 2rem;
+        font-size: ${remify(14)};
+        gap: ${remify(20)};
     }
 
     .powered-by {
-        margin-top: 2rem;
+        margin-top: ${remify(20)};
         text-align: center;
     }
 

@@ -1,17 +1,17 @@
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .root {
         list-style: none;
         margin: 0;
         padding: 0;
         display: flex;
         flex-direction: column;
-        gap: 0.4rem;
+        gap: ${remify(4)};
         width: 100%;
         overflow: hidden;
     }
 
     .item {
-        border-radius: 8px;
+        border-radius: ${remify(8)};
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         width: 100%;
         overflow: hidden;
@@ -26,11 +26,11 @@ export const styles = ({ colors }) => `
         align-items: center;
         text-decoration: none;
         color: ${colors.gray[700]};
-        padding: 1.2rem 1.6rem;
-        font-size: 1.52rem;
+        padding: ${remify(12)} ${remify(16)};
+        font-size: ${remify(15.2)};
         font-weight: 500;
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        border-radius: 8px;
+        border-radius: ${remify(8)};
         position: relative;
         line-height: 1.4;
         width: 100%;
@@ -52,15 +52,15 @@ export const styles = ({ colors }) => `
 
     /* Nested links styling */
     .root .root {
-        margin-top: 0.8rem;
-        margin-left: 1.6rem;
-        padding-left: 1.6rem;
-        border-left: 2px solid ${colors.gray[100]};
+        margin-top: ${remify(8)};
+        margin-left: ${remify(16)};
+        padding-left: ${remify(16)};
+        border-left: ${remify(2)} solid ${colors.gray[100]};
     }
 
     .root .root .link {
-        font-size: 1.4rem;
-        padding: 0.8rem 1.2rem;
+        font-size: ${remify(14)};
+        padding: ${remify(8)} ${remify(12)};
         color: ${colors.gray[500]};
     }
 

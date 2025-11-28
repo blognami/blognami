@@ -1,4 +1,4 @@
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .root {
         list-style: none;
         margin: 0;
@@ -11,12 +11,12 @@ export const styles = ({ colors }) => `
         justify-content: space-between;
         text-decoration: none;
         color: ${colors.gray[500]};
-        padding: 0.6rem 0;
-        font-size: 1.4rem;
+        padding: ${remify(6)} 0;
+        font-size: ${remify(14)};
         transition: color 0.2s ease;
-        border-left: 2px solid transparent;
-        padding-left: 1.2rem;
-        margin-left: -1.2rem;
+        border-left: ${remify(2)} solid transparent;
+        padding-left: ${remify(12)};
+        margin-left: -${remify(12)};
     }
 
     .link:hover {
@@ -30,11 +30,11 @@ export const styles = ({ colors }) => `
     }
 
     .badge {
-        padding: 0.4rem 0.8rem;
-        font-size: 1.3rem;
+        padding: ${remify(4)} ${remify(8)};
+        font-size: ${remify(13)};
         line-height: 1;
-        border: 1px solid ${colors.gray[200]};
-        border-radius: 32px;
+        border: ${remify(1)} solid ${colors.gray[200]};
+        border-radius: ${remify(32)};
     }
 `;
 

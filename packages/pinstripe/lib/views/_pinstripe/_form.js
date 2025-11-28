@@ -1,5 +1,5 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .form {
         display: block;
     }
@@ -29,7 +29,7 @@ export const styles = ({ colors }) => `
     .label {
         color: ${colors.gray[700]};
         display: block;
-        font-size: 1.6rem;
+        font-size: ${remify(16)};
         font-weight: 700;
     }
 
@@ -41,18 +41,18 @@ export const styles = ({ colors }) => `
         -moz-appearance: none;
         -webkit-appearance: none;
         align-items: center;
-        border: 0.1rem solid transparent;
-        border-radius: 0.4rem;
+        border: ${remify(1)} solid transparent;
+        border-radius: ${remify(4)};
         box-shadow: inset 0 0.0625em 0.125em rgb(10 10 10 / 5%);
         display: inline-flex;
-        font-size: 1.6rem;
+        font-size: ${remify(16)};
         height: 2.5em;
         justify-content: flex-start;
         line-height: 1.5;
-        padding-bottom: calc(0.5em - 0.1rem);
-        padding-left: calc(0.75em - 0.1rem);
-        padding-right: calc(0.75em - 0.1rem);
-        padding-top: calc(0.5em - 0.1rem);
+        padding-bottom: calc(0.5em - ${remify(1)});
+        padding-left: calc(0.75em - ${remify(1)});
+        padding-right: calc(0.75em - ${remify(1)});
+        padding-top: calc(0.5em - ${remify(1)});
         position: relative;
         vertical-align: top;
         background-color: ${colors.white};
@@ -78,19 +78,19 @@ export const styles = ({ colors }) => `
     }
 
     .input + .is-error {
-        font-size: 1.2rem;
-        margin-top: 0.25rem;
+        font-size: ${remify(12)};
+        margin-top: ${remify(2.5)};
     }
 
     .textarea {
-        border: 0.1rem solid ${colors.gray[300]};
+        border: ${remify(1)} solid ${colors.gray[300]};
         width: 100%;
         min-height: 7em;
-        border-radius: 0.4rem;
-        padding-bottom: calc(0.5em - 0.1rem);
-        padding-left: calc(0.75em - 0.1rem);
-        padding-right: calc(0.75em - 0.1rem);
-        padding-top: calc(0.5em - 0.1rem);
+        border-radius: ${remify(4)};
+        padding-bottom: calc(0.5em - ${remify(1)});
+        padding-left: calc(0.75em - ${remify(1)});
+        padding-right: calc(0.75em - ${remify(1)});
+        padding-top: calc(0.5em - ${remify(1)});
     }
 
     .is-error:not(input):not(textarea) {
@@ -108,7 +108,7 @@ export const styles = ({ colors }) => `
         flex-wrap: wrap;
         align-items: center;
         justify-content: start;
-        font-size: 11px;
+        font-size: ${remify(11)};
         gap: 0.5em;
     }
 

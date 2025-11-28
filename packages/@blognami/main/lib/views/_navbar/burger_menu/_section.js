@@ -1,6 +1,6 @@
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .root {
-        margin-bottom: 3.2rem;
+        margin-bottom: ${remify(32)};
     }
 
     .root:last-child {
@@ -8,14 +8,14 @@ export const styles = ({ colors }) => `
     }
 
     .label {
-        font-size: 1.4rem;
+        font-size: ${remify(14)};
         font-weight: 700;
         color: ${colors.gray[500]};
         text-transform: uppercase;
         letter-spacing: 0.1em;
-        margin-bottom: 1.6rem;
-        padding-bottom: 0.8rem;
-        border-bottom: 2px solid ${colors.gray[100]};
+        margin-bottom: ${remify(16)};
+        padding-bottom: ${remify(8)};
+        border-bottom: ${remify(2)} solid ${colors.gray[100]};
     }
 `;
 

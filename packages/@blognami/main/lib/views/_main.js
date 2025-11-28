@@ -1,27 +1,27 @@
-export const styles = ({ breakpointFor }) => `
+export const styles = ({ breakpointFor, remify }) => `
     .root {
         flex: 1;
         display: flex;
-        max-width: 1280px;
+        max-width: ${remify(1280)};
         margin: 0 auto;
         width: 100%;
-        padding: 0 1.6rem;
-        gap: 3.2rem;
+        padding: 0 ${remify(16)};
+        gap: ${remify(32)};
     }
 
     .content {
         flex: 1;
-        padding: 1.6rem 0;
-        max-width: 650px;
+        padding: ${remify(16)} 0;
+        max-width: ${remify(650)};
     }
 
     ${breakpointFor('md')} {
         .root {
-            padding: 0 2.4rem;
+            padding: 0 ${remify(24)};
         }
 
         .content {
-            padding: 3.2rem 0 3.2rem 0;
+            padding: ${remify(32)} 0 ${remify(32)} 0;
         }
     }
 `;

@@ -1,9 +1,9 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .root {
         display: block;
-        margin-bottom: 2rem;
-        font-size: 1.2rem;
+        margin-bottom: ${remify(20)};
+        font-size: ${remify(12)};
         font-weight: 500;
         line-height: 1;
         color: ${colors.semantic.secondaryText};

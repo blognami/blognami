@@ -1,4 +1,4 @@
-export const styles = ({ colors, breakpointFor }) => `
+export const styles = ({ colors, breakpointFor, remify }) => `
     .root {
         display: flex;
         flex-direction: column;
@@ -19,7 +19,7 @@ export const styles = ({ colors, breakpointFor }) => `
         width: 1.5em;
         height: 0.2em;
         background: ${colors.gray[700]};
-        border-radius: 2px;
+        border-radius: ${remify(2)};
         transition: all 0.3s;
     }
 

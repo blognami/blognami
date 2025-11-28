@@ -1,14 +1,14 @@
 
-export const styles = ({ breakpointFor }) => `
+export const styles = ({ breakpointFor, remify }) => `
     .title {
-        font-size: 4.2rem;
+        font-size: ${remify(42)};
         font-weight: 600;
         line-height: 1;
     }
 
     ${breakpointFor('md')} {
         .title {
-            font-size: 7.4rem;
+            font-size: ${remify(74)};
         }
     }
 `;

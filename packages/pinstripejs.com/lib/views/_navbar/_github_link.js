@@ -1,15 +1,15 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .root {
         display: flex;
         align-items: center;
-        gap: 0.8rem;
+        gap: ${remify(8)};
         text-decoration: none;
         color: ${colors.gray[500]};
         font-weight: 500;
-        padding: 0.8rem 1.6rem;
-        border: 1px solid ${colors.gray[200]};
-        border-radius: 0.6rem;
+        padding: ${remify(8)} ${remify(16)};
+        border: ${remify(1)} solid ${colors.gray[200]};
+        border-radius: ${remify(6)};
         transition: all 0.2s ease;
     }
 

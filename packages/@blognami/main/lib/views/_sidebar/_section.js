@@ -1,11 +1,11 @@
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .label {
-        font-size: 1.4rem;
+        font-size: ${remify(14)};
         font-weight: 600;
         color: ${colors.gray[900]};
         text-transform: uppercase;
         letter-spacing: 0.05em;
-        margin-bottom: 1.2rem;
+        margin-bottom: ${remify(12)};
     }
 `;
 
