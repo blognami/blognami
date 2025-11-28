@@ -16,6 +16,16 @@ const COERCE_MAP = {
     string: items => items.join(' '),
     boolean: items => items.length ? items[0] === 'true' : true,
     number: items => Number(items[0] || 0),
+    fields: items => {
+        const fieldsString = items.join(' ');
+        return fieldsString.split(/\s+/).map(field => field.trim()).filter(field => field).map(arg => {
+            const matches = arg.match(/^(\^|)([^:]*)(:|)(.*)$/);
+            const mandatory = matches[1] == '^';
+            const name = inflector.camelize(matches[2]);
+            const type = matches[4] || 'string';
+            return { mandatory, name, type };
+        });
+    },
 };
 
 export const Command = Class.extend().include({

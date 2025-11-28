@@ -18,10 +18,10 @@ export default {
             description: 'The table name for the migration. Can be inferred from suffix if it ends with "_to_tablename".' 
         });
         
-        this.hasParam('fields', { 
-            type: 'string', 
-            optional: true, 
-            description: 'Field definitions for the migration (e.g., "name:string age:integer").' 
+        this.hasParam('fields', {
+            type: 'fields',
+            optional: true,
+            description: 'Field definitions for the migration (e.g., "name:string age:integer").'
         });
     },
 
@@ -29,8 +29,7 @@ export default {
 
         const suffix = this.inflector.snakeify(this.params.suffix || 'migration');
 
-        const { fields = '' } = this.params;
-        const normalizedFields = this.cliUtils.normalizeFields(fields);
+        const normalizedFields = this.params.fields || [];
         
         const table = this.params.table || (() => {
             const matches = suffix.match(/_to_(.+)$/);
