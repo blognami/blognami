@@ -353,7 +353,6 @@ The service includes comprehensive English pluralization rules:
 The inflector service integrates seamlessly with other Pinstripe services:
 
 - **fsBuilder**: File and directory name generation
-- **cliUtils**: Processing command-line field specifications
 - **cssClassesFor**: Dynamic CSS class name generation
 - **renderText**: Template variable naming
 - **database services**: Model and table name handling

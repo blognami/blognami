@@ -2,7 +2,13 @@
 import test from 'node:test';
 import assert from 'node:assert';
 
-import { Workspace } from 'pinstripe';
+import { Command } from 'pinstripe';
+
+Command.register('test-fields', {
+    meta(){
+        this.hasParam('fields', { type: 'fields', optional: true });
+    }
+});
 
 [
     { input: '', expectedOutput: []},
@@ -16,9 +22,11 @@ import { Workspace } from 'pinstripe';
         { mandatory: false, name: 'plum', type: 'fruit' }
     ] },
 ].forEach(({ input, expectedOutput}, i) => {
-    test(`cliUtils.normalizeFields (${i}})`, () => Workspace.run(function(){
-        assert.deepEqual(this.cliUtils.normalizeFields(input), expectedOutput);
-    }));
+    test(`fields parameter type (${i})`, () => {
+        const TestCommand = Command.for('test-fields');
+        const extracted = TestCommand.extractParams(['--fields', input]);
+        const coerced = TestCommand.coerceParams(extracted);
+        assert.deepEqual(coerced.fields, expectedOutput);
+    });
 });
-
 
