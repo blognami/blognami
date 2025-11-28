@@ -1,5 +1,5 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ colors, breakpointFor }) => `
     .root {
         border-top: 1px solid #e5e7eb;
         background-color: #f9fafb;
@@ -13,13 +13,15 @@ export const styles = ({ colors }) => `
         margin: 0 auto;
         padding: 0 2.4rem;
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
+        text-align: center;
         font-size: 1.4rem;
         gap: 2rem;
     }
 
     .powered-by {
-        text-align: right;
+        margin-top: 2rem;
+        text-align: center;
     }
 
     .link {
@@ -32,15 +34,15 @@ export const styles = ({ colors }) => `
         opacity: 1;
     }
 
-    @media (max-width: 767px) {
+    ${breakpointFor('md')} {
         .container {
-            grid-template-columns: 1fr;
-            text-align: center;
+            grid-template-columns: 1fr 1fr;
+            text-align: left;
         }
 
         .powered-by {
-            margin-top: 2rem;
-            text-align: center;
+            margin-top: 0;
+            text-align: right;
         }
     }
 `;

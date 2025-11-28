@@ -1,22 +1,22 @@
 
-export const styles = `
+export const styles = ({ breakpointFor }) => `
     .root {
-        width: 25.6rem;
-        padding: 3.2rem 0;
-        border-right: 1px solid #e5e7eb;
-        position: sticky;
-        top: 6.4rem;
-        height: calc(100vh - 6.4rem);
-        overflow-y: auto;
-        padding-right: 2.4rem;
-        display: flex;
-        flex-direction: column;
-        gap: 3.2rem;
+        display: none;
     }
 
-    @media (max-width: 768px) {
+    ${breakpointFor('md')} {
         .root {
-            display: none;
+            display: flex;
+            width: 25.6rem;
+            padding: 3.2rem 0;
+            border-right: 1px solid #e5e7eb;
+            position: sticky;
+            top: 6.4rem;
+            height: calc(100vh - 6.4rem);
+            overflow-y: auto;
+            padding-right: 2.4rem;
+            flex-direction: column;
+            gap: 3.2rem;
         }
     }
 `;

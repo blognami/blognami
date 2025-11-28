@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ breakpointFor }) => `
     .root {
         background-color: #ffffff;
         border-bottom: 1px solid #e5e7eb;
@@ -13,7 +13,7 @@ export const styles = `
     .container {
         max-width: 1280px;
         margin: 0 auto;
-        padding: 0 2.4rem;
+        padding: 0 1.6rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -27,7 +27,7 @@ export const styles = `
     }
 
     .link-group-items {
-        display: flex;
+        display: none;
         align-items: center;
         gap: 2.4rem;
         list-style: none;
@@ -35,13 +35,13 @@ export const styles = `
         padding: 0;
     }
 
-    @media (max-width: 768px) {
+    ${breakpointFor('md')} {
         .container {
-            padding: 0 1.6rem;
+            padding: 0 2.4rem;
         }
 
         .link-group-items {
-            display: none;
+            display: flex;
         }
     }
 `;

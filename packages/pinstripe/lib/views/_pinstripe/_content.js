@@ -1,5 +1,9 @@
 
-export const styles = ({ colors, fonts }) =>`
+export const styles = ({ colors, fonts, breakpointFor }) =>`
+    .root {
+        margin-top: 3.2rem;
+    }
+
     .root img {
         height: auto;
     }
@@ -25,21 +29,15 @@ export const styles = ({ colors, fonts }) =>`
     }
 
     .root h1 {
-        font-size: 3.6rem;
+        font-size: 3.2rem;
         font-weight: 700;
         color: #111827;
         margin: 0 0 1.6rem 0;
         line-height: 1.2;
     }
-    
-    @media (max-width: 767px) {
-        .root h1 {
-            font-size: 3.2rem;
-        }
-    }
 
     .root h2 {
-        font-size: 3rem;
+        font-size: 2.4rem;
         font-weight: 600;
         color: #111827;
         margin: 3.2rem 0 1.6rem 0;
@@ -47,7 +45,7 @@ export const styles = ({ colors, fonts }) =>`
     }
 
     .root h3 {
-        font-size: 2.4rem;
+        font-size: 2.1rem;
         font-weight: 600;
         color: #111827;
         margin: 2.4rem 0 1.2rem 0;
@@ -144,19 +142,13 @@ export const styles = ({ colors, fonts }) =>`
         border: 0;
     }
 
-    @media (max-width: 767px) {
-        .root h2 {
-            font-size: 2.4rem;
-        }
-
-        .root h3 {
-            font-size: 2.1rem;
-        }
+    .root > * + * {
+        margin-top: 2rem;
+        margin-bottom: 0;
     }
 
-    .root > * + * {
-        margin-top: 2.8rem;
-        margin-bottom: 0;
+    .root > [id]:not(:first-child) {
+        margin-top: 3.2rem;
     }
 
     .root > hr,
@@ -185,7 +177,7 @@ export const styles = ({ colors, fonts }) =>`
     .root > ul,
     .root > dl,
     .root > p {
-        font-size: var(--content-font-size, 1.9rem);
+        font-size: 1.7rem;
         letter-spacing: var(--content-letter-spacing, 0);
     }
 
@@ -199,17 +191,29 @@ export const styles = ({ colors, fonts }) =>`
         margin-top: 0.8rem;
     }
 
-    @media (max-width: 767px) {
+    ${breakpointFor('md')} {
         .root {
-            margin-top: 3.2rem;
+            margin-top: 0;
+        }
+
+        .root h1 {
+            font-size: 3.6rem;
+        }
+
+        .root h2 {
+            font-size: 3rem;
+        }
+
+        .root h3 {
+            font-size: 2.4rem;
         }
 
         .root > * + * {
-            margin-top: 2rem;
+            margin-top: 2.8rem;
         }
 
         .root > [id]:not(:first-child) {
-            margin-top: 3.2rem;
+            margin-top: auto;
         }
 
         .root > blockquote:not([class]),
@@ -217,9 +221,9 @@ export const styles = ({ colors, fonts }) =>`
         .root > ul,
         .root > dl,
         .root > p {
-            font-size: 1.7rem;
+            font-size: var(--content-font-size, 1.9rem);
         }
-    }    
+    }
 `;
 
 export default {

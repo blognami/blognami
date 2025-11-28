@@ -1,27 +1,27 @@
-export const styles = `
+export const styles = ({ breakpointFor }) => `
     .root {
         flex: 1;
         display: flex;
         max-width: 1280px;
         margin: 0 auto;
         width: 100%;
-        padding: 0 2.4rem;
+        padding: 0 1.6rem;
         gap: 3.2rem;
     }
 
     .content {
         flex: 1;
-        padding: 3.2rem 0 3.2rem 0;
+        padding: 1.6rem 0;
         max-width: 650px;
     }
 
-    @media (max-width: 768px) {
+    ${breakpointFor('md')} {
         .root {
-            padding: 0 1.6rem;
+            padding: 0 2.4rem;
         }
-        
+
         .content {
-            padding: 1.6rem 0;
+            padding: 3.2rem 0 3.2rem 0;
         }
     }
 `;
