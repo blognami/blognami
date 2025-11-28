@@ -182,6 +182,18 @@ export const styles = ({ colors, breakpointFor, remify }) => `
         color: ${colors.gray[900]};
     }
 
+    .section pre {
+        background: ${colors.gray[800]};
+        color: ${colors.gray[50]};
+        padding: ${remify(16)};
+        border-radius: ${remify(6)};
+        overflow-x: auto;
+        font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
+        font-size: ${remify(14)};
+        line-height: 1.5;
+        margin: 0;
+    }
+
     ${breakpointFor('sm')} {
         .cta-group {
             flex-direction: row;
