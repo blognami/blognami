@@ -1,21 +1,21 @@
 
-export const styles = `
+export const styles = ({ colors }) => `
     .root {
         display: flex;
         align-items: center;
         gap: 0.8rem;
         text-decoration: none;
-        color: #6b7280;
+        color: ${colors.gray[500]};
         font-weight: 500;
         padding: 0.8rem 1.6rem;
-        border: 1px solid #e5e7eb;
+        border: 1px solid ${colors.gray[200]};
         border-radius: 0.6rem;
         transition: all 0.2s ease;
     }
 
     .root:hover {
-        color: #111827;
-        border-color: #d1d5db;
+        color: ${colors.gray[900]};
+        border-color: ${colors.gray[300]};
     }
 `;
 

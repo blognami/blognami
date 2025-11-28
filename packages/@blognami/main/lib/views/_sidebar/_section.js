@@ -1,8 +1,8 @@
-export const styles = `
+export const styles = ({ colors }) => `
     .label {
         font-size: 1.4rem;
         font-weight: 600;
-        color: #111827;
+        color: ${colors.gray[900]};
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-bottom: 1.2rem;

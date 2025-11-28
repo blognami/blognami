@@ -1,11 +1,11 @@
 
-export const styles = `
+export const styles = ({ colors }) => `
     .root {
         display: flex;
         align-items: center;
         gap: 1.2rem;
         text-decoration: none;
-        color: #111827;
+        color: ${colors.gray[900]};
         font-weight: 600;
         font-size: 2rem;
     }
@@ -13,7 +13,7 @@ export const styles = `
     .icon {
         width: 3.2rem;
         height: 3.2rem;
-        color: #35D0AC;
+        color: ${colors.semantic.accent};
     }
 `;
 

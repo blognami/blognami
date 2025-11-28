@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ colors }) => `
     .form {
         display: block;
     }
@@ -27,12 +27,12 @@ export const styles = `
     }
 
     .label {
-        color: #363636;
+        color: ${colors.gray[700]};
         display: block;
         font-size: 1.6rem;
         font-weight: 700;
     }
-    
+
     .label a {
         text-decoration: underline;
     }
@@ -55,26 +55,26 @@ export const styles = `
         padding-top: calc(0.5em - 0.1rem);
         position: relative;
         vertical-align: top;
-        background-color: white;
-        border-color: #dbdbdb;
-        color: #363636;
+        background-color: ${colors.white};
+        border-color: ${colors.gray[300]};
+        color: ${colors.gray[700]};
         max-width: 100%;
         width: 100%;
     }
 
     .input:not([type='checkbox']):focus {
         outline: none;
-        border-color: #485fc7;
-        box-shadow: 0 0 0 0.125em rgb(72 95 199 / 25%);
+        border-color: ${colors.blue[600]};
+        box-shadow: 0 0 0 0.125em color-mix(in oklch, ${colors.blue[600]} 25%, transparent);
     }
 
     .input:not([type='checkbox']).is-error {
-        border-color: #f14668;
+        border-color: ${colors.red[500]};
     }
 
     .input:not([type='checkbox']).is-error:focus {
         outline: none;
-        box-shadow: 0 0 0 0.125em rgb(241 70 104 / 25%);
+        box-shadow: 0 0 0 0.125em color-mix(in oklch, ${colors.red[500]} 25%, transparent);
     }
 
     .input + .is-error {
@@ -83,7 +83,7 @@ export const styles = `
     }
 
     .textarea {
-        border: 0.1rem solid #dbdbdb;
+        border: 0.1rem solid ${colors.gray[300]};
         width: 100%;
         min-height: 7em;
         border-radius: 0.4rem;
@@ -94,7 +94,7 @@ export const styles = `
     }
 
     .is-error:not(input):not(textarea) {
-        color: #f14668;
+        color: ${colors.red[500]};
         display: block;
     }
 

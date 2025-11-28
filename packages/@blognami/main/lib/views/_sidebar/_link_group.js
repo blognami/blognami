@@ -10,7 +10,7 @@ export const styles = ({ colors }) => `
         align-items: center;
         justify-content: space-between;
         text-decoration: none;
-        color: #6b7280;
+        color: ${colors.gray[500]};
         padding: 0.6rem 0;
         font-size: 1.4rem;
         transition: color 0.2s ease;
@@ -20,13 +20,13 @@ export const styles = ({ colors }) => `
     }
 
     .link:hover {
-        color: #111827;
+        color: ${colors.gray[900]};
     }
 
     .link-active {
-        color: #35D0AC;
-        border-left-color: #35D0AC;
-        background-color: rgba(53, 208, 172, 0.05);
+        color: ${colors.semantic.accent};
+        border-left-color: ${colors.semantic.accent};
+        background-color: color-mix(in oklch, ${colors.semantic.accent} 5%, transparent);
     }
 
     .badge {

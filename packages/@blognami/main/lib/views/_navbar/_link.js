@@ -1,18 +1,18 @@
-export const styles = `
+export const styles = ({ colors }) => `
     .link {
         text-decoration: none;
-        color: #6b7280;
+        color: ${colors.gray[500]};
         font-weight: 500;
         transition: color 0.2s ease;
         padding: 0.8rem 0;
     }
 
     .link:hover {
-        color: #111827;
+        color: ${colors.gray[900]};
     }
 
     .link-active {
-        color: #35D0AC;
+        color: ${colors.semantic.accent};
     }
 `;
 

@@ -1,4 +1,4 @@
-export const styles = ({ breakpointFor }) => `
+export const styles = ({ colors, breakpointFor }) => `
     .root {
         display: none;
     }
@@ -6,7 +6,7 @@ export const styles = ({ breakpointFor }) => `
     .title {
         font-size: 1.4rem;
         font-weight: 600;
-        color: #111827;
+        color: ${colors.gray[900]};
         margin-bottom: 1.2rem;
     }
 
@@ -19,13 +19,13 @@ export const styles = ({ breakpointFor }) => `
     .links .links {
         padding-left: 1.6rem;
         margin-top: 0.4rem;
-        border-left: 1px solid #e5e7eb;
+        border-left: 1px solid ${colors.gray[200]};
     }
 
     .link {
         display: block;
         text-decoration: none;
-        color: #6b7280;
+        color: ${colors.gray[500]};
         padding: 0.4rem 0;
         font-size: 1.2rem;
         transition: color 0.2s ease;
@@ -33,7 +33,7 @@ export const styles = ({ breakpointFor }) => `
 
     .links .links .link {
         font-size: 1.1rem;
-        color: #9ca3af;
+        color: ${colors.gray[400]};
         padding: 0.3rem 0;
         position: relative;
     }
@@ -46,24 +46,24 @@ export const styles = ({ breakpointFor }) => `
         transform: translateY(-50%);
         width: 0.8rem;
         height: 1px;
-        background-color: #d1d5db;
+        background-color: ${colors.gray[300]};
     }
 
     .link:hover {
-        color: #111827;
+        color: ${colors.gray[900]};
     }
 
     .links .links .link:hover {
-        color: #6b7280;
+        color: ${colors.gray[500]};
     }
 
     .link[data-active="true"] {
-        color: #35D0AC;
+        color: ${colors.semantic.accent};
         font-weight: 500;
     }
 
     .links .links .link[data-active="true"] {
-        color: #35D0AC;
+        color: ${colors.semantic.accent};
         font-weight: 500;
     }
 
