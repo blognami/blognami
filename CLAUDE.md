@@ -297,9 +297,23 @@ await user.delete();
 const userPosts = await user.posts.all();
 ```
 
+## Test Location
+
+Unit tests live next to the code they test (e.g., `lib/command.test.js` tests `lib/command.js`).
+
+Integration/feature tests live in `packages/demo/tests/` organized by type:
+- `models/` - Model tests (e.g., `user.test.js`)
+- `services/` - Service tests
+- `cli/` - CLI command tests
+- `e2e/` - Playwright end-to-end tests
+
+## Commit Style
+
+Use conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, etc.
+No generated-by footers.
+
 ## Important Notes
 
 - All packages use ES modules (`"type": "module"`)
 - No Express/Fastify - uses native Node.js HTTP
 - Database supports MySQL and SQLite via adapters
-- Tests run in the `demo` package workspace
