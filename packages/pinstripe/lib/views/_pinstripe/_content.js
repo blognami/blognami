@@ -9,7 +9,7 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     }
 
     .root a {
-        color: #000;
+        color: ${colors.gray[950]};
         text-decoration: none;
     }
 
@@ -24,14 +24,14 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     .root h5,
     .root h6 {
         line-height: 1.15;
-        color: #000;
+        color: ${colors.gray[950]};
         letter-spacing: -0.02em;
     }
 
     .root h1 {
         font-size: 3.2rem;
         font-weight: 700;
-        color: #111827;
+        color: ${colors.gray[900]};
         margin: 0 0 1.6rem 0;
         line-height: 1.2;
     }
@@ -39,7 +39,7 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     .root h2 {
         font-size: 2.4rem;
         font-weight: 600;
-        color: #111827;
+        color: ${colors.gray[900]};
         margin: 3.2rem 0 1.6rem 0;
         line-height: 1.3;
     }
@@ -47,7 +47,7 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     .root h3 {
         font-size: 2.1rem;
         font-weight: 600;
-        color: #111827;
+        color: ${colors.gray[900]};
         margin: 2.4rem 0 1.2rem 0;
         line-height: 1.4;
     }
@@ -72,7 +72,7 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     }
 
     .root p {
-        color: #4b5563;
+        color: ${colors.gray[600]};
         margin-bottom: 1.6rem;
         line-height: 1.7;
     }
@@ -91,8 +91,8 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     }
 
     .root pre {
-        background-color: #1f2937;
-        color: #f9fafb;
+        background-color: ${colors.gray[800]};
+        color: ${colors.gray[50]};
         padding: 2.4rem;
         border-radius: 0.8rem;
         overflow-x: auto;
@@ -106,8 +106,8 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     }
 
     .root code {
-        background-color: #f3f4f6;
-        color: #e53e3e;
+        background-color: ${colors.gray[100]};
+        color: ${colors.red[600]};
         padding: 0.2rem 0.4rem;
         border-radius: 0.4rem;
         font-size: 0.875em;

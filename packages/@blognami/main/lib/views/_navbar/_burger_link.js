@@ -1,4 +1,4 @@
-export const styles = ({ breakpointFor }) => `
+export const styles = ({ colors, breakpointFor }) => `
     .root {
         display: flex;
         flex-direction: column;
@@ -18,7 +18,7 @@ export const styles = ({ breakpointFor }) => `
         display: block;
         width: 1.5em;
         height: 0.2em;
-        background: #374151;
+        background: ${colors.gray[700]};
         border-radius: 2px;
         transition: all 0.3s;
     }

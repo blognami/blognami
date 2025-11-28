@@ -1,4 +1,4 @@
-export const styles = `
+export const styles = ({ colors }) => `
     .root {
         list-style: none;
         margin: 0;
@@ -18,14 +18,14 @@ export const styles = `
     }
 
     .item:hover {
-        background-color: #f8fafc;
+        background-color: ${colors.gray[50]};
     }
 
     .link {
         display: flex;
         align-items: center;
         text-decoration: none;
-        color: #374151;
+        color: ${colors.gray[700]};
         padding: 1.2rem 1.6rem;
         font-size: 1.52rem;
         font-weight: 500;
@@ -42,8 +42,8 @@ export const styles = `
     }
 
     .link:hover {
-        color: #1f2937;
-        background-color: #f8fafc;
+        color: ${colors.gray[800]};
+        background-color: ${colors.gray[50]};
     }
 
     .link:active {
@@ -55,17 +55,17 @@ export const styles = `
         margin-top: 0.8rem;
         margin-left: 1.6rem;
         padding-left: 1.6rem;
-        border-left: 2px solid #f1f5f9;
+        border-left: 2px solid ${colors.gray[100]};
     }
 
     .root .root .link {
         font-size: 1.4rem;
         padding: 0.8rem 1.2rem;
-        color: #6b7280;
+        color: ${colors.gray[500]};
     }
 
     .root .root .link:hover {
-        color: #374151;
+        color: ${colors.gray[700]};
     }
 `;
 

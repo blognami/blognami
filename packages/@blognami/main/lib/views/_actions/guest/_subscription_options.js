@@ -1,4 +1,4 @@
-export const styles = `
+export const styles = ({ colors }) => `
     .root {
         display: flex;
         gap: 16px;
@@ -6,7 +6,7 @@ export const styles = `
     }
 
     .option {
-        border: 1px solid #ddd;
+        border: 1px solid ${colors.gray[300]};
         flex: 1 1 0;
         padding: 16px;
         border-radius: 12px;
@@ -27,19 +27,19 @@ export const styles = `
     .features {
         flex: 1 1 0;
     }
-    
+
     .features ul {
         margin: 0;
-        padding: 0 0 0 1em; 
+        padding: 0 0 0 1em;
         display: flex;
         flex-direction: column;
         gap: 0.2em;
     }
-    
+
     .features li {
         font-size: 0.8em;
     }
-    
+
 `;
 
 export default {

@@ -1,11 +1,11 @@
 
 export const styles = ({ colors, breakpointFor }) => `
     .root {
-        border-top: 1px solid #e5e7eb;
-        background-color: #f9fafb;
+        border-top: 1px solid ${colors.gray[200]};
+        background-color: ${colors.gray[50]};
         padding: 4.8rem 0;
         margin-top: 6.4rem;
-        color: ${colors?.semantic?.secondaryText || '#6b7280'};
+        color: ${colors.semantic.secondaryText};
     }
 
     .container {
@@ -25,12 +25,12 @@ export const styles = ({ colors, breakpointFor }) => `
     }
 
     .link {
-        color: ${colors?.semantic?.secondaryText || '#6b7280'};
+        color: ${colors.semantic.secondaryText};
         text-decoration: none;
     }
 
     .link:hover {
-        color: #000;
+        color: ${colors.gray[950]};
         opacity: 1;
     }
 

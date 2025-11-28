@@ -1,5 +1,5 @@
 
-export const styles = ({ breakpointFor }) => `
+export const styles = ({ colors, breakpointFor }) => `
     .root {
         display: none;
     }
@@ -9,7 +9,7 @@ export const styles = ({ breakpointFor }) => `
             display: flex;
             width: 25.6rem;
             padding: 3.2rem 0;
-            border-right: 1px solid #e5e7eb;
+            border-right: 1px solid ${colors.gray[200]};
             position: sticky;
             top: 6.4rem;
             height: calc(100vh - 6.4rem);

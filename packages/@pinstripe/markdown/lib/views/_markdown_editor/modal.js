@@ -1,11 +1,11 @@
 
-export const styles = `
+export const styles = ({ colors, shadow }) => `
     .root {
         display: flex;
         flex-direction: row;
         width: 100%;
         height: 100%;
-        background: #fff;
+        background: ${colors.white};
         z-index: 1;
         margin: 0 auto;
     }
@@ -17,7 +17,7 @@ export const styles = `
         position: relative;
         border-style: solid;
         border-width: 0 0.1rem 0 0;
-        border-color: rgb(99, 99, 99);
+        border-color: ${colors.gray[500]};
         padding: 0;
     }
     .text-pane > textarea {
@@ -37,11 +37,11 @@ export const styles = `
         overflow-y: auto;
         padding: 1em;
     }
-    
+
     .preview-pane pinstripe-frame > * + * {
         margin-top: 2rem;
     }
-    
+
     .actions {
         position: absolute;
         top: 0.8rem;
@@ -50,27 +50,27 @@ export const styles = `
     }
     .actions button {
         display: none;
-        background: rgba(255, 255, 255, 0.95);
-        border: 0.1rem solid rgb(220, 220, 220);
+        background: color-mix(in oklch, ${colors.white} 95%, transparent);
+        border: 0.1rem solid ${colors.gray[300]};
         border-radius: 0.3rem;
         padding: 0.4rem 0.8rem;
         font-size: 1.2rem;
-        color: rgb(60, 60, 60);
+        color: ${colors.gray[700]};
         cursor: pointer;
-        box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.08);
+        box-shadow: ${shadow['2xs']};
         transition: all 0.2s ease;
     }
     .actions button[data-display="true"] {
         display: block;
     }
     .actions button:hover {
-        background: rgb(255, 255, 255);
-        border-color: rgb(180, 180, 180);
-        box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.15);
+        background: ${colors.white};
+        border-color: ${colors.gray[400]};
+        box-shadow: ${shadow.sm};
     }
     .actions button:active {
         transform: translateY(0.1rem);
-        box-shadow: 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1);
+        box-shadow: ${shadow.xs};
     }
 `;
 

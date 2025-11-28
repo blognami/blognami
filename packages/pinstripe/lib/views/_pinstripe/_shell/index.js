@@ -136,7 +136,7 @@ export const styles = ({ colors, fonts }) => `
         font-size: 1.6rem;
         line-height: 1.6;
         color: ${colors.semantic.primaryText};
-        background-color: #fff;
+        background-color: ${colors.white};
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }

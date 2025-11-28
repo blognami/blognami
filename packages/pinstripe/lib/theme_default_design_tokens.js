@@ -295,7 +295,7 @@ export const themeDefaultDesignTokens = {
     black: "#000",
     white: "#fff",
     semantic: {
-      accent: "@colors.pink.600",
+      accent: "@colors.teal.400",
       primaryText: "@colors.gray.950",
       secondaryText: "@colors.gray.500",
     },

@@ -1,13 +1,13 @@
 
-export const styles = ({ breakpointFor }) => `
+export const styles = ({ colors, breakpointFor }) => `
     .root {
-        background-color: #ffffff;
-        border-bottom: 1px solid #e5e7eb;
+        background-color: ${colors.white};
+        border-bottom: 1px solid ${colors.gray[200]};
         position: sticky;
         top: 0;
         z-index: 40;
         backdrop-filter: blur(8px);
-        background-color: rgba(255, 255, 255, 0.95);
+        background-color: color-mix(in oklch, ${colors.white} 95%, transparent);
     }
 
     .container {

@@ -1,9 +1,9 @@
 
-export const styles = ({ breakpointFor }) => `
+export const styles = ({ colors, shadow, breakpointFor }) => `
     .root {
-        background-color: #ffffff;
+        background-color: ${colors.white};
         border-radius: 12px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
+        box-shadow: ${shadow.xl};
         padding: 2.4rem;
         width: 100%;
         max-width: none;
@@ -12,7 +12,7 @@ export const styles = ({ breakpointFor }) => `
         flex-direction: column;
         gap: 3.2rem;
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid color-mix(in oklch, ${colors.white} 20%, transparent);
         animation: slideInUp 0.3s ease-out;
         box-sizing: border-box;
         overflow: hidden;

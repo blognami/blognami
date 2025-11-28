@@ -1,4 +1,4 @@
-export const styles = `
+export const styles = ({ colors }) => `
     .root {
         margin-bottom: 3.2rem;
     }
@@ -10,12 +10,12 @@ export const styles = `
     .label {
         font-size: 1.4rem;
         font-weight: 700;
-        color: #6b7280;
+        color: ${colors.gray[500]};
         text-transform: uppercase;
         letter-spacing: 0.1em;
         margin-bottom: 1.6rem;
         padding-bottom: 0.8rem;
-        border-bottom: 2px solid #f3f4f6;
+        border-bottom: 2px solid ${colors.gray[100]};
     }
 `;
 
