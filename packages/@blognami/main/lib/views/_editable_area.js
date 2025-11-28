@@ -1,7 +1,7 @@
 
-export const styles = ({ colors }) => `
+export const styles = ({ colors, remify }) => `
     .root {
-        border-width: 0.1rem;
+        border-width: ${remify(1)};
         border-style: dashed;
         border-color: ${colors.gray[700]};
     }
@@ -12,10 +12,10 @@ export const styles = ({ colors }) => `
         text-align: right;
     }
     .body, .header {
-        padding: 0.7rem;
+        padding: ${remify(7)};
     }
     .body > * + * {
-        margin-top: 2rem;
+        margin-top: ${remify(20)};
     }
 `;
 

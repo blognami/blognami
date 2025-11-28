@@ -1,6 +1,6 @@
 
 
-export const styles = `
+export const styles = ({ remify }) => `
     .root {
         width: 100%;
         border-collapse: collapse;
@@ -15,18 +15,18 @@ export const styles = `
         -moz-appearance: none;
         -webkit-appearance: none;
         align-items: center;
-        border: 0.1rem solid transparent;
-        border-radius: 0.4rem;
+        border: ${remify(1)} solid transparent;
+        border-radius: ${remify(4)};
         box-shadow: inset 0 0.0625em 0.125em rgb(10 10 10 / 5%);
         display: inline-flex;
-        font-size: 1.6rem;
+        font-size: ${remify(16)};
         height: 2.5em;
         justify-content: flex-start;
         line-height: 1.5;
-        padding-bottom: calc(0.5em - 0.1rem);
-        padding-left: calc(0.75em - 0.1rem);
-        padding-right: calc(0.75em - 0.1rem);
-        padding-top: calc(0.5em - 0.1rem);
+        padding-bottom: calc(0.5em - ${remify(1)});
+        padding-left: calc(0.75em - ${remify(1)});
+        padding-right: calc(0.75em - ${remify(1)});
+        padding-top: calc(0.5em - ${remify(1)});
         position: relative;
         vertical-align: top;
         background-color: white;
@@ -47,7 +47,7 @@ export const styles = `
         padding: 1em;
         margin: 0;
         line-height: 0;
-        border: 0.1rem solid #dbdbdb;
+        border: ${remify(1)} solid #dbdbdb;
     }
 
     .heading-cell {
@@ -56,7 +56,7 @@ export const styles = `
 
     .pagination {
         text-align: right;
-        margin-top: 7px;
+        margin-top: ${remify(7)};
     }
 `;
 

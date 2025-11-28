@@ -1,5 +1,5 @@
 
-export const styles = ({ colors, shadow }) => `
+export const styles = ({ colors, shadow, remify }) => `
     .root {
         display: flex;
         flex-direction: row;
@@ -16,7 +16,7 @@ export const styles = ({ colors, shadow }) => `
     .text-pane {
         position: relative;
         border-style: solid;
-        border-width: 0 0.1rem 0 0;
+        border-width: 0 ${remify(1)} 0 0;
         border-color: ${colors.gray[500]};
         padding: 0;
     }
@@ -29,7 +29,7 @@ export const styles = ({ colors, shadow }) => `
         padding: 1em;
     }
     .text-pane > textarea, .preview-pane > p {
-        font-size: 1.6rem;
+        font-size: ${remify(16)};
         font-family: monospace;
     }
     .preview-pane {
@@ -39,22 +39,22 @@ export const styles = ({ colors, shadow }) => `
     }
 
     .preview-pane pinstripe-frame > * + * {
-        margin-top: 2rem;
+        margin-top: ${remify(20)};
     }
 
     .actions {
         position: absolute;
-        top: 0.8rem;
-        right: 0.8rem;
+        top: ${remify(8)};
+        right: ${remify(8)};
         z-index: 10;
     }
     .actions button {
         display: none;
         background: color-mix(in oklch, ${colors.white} 95%, transparent);
-        border: 0.1rem solid ${colors.gray[300]};
-        border-radius: 0.3rem;
-        padding: 0.4rem 0.8rem;
-        font-size: 1.2rem;
+        border: ${remify(1)} solid ${colors.gray[300]};
+        border-radius: ${remify(3)};
+        padding: ${remify(4)} ${remify(8)};
+        font-size: ${remify(12)};
         color: ${colors.gray[700]};
         cursor: pointer;
         box-shadow: ${shadow['2xs']};
@@ -69,7 +69,7 @@ export const styles = ({ colors, shadow }) => `
         box-shadow: ${shadow.sm};
     }
     .actions button:active {
-        transform: translateY(0.1rem);
+        transform: translateY(${remify(1)});
         box-shadow: ${shadow.xs};
     }
 `;
@@ -148,7 +148,7 @@ export const decorators = {
 export default {
     render(){
         return this.renderHtml`
-            <pinstripe-modal class="${this.cssClasses.modal}" width="120.0rem" height="full">
+            <pinstripe-modal class="${this.cssClasses.modal}" width="75rem" height="full">
                 <div class="${this.cssClasses.root}">
                     <div class="${this.cssClasses.textPane}">
                         <textarea name="value" data-part="editor-textarea">${this.params.value}</textarea>

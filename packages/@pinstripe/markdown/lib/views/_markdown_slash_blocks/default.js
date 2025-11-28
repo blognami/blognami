@@ -1,7 +1,7 @@
 
-export const styles = `
+export const styles = ({ remify }) => `
     .root {
-        border-width: 0.1rem;
+        border-width: ${remify(1)};
         border-style: dashed;
         padding: 1em;
     }

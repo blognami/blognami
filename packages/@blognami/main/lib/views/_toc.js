@@ -1,13 +1,13 @@
-export const styles = ({ colors, breakpointFor }) => `
+export const styles = ({ colors, breakpointFor, remify }) => `
     .root {
         display: none;
     }
 
     .title {
-        font-size: 1.4rem;
+        font-size: ${remify(14)};
         font-weight: 600;
         color: ${colors.gray[900]};
-        margin-bottom: 1.2rem;
+        margin-bottom: ${remify(12)};
     }
 
     .links {
@@ -17,35 +17,35 @@ export const styles = ({ colors, breakpointFor }) => `
     }
 
     .links .links {
-        padding-left: 1.6rem;
-        margin-top: 0.4rem;
-        border-left: 1px solid ${colors.gray[200]};
+        padding-left: ${remify(16)};
+        margin-top: ${remify(4)};
+        border-left: ${remify(1)} solid ${colors.gray[200]};
     }
 
     .link {
         display: block;
         text-decoration: none;
         color: ${colors.gray[500]};
-        padding: 0.4rem 0;
-        font-size: 1.2rem;
+        padding: ${remify(4)} 0;
+        font-size: ${remify(12)};
         transition: color 0.2s ease;
     }
 
     .links .links .link {
-        font-size: 1.1rem;
+        font-size: ${remify(11)};
         color: ${colors.gray[400]};
-        padding: 0.3rem 0;
+        padding: ${remify(3)} 0;
         position: relative;
     }
 
     .links .links .link::before {
         content: '';
         position: absolute;
-        left: -1.6rem;
+        left: -${remify(16)};
         top: 50%;
         transform: translateY(-50%);
-        width: 0.8rem;
-        height: 1px;
+        width: ${remify(8)};
+        height: ${remify(1)};
         background-color: ${colors.gray[300]};
     }
 
@@ -70,11 +70,11 @@ export const styles = ({ colors, breakpointFor }) => `
     ${breakpointFor('lg')} {
         .root {
             display: block;
-            width: 19.2rem;
-            padding: 3.2rem 0 3.2rem 0;
+            width: ${remify(192)};
+            padding: ${remify(32)} 0 ${remify(32)} 0;
             position: sticky;
-            top: 6.4rem;
-            height: calc(100vh - 6.4rem);
+            top: ${remify(64)};
+            height: calc(100vh - ${remify(64)});
             overflow-y: auto;
         }
     }

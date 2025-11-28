@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ remify }) => `
     .root {
         display: inline-flex;
         gap: 0.7em;
@@ -15,7 +15,7 @@ export const styles = `
         border-radius: 25%;
         align-items: center;
         justify-content: center;
-        border: 1px solid #333;
+        border: ${remify(1)} solid #333;
     }
 
     .active {

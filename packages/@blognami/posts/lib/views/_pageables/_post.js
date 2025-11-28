@@ -1,17 +1,17 @@
 
-export const styles = ({ colors, breakpointFor }) => `
+export const styles = ({ colors, breakpointFor, remify }) => `
     .status-bar {
-        margin-bottom: 2rem;
+        margin-bottom: ${remify(20)};
         text-align: right;
     }
 
     .navigation {
-        padding-top: 3.2rem;
-        margin-top: 8rem;
-        border-top: 1px solid ${colors.gray[200]};
+        padding-top: ${remify(32)};
+        margin-top: ${remify(80)};
+        border-top: ${remify(1)} solid ${colors.gray[200]};
         display: grid;
         grid-template-columns: 1fr;
-        row-gap: 1.6rem;
+        row-gap: ${remify(16)};
         align-items: center;
         grid-column: wide-start / wide-end;
     }
@@ -40,7 +40,7 @@ export const styles = ({ colors, breakpointFor }) => `
     .navigation-label {
         display: flex;
         align-items: center;
-        font-size: 1.7rem;
+        font-size: ${remify(17)};
         font-weight: 700;
         line-height: 1.8;
         text-transform: uppercase;
@@ -48,8 +48,8 @@ export const styles = ({ colors, breakpointFor }) => `
     }
 
     .navigation-title {
-        margin-top: 0.8rem;
-        font-size: 1.6rem;
+        margin-top: ${remify(8)};
+        font-size: ${remify(16)};
         font-weight: 400;
         letter-spacing: 0;
     }
@@ -61,7 +61,7 @@ export const styles = ({ colors, breakpointFor }) => `
     ${breakpointFor('md')} {
         .navigation {
             grid-template-columns: 1fr auto 1fr;
-            column-gap: 2.4rem;
+            column-gap: ${remify(24)};
             row-gap: 0;
         }
 

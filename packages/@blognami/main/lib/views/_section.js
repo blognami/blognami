@@ -1,5 +1,5 @@
 
-export const styles = ({ colors }) =>`
+export const styles = ({ colors, remify }) =>`
     .root:not(:first-child){
         margin-top: 2em;
     }
@@ -7,8 +7,8 @@ export const styles = ({ colors }) =>`
     .title {
         display: flex;
         align-items: center;
-        margin-bottom: 2.4rem;
-        font-size: 1.2rem;
+        margin-bottom: ${remify(24)};
+        font-size: ${remify(12)};
         font-weight: 500;
         text-transform: uppercase;
         letter-spacing: 0.01em;
@@ -17,13 +17,13 @@ export const styles = ({ colors }) =>`
     .title::after {
         flex-grow: 1;
         height: 1px;
-        margin-left: 1.6rem;
+        margin-left: ${remify(16)};
         content: "";
         background-color: ${colors.gray[200]};
     }
 
     .root > * + * {
-        margin-top: 2rem;
+        margin-top: ${remify(20)};
     }
 `;
 

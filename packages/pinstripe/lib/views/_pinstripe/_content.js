@@ -1,7 +1,7 @@
 
-export const styles = ({ colors, fonts, breakpointFor }) =>`
+export const styles = ({ colors, fonts, breakpointFor, remify }) =>`
     .root {
-        margin-top: 3.2rem;
+        margin-top: ${remify(32)};
     }
 
     .root img {
@@ -29,62 +29,62 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     }
 
     .root h1 {
-        font-size: 3.2rem;
+        font-size: ${remify(32)};
         font-weight: 700;
         color: ${colors.gray[900]};
-        margin: 0 0 1.6rem 0;
+        margin: 0 0 ${remify(16)} 0;
         line-height: 1.2;
     }
 
     .root h2 {
-        font-size: 2.4rem;
+        font-size: ${remify(24)};
         font-weight: 600;
         color: ${colors.gray[900]};
-        margin: 3.2rem 0 1.6rem 0;
+        margin: ${remify(32)} 0 ${remify(16)} 0;
         line-height: 1.3;
     }
 
     .root h3 {
-        font-size: 2.1rem;
+        font-size: ${remify(21)};
         font-weight: 600;
         color: ${colors.gray[900]};
-        margin: 2.4rem 0 1.2rem 0;
+        margin: ${remify(24)} 0 ${remify(12)} 0;
         line-height: 1.4;
     }
 
     .root h4 {
-        font-size: 2.2rem;
+        font-size: ${remify(22)};
     }
 
     .root h5 {
-        font-size: 2rem;
+        font-size: ${remify(20)};
     }
 
     .root h6 {
-        font-size: 1.8rem;
+        font-size: ${remify(18)};
     }
 
     .root hr {
         width: 100%;
-        height: 1px;
+        height: ${remify(1)};
         background-color: ${colors.gray[200]};
         border: 0;
     }
 
     .root p {
         color: ${colors.gray[600]};
-        margin-bottom: 1.6rem;
+        margin-bottom: ${remify(16)};
         line-height: 1.7;
     }
 
     .root blockquote:not([class]) {
-        padding-left: 2rem;
-        border-left: 4px solid ${colors.semantic.accent};
+        padding-left: ${remify(20)};
+        border-left: ${remify(4)} solid ${colors.semantic.accent};
     }
 
     .root figcaption {
-        margin-top: 1.6rem;
-        font-size: 1.4rem;
+        margin-top: ${remify(16)};
+        font-size: ${remify(14)};
         line-height: 1.4;
         color: ${colors.semantic.secondaryText};
         text-align: center;
@@ -93,12 +93,12 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     .root pre {
         background-color: ${colors.gray[800]};
         color: ${colors.gray[50]};
-        padding: 2.4rem;
-        border-radius: 0.8rem;
+        padding: ${remify(24)};
+        border-radius: ${remify(8)};
         overflow-x: auto;
-        margin: 2.4rem 0;
+        margin: ${remify(24)} 0;
         font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
-        font-size: 1.4rem;
+        font-size: ${remify(14)};
         line-height: 1.5;
         hyphens: none;
         white-space: pre;
@@ -108,14 +108,14 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     .root code {
         background-color: ${colors.gray[100]};
         color: ${colors.red[600]};
-        padding: 0.2rem 0.4rem;
-        border-radius: 0.4rem;
+        padding: ${remify(2)} ${remify(4)};
+        border-radius: ${remify(4)};
         font-size: 0.875em;
         font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
     }
 
     .root pre > code {
-        max-width: 600px;
+        max-width: ${remify(600)};
         display: block;
         overflow: auto;
     }
@@ -129,10 +129,10 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     }
 
     .root :not(pre) > code {
-        padding: 0.4rem;
+        padding: ${remify(4)};
         color: ${colors.semantic.accent};
         background-color: ${colors.gray[50]};
-        border-radius: 3px;
+        border-radius: ${remify(3)};
     }
 
     .root iframe {
@@ -143,23 +143,23 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     }
 
     .root > * + * {
-        margin-top: 2rem;
+        margin-top: ${remify(20)};
         margin-bottom: 0;
     }
 
     .root > [id]:not(:first-child) {
-        margin-top: 3.2rem;
+        margin-top: ${remify(32)};
     }
 
     .root > hr,
     .root > blockquote {
         position: relative;
-        margin-top: 4rem;
+        margin-top: ${remify(40)};
     }
 
     .root > hr + *,
     .root > blockquote + * {
-        margin-top: 4rem;
+        margin-top: ${remify(40)};
     }
 
     .root h3 {
@@ -177,18 +177,18 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
     .root > ul,
     .root > dl,
     .root > p {
-        font-size: 1.7rem;
+        font-size: ${remify(17)};
         letter-spacing: var(--content-letter-spacing, 0);
     }
 
     .root ul,
     .root ol,
     .root dl {
-        padding-left: 2.8rem;
+        padding-left: ${remify(28)};
     }
 
     .root li + li {
-        margin-top: 0.8rem;
+        margin-top: ${remify(8)};
     }
 
     ${breakpointFor('md')} {
@@ -197,19 +197,19 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
         }
 
         .root h1 {
-            font-size: 3.6rem;
+            font-size: ${remify(36)};
         }
 
         .root h2 {
-            font-size: 3rem;
+            font-size: ${remify(30)};
         }
 
         .root h3 {
-            font-size: 2.4rem;
+            font-size: ${remify(24)};
         }
 
         .root > * + * {
-            margin-top: 2.8rem;
+            margin-top: ${remify(28)};
         }
 
         .root > [id]:not(:first-child) {
@@ -221,7 +221,7 @@ export const styles = ({ colors, fonts, breakpointFor }) =>`
         .root > ul,
         .root > dl,
         .root > p {
-            font-size: var(--content-font-size, 1.9rem);
+            font-size: var(--content-font-size, ${remify(19)});
         }
     }
 `;

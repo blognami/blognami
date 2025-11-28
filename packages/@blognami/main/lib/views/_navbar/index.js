@@ -1,35 +1,35 @@
 
-export const styles = ({ colors, breakpointFor }) => `
+export const styles = ({ colors, breakpointFor, remify }) => `
     .root {
         background-color: ${colors.white};
-        border-bottom: 1px solid ${colors.gray[200]};
+        border-bottom: ${remify(1)} solid ${colors.gray[200]};
         position: sticky;
         top: 0;
         z-index: 40;
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(${remify(8)});
         background-color: color-mix(in oklch, ${colors.white} 95%, transparent);
     }
 
     .container {
-        max-width: 1280px;
+        max-width: ${remify(1280)};
         margin: 0 auto;
-        padding: 0 1.6rem;
+        padding: 0 ${remify(16)};
         display: flex;
         align-items: center;
         justify-content: space-between;
-        height: 6.4rem;
+        height: ${remify(64)};
     }
 
     .link-group {
         display: flex;
         align-items: center;
-        gap: 3.2rem;
+        gap: ${remify(32)};
     }
 
     .link-group-items {
         display: none;
         align-items: center;
-        gap: 2.4rem;
+        gap: ${remify(24)};
         list-style: none;
         margin: 0;
         padding: 0;
@@ -37,7 +37,7 @@ export const styles = ({ colors, breakpointFor }) => `
 
     ${breakpointFor('md')} {
         .container {
-            padding: 0 2.4rem;
+            padding: 0 ${remify(24)};
         }
 
         .link-group-items {

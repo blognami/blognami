@@ -1,5 +1,5 @@
 
-export const styles = `
+export const styles = ({ remify }) => `
     .root {
         width: 100%;
         height: 100%;
@@ -8,19 +8,19 @@ export const styles = `
     }
     .header, .body, .footer {
         display: block;
-        padding: 2.0rem;
+        padding: ${remify(20)};
     }
     .header {
         background-color: whitesmoke;
-        border-bottom: 0.1rem solid #dbdbdb;
-        border-top-left-radius: 0.6rem;
-        border-top-right-radius: 0.6rem;
+        border-bottom: ${remify(1)} solid #dbdbdb;
+        border-top-left-radius: ${remify(6)};
+        border-top-right-radius: ${remify(6)};
     }
     .title {
         color: #363636;
         flex-grow: 1;
         flex-shrink: 0;
-        font-size: 2.4rem;
+        font-size: ${remify(24)};
         line-height: 1;
     }
     .body {
@@ -29,9 +29,9 @@ export const styles = `
     }
     .footer {
         background-color: whitesmoke;
-        border-bottom-left-radius: 0.6rem;
-        border-bottom-right-radius: 0.6rem;
-        border-top: 0.1rem solid #dbdbdb;
+        border-bottom-left-radius: ${remify(6)};
+        border-bottom-right-radius: ${remify(6)};
+        border-top: ${remify(1)} solid #dbdbdb;
     }
 `;
 
