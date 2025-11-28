@@ -1,7 +1,7 @@
 
-export const styles = ({ colors, fonts }) => `
+export const styles = ({ colors, fonts, breakpointFor }) => `
     .post + .post {
-        margin-top: 8rem;
+        margin-top: 6.4rem;
     }
 
     .post-link {
@@ -70,9 +70,9 @@ export const styles = ({ colors, fonts }) => `
         margin-top: 1.6rem;
     }
 
-    @media (max-width: 767px) {
+    ${breakpointFor('md')} {
         .post + .post {
-            margin-top: 6.4rem;
+            margin-top: 8rem;
         }
     }
 `;

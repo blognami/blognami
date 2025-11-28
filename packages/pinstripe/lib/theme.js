@@ -43,9 +43,11 @@ export const Theme = Class.extend().include({
     return this;
   },
 
-  breakpointFor(minWidthProperty) {
-    const minWidth = this.getNestedProperty(`breakpoints.${minWidthProperty}`);
-    return `@media (min-width: ${minWidth})`;
+  get breakpointFor() {
+    return (minWidthProperty) => {
+      const minWidth = this.getNestedProperty(`breakpoints.${minWidthProperty}`);
+      return `@media (min-width: ${minWidth})`;
+    };
   },
 
   getNestedProperty(path) {
@@ -61,6 +63,7 @@ function remify(value) {
 
 function traverse(o, fn) {
   for (const key in o) {
+    if (!Object.hasOwn(o, key)) continue;
     if (typeof o[key] === "object") {
       traverse(o[key], fn);
     } else {

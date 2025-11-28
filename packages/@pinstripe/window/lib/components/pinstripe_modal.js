@@ -83,37 +83,33 @@ Component.register('pinstripe-modal', {
                     width: 0.2rem;
                 }
 
-                @media (max-width: 766px) {
-                    .container {
-                        width: 100vw;
-                        min-height: 100vh;
-                        display: grid;
-                        grid-template-columns: [grid-start] 1rem [full-start] auto [full-end] 1rem [grid-end];
-                        grid-template-rows: [grid-start] 0 [top-start] 7.2rem [top-end] 0 [full-start] ${mobileHeight} [full-end] 1rem [grid-end];
-                    }
-
-                    .close-button {
-                        grid-area: top / full;
-                        position: absolute;
-                        right: 2rem;
-                        top: 2rem;
-                    }
-
-                    .body {
-                        grid-area: full;
-                    }
+                .container {
+                    width: 100vw;
+                    min-height: 100vh;
+                    display: grid;
+                    grid-template-columns: [grid-start] 1rem [full-start] auto [full-end] 1rem [grid-end];
+                    grid-template-rows: [grid-start] 0 [top-start] 7.2rem [top-end] 0 [full-start] ${mobileHeight} [full-end] 1rem [grid-end];
                 }
 
-                @media (min-width: 767px) {
+                .close-button {
+                    grid-area: top / full;
+                    position: absolute;
+                    right: 2rem;
+                    top: 2rem;
+                }
+
+                .body {
+                    grid-area: full;
+                }
+
+                @media (min-width: 48rem) {
                     .container {
-                        width: 100vw;
-                        min-height: 100vh;
-                        display: grid;
                         grid-template-columns: [grid-start] 7.2rem [full-start] auto [fixed-start] minmax(0, ${desktopWidth}) [fixed-end] auto [full-end] 7.2rem [grid-end];
                         grid-template-rows: [grid-start] 2rem [full-start] ${desktopHeight} [full-end] 2rem [grid-end];
                     }
 
                     .close-button {
+                        grid-area: unset;
                         position: fixed;
                         right: 2.0rem;
                         top: 2.0rem;

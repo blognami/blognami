@@ -1,13 +1,13 @@
 
-export const styles = `
+export const styles = ({ breakpointFor }) => `
     .root {
         background-color: #ffffff;
-        border-radius: 16px;
+        border-radius: 12px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.08);
-        padding: 3.2rem;
-        max-width: 420px;
+        padding: 2.4rem;
         width: 100%;
-        margin: 0 auto;
+        max-width: none;
+        margin: 0;
         display: flex;
         flex-direction: column;
         gap: 3.2rem;
@@ -29,20 +29,11 @@ export const styles = `
         }
     }
 
-    @media (max-width: 767px) {
+    ${breakpointFor('md')} {
         .root {
-            padding: 2.4rem;
-            border-radius: 12px;
-            margin: 0;
-            width: 100%;
-            max-width: none;
-        }
-    }
-
-    @media (min-width: 768px) {
-        .root {
+            padding: 3.2rem;
+            border-radius: 16px;
             margin: 1.6rem auto;
-            width: 100%;
             max-width: 420px;
         }
     }

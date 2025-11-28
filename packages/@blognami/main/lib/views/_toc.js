@@ -1,11 +1,6 @@
-export const styles = `
+export const styles = ({ breakpointFor }) => `
     .root {
-        width: 19.2rem;
-        padding: 3.2rem 0 3.2rem 0;
-        position: sticky;
-        top: 6.4rem;
-        height: calc(100vh - 6.4rem);
-        overflow-y: auto;
+        display: none;
     }
 
     .title {
@@ -72,9 +67,15 @@ export const styles = `
         font-weight: 500;
     }
 
-    @media (max-width: 1024px) {
+    ${breakpointFor('lg')} {
         .root {
-            display: none;
+            display: block;
+            width: 19.2rem;
+            padding: 3.2rem 0 3.2rem 0;
+            position: sticky;
+            top: 6.4rem;
+            height: calc(100vh - 6.4rem);
+            overflow-y: auto;
         }
     }
 `;

@@ -1,14 +1,14 @@
 
-export const styles = `
+export const styles = ({ breakpointFor }) => `
     .title {
-        font-size: 7.4rem;
+        font-size: 4.2rem;
         font-weight: 600;
         line-height: 1;
     }
 
-    @media (max-width: 767px) {
+    ${breakpointFor('md')} {
         .title {
-            font-size: 4.2rem;
+            font-size: 7.4rem;
         }
     }
 `;

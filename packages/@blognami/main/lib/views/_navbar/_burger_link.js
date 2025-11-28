@@ -1,6 +1,6 @@
-export const styles = `
+export const styles = ({ breakpointFor }) => `
     .root {
-        display: none;
+        display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
@@ -23,9 +23,9 @@ export const styles = `
         transition: all 0.3s;
     }
 
-    @media (max-width: 768px) {
+    ${breakpointFor('md')} {
         .root {
-            display: flex;
+            display: none;
         }
     }
 `;
