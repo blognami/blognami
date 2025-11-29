@@ -568,8 +568,11 @@ const matchesSelector = (() => {
 })();
 
 function cleanChildren(){
-    if(this.node.shadowRoot) clean.call(this.shadow);
-    this.children.forEach(child => clean.call(child));
+    if(this.node.shadowRoot?._component) clean.call(this.node.shadowRoot._component);
+
+    const children = [...this.node.childNodes].map(node => node._component).filter(Boolean);
+
+    children.forEach(child => clean.call(child));
 }
 
 function clean(){
