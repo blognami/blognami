@@ -96,6 +96,7 @@ export const styles = ({ colors, fonts, breakpointFor, remify }) =>`
         padding: ${remify(24)};
         border-radius: ${remify(8)};
         overflow-x: auto;
+        max-width: 100%;
         margin: ${remify(24)} 0;
         font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
         font-size: ${remify(14)};

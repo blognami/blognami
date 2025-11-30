@@ -91,6 +91,7 @@ export const styles = ({ colors, breakpointFor, remify }) => `
         padding: ${remify(16)};
         border-radius: ${remify(6)};
         overflow-x: auto;
+        max-width: 100%;
         font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
         font-size: ${remify(14)};
         line-height: 1.5;
@@ -188,6 +189,7 @@ export const styles = ({ colors, breakpointFor, remify }) => `
         padding: ${remify(16)};
         border-radius: ${remify(6)};
         overflow-x: auto;
+        max-width: 100%;
         font-family: 'SF Mono', Monaco, Inconsolata, 'Roboto Mono', Consolas, 'Courier New', monospace;
         font-size: ${remify(14)};
         line-height: 1.5;
