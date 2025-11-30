@@ -11,6 +11,7 @@ export const styles = ({ breakpointFor, remify }) => `
 
     .content {
         flex: 1;
+        min-width: 0;
         padding: ${remify(16)} 0;
         max-width: ${remify(650)};
     }
