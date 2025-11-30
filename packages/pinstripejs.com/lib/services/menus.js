@@ -24,7 +24,10 @@ export default {
             });
 
 
-            this.menus.burgerMenu = [];
+            this.addMenuItem('burgerMenu', {
+                label: 'Info',
+                displayOrder: 1
+            });
             this.addMenuItem('burgerMenu', 'Info', {
                 label: 'Docs',
                 url: '/',
@@ -37,6 +40,14 @@ export default {
             this.addMenuItem('burgerMenu', 'Info', {
                 label: 'GitHub',
                 url: 'https://github.com/blognami/blognami'
+            });
+
+            // Filter burger menu to match sidebar - remove 'About' section
+            this.menus.burgerMenu = this.menus.burgerMenu.filter(item => item.label != 'About').map(item => {
+                if(item.label == 'Getting Started'){
+                    item.displayOrder = 2;
+                }
+                return item;
             });
 
             this.menus.footer = [];

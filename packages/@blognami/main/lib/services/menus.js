@@ -393,10 +393,16 @@ export default {
                     for(const [menuName, _menuPath] of Object.entries(annotations.menus)) {
                         const menuPath = [..._menuPath];
                         const label = menuPath.pop();
-                        out.push([menuName, ...menuPath, {
+                        const menuItem = {
                             label,
                             url: `/${path}`.replace(/\/index$/, '') || '/'
-                        }]);
+                        };
+                        out.push([menuName, ...menuPath, menuItem]);
+
+                        // Also add sidebar items to burger menu for mobile navigation
+                        if(menuName === 'sidebar') {
+                            out.push(['burgerMenu', ...menuPath, { ...menuItem }]);
+                        }
                     }
                 }
             }
