@@ -42,8 +42,8 @@ export default {
                 url: 'https://github.com/blognami/blognami'
             });
 
-            // Filter burger menu to match sidebar - remove 'About' section
-            this.menus.burgerMenu = this.menus.burgerMenu.filter(item => item.label != 'About').map(item => {
+            // Filter burger menu - remove 'About' and 'Account' sections
+            this.menus.burgerMenu = this.menus.burgerMenu.filter(item => item.label != 'About' && item.label != 'Account').map(item => {
                 if(item.label == 'Getting Started'){
                     item.displayOrder = 2;
                 }
