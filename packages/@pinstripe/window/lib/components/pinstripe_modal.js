@@ -48,8 +48,8 @@ Component.register('pinstripe-modal', {
                 .close-button {
                     background: none;
                     display: inline-block;
-                    height: 3.2rem;
-                    width: 3.2rem;
+                    height: 2rem;
+                    width: 2rem;
                     user-select: none;
                     -webkit-appearance: none;
                     border: none;
@@ -75,12 +75,12 @@ Component.register('pinstripe-modal', {
                     box-sizing: inherit;
                 }
                 .close-button:before {
-                    height: 0.2rem;
+                    height: 0.125rem;
                     width: 50%;
                 }
                 .close-button:after {
                     height: 50%;
-                    width: 0.2rem;
+                    width: 0.125rem;
                 }
 
                 .container {
