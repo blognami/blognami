@@ -63,6 +63,7 @@ export default {
             if(a){
                 item.label = a.children.map(c => c.type === '#text' ? c.attributes.value : '').join('').trim();
                 item.url = a.attributes.href;
+                item.target = '_top';
             } else {
                 item.label = li.children.map(c => c.type === '#text' ? c.attributes.value : '').join('').trim();
             }
