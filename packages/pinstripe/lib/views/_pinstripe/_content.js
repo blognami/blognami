@@ -9,12 +9,14 @@ export const styles = ({ colors, fonts, breakpointFor, remify }) =>`
     }
 
     .root a {
-        color: ${colors.gray[950]};
-        text-decoration: none;
+        color: ${colors.semantic.accent};
+        text-decoration: underline;
+        word-break: break-word;
+        transition: opacity 0.15s ease;
     }
 
     .root a:hover {
-        opacity: 0.8;
+        opacity: 0.75;
     }
 
     .root h1,
@@ -40,28 +42,42 @@ export const styles = ({ colors, fonts, breakpointFor, remify }) =>`
         font-size: ${remify(24)};
         font-weight: 600;
         color: ${colors.gray[900]};
-        margin: ${remify(32)} 0 ${remify(16)} 0;
+        margin: ${remify(40)} 0 ${remify(16)} 0;
         line-height: 1.3;
     }
 
     .root h3 {
-        font-size: ${remify(21)};
+        font-size: ${remify(20)};
         font-weight: 600;
         color: ${colors.gray[900]};
-        margin: ${remify(24)} 0 ${remify(12)} 0;
+        margin: ${remify(32)} 0 ${remify(12)} 0;
         line-height: 1.4;
     }
 
     .root h4 {
-        font-size: ${remify(22)};
+        font-size: ${remify(18)};
+        font-weight: 600;
+        color: ${colors.gray[900]};
+        margin: ${remify(28)} 0 ${remify(10)} 0;
+        line-height: 1.4;
     }
 
     .root h5 {
-        font-size: ${remify(20)};
+        font-size: ${remify(16)};
+        font-weight: 600;
+        color: ${colors.gray[900]};
+        margin: ${remify(24)} 0 ${remify(8)} 0;
+        line-height: 1.4;
     }
 
     .root h6 {
-        font-size: ${remify(18)};
+        font-size: ${remify(14)};
+        font-weight: 600;
+        color: ${colors.gray[800]};
+        margin: ${remify(20)} 0 ${remify(8)} 0;
+        line-height: 1.4;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
     .root hr {
@@ -148,10 +164,6 @@ export const styles = ({ colors, fonts, breakpointFor, remify }) =>`
         margin-bottom: 0;
     }
 
-    .root > [id]:not(:first-child) {
-        margin-top: ${remify(32)};
-    }
-
     .root > hr,
     .root > blockquote {
         position: relative;
@@ -161,16 +173,6 @@ export const styles = ({ colors, fonts, breakpointFor, remify }) =>`
     .root > hr + *,
     .root > blockquote + * {
         margin-top: ${remify(40)};
-    }
-
-    .root h3 {
-        font-weight: 600;
-    }
-
-    .root a {
-        color: var(--accent-color);
-        text-decoration: underline;
-        word-break: break-word;
     }
 
     .root > blockquote:not([class]),
@@ -198,23 +200,37 @@ export const styles = ({ colors, fonts, breakpointFor, remify }) =>`
         }
 
         .root h1 {
-            font-size: ${remify(36)};
+            font-size: ${remify(40)};
+            margin: 0 0 ${remify(24)} 0;
         }
 
         .root h2 {
-            font-size: ${remify(30)};
+            font-size: ${remify(32)};
+            margin: ${remify(56)} 0 ${remify(20)} 0;
         }
 
         .root h3 {
             font-size: ${remify(24)};
+            margin: ${remify(48)} 0 ${remify(16)} 0;
+        }
+
+        .root h4 {
+            font-size: ${remify(20)};
+            margin: ${remify(40)} 0 ${remify(12)} 0;
+        }
+
+        .root h5 {
+            font-size: ${remify(18)};
+            margin: ${remify(32)} 0 ${remify(10)} 0;
+        }
+
+        .root h6 {
+            font-size: ${remify(16)};
+            margin: ${remify(28)} 0 ${remify(10)} 0;
         }
 
         .root > * + * {
             margin-top: ${remify(28)};
-        }
-
-        .root > [id]:not(:first-child) {
-            margin-top: auto;
         }
 
         .root > blockquote:not([class]),
