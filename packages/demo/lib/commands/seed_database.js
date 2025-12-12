@@ -5,19 +5,32 @@ import Yaml from 'js-yaml';
 
 export default {
     async run(){
-        const defaultModules = '@blognami/pages, @blognami/posts, @blognami/tags, @blognami/main';
-        this.modules = (process.env.MODULES ?? defaultModules).split(/\s*,\s*/).filter(Boolean);
+        let lorumIpsumScopedDatabase = this.database;
+        
+        if(process.env.TENANCY === 'multi'){
+            lorumIpsumScopedDatabase = await this.database.tenants.insert({
+                name: 'lorum-ipsum',
+                subscriptionTier: 'demo',
+                subscriptionExpiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) // 3 days
+            }).scopedDatabase;
 
-        if(this.modules.includes('@pinstripe/multi-tenant')){
-            await this.database.tenants.insert({
-                name: 'test',
-                host: '127.0.0.1'
+            const { scopedDatabase: portalScopedDatabase } =  await this.database.tenants.insert({
+                name: 'portal',
+                subscriptionTier: 'permanent'
+            });
+
+            if(process.env.SKIP_FIXTURES == 'true') return;
+            
+            await portalScopedDatabase.users.insert({
+                name: 'Admin',
+                email: 'admin@example.com',
+                role: 'admin'
             });
         }
     
         if(process.env.SKIP_FIXTURES == 'true') return;
     
-        await this.database.site.update({
+        await lorumIpsumScopedDatabase.site.update({
             title: 'Lorem ipsum',
             navigation: [
                 'Provident itaque iste.',
@@ -25,7 +38,7 @@ export default {
             ].join('\n')
         });
     
-        this.user = await this.database.users.insert({
+        this.user = await lorumIpsumScopedDatabase.users.insert({
             name: 'Admin',
             email: 'admin@example.com',
             role: 'admin'
@@ -34,46 +47,43 @@ export default {
         const { rootPath } = await this.project;
         const contentPath = `${rootPath}/content`;
         if(!existsSync(contentPath)) return;
-        await this.loadDir(contentPath, contentPath);
+        await this.loadDir(lorumIpsumScopedDatabase, contentPath, contentPath);
     },
 
-    async loadDir(dirPath, currentDirPath){
+    async loadDir(scopedDatabase, dirPath, currentDirPath){
         const items = (await promisify(readdir)(currentDirPath)).reverse();
         for(let i in items){
             const item = items[i];
             const currentPath = `${currentDirPath}/${item}`;
             const stats = await promisify(stat)(currentPath);
             if(stats.isDirectory()){
-                await this.loadDir(dirPath, currentPath);         
+                await this.loadDir(scopedDatabase, dirPath, currentPath);         
             } else {
-                await this.loadFile(dirPath, currentPath);
+                await this.loadFile(scopedDatabase, currentPath);
             }
         }
     },
 
-    async loadFile(dirPath, filePath){
+    async loadFile(scopedDatabase, filePath){
         if(filePath.match(/\.md$/i)){
-            await this.loadMarkdownFile(dirPath, filePath);
+            await this.loadMarkdownFile(scopedDatabase, filePath);
         }
     },
 
-    async loadMarkdownFile(dirPath, filePath){
+    async loadMarkdownFile(scopedDatabase, filePath){
         const data = await promisify(readFile)(filePath, 'utf8');
         const [ frontMatter, body ] = this.extractFrontMatterAndBody(data);
         const { type = 'post', tags, ...otherFrontMatter } = frontMatter;
 
-        if(type == 'page' && !this.modules.includes('@blognami/pages')) return;
-        if(type == 'post' && !this.modules.includes('@blognami/posts')) return;
-
         const tagIds = [];
         if(tags){
             for(let tagName of tags){
-                const tag = await this.database.tags.where({ name: tagName }).first();
+                const tag = await scopedDatabase.tags.where({ name: tagName }).first();
                 if(tag){
                     tagIds.push(tag.id);
                     continue;
                 }
-                const { id } = await this.database.tags.insert({ name: tagName });
+                const { id } = await scopedDatabase.tags.insert({ name: tagName });
                 tagIds.push(id);
             }
         }
@@ -95,10 +105,10 @@ export default {
             });
         }
 
-        const { id } = await this.database[this.inflector.pluralize(type)].insert(entity);
+        const { id } = await scopedDatabase[this.inflector.pluralize(type)].insert(entity);
         
         for(let tagId of tagIds){
-            await this.database.tagableTags.insert({ tagableId: id, tagId });
+            await scopedDatabase.tagableTags.insert({ tagableId: id, tagId });
         }
     },
 

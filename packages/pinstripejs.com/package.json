@@ -8,7 +8,7 @@
     ".": "./lib/index.js"
   },
   "scripts": {
-    "start": "pinstripe start-server",
+    "start": "pinstripe start-server --host 127.0.0.1:3002",
     "build": "rm -rf build && pinstripe reset-database && pinstripe generate-static-site",
     "reset-database": "pinstripe reset-database"
   }

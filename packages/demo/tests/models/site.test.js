@@ -2,7 +2,7 @@
 import { beforeEach, test } from 'node:test';
 import assert from 'node:assert';
 
-import { Workspace, reset, modules } from './helpers.js';
+import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
@@ -16,7 +16,7 @@ test(`site`, () => Workspace.run(async _ => {
     assert.equal(await sites.count(), 1);
 }));
 
-if(modules.includes('@pinstripe/multi-tenant')){
+if(process.env.TENANCY === 'multi'){
     test(`site with multi-tenancy and tenant exists`, () => Workspace.run(async _ => {
         const { tenant, site, sites } = _.database;
 
