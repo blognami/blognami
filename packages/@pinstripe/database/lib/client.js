@@ -34,8 +34,14 @@ export const Client = Class.extend().include({
             connectionPromise = this.adapt(this, {
                 async mysql(){
                     const { adapter, database, ...connectionConfig } = this.config;
-                    connection = mysql.createConnection(connectionConfig);
-                    connection.connect();
+                    connection = mysql.createPool({
+                        ...connectionConfig,
+                        waitForConnections: true,
+                        connectionLimit: 1,
+                        queueLimit: 0,
+                        enableKeepAlive: true,
+                        keepAliveInitialDelay: 10000
+                    });
                     const databases = (await this.run('show databases')).map(row => row['Database']);
                     if(!databases.includes(database)){
                         await this.run(`create database ${database}`, { skipConnectionPromise: true });
@@ -303,8 +309,8 @@ function run(query, values){
             if(cache && cache[cacheKey]) return [...cache[cacheKey]];
 
             if(!isTest) console.log(`Query: ${query}`);
-            
-            const out = await new Promise((resolve, reject) => {
+
+            const executeQuery = () => new Promise((resolve, reject) => {
                 connection.query(query, (error, rows) => {
                     if(error){
                         reject(error);
@@ -316,6 +322,18 @@ function run(query, values){
                     }
                 });
             });
+
+            let out;
+            try {
+                out = await executeQuery();
+            } catch(error) {
+                const retryableErrors = ['ECONNRESET', 'ETIMEDOUT', 'ECONNREFUSED', 'PROTOCOL_CONNECTION_LOST'];
+                if(retryableErrors.includes(error.code)){
+                    out = await executeQuery();
+                } else {
+                    throw error;
+                }
+            }
 
             if(cache) cache[cacheKey] = out;
 
