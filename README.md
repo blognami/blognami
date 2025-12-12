@@ -1,24 +1,15 @@
-
-emen# 🌟 Welcome to the Blognami Monorepo
+# Blognami
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/blognami/blognami?style=social)](https://github.com/blognami/blognami/stargazers)
 
-> ### ⭐ Why Star This Repo?
->
-> Blognami is still in its **early days**, and every star helps others discover it.
-> If you like the idea, plan to use it, or just want to support open-source work, please **click the ⭐ at the top** — it’s quick, free, and makes a big difference.
+**Blognami** is an open-source, passwordless blogging platform built on top of **Pinstripe**, a full-stack JavaScript web framework.
 
-**Blognami** is an open-source, passwordless blogging platform built on top of **Pinstripe**, its own full-stack JavaScript web framework.
+This monorepo contains the complete codebase for both Blognami and Pinstripe, along with all related packages.
 
-This repository contains the complete codebase for both **Blognami** and **Pinstripe**, along with all related packages and examples.
+## Quick Start
 
----
-
-## 🚀 Quick Start
-
-Want to try Blognami?
-Follow the [Getting Started Guide](https://blognami.com/docs/guides/getting-started) to spin up your first blog in minutes:
+Create a new Blognami blog:
 
 ```bash
 npx pinstripe generate-project --name my-blog --with blognami
@@ -29,93 +20,115 @@ npx pinstripe start-server
 
 Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
 
----
+For more details, see the [Getting Started Guide](https://blognami.com/docs/guides/getting-started).
 
-## ❓ What is Blognami?
+## Architecture
 
-Blognami is **both an app and a framework stack**:
-
-* **Blognami** → The blogging platform itself — passwordless authentication, markdown editing, tagging, and more.
-* **Pinstripe** → The underlying full-stack web framework powering Blognami.
-  It provides the core runtime, database integration, and CLI commands used to create, run, and manage Blognami projects.
-
-This monorepo contains **all the packages for both Blognami and Pinstripe**, so you can explore the internals, contribute, or extend them.
-
----
-
-### 🗺 How They Fit Together
-
-```text
-+---------------------------+
-|       Blognami App        |
-| (Pages, Posts, Tags, etc) |
-+---------------------------+
-            ⬇ built on
-+---------------------------+
-|      Pinstripe Framework     |
-| (Core runtime + CLI, DB,  |
-|  auth, utils, multi-tenant|
-|  static site generation)  |
-+---------------------------+
-            ⬇ runs on
-+---------------------------+
-|  Node.js + Your Database  |
-+---------------------------+
+```
+┌─────────────────────────────┐
+│        Blognami App         │
+│  (Pages, Posts, Tags, etc)  │
+├─────────────────────────────┤
+│     Pinstripe Framework     │
+│  (Core runtime, CLI, DB,    │
+│   auth, multi-tenancy)      │
+├─────────────────────────────┤
+│   Node.js + MySQL/SQLite    │
+└─────────────────────────────┘
 ```
 
-💡 Think of **Blognami** as the *ready-to-use app* and **Pinstripe** as the *foundation + toolbox* that makes it possible.
+**Blognami** is the ready-to-use blogging application. **Pinstripe** is the underlying framework that provides the core runtime, database layer, CLI tooling, and extensibility system.
 
----
+## Package Overview
 
-## 📦 Package Index
+### Blognami Packages
 
-### Blognami Core
-
-* [**@blognami/main**](./packages/@blognami/main) – Core Blognami application logic
-* [**@blognami/pages**](./packages/@blognami/pages) – Page management for Blognami
-* [**@blognami/posts**](./packages/@blognami/posts) – Blog post management
-* [**@blognami/tags**](./packages/@blognami/tags) – Tagging system
-
-**Convenience Package**
-
-* [**blognami**](./packages/blognami) – A meta-package that installs a well-chosen subset of Blognami packages (including `@blognami/pages` and `@blognami/posts`) so you can get started quickly without manually installing each one.
-
----
+| Package | Description |
+|---------|-------------|
+| [blognami](./packages/blognami) | Meta-package bundling all Blognami features |
+| [@blognami/main](./packages/@blognami/main) | Core application logic, admin UI, authentication |
+| [@blognami/posts](./packages/@blognami/posts) | Blog post management |
+| [@blognami/pages](./packages/@blognami/pages) | Static page management |
+| [@blognami/tags](./packages/@blognami/tags) | Tagging system |
 
 ### Pinstripe Framework
 
-* [**@pinstripe/database**](./packages/@pinstripe/database) – Database layer
-* [**@pinstripe/multi-tenant**](./packages/@pinstripe/multi-tenant) – Multi-tenancy support
-* [**@pinstripe/one-time-token**](./packages/@pinstripe/one-time-token) – One-time token auth system
-* [**@pinstripe/static-site**](./packages/@pinstripe/static-site) – Static site generation
-* [**@pinstripe/utils**](./packages/@pinstripe/utils) – Utility functions
-
-**Core + CLI**
-
-* [**pinstripe**](./packages/pinstripe) – The core Pinstripe framework **and** the CLI used to scaffold, run, and manage Blognami projects.
-
----
+| Package | Description |
+|---------|-------------|
+| [pinstripe](./packages/pinstripe) | Core framework and CLI |
+| [@pinstripe/database](./packages/@pinstripe/database) | MySQL and SQLite database layer |
+| [@pinstripe/utils](./packages/@pinstripe/utils) | Meta-programming utilities |
+| [@pinstripe/window](./packages/@pinstripe/window) | Browser-side framework |
+| [@pinstripe/markdown](./packages/@pinstripe/markdown) | Markdown processing |
+| [@pinstripe/one-time-token](./packages/@pinstripe/one-time-token) | Passwordless authentication |
+| [@pinstripe/multi-tenant](./packages/@pinstripe/multi-tenant) | Multi-tenancy support |
+| [@pinstripe/static-site](./packages/@pinstripe/static-site) | Static site generation |
 
 ### Other Packages
 
-* [**demo**](./packages/demo) – Example Blognami project
+| Package | Description |
+|---------|-------------|
+| [demo](./packages/demo) | Example project with tests |
+| [blognami.com](./packages/blognami.com) | Marketing site |
+| [pinstripejs.com](./packages/pinstripejs.com) | Framework documentation site |
 
----
+## Development
 
-## 💡 Contributing
+### Prerequisites
 
-Blognami is still in its **early days**, which means your ideas and contributions can have a real impact!
+- Node.js 18+
+- npm 9+
 
-Here’s how you can help:
+### Setup
 
-* ⭐ **Star this repo** to help others discover Blognami
-* 🐞 **Report bugs** or request features via [GitHub Issues](https://github.com/blognami/blognami/issues)
-* 🔧 **Fork and contribute** — explore the packages above and start experimenting
+```bash
+git clone https://github.com/blognami/blognami.git
+cd blognami
+npm install
+```
 
-👋 I’m **Jody Salt**, creator of Blognami, and I’d be thrilled to see you get involved — even if it’s just to share what you’ve built.
+### Running the Demo
 
----
+```bash
+npm run start        # Start demo project at http://127.0.0.1:3000
+npm run watch        # Start with auto-reload on file changes
+```
 
-## 📄 License
+### Testing
 
-This monorepo is released under the [MIT License](https://opensource.org/licenses/MIT).
+```bash
+npm test             # Run all tests
+npm run test:unit    # Unit tests only
+npm run test:models  # Model tests
+npm run test:services # Service tests
+npm run test:cli     # CLI command tests
+npm run test:e2e     # Playwright end-to-end tests
+```
+
+### CLI Commands
+
+The Pinstripe CLI provides commands for development:
+
+```bash
+npx pinstripe start-server       # Run development server
+npx pinstripe generate-view      # Create a new view
+npx pinstripe generate-command   # Create a new command
+npx pinstripe generate-service   # Create a new service
+npx pinstripe list-views         # List all registered views
+npx pinstripe list-commands      # List all registered commands
+npx pinstripe list-services      # List all registered services
+```
+
+## Contributing
+
+Contributions are welcome! Here's how you can help:
+
+- **Report bugs** or request features via [GitHub Issues](https://github.com/blognami/blognami/issues)
+- **Submit pull requests** with bug fixes or new features
+- **Star this repo** to help others discover Blognami
+
+I'm **Jody Salt**, the creator of Blognami. I'd love to hear about what you're building with it.
+
+## License
+
+MIT License - see [LICENSE](https://opensource.org/licenses/MIT) for details.
