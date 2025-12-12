@@ -21,7 +21,7 @@ export default {
             meta,
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">
-                    ${this.renderView('_navbar')}
+                    ${this.renderView('_header')}
 
                     ${this.renderView('_main', { body })}
 

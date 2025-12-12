@@ -1,0 +1,11 @@
+
+- ~~copy over background_jobs~~
+- ~~copy over migrations~~
+- ~~copy over models~~
+    - ~~this need adapting to the new hooks~~
+- ~~copy over actions~~
+- ~~update navbar~~
+- add blognami.com to demo
+    - make the app listen to port 3001
+- make pinstripejs.com listen to port 3002
+    - modify scripts so that all they can all be started up with `watch` / `start`

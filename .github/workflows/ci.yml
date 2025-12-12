@@ -18,9 +18,7 @@ jobs:
       matrix:
         node: [18.x, 20.x]
         database-adapter: [mysql, sqlite]
-        modules:
-          - '@blognami/pages, @blognami/posts, @blognami/tags, @blognami/main'
-          - '@pinstripe/multi-tenant, @blognami/pages, @blognami/posts, @blognami/tags, @blognami/main'
+        tenancy: [single, multi]
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node }}
@@ -30,7 +28,7 @@ jobs:
       - run: npm install
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
-      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} MODULES="${{ matrix.modules }}" npm run test
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} npm run test
         env:
           CI: true
       - name: Archive Playwright HTML report

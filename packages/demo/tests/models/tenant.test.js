@@ -2,13 +2,13 @@
 import { beforeEach, test } from 'node:test';
 import assert from 'node:assert';
 
-import { Workspace, reset, modules } from './helpers.js';
+import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
 const COLLECTION_NAMES = ['comments', 'commentables', 'pages', 'pageables', 'posts', 'revisables', 'sessions', 'sites', 'tagables', 'users'];
 
-if(modules.includes('@pinstripe/multi-tenant')){
+if(process.env.TENANCY === 'multi'){
     test(`tenant`, () => Workspace.run(async _ => {
         const { tenant, site, users, posts, withoutTenantScope: database } = _.database;
 
