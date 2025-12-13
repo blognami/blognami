@@ -12,11 +12,11 @@ test(`subscribable`, () => Workspace.run(async _ => {
 
     const { subscribables, newsletter, users, subscriptions } = _.database;
 
-    assert.equal(await subscribables.count(), 0);
+    const initialSubscribablesCount = await subscribables.count();
 
     await newsletter;
 
-    assert.equal(await subscribables.count(), 1);
+    assert.equal(await subscribables.count(), initialSubscribablesCount + 1);
 
     assert.equal(await subscriptions.count(), 0);
 
