@@ -91,7 +91,7 @@ export const decorators = {
 
 export default {
     async render(){
-        const { expirySeconds } = this.params;
+        const { expirySeconds, tenantId } = this.params;
 
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
@@ -101,7 +101,7 @@ export default {
                         ${this.renderView('_button', {
                             tagName: 'a',
                             body: 'Sign up to keep your data',
-                            href: '/_actions/guest/saas_subscribe',
+                            href: `/_actions/guest/saas_subscribe?tenantId=${tenantId}`,
                             target: '_overlay',
                         })}
                     </div>

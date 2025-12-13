@@ -4,7 +4,7 @@ export default {
 
         this.addHook(['afterInsert', 'afterUpdate'], async function(){
             const stripe = await this.database.stripe;
-            await stripe.runHook('syncWithSubscribable', { args: [ this ] });
+            if(stripe) await stripe.runHook('syncWithSubscribable', { args: [ this ] });
         });
     },
 
@@ -23,10 +23,13 @@ export default {
             userId: user.id,
             tier
         });
+
+        await this.runHook('afterSubscribe', { user, tier });
     },
 
     async createSubscribeUrl(user, options = {}){
-        return this.database.stripe.createSubscribeUrl({ subscribableId: this.id, userId: user.id, email: user.email, ...options });
+        const stripe = await this.database.stripe;
+        return stripe.createSubscribeUrl({ subscribableId: this.id, userId: user.id, email: user.email, ...options });
     },
 
     async isSubscribed(user, options = {}){
@@ -38,13 +41,16 @@ export default {
         return false;
     },
 
-    async unsubscribe(user){
+    async unsubscribe(user, options = {}){
+        const stripe = await this.database.stripe;
         const subscription = await this.subscriptions.where({ userId: user.id, subscribableId: this.id }).first();
         if(!subscription) return;
-        if(subscription.tier == 'paid'){
-            await this.database.stripe.cancelSubscription({ subscribableId: this.id, userId: user.id });
+        const { tier } = subscription;
+        if(tier == 'paid'){
+            await stripe.cancelSubscription({ subscribableId: this.id, userId: user.id });
         } else {
             await subscription.delete();
         }
+        await this.runHook('afterUnsubscribe', { user, tier });
     }
 }

@@ -18,15 +18,13 @@ export default {
             if(matches){
                 const type = matches[1];
                 const { metadata: { blognamiUserId: userId, blognamiSubscribableId: subscribableId } } = event.data.object;
-                console.log(`----------- subscription ${JSON.stringify({ type, userId, subscribableId })}`);
-                // console.log(`event.data.object ${JSON.stringify(event.data.object, null, 2)}`);
                 const user = await this.database.users.where({ id: userId }).first();
-                if(user){
+                const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
+                if(user && subscribable){
                     if(type == 'created'){
-                        const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
-                        if(subscribable) await subscribable.subscribe(user, { tier: 'paid' });
+                        await subscribable.subscribe(user, { tier: 'paid' });
                     } else {
-                        await this.database.subscriptions.where({ userId, subscribableId }).delete();
+                        await subscribable.unsubscribe(user);
                     }
                 }
             }
