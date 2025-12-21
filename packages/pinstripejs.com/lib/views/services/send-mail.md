@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "sendMail"]
+menu:
+    path: ["Services", "sendMail"]
 ---
 # sendMail
 

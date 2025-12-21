@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "show-config"]
+menu:
+    path: ["Commands", "show-config"]
 ---
 # show-config Command
 

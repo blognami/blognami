@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "trapify"]
+menu:
+    path: ["Services", "trapify"]
 ---
 # trapify
 

@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "list-background-jobs"]
+menu:
+    path: ["Commands", "list-background-jobs"]
 ---
 # list-background-jobs Command
 

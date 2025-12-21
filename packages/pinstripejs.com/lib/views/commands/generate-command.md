@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "generate-command"]
+menu:
+    path: ["Commands", "generate-command"]
 ---
 # generate-command Command
 

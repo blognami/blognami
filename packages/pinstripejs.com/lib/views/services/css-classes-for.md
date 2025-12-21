@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "cssClassesFor"]
+menu:
+    path: ["Services", "cssClassesFor"]
 ---
 # cssClassesFor
 

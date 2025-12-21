@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "list-views"]
+menu:
+    path: ["Commands", "list-views"]
 ---
 # list-views Command
 

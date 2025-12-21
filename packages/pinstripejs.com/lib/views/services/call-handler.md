@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "callHandler"]
+menu:
+    path: ["Services", "callHandler"]
 ---
 # callHandler
 

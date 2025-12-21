@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "migrate-database"]
+menu:
+    path: ["Commands", "migrate-database"]
 ---
 # migrate-database Command
 

@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "runInNewWorkspace"]
+menu:
+    path: ["Services", "runInNewWorkspace"]
 ---
 # runInNewWorkspace
 

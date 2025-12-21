@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "parseHtml"]
+menu:
+    path: ["Services", "parseHtml"]
 ---
 # parseHtml
 

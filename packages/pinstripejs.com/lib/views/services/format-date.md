@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "formatDate"]
+menu:
+    path: ["Services", "formatDate"]
 ---
 # formatDate
 

@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "environment"]
+menu:
+    path: ["Services", "environment"]
 ---
 # environment
 

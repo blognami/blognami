@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "generate-migration"]
+menu:
+    path: ["Commands", "generate-migration"]
 ---
 # generate-migration Command
 

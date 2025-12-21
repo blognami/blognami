@@ -53,18 +53,17 @@ export default {
 
         await this.runHook('beforeRender');
 
-        const footerSections = await this.menus.footer || [];
-        const legalSection = footerSections.find(section => section.label === 'Legal') || { children: [] };
+        const legalItems = await this.menus.legal || [];
 
         return this.renderHtml`
             <footer class="${this.cssClasses.root}" data-test-id="footer">
                 <div class="${this.cssClasses.container}">
                     <div>
                         ${this.copyrightOwner} © ${new Date().getFullYear()}
-                        ${legalSection.children.map(child => {
-                            return this.renderHtml` | <a class="${this.cssClasses.link}" href="${child.url}">${child.label}</a>`;
+                        ${legalItems.map(item => {
+                            return this.renderHtml` | <a class="${this.cssClasses.link}" href="${item.url}">${item.label}</a>`;
                         })}
-                    </div>    
+                    </div>
                     <div class="${this.cssClasses.poweredBy}">
                         <a class="${this.cssClasses.link}" href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
                     </div>

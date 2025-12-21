@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "inflector"]
+menu:
+    path: ["Services", "inflector"]
 ---
 # inflector
 

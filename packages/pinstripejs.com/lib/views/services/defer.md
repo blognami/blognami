@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "defer"]
+menu:
+    path: ["Services", "defer"]
 ---
 # defer
 

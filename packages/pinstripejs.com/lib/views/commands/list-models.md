@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "list-models"]
+menu:
+    path: ["Commands", "list-models"]
 ---
 # list-models Command
 

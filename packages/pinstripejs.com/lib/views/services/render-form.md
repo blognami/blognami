@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "renderForm"]
+menu:
+    path: ["Services", "renderForm"]
 ---
 # renderForm
 

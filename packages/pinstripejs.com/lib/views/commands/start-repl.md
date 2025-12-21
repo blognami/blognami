@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "start-repl"]
+menu:
+    path: ["Commands", "start-repl"]
 ---
 # start-repl Command
 

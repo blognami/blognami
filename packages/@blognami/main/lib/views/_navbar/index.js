@@ -48,7 +48,7 @@ export const styles = ({ colors, breakpointFor, remify }) => `
 
 export default {
     async render(){
-        const items = await this.menus.navbar || [];
+        const items = await this.menus.user || [];
 
         return this.renderHtml`
             <header class="${this.cssClasses.root}" id="pinstripe-scroll-top" data-test-id="navbar">
@@ -56,9 +56,20 @@ export default {
                     ${this.renderView('_navbar/_branding')}
                     <nav class="${this.cssClasses.linkGroup}">
                         <ul class="${this.cssClasses.linkGroupItems}">
-                            ${items.map(({ partial, ...item }) => {
+                            ${items.map(item => {
+                                // Generate popover URL for items with children
+                                let { url, target, preload } = item;
+                                if (url === undefined && item.children) {
+                                    const popoverUrl = new URL('/_navbar/menu', 'http://localhost');
+                                    popoverUrl.searchParams.append('path', JSON.stringify([item.label]));
+                                    url = popoverUrl.pathname + popoverUrl.search;
+                                    target = '_overlay';
+                                    preload = true;
+                                }
+                                target = target ?? '_top';
+
                                 return this.renderHtml`
-                                    <li>${this.renderView(partial, item)}</li>
+                                    <li>${this.renderView('_navbar/_link', { ...item, url, target, preload })}</li>
                                 `;
                             })}
                         </ul>

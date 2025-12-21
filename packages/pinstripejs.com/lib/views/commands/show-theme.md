@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "show-theme"]
+menu:
+    path: ["Commands", "show-theme"]
 ---
 # show-theme Command
 

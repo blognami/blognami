@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "generate-model"]
+menu:
+    path: ["Commands", "generate-model"]
 ---
 # generate-model Command
 

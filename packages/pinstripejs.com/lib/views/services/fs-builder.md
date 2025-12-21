@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "fsBuilder"]
+menu:
+    path: ["Services", "fsBuilder"]
 ---
 # fsBuilder
 

@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "theme"]
+menu:
+    path: ["Services", "theme"]
 ---
 # theme
 

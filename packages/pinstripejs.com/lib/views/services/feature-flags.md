@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "featureFlags"]
+menu:
+    path: ["Services", "featureFlags"]
 ---
 # featureFlags
 

@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "renderTag"]
+menu:
+    path: ["Services", "renderTag"]
 ---
 # renderTag
 

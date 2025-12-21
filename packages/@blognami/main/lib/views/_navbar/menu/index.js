@@ -4,7 +4,7 @@ export default {
     async render(){
         const path = JSON.parse(this.params.path || '[]');
 
-        const items = await this.menus.navbar || [];
+        const items = await this.menus.user || [];
 
         let currentItems = items;
         for(const label of path){
@@ -13,11 +13,11 @@ export default {
                 return;
             }
         }
-        
+
         return this.renderHtml`
             <pinstripe-popover>
                 <pinstripe-menu>
-                    ${currentItems.map(({ partial, ...item}) => this.renderView(partial, item))}
+                    ${currentItems.map(item => this.renderView('_navbar/menu/_link', item))}
                 </pinstripe-menu>
             </pinstripe-popover>
         `;

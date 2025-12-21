@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "params"]
+menu:
+    path: ["Services", "params"]
 ---
 # params
 

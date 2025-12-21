@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "isClient"]
+menu:
+    path: ["Services", "isClient"]
 ---
 # isClient
 
