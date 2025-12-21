@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "seed-database"]
+menu:
+    path: ["Commands", "seed-database"]
 ---
 # seed-database Command
 

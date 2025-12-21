@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "createModel"]
+menu:
+    path: ["Services", "createModel"]
 ---
 # createModel
 

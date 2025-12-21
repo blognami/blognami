@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "list-commands"]
+menu:
+    path: ["Commands", "list-commands"]
 ---
 # list-commands Command
 

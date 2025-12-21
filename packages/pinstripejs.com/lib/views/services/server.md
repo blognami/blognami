@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "server"]
+menu:
+    path: ["Services", "server"]
 ---
 # server
 

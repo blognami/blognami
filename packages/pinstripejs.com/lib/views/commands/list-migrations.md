@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "list-migrations"]
+menu:
+    path: ["Commands", "list-migrations"]
 ---
 # list-migrations Command
 

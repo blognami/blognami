@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "config"]
+menu:
+    path: ["Services", "config"]
 ---
 # config
 

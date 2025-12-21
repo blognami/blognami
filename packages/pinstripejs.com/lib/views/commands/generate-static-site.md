@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "generate-static-site"]
+menu:
+    path: ["Commands", "generate-static-site"]
 ---
 # generate-static-site Command
 

@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "database"]
+menu:
+    path: ["Services", "database"]
 ---
 # database
 

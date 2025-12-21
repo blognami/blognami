@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "bundler"]
+menu:
+    path: ["Services", "bundler"]
 ---
 # bundler
 

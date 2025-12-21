@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "renderRedirect"]
+menu:
+    path: ["Services", "renderRedirect"]
 ---
 # renderRedirect
 

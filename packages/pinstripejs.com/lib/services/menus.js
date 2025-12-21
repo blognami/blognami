@@ -1,56 +1,27 @@
 export default {
     meta(){
         this.addHook('initializeMenus', function(){
-            this.menus.navbar = [];
-            this.addMenuItem('navbar', {
+            this.menus.user = [];
+            this.addMenuItem('user', {
                 label: 'Docs',
                 url: '/',
                 displayOrder: 1
             });
-            this.addMenuItem('navbar', {
+            this.addMenuItem('user', {
                 label: 'Blog',
                 url: 'https://blognami.com/pinstripe',
             });
-            this.addMenuItem('navbar', {
-                label: 'GitHub',
-                partial: '_navbar/_github_link',
-            });
-
-            this.menus.sidebar = this.menus.sidebar.filter(item => item.label != 'About').map(item => {
-                if(item.label == 'Getting Started'){
-                    item.displayOrder = 1;
-                }
-                return item;
-            });
-
-
-            this.addMenuItem('burgerMenu', {
-                label: 'Info',
-                displayOrder: 1
-            });
-            this.addMenuItem('burgerMenu', 'Info', {
-                label: 'Docs',
-                url: '/',
-                displayOrder: 1
-            });
-            this.addMenuItem('burgerMenu', 'Info', {
-                label: 'Blog',
-                url: 'https://blognami.com/pinstripe',
-            });
-            this.addMenuItem('burgerMenu', 'Info', {
+            this.addMenuItem('user', {
                 label: 'GitHub',
                 url: 'https://github.com/blognami/blognami'
             });
 
-            // Filter burger menu - remove 'About' and 'Account' sections
-            this.menus.burgerMenu = this.menus.burgerMenu.filter(item => item.label != 'About' && item.label != 'Account').map(item => {
-                if(item.label == 'Getting Started'){
-                    item.displayOrder = 2;
-                }
-                return item;
+            this.addMenuItem('content', {
+                label: 'Getting Started',
+                displayOrder: 1
             });
 
-            this.menus.footer = [];
+            this.menus.legal = [];
         });
     }
 };

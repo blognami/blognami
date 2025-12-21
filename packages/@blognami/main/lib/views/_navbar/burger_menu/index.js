@@ -41,15 +41,19 @@ export const styles = ({ colors, shadow, breakpointFor, remify }) => `
 
 export default {
     async render(){
-        const sections = await this.menus.burgerMenu || [];
+        const userItems = await this.menus.user || [];
+        const contentItems = await this.menus.content || [];
 
         return this.renderHtml`
             <pinstripe-modal>
                 <div class="${this.cssClasses.root}">
-                    ${sections.map(section => {
-                        const { partial, ...restOfSection } = section;
-                        return this.renderView(partial, restOfSection);
-                    })}
+                    ${userItems.map(item =>
+                        this.renderView('_navbar/burger_menu/_link_group_section', item)
+                    )}
+                    ${this.renderView('_navbar/burger_menu/_top_section')}
+                    ${contentItems.map(item =>
+                        this.renderView('_navbar/burger_menu/_link_group_section', item)
+                    )}
                 </div>
             </pinstripe-modal>
         `;

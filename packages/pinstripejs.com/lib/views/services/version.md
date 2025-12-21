@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "version"]
+menu:
+    path: ["Services", "version"]
 ---
 # version
 

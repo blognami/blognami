@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "renderHtml"]
+menu:
+    path: ["Services", "renderHtml"]
 ---
 # renderHtml
 

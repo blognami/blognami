@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "runCommand"]
+menu:
+    path: ["Services", "runCommand"]
 ---
 # runCommand
 

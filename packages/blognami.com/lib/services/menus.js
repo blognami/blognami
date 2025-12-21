@@ -5,14 +5,14 @@ export default {
 
             // Signed out links
             if(await this.isSignedOut){
-                this.addMenuItem('navbar', {
+                this.addMenuItem('user', {
                     label: 'Get started',
                     url: '/_actions/guest/sign_in',
                     target: '_overlay',
                     displayOrder: 0
                 });
 
-                this.addMenuItem('navbar', {
+                this.addMenuItem('user', {
                     label: 'Demo',
                     url: '/_actions/guest/add_blog',
                     target: '_overlay',
@@ -21,7 +21,7 @@ export default {
             }
 
             // GitHub link (always visible when portal enabled)
-            this.addMenuItem('navbar', {
+            this.addMenuItem('user', {
                 label: 'GitHub',
                 url: 'https://github.com/blognami/blognami',
                 target: '_blank',
@@ -30,13 +30,13 @@ export default {
 
             // Signed in links with dropdowns
             if(await this.isSignedIn){
-                this.addMenuItem('navbar', 'Add', {
+                this.addMenuItem('user', 'Add', {
                     label: 'Blog',
                     url: '/_actions/guest/add_blog',
                     target: '_overlay'
                 });
 
-                this.addMenuItem('navbar', 'Find', {
+                this.addMenuItem('user', 'Find', {
                     label: 'Blog',
                     url: '/_actions/user/find_blog',
                     target: '_overlay'

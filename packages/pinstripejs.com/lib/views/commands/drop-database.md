@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "drop-database"]
+menu:
+    path: ["Commands", "drop-database"]
 ---
 # drop-database Command
 

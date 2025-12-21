@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "initialParams"]
+menu:
+    path: ["Services", "initialParams"]
 ---
 # initialParams
 

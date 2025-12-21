@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "serviceWorker"]
+menu:
+    path: ["Services", "serviceWorker"]
 ---
 # serviceWorker
 

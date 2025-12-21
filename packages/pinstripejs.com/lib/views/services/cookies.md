@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "cookies"]
+menu:
+    path: ["Services", "cookies"]
 ---
 # cookies
 

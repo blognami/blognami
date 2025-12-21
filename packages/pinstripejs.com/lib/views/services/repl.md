@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "repl"]
+menu:
+    path: ["Services", "repl"]
 ---
 # repl
 

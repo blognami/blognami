@@ -23,16 +23,14 @@ export const styles = ({ colors, breakpointFor, remify }) => `
 
 export default {
     async render(){
-        const sections = await this.menus.sidebar || [];
-
-        if(sections.length === 0) return;
+        const sections = await this.menus.content || [];
 
         return this.renderHtml`
             <aside class="${this.cssClasses.root}" data-test-id="sidebar">
-                ${sections.map(section => {
-                    const { partial, ...restOfSection } = section;
-                    return this.renderView(partial, restOfSection);
-                })}
+                ${this.renderView('_sidebar/_top_section')}
+                ${sections.map(section =>
+                    this.renderView('_sidebar/_link_group_section', section)
+                )}
             </aside>
         `;
     }

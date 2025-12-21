@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "viewMap"]
+menu:
+    path: ["Services", "viewMap"]
 ---
 # viewMap
 

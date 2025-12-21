@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "list-services"]
+menu:
+    path: ["Commands", "list-services"]
 ---
 # list-services Command
 

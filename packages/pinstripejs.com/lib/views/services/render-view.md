@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "renderView"]
+menu:
+    path: ["Services", "renderView"]
 ---
 # renderView
 

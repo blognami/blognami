@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "renderTable"]
+menu:
+    path: ["Services", "renderTable"]
 ---
 # renderTable
 

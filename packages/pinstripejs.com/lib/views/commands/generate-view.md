@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Commands", "generate-view"]
+menu:
+    path: ["Commands", "generate-view"]
 ---
 # generate-view Command
 

@@ -236,8 +236,9 @@ export const styles = ({ colors, breakpointFor, remify }) => `
 export default {
     meta(){
         this.annotate({
-            menus: {
-                sidebar: ['Getting Started', 'Introduction']
+            menu: {
+                path: ['Getting Started', 'Introduction'],
+                displayOrder: 1
             }
         });
     },

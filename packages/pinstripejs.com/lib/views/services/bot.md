@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "bot"]
+menu:
+    path: ["Services", "bot"]
 ---
 # bot
 

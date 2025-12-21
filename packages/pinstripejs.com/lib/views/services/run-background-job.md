@@ -1,6 +1,6 @@
 ---
-menus:
-    sidebar: ["Services", "runBackgroundJob"]
+menu:
+    path: ["Services", "runBackgroundJob"]
 ---
 # runBackgroundJob
 
