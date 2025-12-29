@@ -17,20 +17,26 @@ class PageHelpers {
   }
 
   async signOut() {
-    await this.page.getByTestId('navbar').getByTestId('sign-out').click();
+    await this.page.getByTestId('navbar').getByTestId("your-account").click();
+    await this.page.getByTestId('sign-out').click();
+    await this.waitForPageToBeIdle();
   }
 
-  async submitForm(values = {}) {
+  async submitForm(values = {}, options = {}) {
     const form = this.topModal().locator('form');
-    
+
     for (const [name, value] of Object.entries(values)) {
-      const input = form.locator(`input[name="${name}"], textarea[name="${name}"]`);
-      const inputType = await input.getAttribute('type');
+      const input = form.locator(`input[name="${name}"], textarea[name="${name}"], select[name="${name}"]`);
+      const tagName = await input.evaluate(el => el.tagName.toLowerCase());
+      const isSelect = tagName === 'select';
+      const inputType = isSelect ? null : await input.getAttribute('type');
       const isCheckbox = inputType === 'checkbox';
       const isPassword = inputType === 'password';
       const isMarkdown = await input.getAttribute('data-test-id') === 'markdown-input';
 
-      if (isPassword) {
+      if (isSelect) {
+        await input.selectOption(value);
+      } else if (isPassword) {
         await input.clear();
         await this.typeOtpFor(input, value);
       } else if (isCheckbox) {
@@ -54,7 +60,7 @@ class PageHelpers {
     }
     
     await form.locator('button[type="submit"]').click();
-    await this.waitForPageToBeIdle();
+    if(!options.skipWaitForIdle) await this.waitForPageToBeIdle();
   }
 
   async typeOtpFor(input, email) {
@@ -80,6 +86,20 @@ class PageHelpers {
   async waitForPageToBeIdle() {
     await this.page.waitForTimeout(100); // Small delay to allow state changes
     await this.page.locator('html.idle').waitFor();
+  }
+
+  async completeStripeCheckout(billingName) {
+    await this.page.waitForURL(/checkout\.stripe\.com/);
+    await this.page.locator('[name="enableStripePass"]').uncheck();
+    await this.page.locator('[name="cardNumber"]').fill('4242424242424242');
+    await this.page.locator('[name="cardExpiry"]').fill('12/34');
+    await this.page.locator('[name="cardCvc"]').fill('123');
+    await this.page.locator('[name="billingName"]').fill(billingName);
+    await this.page.locator('[name="billingPostalCode"]').fill('12345');
+    await this.page.getByRole('button', { name: /subscribe|pay/i }).click();
+
+    await this.page.waitForURL(/127\.0\.0\.1:3000/, { timeout: 60000 });
+    await this.waitForPageToBeIdle();
   }
 }
 

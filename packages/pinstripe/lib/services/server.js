@@ -29,7 +29,7 @@ export default {
                     response.end();
                     return;
                 }
-                
+
                 headers.etag = etag;
 
                 response.statusCode = status;

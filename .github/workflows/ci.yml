@@ -28,9 +28,16 @@ jobs:
       - run: npm install
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
+      - name: Install Stripe CLI
+        run: |
+          curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor | sudo tee /usr/share/keyrings/stripe.gpg
+          echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
+          sudo apt update
+          sudo apt install stripe
       - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} npm run test
         env:
           CI: true
+          STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}
       - name: Archive Playwright HTML report
         if: failure()
         uses: actions/upload-artifact@v4

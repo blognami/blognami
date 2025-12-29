@@ -103,7 +103,7 @@ export default {
 
                 this.addMenuItem('user', user.name, {
                     label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`,
-                    url: `/_actions/user/unsubscribe?subscribableId=${this.database.newsletter.id}`,
+                    url: `/_actions/user/unsubscribe?subscribableId=${await this.database.newsletter.id}`,
                     target: '_overlay',
                     testId: 'unsubscribe',
                     dataConfirm: confirmMessage,

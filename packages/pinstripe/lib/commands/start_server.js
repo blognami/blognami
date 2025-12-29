@@ -18,7 +18,9 @@ export default {
         });
     },
 
-    run(){
+    async run(){
+        await this.runHook('beforeServerStart');
+
         const {
             host = process.env.PINSTRIPE_HOST || '127.0.0.1:3000',
             withoutBot = false
@@ -36,5 +38,7 @@ export default {
         }
 
         if(!withoutBot) this.bot.start();
+
+        await this.runHook('afterServerStart');
     }
 };

@@ -1,6 +1,8 @@
 import { test, expect } from './fixtures.js';
 
 const LOGO_PNG = "tests/e2e/logo.png";
+const STRIPE_ENABLED = !!process.env.STRIPE_SECRET_KEY;
+const IS_MULTI_TENANT = process.env.TENANCY === 'multi';
 
 export function describeApp(role) {
   test.describe(`When a ${role} user`, () => {
@@ -628,6 +630,65 @@ export function describeApp(role) {
       describeSidebar(role);
       describeFooter(role);
     });
+
+    if (role === "guest") {
+      test.describe("Stripe newsletter subscription", () => {
+        test.skip(!STRIPE_ENABLED, 'STRIPE_SECRET_KEY not configured');
+
+        test('paid post becomes accessible after subscription', async ({ page, helpers }) => {
+          // Sign in as admin to set up paid content
+          await helpers.signIn('admin@example.com');
+
+          // Navigate to settings and enable monthly subscription
+          await page.getByTestId('navbar').getByTestId('settings').click();
+          await helpers.topPopover().getByTestId('edit-site-membership').click();
+          await helpers.submitForm({ enableMonthly: true, monthlyPrice: '5' });
+
+          // Set a post to paid access
+          await page.getByTestId("main").getByText("Alexandra Burgs").click();
+          await helpers.waitForPageToBeIdle();
+          await page.getByTestId("main").getByTestId("edit-post-meta").click();
+          await helpers.submitForm({ access: 'paid' });
+
+          // Sign out and verify content is restricted
+          await helpers.signOut();
+          await page.goto('/alexandra-burgs');
+          await helpers.waitForPageToBeIdle();
+          await expect(page.getByText('This content is for paying subscribers only.')).toBeVisible();
+          await expect(page.getByTestId('post-body')).not.toBeVisible();
+
+          // Subscribe via Stripe
+          await page.getByTestId('subscribe-now-button').click();
+          await helpers.waitForPageToBeIdle();
+          await page.getByTestId('monthly-subscription-button').click();
+          await helpers.waitForPageToBeIdle();
+          await helpers.submitForm({ email: 'subscriber@example.com', legal: true });
+          await helpers.submitForm({ password: 'subscriber@example.com' });
+          await helpers.submitForm({ name: 'Test Subscriber' }, { skipWaitForIdle: true });
+          await helpers.completeStripeCheckout('Test Subscriber');
+
+          // Verify content is now accessible
+          await expect(page.getByText('This content is for paying subscribers only.')).not.toBeVisible();
+          await expect(page.getByTestId('post-body')).toBeVisible();
+        });
+      });
+    }
+
+    if (role === "admin") {
+      test.describe("Stripe SaaS subscription", () => {
+        test.skip(!STRIPE_ENABLED || !IS_MULTI_TENANT, 'Requires STRIPE_SECRET_KEY and TENANCY=multi');
+
+        test('subscribing removes demo banner', async ({ page, helpers }) => {
+          const subscribeButton = page.getByTestId('demo-banner-subscribe-button');
+          await expect(subscribeButton).toBeVisible();
+
+          await subscribeButton.click();
+          await helpers.completeStripeCheckout('Admin');
+
+          await expect(subscribeButton).not.toBeVisible();
+        });
+      });
+    }
   });
 }
 

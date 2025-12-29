@@ -66,6 +66,7 @@ export default {
                                 isPrimary: true,
                                 isFullWidth: true,
                                 body: 'Select',
+                                ['data-test-id']: `${title.toLowerCase().replace(/\s+/g, '-')}-subscription-button`,
                             })}
                         </div>
                     </div>

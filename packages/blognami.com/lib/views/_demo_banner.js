@@ -103,6 +103,7 @@ export default {
                             body: 'Sign up to keep your data',
                             href: `/_actions/guest/saas_subscribe?tenantId=${tenantId}`,
                             target: '_overlay',
+                            ['data-test-id']: 'demo-banner-subscribe-button',
                         })}
                     </div>
                 </div>

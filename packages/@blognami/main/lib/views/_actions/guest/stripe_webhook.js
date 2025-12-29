@@ -24,7 +24,7 @@ export default {
                     if(type == 'created'){
                         await subscribable.subscribe(user, { tier: 'paid' });
                     } else {
-                        await subscribable.unsubscribe(user);
+                        await subscribable.unsubscribe(user, { force: true });
                     }
                 }
             }

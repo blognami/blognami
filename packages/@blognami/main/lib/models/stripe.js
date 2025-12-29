@@ -116,7 +116,7 @@ const SubscribableHandler = {
       starting_after = currentStripePrices[currentStripePrices.length - 1].id;
     }
 
-    const { monthlyPrice, yearlyPrice, currency } =
+    const { monthlyPrice, yearlyPrice, currency = 'USD' } =
       this.subscribable.subscriptionConfig;
 
     const out = {};
@@ -243,11 +243,7 @@ const SubscribableHandler = {
 
     if (!stripePrice) return;
 
-    console.log({ stripePrice });
-
     const stripeCustomer = await this.getStripeCustomer({ userId, email });
-
-    console.log({ stripeCustomer });
 
     return await this.stripe.api.checkout.sessions.create({
       success_url: returnUrl,
@@ -335,6 +331,9 @@ const SubscribableHandler = {
   },
 
   async syncStripeWithSubscribable() {
+    const { monthlyPrice, yearlyPrice } = this.subscribable.subscriptionConfig || {};
+    if (monthlyPrice === undefined && yearlyPrice === undefined) return;
+
     await this.getStripePrices();
     if (this.webhookUrlIsPublicallyAccessible())
       await this.getStripeWebhookEndpoint();
