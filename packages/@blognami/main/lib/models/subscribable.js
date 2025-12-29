@@ -33,6 +33,7 @@ export default {
     },
 
     async isSubscribed(user, options = {}){
+        if(!user) return false;
         const { tier = 'free' } = options;
         const subscription = await this.subscriptions.where({ userId: user.id }).first();
         if(tier == 'free' && subscription) return true;
@@ -42,11 +43,12 @@ export default {
     },
 
     async unsubscribe(user, options = {}){
+        const { force = false } = options;
         const stripe = await this.database.stripe;
         const subscription = await this.subscriptions.where({ userId: user.id, subscribableId: this.id }).first();
         if(!subscription) return;
         const { tier } = subscription;
-        if(tier == 'paid'){
+        if(tier == 'paid' && !force) {
             await stripe.cancelSubscription({ subscribableId: this.id, userId: user.id });
         } else {
             await subscription.delete();

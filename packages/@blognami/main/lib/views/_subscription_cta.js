@@ -26,6 +26,7 @@ export default {
                     href: `/_actions/guest/subscribe?subscribableId=${await this.database.newsletter.id}`,
                     class: this.cssClasses.button,
                     body: 'Subscribe now',
+                    ['data-test-id']: 'subscribe-now-button',
                 })}
             </div>
         `;

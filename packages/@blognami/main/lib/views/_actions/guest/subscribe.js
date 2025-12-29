@@ -24,7 +24,7 @@ export default {
             title: 'Monthly',
             price: `${currencySymbol}${monthlyPrice} per month`,
             features: monthlyFeatures,
-            action: `/_actions/guest/subscribe?plan=monthly&returnUrl=${encodeURIComponent(returnUrl)}`
+            action: `/_actions/guest/subscribe?subscribableId=${subscribableId}&plan=monthly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
         if(yearlyPrice !== undefined) options.push({
@@ -32,7 +32,7 @@ export default {
             title: 'Yearly',
             price: `${currencySymbol}${yearlyPrice} per year`,
             features: yearlyFeatures,
-            action: `/_actions/guest/subscribe?plan=yearly&returnUrl=${encodeURIComponent(returnUrl)}`
+            action: `/_actions/guest/subscribe?subscribableId=${subscribableId}&plan=yearly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
         if(freeFeatures) options.push({
@@ -40,7 +40,7 @@ export default {
             title: 'None',
             price: 'Free',
             features: freeFeatures,
-            action: `/_actions/guest/subscribe?plan=free&returnUrl=${encodeURIComponent(returnUrl)}`
+            action: `/_actions/guest/subscribe?subscribableId=${subscribableId}&plan=free&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
         if(options.length == 1) plan = options[0].name;
