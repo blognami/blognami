@@ -78,7 +78,7 @@ export default {
         return this.renderHtml`
             <ul class="${this.cssClasses.root}">
                 ${links.map(link => {
-                    const { url, target, label } = link;
+                    const { url, target = '_top', label } = link;
                     
                     return this.renderHtml`
                         <li class="${this.cssClasses.item}">
