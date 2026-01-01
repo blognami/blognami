@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures.js';
 
 const LOGO_PNG = "tests/e2e/logo.png";
-const STRIPE_ENABLED = !!process.env.STRIPE_SECRET_KEY;
+const STRIPE_ENABLED = !!process.env.STRIPE_API_KEY;
 const IS_MULTI_TENANT = process.env.TENANCY === 'multi';
 
 export function describeApp(role) {
@@ -633,7 +633,7 @@ export function describeApp(role) {
 
     if (role === "guest") {
       test.describe("Stripe newsletter subscription", () => {
-        test.skip(!STRIPE_ENABLED, 'STRIPE_SECRET_KEY not configured');
+        test.skip(!STRIPE_ENABLED, 'STRIPE_API_KEY not configured');
 
         test('paid post becomes accessible after subscription', async ({ page, helpers }) => {
           // Sign in as admin to set up paid content
@@ -676,7 +676,7 @@ export function describeApp(role) {
 
     if (role === "admin") {
       test.describe("Stripe SaaS subscription", () => {
-        test.skip(!STRIPE_ENABLED || !IS_MULTI_TENANT, 'Requires STRIPE_SECRET_KEY and TENANCY=multi');
+        test.skip(!STRIPE_ENABLED || !IS_MULTI_TENANT, 'Requires STRIPE_API_KEY and TENANCY=multi');
 
         test('subscribing removes demo banner', async ({ page, helpers }) => {
           const subscribeButton = page.getByTestId('demo-banner-subscribe-button');
