@@ -5,7 +5,7 @@ export default {
 
         if(await this.isSignedOut){
             return this.renderRedirect({
-                url: `/_actions/guest/sign_in?returnUrl=${encodeURIComponent(`/_actions/guest/saas_subscribe?tenantId=${tenantId}`)}`
+                url: `/_actions/guest/sign_in?returnUrl=${encodeURIComponent(`/_actions/admin/saas_subscribe?tenantId=${tenantId}`)}`
             });
         }
 

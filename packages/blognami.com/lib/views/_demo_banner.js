@@ -101,7 +101,7 @@ export default {
                         ${this.renderView('_button', {
                             tagName: 'a',
                             body: 'Sign up to keep your data',
-                            href: `/_actions/guest/saas_subscribe?tenantId=${tenantId}`,
+                            href: `/_actions/admin/saas_subscribe?tenantId=${tenantId}`,
                             target: '_overlay',
                             ['data-test-id']: 'demo-banner-subscribe-button',
                         })}
