@@ -96,13 +96,13 @@ export default {
             if (await this.database.newsletter.isSubscribed(user)) {
                 const isPaid = await this.database.newsletter.isSubscribed(user, { tier: 'paid' });
                 const confirmMessage = isPaid ? (
-                    `Are you sure you want to unsubscribe? You will lose access to members only content, and any remaining subscription time will be lost.`
+                    `Are you sure you want to cancel your subscription? You will lose access to members only content, and any remaining subscription time will be lost.`
                 ) : (
-                    `Are you sure you want to unsubscribe? You will lose access to members only content.`
+                    `Are you sure you want to cancel your subscription? You will lose access to members only content.`
                 );
 
                 this.addMenuItem('user', user.name, {
-                    label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`,
+                    label: `Cancel newsletter subscription (${isPaid ? 'paid' : 'free'})`,
                     url: `/_actions/user/unsubscribe?subscribableId=${await this.database.newsletter.id}`,
                     target: '_overlay',
                     testId: 'unsubscribe',
