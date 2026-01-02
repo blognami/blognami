@@ -17,7 +17,10 @@ export default {
         });
 
         this.addHook('afterUnsubscribe', async function(){
-            await this.update({ subscriptionTier: 'cancelled' });
+            await this.update({
+                subscriptionTier: 'demo',
+                subscriptionExpiresAt: new Date(Date.now() + this.demoSeconds)
+            });
         });
     },
 
