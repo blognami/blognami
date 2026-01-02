@@ -145,6 +145,7 @@ export default {
                 url: '/_actions/admin/saas_unsubscribe',
                 target: '_overlay',
                 testId: 'saas-unsubscribe',
+                displayOrder: 200,
                 dataConfirm: 'Are you sure you want to cancel your subscription? You will lose any remaining subscription time and your blog will revert to demo mode with 3 days until expiry.',
                 showIf: 'admin'
             });
