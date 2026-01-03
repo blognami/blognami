@@ -50,9 +50,24 @@ export default {
         const { tier } = subscription;
         if(tier == 'paid' && !force) {
             await stripe.cancelSubscription({ subscribableId: this.id, userId: user.id });
+            await this.waitForSubscriptionToBeDeleted(user.id);
         } else {
             await subscription.delete();
         }
         await this.runHook('afterUnsubscribe', { user, tier });
+    },
+
+    waitForSubscriptionToBeDeletedTimeout: 30000,
+
+    async waitForSubscriptionToBeDeleted(userId){
+        const timeout = Date.now() + this.waitForSubscriptionToBeDeletedTimeout;
+        while(Date.now() < timeout) {
+            const exists = await this.workspace.runInNewWorkspace(async _ => {
+                const subscribable = await _.database.subscribables.where({ id: this.id }).first();
+                return await subscribable.subscriptions.where({ userId }).first();
+            });
+            if(!exists) break;
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
     }
 }
