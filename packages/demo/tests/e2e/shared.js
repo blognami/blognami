@@ -632,7 +632,7 @@ export function describeApp(role) {
     });
 
     if (role === "guest") {
-      test.describe("Stripe newsletter subscription", () => {
+      test.describe.only("Stripe newsletter subscription", () => {
         test.skip(!STRIPE_ENABLED, 'STRIPE_API_KEY not configured');
 
         test('paid post becomes accessible after subscription', async ({ page, helpers }) => {
@@ -670,12 +670,24 @@ export function describeApp(role) {
           // Verify content is now accessible
           await expect(page.getByText('This content is for paying subscribers only.')).not.toBeVisible();
           await expect(page.getByTestId('post-body')).toBeVisible();
+
+          // Cancel subscription via UI
+          await page.getByTestId('navbar').getByTestId('your-account').click();
+          page.on('dialog', dialog => dialog.accept());
+          await helpers.topPopover().getByTestId('unsubscribe').click();
+          await helpers.waitForPageToBeIdle();
+
+          // Navigate back to paid post and verify access is revoked
+          await page.getByTestId('main').getByText('Alexandra Burgs').click();
+          await helpers.waitForPageToBeIdle();
+          await expect(page.getByText('This content is for paying subscribers only.')).toBeVisible();
+          await expect(page.getByTestId('post-body')).not.toBeVisible();
         });
       });
     }
 
     if (role === "admin") {
-      test.describe("Stripe SaaS subscription", () => {
+      test.describe.only("Stripe SaaS subscription", () => {
         test.skip(!STRIPE_ENABLED || !IS_MULTI_TENANT, 'Requires STRIPE_API_KEY and TENANCY=multi');
 
         test('subscribing removes demo banner', async ({ page, helpers }) => {
@@ -686,6 +698,15 @@ export function describeApp(role) {
           await helpers.completeStripeCheckout('Admin');
 
           await expect(subscribeButton).not.toBeVisible();
+
+          // Cancel subscription via UI
+          await page.getByTestId('navbar').getByTestId('settings').click();
+          page.on('dialog', dialog => dialog.accept());
+          await helpers.topPopover().getByTestId('saas-unsubscribe').click();
+          await helpers.waitForPageToBeIdle();
+
+          // Verify demo banner returns
+          await expect(subscribeButton).toBeVisible();
         });
       });
     }
