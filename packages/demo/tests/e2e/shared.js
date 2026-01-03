@@ -673,7 +673,6 @@ export function describeApp(role) {
 
           // Cancel subscription via UI
           await page.getByTestId('navbar').getByTestId('your-account').click();
-          page.on('dialog', dialog => dialog.accept());
           await helpers.topPopover().getByTestId('unsubscribe').click();
           await helpers.waitForPageToBeIdle();
 
@@ -701,7 +700,7 @@ export function describeApp(role) {
 
           // Cancel subscription via UI
           await page.getByTestId('navbar').getByTestId('settings').click();
-          page.on('dialog', dialog => dialog.accept());
+          await helpers.waitForPageToBeIdle();
           await helpers.topPopover().getByTestId('saas-unsubscribe').click();
           await helpers.waitForPageToBeIdle();
 
