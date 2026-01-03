@@ -10,18 +10,19 @@ export default {
 
     async subscribe(user, options = {}){
         const { tier = 'free' } = options;
+        await this.database.lock(async () => {
+            const subscription = await this.database.subscriptions.where({ userId: user.id, subscribableId: this.id }).first();
 
-        const subscription = await this.database.subscriptions.where({ userId: user.id, subscribableId: this.id }).first();
-
-        if(subscription) {
-            await subscription.update({ tier });
-            return;
-        }
-        
-        await this.database.subscriptions.insert({
-            subscribableId: this.id,
-            userId: user.id,
-            tier
+            if(subscription) {
+                await subscription.update({ tier });
+                return;
+            }
+            
+            await this.database.subscriptions.insert({
+                subscribableId: this.id,
+                userId: user.id,
+                tier
+            });
         });
 
         await this.runHook('afterSubscribe', { user, tier });
