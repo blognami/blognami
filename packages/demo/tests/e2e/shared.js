@@ -632,7 +632,7 @@ export function describeApp(role) {
     });
 
     if (role === "guest") {
-      test.describe.only("Stripe newsletter subscription", () => {
+      test.describe("Stripe newsletter subscription", () => {
         test.skip(!STRIPE_ENABLED, 'STRIPE_API_KEY not configured');
 
         test('paid post becomes accessible after subscription', async ({ page, helpers }) => {
@@ -687,7 +687,7 @@ export function describeApp(role) {
     }
 
     if (role === "admin") {
-      test.describe.only("Stripe SaaS subscription", () => {
+      test.describe("Stripe SaaS subscription", () => {
         test.skip(!STRIPE_ENABLED || !IS_MULTI_TENANT, 'Requires STRIPE_API_KEY and TENANCY=multi');
 
         test('subscribing removes demo banner', async ({ page, helpers }) => {
