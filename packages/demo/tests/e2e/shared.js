@@ -632,7 +632,7 @@ export function describeApp(role) {
     });
 
     if (role === "guest") {
-      test.describe.only("Stripe newsletter subscription", () => {
+      test.describe("Stripe newsletter subscription", () => {
         test.skip(!STRIPE_ENABLED, 'STRIPE_API_KEY not configured');
 
         test('paid post becomes accessible after subscription', async ({ page, helpers }) => {
@@ -672,9 +672,9 @@ export function describeApp(role) {
           await expect(page.getByTestId('post-body')).toBeVisible();
 
           // Cancel subscription via UI
+          page.on('dialog', dialog => dialog.accept());
           await page.getByTestId('navbar').getByTestId('your-account').click();
           await helpers.waitForPageToBeIdle();
-          page.on('dialog', dialog => dialog.accept());
           await helpers.topPopover().getByTestId('unsubscribe').click();
           await helpers.waitForPageToBeIdle();
 
