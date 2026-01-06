@@ -78,25 +78,22 @@ const SubscribableHandler = {
   },
 
   async getStripeProduct() {
-    const { id } = this.subscribable;
+    let stripeProductId = await this.subscribable.stripeProductId;
 
-    const { data: stripeProducts } = await this.stripe.api.products.search({
-      query: `metadata['pinstripeSubscribableId']:'${id}' AND active:'true'`,
-    });
-
-    let out = stripeProducts[0];
-
-    if (!out) {
-      out = await this.stripe.api.products.create({
-        name: this.subscribable.subscriptionConfig.name,
-        metadata: {
-          pinstripeSubscribableId: id,
-          blognamiEnvironment: process.env.NODE_ENV,
-        },
-      });
+    if (stripeProductId) {
+      return await this.stripe.api.products.retrieve(stripeProductId);
     }
 
-    return out;
+    const stripeProduct = await this.stripe.api.products.create({
+      name: this.subscribable.subscriptionConfig.name,
+      metadata: {
+        blognamiEnvironment: process.env.NODE_ENV,
+      },
+    });
+
+    await this.subscribable.update({ stripeProductId: stripeProduct.id });
+
+    return stripeProduct;
   },
 
   async getStripePrices() {
@@ -213,20 +210,23 @@ const SubscribableHandler = {
   },
 
   async getStripeCustomer({ userId, email }) {
-    const {
-      data: [stripeCustomer],
-    } = await this.stripe.api.customers.search({
-      query: `metadata['blognamiUserId']:'${userId}'`,
-    });
-    if (stripeCustomer) return stripeCustomer;
+    const user = await this.stripe.database.users.where({ id: userId }).first();
+    if (!user) return;
 
-    if (email)
-      return await this.stripe.api.customers.create({
+    if (user.stripeCustomerId) {
+      return await this.stripe.api.customers.retrieve(user.stripeCustomerId);
+    }
+
+    if (email) {
+      const stripeCustomer = await this.stripe.api.customers.create({
         email,
         metadata: {
           blognamiUserId: userId,
         },
       });
+      await user.update({ stripeCustomerId: stripeCustomer.id });
+      return stripeCustomer;
+    }
   },
 
   async createCheckoutSession({

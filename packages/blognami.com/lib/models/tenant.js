@@ -17,7 +17,10 @@ export default {
         });
 
         this.addHook('afterUnsubscribe', async function(){
-            await this.update({ subscriptionTier: 'cancelled' });
+            await this.update({
+                subscriptionTier: 'demo',
+                subscriptionExpiresAt: new Date(Date.now() + this.demoSeconds)
+            });
         });
     },
 
@@ -30,5 +33,9 @@ export default {
             monthlyPrice: 15,
             monthlyFeatures: ['Unlimited blog posts', 'Custom domain support', 'Premium support']
         };
+    },
+
+    get stripeProductId(){
+        return this.workspace.config.stripe.productId;
     }
 };

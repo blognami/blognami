@@ -670,6 +670,19 @@ export function describeApp(role) {
           // Verify content is now accessible
           await expect(page.getByText('This content is for paying subscribers only.')).not.toBeVisible();
           await expect(page.getByTestId('post-body')).toBeVisible();
+
+          // Cancel subscription via UI
+          page.on('dialog', dialog => dialog.accept());
+          await page.getByTestId('navbar').getByTestId('your-account').click();
+          await helpers.waitForPageToBeIdle();
+          await helpers.topPopover().getByTestId('unsubscribe').click();
+          await helpers.waitForPageToBeIdle();
+
+          // Navigate back to paid post and verify access is revoked
+          await page.getByTestId('main').getByText('Alexandra Burgs').click();
+          await helpers.waitForPageToBeIdle();
+          await expect(page.getByText('This content is for paying subscribers only.')).toBeVisible();
+          await expect(page.getByTestId('post-body')).not.toBeVisible();
         });
       });
     }
@@ -686,6 +699,16 @@ export function describeApp(role) {
           await helpers.completeStripeCheckout('Admin');
 
           await expect(subscribeButton).not.toBeVisible();
+
+          // Cancel subscription via UI
+          await page.getByTestId('navbar').getByTestId('settings').click();
+          await helpers.waitForPageToBeIdle();
+          page.on('dialog', dialog => dialog.accept());
+          await helpers.topPopover().getByTestId('saas-unsubscribe').click();
+          await helpers.waitForPageToBeIdle();
+
+          // Verify demo banner returns
+          await expect(subscribeButton).toBeVisible();
         });
       });
     }

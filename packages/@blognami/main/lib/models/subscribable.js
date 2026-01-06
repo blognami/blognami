@@ -10,18 +10,19 @@ export default {
 
     async subscribe(user, options = {}){
         const { tier = 'free' } = options;
+        await this.database.lock(async () => {
+            const subscription = await this.database.subscriptions.where({ userId: user.id, subscribableId: this.id }).first();
 
-        const subscription = await this.database.subscriptions.where({ userId: user.id, subscribableId: this.id }).first();
-
-        if(subscription) {
-            await subscription.update({ tier });
-            return;
-        }
-        
-        await this.database.subscriptions.insert({
-            subscribableId: this.id,
-            userId: user.id,
-            tier
+            if(subscription) {
+                await subscription.update({ tier });
+                return;
+            }
+            
+            await this.database.subscriptions.insert({
+                subscribableId: this.id,
+                userId: user.id,
+                tier
+            });
         });
 
         await this.runHook('afterSubscribe', { user, tier });
@@ -50,9 +51,24 @@ export default {
         const { tier } = subscription;
         if(tier == 'paid' && !force) {
             await stripe.cancelSubscription({ subscribableId: this.id, userId: user.id });
+            await this.waitForSubscriptionToBeDeleted(user.id);
         } else {
             await subscription.delete();
         }
         await this.runHook('afterUnsubscribe', { user, tier });
+    },
+
+    waitForSubscriptionToBeDeletedTimeout: 30000,
+
+    async waitForSubscriptionToBeDeleted(userId){
+        const timeout = Date.now() + this.waitForSubscriptionToBeDeletedTimeout;
+        while(Date.now() < timeout) {
+            const exists = await this.workspace.runInNewWorkspace(async _ => {
+                const subscribable = await _.database.subscribables.where({ id: this.id }).first();
+                return await subscribable.subscriptions.where({ userId }).first();
+            });
+            if(!exists) break;
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
     }
 }

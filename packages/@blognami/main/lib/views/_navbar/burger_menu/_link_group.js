@@ -84,11 +84,12 @@ export default {
                         <li class="${this.cssClasses.item}">
                             ${() => {
                                 if (url) {
-                                    return this.renderHtml`<a href="${url}" class="${this.cssClasses.link}" target="${target}">${label}</a>`;
+                                    const { dataConfirm } = link;
+                                    return this.renderHtml`<a href="${url}" class="${this.cssClasses.link}" target="${target}" data-confirm="${dataConfirm || null}">${label}</a>`;
                                 }
                                 return this.renderHtml`<span class="${this.cssClasses.link}">${label}</span>`;
                             }}
-                            ${link.children && link.children.length > 0 
+                            ${link.children && link.children.length > 0
                                 ? this.renderView('_navbar/burger_menu/_link_group', link)
                                 : ''
                             }
