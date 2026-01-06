@@ -7,6 +7,7 @@ export default {
             await newsletter.addColumn('yearlyPrice', 'decimal');
             await newsletter.addColumn('currency', 'string', { default: 'USD' });
             await newsletter.addColumn('enableFree', 'boolean', { default: true });
+            await newsletter.addColumn('stripeProductId', 'string');
         });
     }
 };

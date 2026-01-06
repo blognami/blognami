@@ -14,6 +14,7 @@ export default {
             await users.addColumn('emailNotificationFrequency', 'string', { default: 'asap' });
             await users.addColumn('emailNotificationLastSentAt', 'datetime');
             await users.addColumn('emailNotificationScheduledAt', 'datetime');
+            await users.addColumn('stripeCustomerId', 'string');
         });
 
         await this.database.table('sessions', async sessions => {

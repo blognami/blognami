@@ -96,13 +96,13 @@ export default {
             if (await this.database.newsletter.isSubscribed(user)) {
                 const isPaid = await this.database.newsletter.isSubscribed(user, { tier: 'paid' });
                 const confirmMessage = isPaid ? (
-                    `Are you sure you want to unsubscribe? You will lose access to members only content, and any remaining subscription time will be lost.`
+                    `Are you sure you want to cancel your subscription? You will lose access to members only content, and any remaining subscription time will be lost.`
                 ) : (
-                    `Are you sure you want to unsubscribe? You will lose access to members only content.`
+                    `Are you sure you want to cancel your subscription? You will lose access to members only content.`
                 );
 
                 this.addMenuItem('user', user.name, {
-                    label: `Unsubscribe (from ${isPaid ? 'paid' : 'free'} membership)`,
+                    label: `Cancel newsletter subscription (${isPaid ? 'paid' : 'free'})`,
                     url: `/_actions/user/unsubscribe?subscribableId=${await this.database.newsletter.id}`,
                     target: '_overlay',
                     testId: 'unsubscribe',
@@ -136,6 +136,20 @@ export default {
             testId: 'edit-site-membership',
             showIf: 'admin'
         });
+
+        // SaaS Unsubscribe (only show for paid subscribers)
+        const tenant = await this.database.tenant;
+        if(tenant?.subscriptionTier === 'paid'){
+            this.addMenuItem('user', 'Settings', {
+                label: 'Cancel Blognami subscription',
+                url: '/_actions/admin/saas_unsubscribe',
+                target: '_overlay',
+                testId: 'saas-unsubscribe',
+                displayOrder: 200,
+                dataConfirm: 'Are you sure you want to cancel your subscription? You will lose any remaining subscription time and your blog will revert to demo mode with 3 days until expiry.',
+                showIf: 'admin'
+            });
+        }
 
         // Legal footer menu items
         this.addMenuItem('legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });

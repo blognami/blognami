@@ -16,5 +16,9 @@ export default {
         if(url.port == '3001') return 'portal';
         if(this.initialParams._headers.host == 'example.com') return;
         return this.initialParams._headers['x-tenant'] || 'lorum-ipsum';
+    },
+
+    stripe: {
+        productId: 'prod_TjS2bQ7tQwQbLi'
     }
 };

@@ -6,6 +6,7 @@ videos/
 screenshots/
 downloads/
 packages/*test
+test-results/
 
 *.db
 *.db-journal
