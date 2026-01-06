@@ -6,7 +6,7 @@ import { Table } from "./table.js";
 import { TableReference } from './table_reference.js';
 import { defer } from '@pinstripe/utils';
 import { inflector } from '@pinstripe/utils';
-import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP } from './constants.js';
+import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP, KEY_TYPES } from './constants.js';
 
 export const Row = Model.extend().include({
     meta(){
@@ -152,11 +152,11 @@ export const Row = Model.extend().include({
                         if(name == 'id') return;
                         this.database.client.adapt({
                             mysql(){
-                                if(name.match(/(^id|Id)$/)){
+                                if(KEY_TYPES.includes(columns[name])){
                                     query.push(i > 0 ? ', ? = uuid_to_bin(?)' : '? = uuid_to_bin(?)', tableReference.createColumnReference(name), modifiedFields[name]);
                                 } else {
                                     query.push(i > 0 ? ', ? = ?' : '? = ?', tableReference.createColumnReference(name), modifiedFields[name]);
-                                } 
+                                }
                             },
 
                             sqlite(){
@@ -188,7 +188,7 @@ export const Row = Model.extend().include({
                     });
                     query.push(') values(');
                     Object.keys(modifiedFields).forEach((name, i) => {
-                        if(name.match(/(^id|Id)$/)){
+                        if(KEY_TYPES.includes(columns[name])){
                             this.database.client.adapt({
                                 mysql(){
                                     query.push(i > 0 ? ', uuid_to_bin(?)' : 'uuid_to_bin(?)', modifiedFields[name]);

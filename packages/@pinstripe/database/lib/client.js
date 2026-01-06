@@ -4,8 +4,6 @@ import { existsSync, unlinkSync } from 'fs';
 
 import { Class, AsyncLock } from '@pinstripe/utils';
 
-import { MYSQL_COLUMN_TYPE_TO_TYPE_MAP, SQLITE_COLUMN_TYPE_TO_TYPE_MAP } from './constants.js';
-
 const lockAsyncLock = AsyncLock.new();
 const transactionAsyncLock = AsyncLock.new();
 
@@ -188,60 +186,71 @@ export const Client = Class.extend().include({
     async extractSchema(){
         const out = {};
 
+        // Create columnTypes table if it doesn't exist using low-level SQL
+        await this.adapt(this, {
+            async mysql(){
+                await this.run(`
+                    create table if not exists \`columnTypes\` (
+                        _id int(11) unsigned auto_increment primary key,
+                        id binary(16) not null,
+                        tableName varchar(255) not null,
+                        columnName varchar(255) not null,
+                        columnType varchar(255) not null,
+                        index(id),
+                        index(tableName)
+                    )
+                `);
+            },
+            async sqlite(){
+                await this.run(`
+                    create table if not exists \`columnTypes\` (
+                        _id integer primary key autoincrement,
+                        id varchar not null,
+                        tableName varchar not null,
+                        columnName varchar not null,
+                        columnType varchar not null
+                    )
+                `);
+                await this.run(`create index if not exists index__columnTypes__id on \`columnTypes\` (id)`);
+                await this.run(`create index if not exists index__columnTypes__tableName on \`columnTypes\` (tableName)`);
+            }
+        });
+
+        // Get all table names
         const tableNames = await this.adapt(this, {
             async mysql(){
                 const rows = await this.run('show tables');
                 return rows.map(row => Object.values(row)[0]);
             },
-
             async sqlite(){
                 const rows = await this.run(`select name from sqlite_schema where type ='table' and name not like 'sqlite_%'`);
                 return rows.map(({ name }) => name);
             }
         });
-    
-        while(tableNames.length){
-            const tableName = tableNames.shift();
-            const columns = await this.adapt(this, {
-                async mysql(){
-                    const out = {};
-                    const rows = await this.run(`describe \`${tableName}\``);
-                    rows.forEach(row => {
-                        const name = row['Field'];
-                        let type;
-                        if(name == '_id'){
-                            type = 'primary_key';
-                        } else if(name == 'id'){
-                            type = 'alternate_key';
-                        } else {
-                            type = MYSQL_COLUMN_TYPE_TO_TYPE_MAP[row['Type']] || 'string';
-                        }
-                        
-                        out[name] = type;
-                    });
-                    return out;
-                },
 
-                async sqlite(){
-                    const out = {};
-                    const rows = await this.run(`pragma table_info(\`${tableName}\`)`);
-                    rows.forEach(row => {
-                        const { name } = row;
-                        let type;
-                        if(name == '_id'){
-                            type = 'primary_key';
-                        } else if(name == 'id'){
-                            type = 'alternate_key';
-                        } else if(name.match(/.+Id$/)){
-                            type = 'foreign_key';
-                        } else {
-                            type = SQLITE_COLUMN_TYPE_TO_TYPE_MAP[row.type] || 'string';
-                        }
-                        out[name] = type;
-                    });
-                    return out;
+        // Get all column types from columnTypes table
+        const columnTypeRows = await this.run('select tableName, columnName, columnType from `columnTypes`');
+
+        // Build schema for each table
+        for (const tableName of tableNames) {
+            const columns = {
+                _id: 'primary_key',
+                id: 'alternate_key'
+            };
+
+            // Special handling for columnTypes table - its columns are created directly via SQL
+            if (tableName === 'columnTypes') {
+                columns.tableName = 'string';
+                columns.columnName = 'string';
+                columns.columnType = 'string';
+            } else {
+                for (const row of columnTypeRows) {
+                    if (row.tableName === tableName) {
+                        columns[row.columnName] = row.columnType;
+                    }
                 }
-            });
+            }
+
             out[tableName] = columns;
         }
 

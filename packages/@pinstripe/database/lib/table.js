@@ -10,7 +10,8 @@ import {
     SQLITE_COMPARISON_OPERATORS,
     MYSQL_KEY_COMPARISON_OPERATORS,
     TYPE_TO_DEFAULT_VALUE_MAP,
-    COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP
+    COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP,
+    KEY_TYPES
 } from './constants.js';
 import { Union } from "./union.js";
 
@@ -52,12 +53,12 @@ export const Table = Class.extend().include({
                                             this.database.client.adapt(this, {
                                                 mysql(){
                                                     let operator = MYSQL_COMPARISON_OPERATORS[suffix];
-                                                    if(name.match(/(^id|Id$)/)){
+                                                    if(KEY_TYPES.includes(columns[name])){
                                                         operator = MYSQL_KEY_COMPARISON_OPERATORS[suffix] || operator;
                                                     }
                                                     query.push(operator, this.tableReference.createColumnReference(name), value);
                                                 },
-            
+
                                                 sqlite(){
                                                     query.push(SQLITE_COMPARISON_OPERATORS[suffix], this.tableReference.createColumnReference(name), value);
                                                 }
@@ -204,14 +205,14 @@ export const Table = Class.extend().include({
                     this.database.client.adapt(this, {
                         mysql(){
                             out.push(
-                                columnName.match(/(^id|Id)$/) ? `, bin_to_uuid(?) as \`${columnName}\`` : `, ? as \`${columnName}\``,
+                                KEY_TYPES.includes(this.constructor.columns[columnName]) ? `, bin_to_uuid(?) as \`${columnName}\`` : `, ? as \`${columnName}\``,
                                 this.tableReference.createColumnReference(columnName)
                             );
                         },
 
                         sqlite(){
                             out.push(
-                                columnName.match(/(^id|Id)$/) ? `, ? as \`${columnName}\`` : `, ? as \`${columnName}\``,
+                                `, ? as \`${columnName}\``,
                                 this.tableReference.createColumnReference(columnName)
                             );
                         }
@@ -393,6 +394,9 @@ export const Table = Class.extend().include({
             });
         }
 
+        await this.database.columnTypes.where({ tableName: this.constructor.name, columnName: name }).delete();
+        await this.database.columnTypes.insert({ tableName: this.constructor.name, columnName: name, columnType: type });
+
         await this.database.reset();
     },
 
@@ -409,6 +413,7 @@ export const Table = Class.extend().include({
                 ]);
             }
         });
+        await this.database.columnTypes.where({ tableName: this.constructor.name, columnName: name }).delete();
         await this.database.reset();
     },
 

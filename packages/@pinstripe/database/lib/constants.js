@@ -15,14 +15,6 @@ export const TYPE_TO_MYSQL_COLUMN_TYPE_MAP = {
     text: "longtext",
 };
 
-export const MYSQL_COLUMN_TYPE_TO_TYPE_MAP = (() => {
-    const out = {};
-    Object.keys(TYPE_TO_MYSQL_COLUMN_TYPE_MAP).forEach(
-        key => out[TYPE_TO_MYSQL_COLUMN_TYPE_MAP[key]] = key
-    );
-    return out;
-})();
-
 export const TYPE_TO_SQLITE_COLUMN_TYPE_MAP = {
     primary_key: "integer",
     alternate_key: "varchar",
@@ -37,14 +29,6 @@ export const TYPE_TO_SQLITE_COLUMN_TYPE_MAP = {
     string: "varchar",
     text: "text",
 };
-
-export const SQLITE_COLUMN_TYPE_TO_TYPE_MAP = (() => {
-    const out = {};
-    Object.keys(TYPE_TO_SQLITE_COLUMN_TYPE_MAP).forEach(
-        key => out[TYPE_TO_SQLITE_COLUMN_TYPE_MAP[key]] = key
-    );
-    return out;
-})();
 
 export const MYSQL_COMPARISON_OPERATORS = {
     '': '? = ?',
@@ -74,6 +58,8 @@ export const MYSQL_KEY_COMPARISON_OPERATORS = {
     '': '? = uuid_to_bin(?)',
     Ne: '? != uuid_to_bin(?)'
 };
+
+export const KEY_TYPES = ['alternate_key', 'foreign_key'];
 
 export const TYPE_TO_DEFAULT_VALUE_MAP = {
     boolean: false,

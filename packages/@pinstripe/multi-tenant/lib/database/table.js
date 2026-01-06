@@ -11,6 +11,7 @@ Table.include({
                 await create.call(this, ...args);
                 if(this.constructor.name == 'appliedMigrations') return;
                 if(this.constructor.name == 'tenants') return;
+                if(this.constructor.name == 'columnTypes') return;
                 await this.addColumn('tenantId', 'foreign_key');
             },
             
