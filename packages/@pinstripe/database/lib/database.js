@@ -96,6 +96,18 @@ export const Database = Class.extend().include({
             }
         });
     },
+
+    async ping(){
+        await this.client.adapt(this, {
+            async mysql(){
+                await this.run('select 1');
+            },
+
+            async sqlite(){
+                await this.run('select 1');
+            }
+        });
+    },
     
     get info(){
         const out = {};
