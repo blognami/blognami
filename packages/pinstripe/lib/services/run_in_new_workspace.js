@@ -1,14 +1,18 @@
 
 import { Workspace } from '../workspace.js';
 
-const runInNewWorkspace = fn => Workspace.run(fn);
-
 export default {
     meta(){
         this.addToClient();
     },
-    
+
     create(){
-        return runInNewWorkspace;
+        return fn => {
+            const { initialParams } = this;
+            return Workspace.run(function(){
+                Object.assign(this.initialParams, initialParams);
+                return fn.call(this, this);
+            });
+        };
     }
 };
