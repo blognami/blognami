@@ -122,5 +122,5 @@ pinstripe start-server --without-bot
 - **`generate-project`** - Create new Pinstripe projects that can be served
 - **`initialize-database`** - Set up database before starting server
 - **`start-repl`** - Interactive development environment
-- **`run-background-job`** - Manually execute background jobs
+- **`queue-background-job`** - Manually execute background jobs
 - **`generate-static-site`** - Generate static files from server routes

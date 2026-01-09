@@ -99,6 +99,6 @@ this.schedule('0 0 1 * *');
 ## Related Commands
 
 - **`list-background-jobs`** - List all available background jobs in the project
-- **`run-background-job`** - Execute a specific background job by name
+- **`queue-background-job`** - Execute a specific background job by name
 - **`generate-service`** - Create business logic services that jobs can use
 - **`generate-command`** - Create CLI commands for manual job execution

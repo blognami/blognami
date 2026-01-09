@@ -12,7 +12,6 @@ Cron-based background job scheduler.
 this.bot.start()              // Start scheduler loop
 this.bot.stop()               // Stop scheduler gracefully
 this.bot.destroy()            // Alias for stop()
-this.bot.runBackgroundJobs(unixTime)  // Run jobs for timestamp
 ```
 
 ## Description
@@ -86,7 +85,7 @@ Common patterns:
 ```bash
 npx pinstripe start-server              # With bot (default)
 npx pinstripe start-server --without-bot  # Without bot
-npx pinstripe run-background-job --name cleanup  # Run manually
+npx pinstripe queue-background-job --name cleanup  # Queue manually
 ```
 
 ## Notes

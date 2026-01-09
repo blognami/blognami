@@ -86,7 +86,7 @@ pinstripe > await db.posts.orderBy('created_at', 'desc').limit(10).all()
 ### Service Testing
 ```javascript
 // Test service functionality
-pinstripe > await runBackgroundJob('maintenance')
+pinstripe > await queueBackgroundJob('maintenance')
 pinstripe > const proj = await project
 pinstripe > proj.name
 ```

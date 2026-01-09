@@ -66,10 +66,10 @@ pinstripe > await environment
 'development'
 ```
 
-### Run Background Jobs
+### Queue Background Jobs
 
 ```javascript
-pinstripe > await runBackgroundJob('send-newsletter')
+pinstripe > await queueBackgroundJob('send-newsletter')
 ```
 
 ## Features

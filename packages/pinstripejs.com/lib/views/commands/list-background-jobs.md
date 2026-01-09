@@ -41,10 +41,10 @@ The following background jobs are available:
 - **Development workflow** - Quickly see what background jobs are available
 - **Debugging** - Verify that background jobs are properly registered
 - **Documentation** - Get an overview of automated tasks in the project
-- **Job execution** - Find job names for use with `run-background-job` command
+- **Job execution** - Find job names for use with `queue-background-job` command
 
 ## Related Commands
 
 - **`generate-background-job`** - Create new background jobs
-- **`run-background-job`** - Execute a specific background job
+- **`queue-background-job`** - Execute a specific background job
 - **`list-commands`** - List all available CLI commands
