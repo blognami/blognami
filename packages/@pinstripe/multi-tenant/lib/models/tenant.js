@@ -1,6 +1,6 @@
 
-import { Row, Database } from "@pinstripe/database";
-import { defer } from '@pinstripe/utils';
+import { Row } from "@pinstripe/database";
+import { Workspace } from 'pinstripe';
 
 export default {
     meta(){
@@ -13,11 +13,11 @@ export default {
         this.hasMany('tenants', { cascadeDelete: false });
     },
 
-    get scopedDatabase(){
-        return defer(async () => {
-            const out = await Database.new(this.database.client, this.database.context);
-            out.tenant = this;
-            return out;
+    runInNewWorkspace(fn){
+        const tenantId = this.id;
+        return Workspace.run(function(){
+            this.initialParams._headers['x-tenant-id'] = tenantId;
+            return fn.call(this, this);
         });
     }
 };

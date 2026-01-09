@@ -24,8 +24,8 @@ export default {
 
     // Store in portal database if multi-tenant
     if (isMultiTenant) {
-      await this.runInNewWorkspace(async function() {
-        await this.portalDatabase.stripe.update({ secretKey, webhookSecret });
+      await this.runInNewPortalWorkspace(async function() {
+        await this.database.stripe.update({ secretKey, webhookSecret });
       });
     }
 
