@@ -42,27 +42,18 @@ if(process.env.TENANCY === 'multi'){
         await expectItemCollectionCountsToBeCorrect(database);
     }));
 
-    test(`runInNewWorkspace should preserve tenant context`, () => Workspace.run(async _ => {
-        // Get portal tenant ID using unscoped database
-        const portalTenant = await _.database.withoutTenantScope.tenants.where({ name: 'portal' }).first();
-        assert.equal(typeof portalTenant, 'object');
+    test(`runInNewWorkspace should preserve tenant context`, () => Workspace.run(async function() {
+        const lorumIpsumTenantId = await this.database.tenant.id;
 
-        // Create a workspace with portal tenant and test runInNewWorkspace from there
-        const tenantIdFromNewWorkspace = await _.runInNewWorkspace(async _ => {
-            // Set portal tenant before first database access
-            _.initialParams._headers['x-tenant-id'] = portalTenant.id;
+        await this.runInNewPortalWorkspace(async function(){
+            const portalTenantId = await this.database.tenant.id;
 
-            const tenant = await _.database.tenant;
-            assert.equal(tenant.id, portalTenant.id, 'Parent workspace should have portal tenant');
+            assert.notEqual(lorumIpsumTenantId, portalTenantId);
 
-            // Now call runInNewWorkspace - this should preserve portal tenant
-            return _.runInNewWorkspace(async _ => {
-                const tenant = await _.database.tenant;
-                return tenant?.id;
+            await this.runInNewWorkspace(async function() {
+                assert.equal(await this.database.tenant.id, portalTenantId, `The child workspace should have inherited it's parent's tenant`);
             });
         });
-
-        assert.equal(tenantIdFromNewWorkspace, portalTenant.id, 'Child workspace should preserve portal tenant');
     }));
 
     async function expectItemCollectionCountsToBeCorrect(item, expectedCounts = {}){
