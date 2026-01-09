@@ -11,7 +11,7 @@
     "clean": "rm -rf ./node_modules",
     "start": "TENANCY=${TENANCY:-multi} pinstripe start-server --host 127.0.0.1:3000 127.0.0.1:3001",
     "test:models": "cd tests/models && NODE_ENV=test TENANCY=${TENANCY:-multi} SKIP_FIXTURES=true node --test --test-concurrency 1",
-    "test:e2e": "NODE_ENV=test TENANCY=${TENANCY:-multi} start-server-and-test 'pinstripe reset-database-and-dump-sql && npm run start -- --without-bot' http://127.0.0.1:3000 'npm run playwright:run'",
+    "test:e2e": "NODE_ENV=test TENANCY=${TENANCY:-multi} start-server-and-test 'pinstripe reset-database-and-dump-sql && npm run start -- --without-background-jobs' http://127.0.0.1:3000 'npm run playwright:run'",
     "test:services": "cd tests/services && node --test",
     "test:cli": "cd tests/cli && node --test --test-concurrency 1",
     "playwright:run": "playwright test",
