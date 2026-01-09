@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "name": "@pinstripe/background-jobs",
+  "version": "0.35.0",
+  "license": "MIT",
+  "exports": { ".": "./lib/index.js" },
+  "dependencies": {
+    "pinstripe": "^0.35.0",
+    "@pinstripe/database": "^0.35.0"
+  }
+}
