@@ -114,5 +114,9 @@ export default {
                 await job.markPending();
             }
         }
+    },
+
+    destroy(){
+        return this.stop();
     }
 };
