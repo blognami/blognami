@@ -49,20 +49,25 @@ export default {
                 candidateName = `${nameBase}-${i}`;
                 i++;
             }
-            
-            const { scopedDatabase, id } = await this.database.tenants.insert({
+
+            const tenant = await this.database.tenants.insert({
                 name: candidateName
             });
 
-            await scopedDatabase.site.update({ title });
+            const userName = user.name;
+            const userEmail = user.email;
 
-            await scopedDatabase.users.insert({
-                name: user.name,
-                email: user.email,
-                role: 'admin',
+            await tenant.runInNewWorkspace(async function(){
+                await this.database.site.update({ title });
+
+                await this.database.users.insert({
+                    name: userName,
+                    email: userEmail,
+                    role: 'admin',
+                });
             });
 
-            const url = `/_actions/user/go_to_blog?id=${id}`;
+            const url = `/_actions/user/go_to_blog?id=${tenant.id}`;
 
             return this.renderHtml`
                 <script>

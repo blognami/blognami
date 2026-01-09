@@ -26,13 +26,16 @@ export default {
 
             // Store in portal database if multi-tenant
             if (isMultiTenant) {
-                await this.runInNewWorkspace(async function() {
-                    await this.portalDatabase.stripe.update({ secretKey, webhookSecret });
+                await this.runInNewPortalWorkspace(async function() {
+                    await this.database.stripe.update({ secretKey, webhookSecret });
                 });
             }
         }
 
-        // 3. Dump SQL (now includes Stripe config)
+        // 3. Close database connection before dumping (SQLite requires this)
+        await this.database.destroy();
+
+        // 4. Dump SQL (now includes Stripe config)
         if(adapter == 'mysql'){
             execSync(`mysqldump ${databaseConfig.database} -h 127.0.0.1 -u root > ${rootPath}/dump.sql`);
         } else {

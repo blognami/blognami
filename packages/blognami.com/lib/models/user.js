@@ -6,16 +6,19 @@ export default {
         return defer(async () => {
             const database = await this.database.withoutTenantScope;
             const portal = await database.tenants.where({ name: 'portal' }).first();
-            const portalDatabase = await portal.scopedDatabase;
-            let user = await portalDatabase.users.where({ email: this.email }).first();
-            if(!user){
-                user = await portalDatabase.users.insert({
-                    name: this.name,
-                    email: this.email,
-                    role: 'user'
-                });
-            }
-            return user;
+            const email = this.email;
+            const name = this.name;
+            return portal.runInNewWorkspace(async function(){
+                let user = await this.database.users.where({ email }).first();
+                if(!user){
+                    user = await this.database.users.insert({
+                        name,
+                        email,
+                        role: 'user'
+                    });
+                }
+                return user;
+            });
         });
     }
 };

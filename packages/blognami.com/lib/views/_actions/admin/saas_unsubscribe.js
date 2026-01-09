@@ -14,11 +14,22 @@ export default {
             return this.renderRedirect({ target: '_top' });
         }
 
-        const portalDatabase = await this.portalDatabase;
-        const portalUser = await user.portalUser;
-        const portalTenant = await portalDatabase.tenants.where({ id: tenant.id }).first();
+        const tenantId = tenant.id;
+        const userEmail = user.email;
+        const userName = user.name;
 
-        await portalTenant.unsubscribe(portalUser);
+        await this.runInNewPortalWorkspace(async function(){
+            let portalUser = await this.database.users.where({ email: userEmail }).first();
+            if(!portalUser){
+                portalUser = await this.database.users.insert({
+                    name: userName,
+                    email: userEmail,
+                    role: 'user'
+                });
+            }
+            const portalTenant = await this.database.tenants.where({ id: tenantId }).first();
+            await portalTenant.unsubscribe(portalUser);
+        });
 
         return this.renderRedirect({ target: '_top' });
     }

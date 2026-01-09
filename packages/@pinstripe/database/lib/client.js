@@ -142,17 +142,28 @@ export const Client = Class.extend().include({
     },
 
     async drop(){
-        await this.adapt(this, {
-            async mysql(){
-                await this.run(`drop database ${this.config.database}`);
-            },
+        const isSqlite = this.config.adapter === 'sqlite';
 
-            sqlite(){
-                if(!existsSync(this.config.filename)) return;
+        if(isSqlite){
+            // For SQLite, close connection BEFORE deleting file.
+            // Force close since file deletion invalidates all connections anyway.
+            const _connection = connection;
+            if(_connection){
+                connection = undefined;
+                connectionCounter = 0;
+                this.connected = false;
+                await new Promise((resolve, reject) => {
+                    _connection.close(error => error ? reject(error) : resolve());
+                });
+            }
+            if(existsSync(this.config.filename)){
                 unlinkSync(this.config.filename);
             }
-        });
-        await this.destroy();
+        } else {
+            // MySQL: drop database then cleanup connection
+            await this.run(`drop database ${this.config.database}`);
+            await this.destroy();
+        }
     },
 
     async destroy(){

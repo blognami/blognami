@@ -35,12 +35,23 @@ export default {
         const returnUrl = new URL('/', this.params._url);
         returnUrl.host = tenant.host;
 
-        const portalDatabase = await this.portalDatabase;
-        const portalUser = await user.portalUser;
-        const portalTenant = await portalDatabase.tenants.where({ id: tenantId }).first();
-        const paymentUrl = await portalTenant.createSubscribeUrl(portalUser, {
-            interval: 'monthly',
-            returnUrl: returnUrl.toString()
+        const userEmail = user.email;
+        const userName = user.name;
+
+        const paymentUrl = await this.runInNewPortalWorkspace(async function(){
+            let portalUser = await this.database.users.where({ email: userEmail }).first();
+            if(!portalUser){
+                portalUser = await this.database.users.insert({
+                    name: userName,
+                    email: userEmail,
+                    role: 'user'
+                });
+            }
+            const portalTenant = await this.database.tenants.where({ id: tenantId }).first();
+            return portalTenant.createSubscribeUrl(portalUser, {
+                interval: 'monthly',
+                returnUrl: returnUrl.toString()
+            });
         });
 
         if(!paymentUrl){

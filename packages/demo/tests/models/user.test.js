@@ -69,13 +69,15 @@ if(process.env.TENANCY === 'multi'){
 
         // Get the existing portal tenant (created by seed_database)
         const portal = await database.tenants.where({ name: 'portal' }).first();
-        const portalDatabase = await portal.scopedDatabase;
 
         // Create a user in portal database
-        const portalUser = await portalDatabase.users.insert({
-            name: 'Portal User',
-            email: 'testuser@example.com',
-            role: 'user'
+        const portalUserId = await portal.runInNewWorkspace(async function(){
+            const { id } = await this.database.users.insert({
+                name: 'Portal User',
+                email: 'testuser@example.com',
+                role: 'user'
+            });
+            return id;
         });
 
         // Create a different tenant and a user with the same email
@@ -84,18 +86,22 @@ if(process.env.TENANCY === 'multi'){
             host: 'tenant1.example.com'
         });
 
-        const tenantDatabase = await tenant.scopedDatabase;
-
-        const tenantUser = await tenantDatabase.users.insert({
-            name: 'Tenant User',
-            email: 'testuser@example.com',
-            role: 'admin'
+        const tenantUserId = await tenant.runInNewWorkspace(async function(){
+            const { id } = await this.database.users.insert({
+                name: 'Tenant User',
+                email: 'testuser@example.com',
+                role: 'admin'
+            });
+            return id;
         });
 
-        // portalUser should find the existing portal user
-        const foundPortalUser = await tenantUser.portalUser;
+        // Get a fresh reference to the tenant user from a new workspace
+        const foundPortalUser = await tenant.runInNewWorkspace(async function(){
+            const tenantUser = await this.database.users.where({ id: tenantUserId }).first();
+            return tenantUser.portalUser;
+        });
 
-        assert.equal(foundPortalUser.id, portalUser.id);
+        assert.equal(foundPortalUser.id, portalUserId);
         assert.equal(foundPortalUser.name, 'Portal User');
         assert.equal(foundPortalUser.email, 'testuser@example.com');
     }));
@@ -105,10 +111,11 @@ if(process.env.TENANCY === 'multi'){
 
         // Get the existing portal tenant
         const portal = await database.tenants.where({ name: 'portal' }).first();
-        const portalDatabase = await portal.scopedDatabase;
 
         // Count initial users (may have admin from seed)
-        const initialCount = await portalDatabase.users.count();
+        const initialCount = await portal.runInNewWorkspace(async function(){
+            return this.database.users.count();
+        });
 
         // Create a tenant and user with a unique email
         const tenant = await database.tenants.insert({
@@ -116,18 +123,26 @@ if(process.env.TENANCY === 'multi'){
             host: 'tenant1.example.com'
         });
 
-        const tenantDatabase = await tenant.scopedDatabase;
-
-        const tenantUser = await tenantDatabase.users.insert({
-            name: 'Tenant User',
-            email: 'newuser@example.com',
-            role: 'admin'
+        const tenantUserId = await tenant.runInNewWorkspace(async function(){
+            const { id } = await this.database.users.insert({
+                name: 'Tenant User',
+                email: 'newuser@example.com',
+                role: 'admin'
+            });
+            return id;
         });
 
         // portalUser should create a new user in portal database
-        const createdPortalUser = await tenantUser.portalUser;
+        const createdPortalUser = await tenant.runInNewWorkspace(async function(){
+            const tenantUser = await this.database.users.where({ id: tenantUserId }).first();
+            return tenantUser.portalUser;
+        });
 
-        assert.equal(await portalDatabase.users.count(), initialCount + 1);
+        const newCount = await portal.runInNewWorkspace(async function(){
+            return this.database.users.count();
+        });
+
+        assert.equal(newCount, initialCount + 1);
         assert.equal(createdPortalUser.name, 'Tenant User');
         assert.equal(createdPortalUser.email, 'newuser@example.com');
         assert.equal(createdPortalUser.role, 'user');
@@ -138,9 +153,10 @@ if(process.env.TENANCY === 'multi'){
 
         // Get the existing portal tenant
         const portal = await database.tenants.where({ name: 'portal' }).first();
-        const portalDatabase = await portal.scopedDatabase;
 
-        const initialCount = await portalDatabase.users.count();
+        const initialCount = await portal.runInNewWorkspace(async function(){
+            return this.database.users.count();
+        });
 
         // Create a tenant and user
         const tenant = await database.tenants.insert({
@@ -148,20 +164,49 @@ if(process.env.TENANCY === 'multi'){
             host: 'tenant1.example.com'
         });
 
-        const tenantDatabase = await tenant.scopedDatabase;
-
-        const tenantUser = await tenantDatabase.users.insert({
-            name: 'Tenant User',
-            email: 'user@example.com',
-            role: 'admin'
+        const tenantUserId = await tenant.runInNewWorkspace(async function(){
+            const { id } = await this.database.users.insert({
+                name: 'Tenant User',
+                email: 'user@example.com',
+                role: 'admin'
+            });
+            return id;
         });
 
-        // Multiple calls should return the same user
-        const portalUser1 = await tenantUser.portalUser;
-        const portalUser2 = await tenantUser.portalUser;
+        // Multiple calls should return the same user (test in a single workspace)
+        const { portalUser1Id, portalUser2Id } = await tenant.runInNewWorkspace(async function(){
+            const tenantUser = await this.database.users.where({ id: tenantUserId }).first();
+            const portalUser1 = await tenantUser.portalUser;
+            const portalUser2 = await tenantUser.portalUser;
+            return { portalUser1Id: portalUser1.id, portalUser2Id: portalUser2.id };
+        });
 
-        assert.equal(portalUser1.id, portalUser2.id);
+        assert.equal(portalUser1Id, portalUser2Id);
+
         // Should only create one new user
-        assert.equal(await portalDatabase.users.count(), initialCount + 1);
+        const newCount = await portal.runInNewWorkspace(async function(){
+            return this.database.users.count();
+        });
+        assert.equal(newCount, initialCount + 1);
+    }));
+
+    test(`tenant.runInNewWorkspace provides isolated context`, () => Workspace.run(async _ => {
+        const { withoutTenantScope: database } = _.database;
+
+        const [tenant1, tenant2] = await Promise.all([
+            database.tenants.insert({ name: 'tenant1', host: 'tenant1.example.com' }),
+            database.tenants.insert({ name: 'tenant2', host: 'tenant2.example.com' })
+        ]);
+
+        const db1TenantId = await tenant1.runInNewWorkspace(async function(){
+            return this.database.tenant?.id;
+        });
+
+        const db2TenantId = await tenant2.runInNewWorkspace(async function(){
+            return this.database.tenant?.id;
+        });
+
+        assert.equal(db1TenantId, tenant1.id);
+        assert.equal(db2TenantId, tenant2.id);
     }));
 }
