@@ -1,6 +1,7 @@
 
 import 'pinstripe';
 import '@pinstripe/database';
+import '@pinstripe/background-jobs';
 import '@blognami/main';
 
 import { importAll } from 'pinstripe';

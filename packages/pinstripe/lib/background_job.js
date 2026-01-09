@@ -28,12 +28,18 @@ export const BackgroundJob = Class.extend().include({
                 return this;
             },
 
-            async run(context, name){
+            async run(context, name, params = {}){
                 await context.fork().run(async context => {
-                    await this.create(name, context).run();
+                    const job = this.create(name, context);
+                    job._params = params;
+                    await job.run();
                 });
             },
         });
+    },
+
+    get params(){
+        return this._params || {};
     },
 
     run(){

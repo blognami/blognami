@@ -19,6 +19,7 @@
     "reset-database": "TENANCY=${TENANCY:-multi} pinstripe reset-database"
   },
   "dependencies": {
+    "@pinstripe/background-jobs": "^0.35.0",
     "pinstripe": "^0.35.0"
   },
   "devDependencies": {
