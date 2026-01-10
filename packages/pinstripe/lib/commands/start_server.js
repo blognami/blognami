@@ -35,6 +35,7 @@ export default {
         await new Promise((resolve) => {
             const shutdown = async () => {
                 await this.runHook('beforeServerStop');
+                await this.server.stop();
                 resolve();
             };
             process.on('SIGINT', shutdown);

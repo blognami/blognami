@@ -16,7 +16,9 @@ export default {
 
         const baseUrl = new URL(`http://${hostname}:${port}/`);
 
-        http.createServer(async (request, response) => {
+        if(!this._servers) this._servers = [];
+
+        const server = http.createServer(async (request, response) => {
             try {
                 const params = await this.extractParams(request, baseUrl, await this.config.server.limits);
 
@@ -46,9 +48,21 @@ export default {
                 response.end(error);
             }
             if(!isTest) console.log(`${request.method}: ${request.url} (${response.statusCode})`);
-        }).listen(port, hostname, () => {
+        });
+
+        server.listen(port, hostname, () => {
             if(!isTest) console.log(`Pinstripe running at "http://${hostname}:${port}/"`)
         });
+
+        this._servers.push(server);
+    },
+
+    async stop(){
+        if(!this._servers) return;
+        await Promise.all(this._servers.map(server =>
+            new Promise(resolve => server.close(resolve))
+        ));
+        this._servers = [];
     },
 
     async extractParams(request, baseUrl, limits){
