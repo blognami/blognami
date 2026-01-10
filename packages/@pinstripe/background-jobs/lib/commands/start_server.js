@@ -7,7 +7,12 @@ export default {
             description: 'Skip starting background job services.'
         });
 
+        this.addHook('beforeServerStart', 'migrateDatabase');
         this.addHook('afterServerStart', 'startBackgroundJobServices');
+    },
+
+    async migrateDatabase(){
+        await this.database.migrate();
     },
 
     async startBackgroundJobServices(){

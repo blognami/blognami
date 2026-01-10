@@ -43,8 +43,7 @@ export default {
 
         await this.database.lock(async () => {
             const currentLeader = await this.database.backgroundJobWorkers
-                .leader()
-                .alive()
+                .where({ leader: true, alive: true })
                 .first();
 
             if(!currentLeader){
@@ -61,12 +60,11 @@ export default {
 
     async cleanupDeadWorkers(){
         const deadWorkers = await this.database.backgroundJobWorkers
-            .active()
-            .dead()
+            .where({ active: true, dead: true })
             .all();
 
         for(const worker of deadWorkers){
-            const jobs = await worker.backgroundJobs.processing().all();
+            const jobs = await worker.backgroundJobs.where({ processing: true }).all();
             for(const job of jobs){
                 await job.release();
             }

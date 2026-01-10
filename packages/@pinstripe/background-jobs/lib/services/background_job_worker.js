@@ -35,8 +35,7 @@ export default {
         }
 
         await this.database.backgroundJobs
-            .where({ backgroundJobWorkerId: this.backgroundJobWorkerId })
-            .processing()
+            .where({ backgroundJobWorkerId: this.backgroundJobWorkerId, processing: true })
             .all()
             .then(jobs => Promise.all(jobs.map(job => job.release())));
 
@@ -80,7 +79,7 @@ export default {
 
         await this.database.lock(async () => {
             const job = await this.database.backgroundJobs
-                .ready()
+                .where({ ready: true })
                 .orderBy('priority', 'desc')
                 .orderBy('runAt', 'asc')
                 .first();

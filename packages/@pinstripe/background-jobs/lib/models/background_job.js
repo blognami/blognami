@@ -12,7 +12,7 @@ export default {
         });
 
         this.scope('ready', function(){
-            return this.pending().where({ runAtLte: new Date() });
+            this.where({ pending: true, runAtLe: new Date() });
         });
     },
 

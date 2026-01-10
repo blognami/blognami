@@ -9,12 +9,12 @@ export default {
 
         this.scope('alive', function(){
             const thirtySecondsAgo = new Date(Date.now() - 30000);
-            return this.where({ lastHeartbeatAtGt: thirtySecondsAgo });
+            this.where({ lastHeartbeatAtGt: thirtySecondsAgo });
         });
 
         this.scope('dead', function(){
             const thirtySecondsAgo = new Date(Date.now() - 30000);
-            return this.where({ lastHeartbeatAtLte: thirtySecondsAgo });
+            this.where({ lastHeartbeatAtLe: thirtySecondsAgo });
         });
 
         this.scope('leader', function(){
