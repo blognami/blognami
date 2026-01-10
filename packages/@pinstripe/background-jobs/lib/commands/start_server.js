@@ -9,6 +9,7 @@ export default {
 
         this.addHook('beforeServerStart', 'migrateDatabase');
         this.addHook('afterServerStart', 'startBackgroundJobServices');
+        this.addHook('beforeServerStop', 'stopBackgroundJobServices');
     },
 
     async migrateDatabase(){
@@ -21,5 +22,13 @@ export default {
 
         await this.backgroundJobWorker.start();
         await this.backgroundJobCoordinator.start(this.backgroundJobWorker.backgroundJobWorkerId);
+    },
+
+    async stopBackgroundJobServices(){
+        const { withoutBackgroundJobs } = this.params;
+        if(withoutBackgroundJobs) return;
+
+        await this.backgroundJobCoordinator.stop();
+        await this.backgroundJobWorker.stop();
     }
 };

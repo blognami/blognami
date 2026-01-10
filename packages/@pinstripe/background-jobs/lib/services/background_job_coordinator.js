@@ -6,7 +6,7 @@ import { BackgroundJob } from '../background_job.js';
 
 export default {
     create(){
-        return this;
+        return this.context.root.getOrCreate('backgroundJobCoordinator', () => this);
     },
 
     async start(backgroundJobWorkerId){

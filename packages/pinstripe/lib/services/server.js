@@ -6,7 +6,7 @@ import sharp from 'sharp';
 
 export default {
     create(){
-        return this;
+        return this.context.root.getOrCreate('server', () => this);
     },
 
     start(options = {}){

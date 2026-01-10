@@ -29,5 +29,16 @@ export default {
         }
 
         await this.runHook('afterServerStart');
+
+        // Keep the command running to prevent context destruction.
+        // This ensures the database connection stays alive for background services.
+        await new Promise((resolve) => {
+            const shutdown = async () => {
+                await this.runHook('beforeServerStop');
+                resolve();
+            };
+            process.on('SIGINT', shutdown);
+            process.on('SIGTERM', shutdown);
+        });
     }
 };
