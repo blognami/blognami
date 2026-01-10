@@ -68,7 +68,7 @@ export default {
                     await this.executeJob(job);
                 }
             } catch(e){
-                console.error('Background job worker error:', e);
+                await this.logger.backgroundJobs.error('Worker poll error', { error: e.message, stack: e.stack });
             }
             await new Promise(resolve => setTimeout(resolve, 1000));
         }
@@ -104,7 +104,13 @@ export default {
 
             await job.delete();
         } catch(e){
-            console.error(`Background job "${job.jobName}" failed:`, e);
+            await this.logger.backgroundJobs.error('Job execution failed', {
+                jobName: job.jobName,
+                error: e.message,
+                stack: e.stack,
+                attempts: job.attempts + 1,
+                maxAttempts: job.maxAttempts
+            });
 
             if(job.attempts + 1 >= job.maxAttempts){
                 await job.update({ lastError: e.message || String(e) });

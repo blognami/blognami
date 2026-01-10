@@ -9,10 +9,11 @@ export default {
         return this.context.root.getOrCreate('server', () => this);
     },
 
-    start(options = {}){
+    async start(options = {}){
         const {  hostname = '127.0.0.1', port = 3000 } = options;
 
         const isTest = process.env.NODE_ENV == 'test';
+        const logger = await this.logger;
 
         const baseUrl = new URL(`http://${hostname}:${port}/`);
 
@@ -44,14 +45,14 @@ export default {
                 response.statusCode = 500;
                 response.setHeader('content-type', 'text/plain');
                 const error = (e.stack || e).toString();
-                console.error(error);
+                logger.http.error('Request error', { method: request.method, url: request.url, error });
                 response.end(error);
             }
-            if(!isTest) console.log(`${request.method}: ${request.url} (${response.statusCode})`);
+            logger.http.debug('Request completed', { method: request.method, url: request.url, status: response.statusCode });
         });
 
         server.listen(port, hostname, () => {
-            if(!isTest) console.log(`Pinstripe running at "http://${hostname}:${port}/"`)
+            logger.http.info('Server started', { hostname, port, url: `http://${hostname}:${port}/` });
         });
 
         this._servers.push(server);

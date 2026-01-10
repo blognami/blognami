@@ -12,8 +12,9 @@ let connectionCounter = 0;
 let connectionPromise;
 
 export const Client = Class.extend().include({
-    initialize(config){
+    initialize(config, options = {}){
         this.config = config;
+        this.logger = options.logger;
         this.lockLevel = 0;
         this.transactionLevel = 0;
         this.cache = {};
@@ -328,7 +329,11 @@ function run(query, values){
 
             if(cache && cache[cacheKey]) return [...cache[cacheKey]];
 
-            if(!isTest) console.log(`Query: ${query}`);
+            if(this.logger){
+                await this.logger.database.debug(`Query: ${query}`);
+            } else if(!isTest){
+                console.log(`Query: ${query}`);
+            }
 
             const executeQuery = () => new Promise((resolve, reject) => {
                 connection.query(query, (error, rows) => {
@@ -369,7 +374,11 @@ function run(query, values){
 
             if(cache && cache[cacheKey]) return [...cache[cacheKey]];
 
-            if(!isTest) console.log(`Query: ${query}`);
+            if(this.logger){
+                await this.logger.database.debug(`Query: ${query}`);
+            } else if(!isTest){
+                console.log(`Query: ${query}`);
+            }
 
             const out = await new Promise((resolve, reject) => {
                 connection.all(query, ...values, (error, rows) => {

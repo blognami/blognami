@@ -4,12 +4,15 @@ import { Database, Client } from "@pinstripe/database";
 export default {
     create(){
         return this.defer(async () => {
-            this.database = await Database.new(
-                await this.context.root.getOrCreate("databaseClient", async () =>
-                    Client.new(await this.config.database)
-                ),
-                this.context
+            const logger = await this.logger;
+            const client = await this.context.root.getOrCreate("databaseClient", async () =>
+                Client.new(await this.config.database, { logger })
             );
+            // Ensure logger is set even if client was created before logger was available
+            if (!client.logger && logger) {
+                client.logger = logger;
+            }
+            this.database = await Database.new(client, this.context);
 
             if(this.database.info.tenants){
                 let { tenant = defaultCallback } = await this.config;
