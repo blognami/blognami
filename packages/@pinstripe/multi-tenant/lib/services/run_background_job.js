@@ -1,6 +1,6 @@
 
-import { BackgroundJob } from 'pinstripe';
 import { Workspace } from 'pinstripe';
+import { BackgroundJob } from '@pinstripe/background-jobs';
 
 export default {
     create(){

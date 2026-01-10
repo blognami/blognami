@@ -7,6 +7,7 @@
     ".": "./lib/index.js"
   },
   "dependencies": {
+    "@pinstripe/background-jobs": "^0.35.0",
     "pinstripe": "^0.35.0"
   },
   "repository": {

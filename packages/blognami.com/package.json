@@ -10,5 +10,8 @@
   "scripts": {
     "start": "pinstripe start-server",
     "reset-database": "pinstripe reset-database"
+  },
+  "dependencies": {
+    "@pinstripe/background-jobs": "^0.35.0"
   }
 }

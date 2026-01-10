@@ -1,8 +1,8 @@
 
 import cronParser from 'cron-parser';
-
-import { BackgroundJob } from 'pinstripe';
 import { Workspace } from 'pinstripe';
+
+import { BackgroundJob } from '../background_job.js';
 
 export default {
     create(){

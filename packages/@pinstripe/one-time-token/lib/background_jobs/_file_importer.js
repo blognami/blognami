@@ -1,1 +1,1 @@
-export { BackgroundJob as default } from 'pinstripe';
+export { BackgroundJob as default } from '@pinstripe/background-jobs';

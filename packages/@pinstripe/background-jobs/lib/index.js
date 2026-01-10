@@ -1,4 +1,6 @@
 
 import { importAll } from 'pinstripe';
 
-await importAll(import.meta.url);
+export * from './background_job.js';
+
+importAll(import.meta.url);
