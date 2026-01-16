@@ -7,7 +7,7 @@ import { ServiceFactory } from '../service_factory.js';
 
 export default {
     create(){
-        return this;
+        return this.context.root.getOrCreate("repl", () => this);
     },
     
     async start(){
