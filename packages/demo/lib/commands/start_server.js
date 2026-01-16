@@ -18,9 +18,7 @@ export default {
     const webhookSecret = execSync('stripe listen --print-secret', { encoding: 'utf8' }).trim();
 
     // Store in main database
-    await this.runInNewWorkspace(async function() {
-      await this.database.stripe.update({ secretKey, webhookSecret });
-    });
+    await this.database.stripe.update({ secretKey, webhookSecret });
 
     // Store in portal database if multi-tenant
     if (isMultiTenant) {
@@ -53,5 +51,7 @@ export default {
     };
     process.on('SIGINT', cleanup);
     process.on('SIGTERM', cleanup);
+
+    await this.database.destroy();
   }
 };

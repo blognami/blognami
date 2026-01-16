@@ -6,7 +6,7 @@ import sharp from 'sharp';
 
 export default {
     create(){
-        return this;
+        return this.context.root.getOrCreate("server", () => this);
     },
 
     start(options = {}){
@@ -16,7 +16,9 @@ export default {
 
         const baseUrl = new URL(`http://${hostname}:${port}/`);
 
-        http.createServer(async (request, response) => {
+        if(!this.servers) this.servers = [];
+
+        const server = http.createServer(async (request, response) => {
             try {
                 const params = await this.extractParams(request, baseUrl, await this.config.server.limits);
 
@@ -46,9 +48,20 @@ export default {
                 response.end(error);
             }
             if(!isTest) console.log(`${request.method}: ${request.url} (${response.statusCode})`);
-        }).listen(port, hostname, () => {
+        });
+
+        server.listen(port, hostname, () => {
             if(!isTest) console.log(`Pinstripe running at "http://${hostname}:${port}/"`)
         });
+
+        this.servers.push(server);
+    },
+
+    async stop(){
+        if(!this.servers) return;
+        await Promise.all(this.servers.map(server =>
+            new Promise(resolve => server.close(resolve))
+        ));
     },
 
     async extractParams(request, baseUrl, limits){
