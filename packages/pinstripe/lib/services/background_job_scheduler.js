@@ -1,15 +1,13 @@
 
-
 import cronParser from 'cron-parser';
 
 import { BackgroundJob } from '../background_job.js';
-import { Workspace } from '../workspace.js';
 
 export default {
     create(){
-        return this;
+        return this.context.root.getOrCreate("backgroundJobScheduler", () => this);
     },
-    
+
     start(){
         if(this.loop) return this.loop;
 
@@ -19,7 +17,7 @@ export default {
                 const target = getUnixTime();
                 while(current < target){
                     current++;
-                    await this.runBackgroundJobs(current);
+                    await this.scheduleBackgroundJobs(current);
                 }
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -28,7 +26,7 @@ export default {
 
             resolve();
         });
-        
+
         return this.loop;
     },
 
@@ -38,7 +36,7 @@ export default {
         await loop;
     },
 
-    async runBackgroundJobs(unixTime){
+    async scheduleBackgroundJobs(unixTime){
         const currentDate = new Date(unixTime * 1000);
         const endDate = new Date((unixTime + 1) * 1000);
         const backgroundJobs = BackgroundJob.names.map(name => BackgroundJob.for(name));
@@ -50,21 +48,15 @@ export default {
                 const interval = cronParser.parseExpression(crontab, {
                     currentDate,
                     endDate
-                }); 
-                
+                });
+
                 if(interval.hasNext()){
-                    await Workspace.run(async function(){
-                        try {
-                            await this.runBackgroundJob(backgroundJob.name, ...args);
-                        } catch(e){
-                            console.error(e);
-                        }
-                    });
+                    await this.backgroundJobQueue.push(backgroundJob.name, ...args);
                 }
             }
         }
     },
-    
+
     destroy(){
         return this.stop();
     }

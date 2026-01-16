@@ -91,4 +91,4 @@ await this.runBackgroundJob('send-newsletter');
 - Each execution runs in isolated workspace context
 - Multi-tenant jobs run once per matching tenant
 - Errors propagate as promise rejections
-- Used internally by the `bot` scheduler service
+- Used internally by the `backgroundJobWorker` service
