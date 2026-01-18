@@ -6,8 +6,8 @@ export default {
 
     _queue: [],
 
-    async push(name, ...args){
-        this._queue.push({ name, args });
+    async push(name, params = {}){
+        this._queue.push({ name, params });
     },
 
     async shift(){

@@ -4,8 +4,10 @@ import { Workspace } from 'pinstripe';
 
 export default {
     meta(){
+        this.include('untenantable');
+
         Row.names.sort().forEach(name => {
-            if(name == 'tenant' || name == 'appliedMigration') return;
+            if(name == 'tenant' || Row.for(name).untenantable) return;
             const { collectionName, abstract } = Row.for(name);
             this.hasMany(collectionName, { cascadeDelete: !abstract });
         });

@@ -44,17 +44,21 @@ export default {
             const backgroundJob = backgroundJobs.shift();
             const schedules = [ ...backgroundJob.schedules ];
             while(schedules.length){
-                const [ crontab, ...args ] = schedules.shift();
+                const [ crontab, params = {} ] = schedules.shift();
                 const interval = cronParser.parseExpression(crontab, {
                     currentDate,
                     endDate
                 });
 
                 if(interval.hasNext()){
-                    await this.backgroundJobQueue.push(backgroundJob.name, ...args);
+                    await this.queueBackgroundJob(backgroundJob.name, params);
                 }
             }
         }
+    },
+
+    async queueBackgroundJob(name, params){
+        await this.backgroundJobQueue.push(name, params);
     },
 
     destroy(){
