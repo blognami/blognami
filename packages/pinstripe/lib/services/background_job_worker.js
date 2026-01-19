@@ -1,5 +1,5 @@
 
-import { Workspace } from '../workspace.js';
+import { BackgroundJob } from '../background_job.js';
 
 export default {
     create(){
@@ -32,13 +32,11 @@ export default {
     async processQueue(){
         let job;
         while(job = await this.backgroundJobQueue.shift()){
-            await Workspace.run(async function(){
-                try {
-                    await this.runBackgroundJob(job.name, ...job.args);
-                } catch(e){
-                    console.error(e);
-                }
-            });
+            try {
+                await BackgroundJob.run(job.name, job.params);
+            } catch(e){
+                console.error(e);
+            }
         }
     },
 

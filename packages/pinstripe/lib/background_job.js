@@ -3,6 +3,7 @@ import { Class } from './class.js';
 import { inflector } from './inflector.js';
 import { ImportableRegistry } from './importable_registry.js';
 import { ServiceConsumer } from './service_consumer.js';
+import { Workspace } from './workspace.js';
 
 export const BackgroundJob = Class.extend().include({
     meta(){
@@ -28,9 +29,11 @@ export const BackgroundJob = Class.extend().include({
                 return this;
             },
 
-            async run(context, name){
-                await context.fork().run(async context => {
-                    await this.create(name, context).run();
+            async run(name, params = {}){
+                const BackgroundJobClass = this;
+                await Workspace.run(async function(){
+                    Object.assign(this.initialParams, params);
+                    await BackgroundJobClass.create(name, this.context).run();
                 });
             },
         });
