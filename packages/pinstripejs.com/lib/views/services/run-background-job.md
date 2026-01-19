@@ -68,13 +68,11 @@ export default {
 export default {
     meta() {
         this.schedule('0 * * * *');
+        this.whereTenant({ active: true }); // only run for active tenants
     },
 
-    multiTenant: true,
-    tenantsFilter: tenants => tenants.where({ active: true }),
-
     async run() {
-        // Runs once per tenant
+        // Runs once per matching tenant
         const users = await this.database.users.where({ subscribed: true }).all();
         for (let user of users) {
             await user.sendNewsletter();
