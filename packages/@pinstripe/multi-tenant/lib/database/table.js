@@ -9,9 +9,7 @@ Table.include({
             async create(...args){
                 if(this.exists) return;
                 await create.call(this, ...args);
-                if(this.constructor.name == 'appliedMigrations') return;
-                if(this.constructor.name == 'tenants') return;
-                if(this.constructor.name == 'columnTypes') return;
+                if(Table.for(this.constructor.name).untenantable) return;
                 await this.addColumn('tenantId', 'foreign_key');
             },
             

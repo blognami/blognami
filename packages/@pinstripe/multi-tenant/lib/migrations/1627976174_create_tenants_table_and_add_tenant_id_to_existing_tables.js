@@ -10,8 +10,7 @@ export default {
     
         while(tableNames.length){
             const tableName = tableNames.shift();
-            if(tableName == 'appliedMigrations') continue;
-            if(tableName == 'tenants') continue;
+            if(this.database[tableName].constructor.untenantable) continue;
             
             if(this.database[tableName].constructor.columns.tenantId) continue;
             await this.database[tableName].addColumn('tenantId', 'foreign_key');
