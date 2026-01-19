@@ -44,7 +44,7 @@ export default {
             const backgroundJob = backgroundJobs.shift();
             const schedules = [ ...backgroundJob.schedules ];
             while(schedules.length){
-                const [ crontab, params = {} ] = schedules.shift();
+                const { crontab, params } = schedules.shift();
                 const interval = cronParser.parseExpression(crontab, {
                     currentDate,
                     endDate
