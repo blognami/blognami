@@ -24,8 +24,8 @@ export const BackgroundJob = Class.extend().include({
                 return this._schedules;
             },
 
-            schedule(...args){
-                this.schedules.push(args);
+            schedule(crontab, params = {}){
+                this.schedules.push({ crontab, params });
                 return this;
             },
 
