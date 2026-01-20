@@ -31,7 +31,7 @@ export default {
 
     async processQueue(){
         let job;
-        while(job = await this.jobQueue.shift()){
+        while(job = this.jobQueue.shift()){
             try {
                 await Job.run(job.name, job.params);
             } catch(e){

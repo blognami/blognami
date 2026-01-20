@@ -6,15 +6,15 @@ export default {
         return this.context.root.getOrCreate("jobQueue", () => this);
     },
 
-    async push(name, params = {}){
+    push(name, params = {}){
         queue.push({ name, params });
     },
 
-    async shift(){
+    shift(){
         return queue.shift();
     },
 
-    async length(){
+    get length(){
         return queue.length;
     }
 };

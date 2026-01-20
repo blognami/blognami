@@ -38,8 +38,7 @@ export default {
         }
 
         if(!withoutJobs){
-            this.jobScheduler.start();
-            this.jobWorker.start();
+            this.jobCoordinator.start();
         }
 
         await this.runHook('afterServerStart');
@@ -49,9 +48,6 @@ export default {
         await new Promise((resolve) => {
             const shutdown = async () => {
                 await this.runHook('beforeServerStop');
-                await this.server.stop();
-                await this.jobScheduler.stop();
-                await this.jobWorker.stop();
                 resolve();
             };
             process.on('SIGINT', shutdown);
