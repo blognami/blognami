@@ -9,13 +9,13 @@ menu:
 The command starts the Pinstripe web server with the following signature:
 
 ```bash
-pinstripe start-server [--host <host:port>] [--without-background-jobs]
+pinstripe start-server [--host <host:port>] [--without-jobs]
 ```
 
 ### Parameters
 
 - **`--host <host:port>`** (optional) - Host and port configuration (e.g. "127.0.0.1:3000"). Defaults to `PINSTRIPE_HOST` environment variable or "127.0.0.1:3000"
-- **`--without-background-jobs`** (optional) - Skip starting the background job worker
+- **`--without-jobs`** (optional) - Skip starting the job worker
 
 ### Examples
 
@@ -26,8 +26,8 @@ pinstripe start-server
 # Start server on specific host and port
 pinstripe start-server --host "0.0.0.0:8080"
 
-# Start server without background job processing
-pinstripe start-server --without-background-jobs
+# Start server without job processing
+pinstripe start-server --without-jobs
 
 # Start server on custom port using environment variable
 PINSTRIPE_HOST="127.0.0.1:4000" pinstripe start-server
@@ -38,7 +38,7 @@ PINSTRIPE_HOST="127.0.0.1:4000" pinstripe start-server
 The `start-server` command is a **development and production server** that launches your Pinstripe application with:
 
 1. **HTTP Server** - Handles web requests and API calls
-2. **Background Job Processing** - Automatically starts the background job worker for scheduled tasks
+2. **Job Processing** - Automatically starts the job worker for scheduled tasks
 3. **Request Routing** - Processes requests through the call handler system
 4. **Static File Serving** - Serves static assets and uploads
 5. **ETag Caching** - Provides HTTP caching with ETag headers
@@ -52,10 +52,10 @@ The `start-server` command is a **development and production server** that launc
 - **Parameter Extraction** - Parses URL parameters, headers, and request bodies
 - **Response Caching** - Generates ETags and handles 304 Not Modified responses
 
-### Background Job Integration
-- **Automatic Startup** - Starts the background job worker for scheduled background jobs by default
-- **Job Scheduling** - Processes background jobs based on cron-like schedules
-- **Optional Disable** - Use `--without-background-jobs` to run server-only mode
+### Job Integration
+- **Automatic Startup** - Starts the job worker for scheduled jobs by default
+- **Job Scheduling** - Processes jobs based on cron-like schedules
+- **Optional Disable** - Use `--without-jobs` to run server-only mode
 
 ### Development vs Production
 ```javascript
@@ -76,7 +76,7 @@ The server accepts multiple host formats:
 # Single host:port
 --host "127.0.0.1:3000"
 
-# Multiple servers (space-separated)  
+# Multiple servers (space-separated)
 --host "127.0.0.1:3000 0.0.0.0:8080"
 
 # Environment variable
@@ -113,8 +113,8 @@ NODE_ENV=production pinstripe start-server
 
 ### API-Only Server
 ```bash
-# Server without background job processing
-pinstripe start-server --without-background-jobs
+# Server without job processing
+pinstripe start-server --without-jobs
 ```
 
 ## Related Commands
@@ -122,5 +122,5 @@ pinstripe start-server --without-background-jobs
 - **`generate-project`** - Create new Pinstripe projects that can be served
 - **`initialize-database`** - Set up database before starting server
 - **`start-repl`** - Interactive development environment
-- **`run-background-job`** - Manually execute background jobs
+- **`run-job`** - Manually execute jobs
 - **`generate-static-site`** - Generate static files from server routes

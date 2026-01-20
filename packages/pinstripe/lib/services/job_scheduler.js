@@ -1,11 +1,11 @@
 
 import cronParser from 'cron-parser';
 
-import { BackgroundJob } from '../background_job.js';
+import { Job } from '../job.js';
 
 export default {
     create(){
-        return this.context.root.getOrCreate("backgroundJobScheduler", () => this);
+        return this.context.root.getOrCreate("jobScheduler", () => this);
     },
 
     start(){
@@ -17,7 +17,7 @@ export default {
                 const target = getUnixTime();
                 while(current < target){
                     current++;
-                    await this.scheduleBackgroundJobs(current);
+                    await this.scheduleJobs(current);
                 }
                 await new Promise(resolve => setTimeout(resolve, 1000));
 
@@ -36,13 +36,13 @@ export default {
         await loop;
     },
 
-    async scheduleBackgroundJobs(unixTime){
+    async scheduleJobs(unixTime){
         const currentDate = new Date(unixTime * 1000);
         const endDate = new Date((unixTime + 1) * 1000);
-        const backgroundJobs = BackgroundJob.names.map(name => BackgroundJob.for(name));
-        while(backgroundJobs.length){
-            const backgroundJob = backgroundJobs.shift();
-            const schedules = [ ...backgroundJob.schedules ];
+        const jobs = Job.names.map(name => Job.for(name));
+        while(jobs.length){
+            const job = jobs.shift();
+            const schedules = [ ...job.schedules ];
             while(schedules.length){
                 const { crontab, params } = schedules.shift();
                 const interval = cronParser.parseExpression(crontab, {
@@ -51,14 +51,14 @@ export default {
                 });
 
                 if(interval.hasNext()){
-                    await this.queueBackgroundJob(backgroundJob.name, params);
+                    await this.queueJob(job.name, params);
                 }
             }
         }
     },
 
-    async queueBackgroundJob(name, params){
-        await this.backgroundJobQueue.push(name, params);
+    async queueJob(name, params){
+        await this.jobQueue.push(name, params);
     },
 
     destroy(){

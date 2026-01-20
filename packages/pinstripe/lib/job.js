@@ -5,9 +5,9 @@ import { ImportableRegistry } from './importable_registry.js';
 import { ServiceConsumer } from './service_consumer.js';
 import { Workspace } from './workspace.js';
 
-export const BackgroundJob = Class.extend().include({
+export const Job = Class.extend().include({
     meta(){
-        this.assignProps({ name: 'BackgroundJob' });
+        this.assignProps({ name: 'Job' });
 
         this.include(ImportableRegistry);
         this.include(ServiceConsumer);
@@ -30,16 +30,16 @@ export const BackgroundJob = Class.extend().include({
             },
 
             async run(name, params = {}){
-                const BackgroundJobClass = this;
+                const JobClass = this;
                 await Workspace.run(async function(){
                     Object.assign(this.initialParams, params);
-                    await BackgroundJobClass.create(name, this.context).run();
+                    await JobClass.create(name, this.context).run();
                 });
             },
         });
     },
 
     run(){
-        console.error(`No such background job "${this.constructor.name}" exists.`);
+        console.error(`No such job "${this.constructor.name}" exists.`);
     }
 });

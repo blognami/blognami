@@ -322,7 +322,7 @@ View.FileImporter.register('md', {
 - **`ServiceFactory`**: Services (`.js` files in `lib/services/`)
 - **`Row`**: Database models (`.js` files in `lib/models/`)
 - **`Command`**: CLI commands (`.js` files in `lib/commands/`)
-- **`BackgroundJob`**: Background jobs (`.js` files in `lib/background_jobs/`)
+- **`Job`**: Jobs (`.js` files in `lib/jobs/`)
 
 ## Key Services Available
 

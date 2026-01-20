@@ -1,9 +1,9 @@
 
-import { Workspace, BackgroundJob } from 'pinstripe';
+import { Workspace, Job } from 'pinstripe';
 
 export default {
-    async queueBackgroundJob(name, params){
-        const { tenantScopes } = BackgroundJob.for(name);
+    async queueJob(name, params){
+        const { tenantScopes } = Job.for(name);
 
         await Workspace.run(async function(){
             if(!await this.database.info.tenants) return;
@@ -14,7 +14,7 @@ export default {
             }
 
             for(let tenant of await tenants.all()){
-                await this.backgroundJobQueue.push(name, {
+                await this.jobQueue.push(name, {
                     ...params,
                     _headers: { ...(params._headers || {}), 'x-tenant-id': tenant.id }
                 });

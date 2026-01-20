@@ -1,30 +1,30 @@
 ---
 menu:
-    path: ["Services", "backgroundJobScheduler"]
+    path: ["Services", "jobScheduler"]
 ---
-# backgroundJobScheduler
+# jobScheduler
 
-Cron-based scheduler that queues background jobs.
+Cron-based scheduler that queues jobs.
 
 ## Interface
 
 ```javascript
-this.backgroundJobScheduler.start()    // Start scheduler loop
-this.backgroundJobScheduler.stop()     // Stop scheduler gracefully
-this.backgroundJobScheduler.destroy()  // Alias for stop()
-this.backgroundJobScheduler.scheduleBackgroundJobs(unixTime)  // Queue jobs for timestamp
+this.jobScheduler.start()    // Start scheduler loop
+this.jobScheduler.stop()     // Stop scheduler gracefully
+this.jobScheduler.destroy()  // Alias for stop()
+this.jobScheduler.scheduleJobs(unixTime)  // Queue jobs for timestamp
 ```
 
 ## Description
 
-The `backgroundJobScheduler` service runs a continuous loop checking for scheduled background jobs every second. When a job's cron expression matches the current time, the scheduler pushes the job to `backgroundJobQueue`. The scheduler starts automatically with the server unless `--without-background-jobs` is specified.
+The `jobScheduler` service runs a continuous loop checking for scheduled jobs every second. When a job's cron expression matches the current time, the scheduler pushes the job to `jobQueue`. The scheduler starts automatically with the server unless `--without-jobs` is specified.
 
 ## Examples
 
-### Background Job Definition
+### Job Definition
 
 ```javascript
-// lib/background_jobs/cleanup.js
+// lib/jobs/cleanup.js
 export default {
     meta() {
         this.schedule('*/5 * * * *');  // Every 5 minutes
@@ -58,10 +58,10 @@ export default {
 
 ```javascript
 // Start manually
-const loop = this.backgroundJobScheduler.start();
+const loop = this.jobScheduler.start();
 
 // Stop gracefully
-await this.backgroundJobScheduler.stop();
+await this.jobScheduler.stop();
 ```
 
 ## Cron Syntax
@@ -83,6 +83,6 @@ Common patterns:
 
 ## Notes
 
-- Scheduler only queues jobs; `backgroundJobWorker` executes them
+- Scheduler only queues jobs; `jobWorker` executes them
 - Uses `cron-parser` for expression parsing
 - Loop checks every 1 second

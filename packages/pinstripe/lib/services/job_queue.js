@@ -3,7 +3,7 @@ const queue = [];
 
 export default {
     create(){
-        return this.context.root.getOrCreate("backgroundJobQueue", () => this);
+        return this.context.root.getOrCreate("jobQueue", () => this);
     },
 
     async push(name, params = {}){

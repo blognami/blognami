@@ -1,9 +1,9 @@
 
-import { BackgroundJob } from '../background_job.js';
+import { Job } from '../job.js';
 
 export default {
     create(){
-        return this.context.root.getOrCreate("backgroundJobWorker", () => this);
+        return this.context.root.getOrCreate("jobWorker", () => this);
     },
 
     start(){
@@ -31,9 +31,9 @@ export default {
 
     async processQueue(){
         let job;
-        while(job = await this.backgroundJobQueue.shift()){
+        while(job = await this.jobQueue.shift()){
             try {
-                await BackgroundJob.run(job.name, job.params);
+                await Job.run(job.name, job.params);
             } catch(e){
                 console.error(e);
             }

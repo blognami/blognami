@@ -2,19 +2,19 @@
 export default {
     meta(){
         this.annotate({
-            description: 'Starts the web server and optionally the background job worker.'
+            description: 'Starts the web server and optionally the job worker.'
         });
-        
-        this.hasParam('host', { 
-            type: 'string', 
-            optional: true, 
-            description: 'Host and port configuration (e.g. "127.0.0.1:3000"). Defaults to PINSTRIPE_HOST environment variable or "127.0.0.1:3000".' 
+
+        this.hasParam('host', {
+            type: 'string',
+            optional: true,
+            description: 'Host and port configuration (e.g. "127.0.0.1:3000"). Defaults to PINSTRIPE_HOST environment variable or "127.0.0.1:3000".'
         });
-        
-        this.hasParam('withoutBackgroundJobs', {
+
+        this.hasParam('withoutJobs', {
             type: 'boolean',
             optional: true,
-            description: 'Skip starting the background job worker.'
+            description: 'Skip starting the job worker.'
         });
     },
 
@@ -23,7 +23,7 @@ export default {
 
         const {
             host = process.env.PINSTRIPE_HOST || '127.0.0.1:3000',
-            withoutBackgroundJobs = false
+            withoutJobs = false
         } = this.params;
 
         for(let pair of host.trim().split(/\s+/)){
@@ -37,9 +37,9 @@ export default {
             });
         }
 
-        if(!withoutBackgroundJobs){
-            this.backgroundJobScheduler.start();
-            this.backgroundJobWorker.start();
+        if(!withoutJobs){
+            this.jobScheduler.start();
+            this.jobWorker.start();
         }
 
         await this.runHook('afterServerStart');
@@ -50,8 +50,8 @@ export default {
             const shutdown = async () => {
                 await this.runHook('beforeServerStop');
                 await this.server.stop();
-                await this.backgroundJobScheduler.stop();
-                await this.backgroundJobWorker.stop();
+                await this.jobScheduler.stop();
+                await this.jobWorker.stop();
                 resolve();
             };
             process.on('SIGINT', shutdown);
