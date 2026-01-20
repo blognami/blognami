@@ -1,7 +1,7 @@
 
-import { BackgroundJob } from 'pinstripe';
+import { Job } from 'pinstripe';
 
-BackgroundJob.include({
+Job.include({
     meta(){
         this.assignProps({
             get tenantScopes(){

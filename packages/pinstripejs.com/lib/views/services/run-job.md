@@ -1,20 +1,20 @@
 ---
 menu:
-    path: ["Services", "runBackgroundJob"]
+    path: ["Services", "runJob"]
 ---
-# runBackgroundJob
+# runJob
 
-Execute background jobs manually.
+Execute jobs manually.
 
 ## Interface
 
 ```javascript
-await this.runBackgroundJob(name, ...args)
+await this.runJob(name, ...args)
 ```
 
 ### Parameters
 
-- **name** - Background job name
+- **name** - Job name
 - **...args** - Optional arguments passed to job
 
 ### Returns
@@ -23,26 +23,26 @@ await this.runBackgroundJob(name, ...args)
 
 ## Description
 
-The `runBackgroundJob` service executes background jobs immediately, bypassing their cron schedules. Useful for development, testing, and triggered execution. In multi-tenant environments, it automatically runs the job for each tenant.
+The `runJob` service executes jobs immediately, bypassing their cron schedules. Useful for development, testing, and triggered execution. In multi-tenant environments, it automatically runs the job for each tenant.
 
 ## Examples
 
 ### Basic Execution
 
 ```javascript
-await this.runBackgroundJob('deliver-notifications');
+await this.runJob('deliver-notifications');
 ```
 
 ### With Arguments
 
 ```javascript
-await this.runBackgroundJob('send-email', 'user@example.com', 'Welcome!');
+await this.runJob('send-email', 'user@example.com', 'Welcome!');
 ```
 
 ### CLI Usage
 
 ```bash
-npx pinstripe run-background-job --name deliver-notifications
+npx pinstripe run-job --name deliver-notifications
 ```
 
 ### Error Handling
@@ -51,7 +51,7 @@ npx pinstripe run-background-job --name deliver-notifications
 export default {
     async render() {
         try {
-            await this.runBackgroundJob('risky-operation');
+            await this.runJob('risky-operation');
             return { status: 'success' };
         } catch (error) {
             console.error('Job failed:', error);
@@ -64,7 +64,7 @@ export default {
 ### Multi-Tenant Job
 
 ```javascript
-// Background job with multi-tenant config
+// Job with multi-tenant config
 export default {
     meta() {
         this.schedule('0 * * * *');
@@ -81,7 +81,7 @@ export default {
 };
 
 // Execute - runs for all active tenants
-await this.runBackgroundJob('send-newsletter');
+await this.runJob('send-newsletter');
 ```
 
 ## Notes
@@ -89,4 +89,4 @@ await this.runBackgroundJob('send-newsletter');
 - Each execution runs in isolated workspace context
 - Multi-tenant jobs run once per matching tenant
 - Errors propagate as promise rejections
-- Used internally by the `backgroundJobWorker` service
+- Used internally by the `jobWorker` service
