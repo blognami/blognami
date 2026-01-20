@@ -57,8 +57,8 @@ export default {
         }
     },
 
-    async queueJob(name, params){
-        await this.jobQueue.push(name, params);
+    queueJob(name, params){
+        this.jobQueue.push(name, params);
     },
 
     destroy(){

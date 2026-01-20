@@ -34,7 +34,7 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
           sudo apt update
           sudo apt install stripe
-      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} npm run test
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} JOB_PROCESSING=distributed npm run test
         env:
           CI: true
           STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}

@@ -15,6 +15,13 @@ this.jobScheduler.destroy()  // Alias for stop()
 this.jobScheduler.scheduleJobs(unixTime)  // Queue jobs for timestamp
 ```
 
+### Job Meta Interface
+
+```javascript
+this.schedule(crontab)              // Schedule job with cron expression
+this.schedule(crontab, params)      // Schedule with parameters
+```
+
 ## Description
 
 The `jobScheduler` service runs a continuous loop checking for scheduled jobs every second. When a job's cron expression matches the current time, the scheduler pushes the job to `jobQueue`. The scheduler starts automatically with the server unless `--without-jobs` is specified.
@@ -53,6 +60,25 @@ export default {
     }
 };
 ```
+
+### Schedule with Parameters
+
+```javascript
+// lib/jobs/generate_report.js
+export default {
+    meta() {
+        this.schedule('0 6 * * *', { type: 'daily', format: 'pdf' });
+        this.schedule('0 0 1 * *', { type: 'monthly', format: 'csv' });
+    },
+
+    async run() {
+        const { type, format } = this.params;
+        await this.generateReport(type, format);
+    }
+};
+```
+
+Parameters passed to `schedule()` are available via `this.params` in the `run()` method. This allows a single job to handle multiple schedules with different configurations.
 
 ### Manual Control
 

@@ -64,6 +64,10 @@ export default {
         ));
     },
 
+    destroy(){
+        return this.stop();
+    },
+
     async extractParams(request, baseUrl, limits){
         const { method, url, headers } = request;
         const _url = new URL(url, baseUrl);
