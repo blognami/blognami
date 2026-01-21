@@ -82,6 +82,7 @@ export function describeApp(role) {
     test.describe("a post page", () => {
       test.beforeEach(async ({ page, helpers }) => {
         await page.getByTestId("main").getByText("Alexandra Burgs").click();
+        await helpers.waitForPageToBeIdle();
         await expect(page.getByTestId("main").getByTestId("post-title")).toContainText("Alexandra Burgs");
       });
 
@@ -521,8 +522,10 @@ export function describeApp(role) {
     test.describe("a user page", () => {
       test.beforeEach(async ({ page, helpers }) => {
         await page.getByTestId("main").getByText("Alexandra Burgs").click();
+        await helpers.waitForPageToBeIdle();
         await expect(page.getByTestId("main").locator("h1")).toContainText("Alexandra Burgs");
         await page.getByTestId("main").getByText("Admin").click();
+        await helpers.waitForPageToBeIdle();
         await expect(page.getByTestId("main").locator("h2").first()).toContainText("Admin");
       });
 

@@ -167,6 +167,7 @@ export const Client = Class.extend().include({
     },
 
     async destroy(){
+        this.cache = {};
         if(!this.connected) return;
         this.connected = false;
         connectionCounter--;
