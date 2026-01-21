@@ -58,11 +58,11 @@ export default {
         if(this.isLeader){
             this.jobScheduler.start();
             await this.sendHeartbeat();
-            await this.distributeJobs();
         } else {
             await this.jobScheduler.stop();
         }
 
+        await this.distributeJobs();
         await this.claimJob();
     },
 
@@ -129,7 +129,7 @@ export default {
 
             if(job){
                 const params = job.params ? JSON.parse(job.params) : {};
-                this.jobQueue.push(job.name, params);
+                await this.jobQueue.push(job.name, params);
                 await job.delete();
             }
         });

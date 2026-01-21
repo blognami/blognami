@@ -11,7 +11,7 @@ export default {
             execSync(`echo "create database ${databaseConfig.database}" | mysql -h 127.0.0.1 -u root`);
             execSync(`mysql ${databaseConfig.database} -h 127.0.0.1 -u root <  ${rootPath}/dump.sql`);
         } else {
-            execSync(`rm -f ${databaseConfig.filename}`);
+            execSync(`rm -f ${databaseConfig.filename} ${databaseConfig.filename}-wal ${databaseConfig.filename}-shm`);
             execSync(`echo '.read ${rootPath}/dump.sql' | sqlite3 ${databaseConfig.filename}`);
         }
     }

@@ -6,46 +6,25 @@ export default {
         return this.renderForm(this.createModel({}), {
             title: 'Publish post',
             fields: [
-                { name: 'notifySubscribers', type: 'checkbox', label: 'Notify subscribers', value: true }
+                { name: 'emailSubscribers', type: 'checkbox', label: 'Email subscribers', value: true }
             ],
             submitTitle: 'Publish',
             width: 'small',
 
-            success: async ({ notifySubscribers }) => {
+            success: async ({ emailSubscribers }) => {
                 await post.update({
                     published: true
                 });
 
-                if(notifySubscribers == 'true') this.notifySubscribers();
+                if(emailSubscribers == 'true'){
+                    await this.jobQueue.push('emailPostToSubscribers', {
+                        postId: post.id,
+                        baseUrl: this.params._url.origin
+                    });
+                }
 
                 return this.renderRedirect({ target: '_top' });
             },
-        });
-    },
-
-    async notifySubscribers(){
-        const { id, _url: baseUrl } = this.params;
-        await this.runInNewWorkspace(async function (){
-            const post = await this.database.posts.where({ id }).first();
-            if(!post) return;
-            const { title, slug, access } = post;
-            const url = new URL(`/${slug}`, baseUrl);
-            const tiers = ['paid'];
-            if(access != 'paid') tiers.push('free');
-
-            let page = 1;
-            while(true){
-                const users = await this.database.users.where({ subscriptions: { tier: tiers } }).paginate(page, 100).all();
-                if(users.length == 0) break;
-                for(const user of users){
-                    await user.notify(({ line }) => {
-                        line(`A new post with title "${title}" has been published:`);
-                        line();
-                        line(`  * ${url}`);
-                    });
-                }
-                page++;
-            }
         });
     }
 };
