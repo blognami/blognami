@@ -154,7 +154,7 @@ export function describeApp(role) {
             await expect(page.getByTestId("main").getByTestId("publish-post")).toContainText("Publish");
             await page.getByTestId("main").getByTestId("publish-post").click();
 
-            await helpers.submitForm({ notifySubscribers: true });
+            await helpers.submitForm({ emailSubscribers: true });
 
             await expect(page.getByTestId("main").getByTestId("publish-post")).not.toBeVisible();
             await expect(page.getByTestId("main").getByTestId("unpublish-post")).toContainText("Unpublish");
