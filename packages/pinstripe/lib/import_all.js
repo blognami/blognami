@@ -45,7 +45,7 @@ const normalizeDirPath = async (dirPath) => {
 };
 
 const importAllRecursive = async (dirPath, currentDirPath, fileImporter = defaultFileImporter) => {
-    const items = await readdir(currentDirPath);
+    const items = (await readdir(currentDirPath)).sort();
     for(let i in items){
         const item = items[i];
         const currentPath = `${currentDirPath}/${item}`;

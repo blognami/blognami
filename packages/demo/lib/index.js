@@ -13,6 +13,8 @@ if(process.env.TENANCY === 'multi'){
 if(process.env.JOB_PROCESSING === 'distributed'){
     modules.push('@pinstripe/distributed-jobs');
 }
-modules.forEach(module => import(module));
+for(const module of modules){
+    await import(module);
+}
 
 importAll(import.meta.url);
