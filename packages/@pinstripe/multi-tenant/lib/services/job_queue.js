@@ -8,7 +8,7 @@ export default {
                 if(tenant){
                     params = {
                         ...params,
-                        _headers: { ...(params._headers || {}), 'x-tenant-id': tenant.id }
+                        _headers: { 'x-tenant-id': tenant.id, ...(params._headers || {}) }
                     };
                 }
                 return push.call(this, name, params);
