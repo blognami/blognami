@@ -20,6 +20,13 @@ export const Client = Class.extend().include({
         this.connected = false;
     },
 
+    clone(){
+        const cloned = Client.new(this.config);
+        cloned.lockLevel = this.lockLevel;
+        cloned.transactionLevel = this.transactionLevel;
+        return cloned;
+    },
+
     async run(query, options = {}){
         if(!this.connected){
             this.connected = true;
