@@ -223,7 +223,7 @@ export const Row = Model.extend().include({
 
     async delete(){
         return this.database.transaction(async () => {
-            await this.runHook('afterDelete');
+            await this.runHook('beforeDelete');
 
             const tableReference = TableReference.new(this.constructor.collectionName);
 
@@ -308,7 +308,7 @@ function defineRelationship({ name, type, collectionName, fromKey, toKey, cascad
     });
 
     if(cascadeDelete) {
-        this.addHook('afterDelete', async function(){
+        this.addHook('beforeDelete', async function(){
             await this[name].delete();
         });
     }

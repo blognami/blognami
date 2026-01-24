@@ -14,7 +14,9 @@ if(process.env.TENANCY === 'multi'){
 
         assert.equal(typeof await tenant, 'object');
 
-        await expectItemCollectionCountsToBeCorrect(tenant);
+        await tenant.runInNewWorkspace(async function(){
+            await expectItemCollectionCountsToBeCorrect(this.database);
+        });
 
         await expectItemCollectionCountsToBeCorrect(database);
 
@@ -31,7 +33,9 @@ if(process.env.TENANCY === 'multi'){
             title: 'Foo'
         });
 
-        await expectItemCollectionCountsToBeCorrect(tenant, { commentables: 1, pageables: 2, posts: 1, revisables: 2, sites: 1, tagables: 1, users: 1 });
+        await tenant.runInNewWorkspace(async function(){
+           await expectItemCollectionCountsToBeCorrect(this.database, { commentables: 1, pageables: 2, posts: 1, revisables: 2, sites: 1, tagables: 1, users: 1 }); 
+        });
 
         await expectItemCollectionCountsToBeCorrect(database, { commentables: 1, pageables: 2, posts: 1, revisables: 2, sites: 1, tagables: 1, users: 1 });
 
