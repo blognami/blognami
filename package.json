@@ -18,7 +18,15 @@
     "playwright:open": "npm run playwright:open --workspace demo",
     "version-all": "npm version minor --workspaces",
     "publish-all": "npm publish --workspaces",
-    "reset-databases": "npm run reset-database --workspaces --if-present"
+    "reset-databases": "npm run reset-database --workspaces --if-present",
+    "test:quick": "QUICK=true npm run test:unit && QUICK=true npm run test:e2e",
+    "ralph": "bash scripts/ralph-docker-run.sh",
+    "ralph:once": "bash scripts/ralph-docker-run.sh -e RALPH_ITERATIONS=1",
+    "ralph:docker:build": "docker build -f Dockerfile.ralph --build-arg GIT_USER_NAME=\"$(git config user.name)\" --build-arg GIT_USER_EMAIL=\"$(git config user.email)\" -t blognami-ralph .",
+    "ralph:docker:token": "claude setup-token",
+    "ralph:docker:clean": "docker volume rm blognami-ralph-nm",
+    "ralph:docker:shell": "bash scripts/ralph-docker-run.sh -it -- bash",
+    "ralph:reset": "echo '[]' > prd.json && > progress.txt"
   },
   "dependencies": {
     "nodemon": "^3.1.4"
