@@ -1,6 +1,6 @@
 
 
-import { afterEach, test } from 'node:test';
+import { afterEach, test, describe } from 'node:test';
 import assert from 'node:assert';
 
 import { reset, inPackagesDir, run } from './helpers.js';

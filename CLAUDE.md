@@ -401,6 +401,39 @@ Integration/feature tests live in `packages/demo/tests/` organized by type:
 Use conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, etc.
 No generated-by footers.
 
+## Ralph / PRD
+
+Ralph is an automated task runner that uses Claude to implement tasks from `prd.json`.
+
+### PRD Schema (`prd.json`)
+
+```json
+[
+  {
+    "category": "functional | non-functional | bug | ...",
+    "description": "What needs to be done",
+    "steps": ["verification step 1", "verification step 2"],
+    "passes": false
+  }
+]
+```
+
+- **category**: Task type (string)
+- **description**: What to implement (string)
+- **steps**: How to verify it's done (array of strings)
+- **passes**: Whether the task is complete (boolean) — set to `true` after implementing and tests pass
+
+### Running Ralph
+
+- `npm run ralph` — AFK mode (builds image, runs in Docker with bypassed permissions, default 10 iterations)
+- `npm run ralph:once` — Single iteration in Docker
+- `npm run ralph:docker:build` — Build the Docker image only
+- `npm run ralph:docker:token` — Set up Claude auth token
+- `npm run ralph:docker:clean` — Remove the named volume for node_modules (use when deps change)
+- `npm run test:quick` — Runs all tests with e2e filtered to smoke tests only
+
+Mounts the project as a volume so git commits appear on the host. Uses a named volume (`blognami-ralph-nm`) for `node_modules` to avoid macOS/Linux binary incompatibility. Set `RALPH_ITERATIONS` env var to control iteration count (default 10).
+
 ## Important Notes
 
 - All packages use ES modules (`"type": "module"`)
