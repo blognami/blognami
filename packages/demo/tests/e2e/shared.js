@@ -336,6 +336,7 @@ export function describeApp(role) {
     test.describe("a basic page", () => {
       test.beforeEach(async ({ page, helpers }) => {
         await page.getByTestId("sidebar").getByText("Osinski Extensions").click();
+        await helpers.waitForPageToBeIdle();
         await expect(page.getByTestId("main").locator("h1")).toContainText("Osinski Extensions");
       });
 
@@ -460,6 +461,7 @@ export function describeApp(role) {
     test.describe("a tag page", () => {
       test.beforeEach(async ({ page, helpers }) => {
         await page.getByTestId("sidebar").getByText("Excepturi Corporis").click();
+        await helpers.waitForPageToBeIdle();
         await expect(page.getByTestId("main").locator("h2").first()).toContainText("Excepturi Corporis");
       });
 
@@ -695,7 +697,8 @@ export function describeApp(role) {
           await helpers.submitForm({ name: 'Test Subscriber' }, { skipWaitForIdle: true });
           await helpers.completeStripeCheckout('Test Subscriber');
 
-          // Verify content is now accessible
+          // Wait for holding page to redirect after confirming subscription
+          await helpers.waitForPageToBeIdle();
           await expect(page.getByText('This content is for paying subscribers only.')).not.toBeVisible();
           await expect(page.getByTestId('post-body')).toBeVisible();
 
@@ -724,15 +727,21 @@ export function describeApp(role) {
           await expect(subscribeButton).toBeVisible();
 
           await subscribeButton.click();
+          await helpers.waitForPageToBeIdle();
+          await page.getByRole('link', { name: 'Select Starter' }).click();
           await helpers.completeStripeCheckout('Admin');
 
+          // Wait for holding page to redirect after confirming subscription
+          await helpers.waitForPageToBeIdle();
           await expect(subscribeButton).not.toBeVisible();
 
           // Cancel subscription via UI
           await page.getByTestId('navbar').getByTestId('settings').click();
           await helpers.waitForPageToBeIdle();
+          await helpers.topPopover().getByRole('link', { name: 'Manage subscription' }).click();
+          await helpers.waitForPageToBeIdle();
           page.on('dialog', dialog => dialog.accept());
-          await helpers.topPopover().getByTestId('saas-unsubscribe').click();
+          await helpers.topModal().getByTestId('saas-unsubscribe').click();
           await helpers.waitForPageToBeIdle();
 
           // Verify demo banner returns

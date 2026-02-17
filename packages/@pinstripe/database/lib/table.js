@@ -407,7 +407,7 @@ export const Table = Class.extend().include({
             },
 
             async sqlite(){
-                await database.run([
+                await this.database.run([
                     `alter table \`${this.constructor.name}\` `,
                     `drop \`${name}\``
                 ]);

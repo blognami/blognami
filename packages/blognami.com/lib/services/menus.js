@@ -41,7 +41,18 @@ export default {
                     url: '/_actions/user/find_blog',
                     target: '_overlay'
                 });
+            }
+        });
 
+        this.addHook('initializeMenus', async function(){
+            const tenant = await this.database.tenant;
+            if(tenant && (tenant.subscriptionPlan === 'starter' || tenant.subscriptionPlan === 'publisher')){
+                this.addMenuItem('user', 'Settings', {
+                    label: 'Manage subscription',
+                    url: '/_actions/admin/saas_manage_subscription',
+                    target: '_overlay',
+                    showIf: 'admin'
+                });
             }
         });
     }

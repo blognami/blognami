@@ -85,9 +85,15 @@ export default {
             return reloadHtml;
         }
 
+        // Create the holding page URL that will be returned to after Stripe checkout
+        const holdingPageUrl = new URL('/_actions/guest/newsletter_subscription_holding_page', this.params._url);
+        holdingPageUrl.searchParams.set('subscribableId', subscribableId);
+        holdingPageUrl.searchParams.set('userId', user.id);
+        holdingPageUrl.searchParams.set('returnUrl', returnUrl);
+
         return this.renderHtml`
             <script type="pinstripe">
-                window.location.href = ${this.renderHtml(JSON.stringify(await subscribable.createSubscribeUrl(user, { interval: plan, returnUrl })))};
+                window.location.href = ${this.renderHtml(JSON.stringify(await subscribable.createSubscribeUrl(user, { interval: plan, returnUrl: holdingPageUrl.toString() })))};
             </script>
         `;
     },

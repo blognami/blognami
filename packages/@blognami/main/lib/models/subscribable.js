@@ -9,7 +9,7 @@ export default {
     },
 
     async subscribe(user, options = {}){
-        const { tier = 'free' } = options;
+        const { tier = 'free', plan = null, interval = null } = options;
         await this.database.lock(async () => {
             const subscription = await this.database.subscriptions.where({ userId: user.id, subscribableId: this.id }).first();
 
@@ -17,7 +17,7 @@ export default {
                 await subscription.update({ tier });
                 return;
             }
-            
+
             await this.database.subscriptions.insert({
                 subscribableId: this.id,
                 userId: user.id,
@@ -25,12 +25,18 @@ export default {
             });
         });
 
-        await this.runHook('afterSubscribe', { user, tier });
+        await this.runHook('afterSubscribe', { args: [{ user, tier, plan, interval }] });
     },
 
     async createSubscribeUrl(user, options = {}){
         const stripe = await this.database.stripe;
         return stripe.createSubscribeUrl({ subscribableId: this.id, userId: user.id, email: user.email, ...options });
+    },
+
+    async updateSubscriptionPlan(user, { plan, interval }){
+        const stripe = await this.database.stripe;
+        await stripe.updateSubscriptionPlan({ subscribableId: this.id, userId: user.id, plan, interval });
+        await this.runHook('afterSubscribe', { args: [{ user, tier: 'paid', plan, interval }] });
     },
 
     async isSubscribed(user, options = {}){
@@ -55,7 +61,7 @@ export default {
         } else {
             await subscription.delete();
         }
-        await this.runHook('afterUnsubscribe', { user, tier });
+        await this.runHook('afterUnsubscribe', { args: [{ user, tier }] });
     },
 
     waitForSubscriptionToBeDeletedTimeout: 30000,

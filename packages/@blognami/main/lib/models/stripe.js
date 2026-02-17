@@ -12,9 +12,7 @@ export default {
 
     this.addHook("syncWithSubscribable", async function (subscribable){
       if(!await this.isConfiguredCorrectly()) return;
-      await this
-        .delegateTo(subscribable, SubscribableHandler)
-        .syncStripeWithSubscribable();
+      await this.syncStripeWithSubscribable(subscribable);
     });
   },
 
@@ -48,15 +46,22 @@ export default {
     userId,
     email,
     returnUrl,
+    plan,
   }) {
     const subscribable = await this.database.subscribables
       .where({ id: subscribableId })
       .first();
     if (!subscribable) return;
-    return this.delegateTo(
-      subscribable,
-      SubscribableHandler
-    ).createStripePaymentUrl({ interval, userId, email, returnUrl });
+
+    const stripeCheckoutSession = await this.createCheckoutSession(subscribable, {
+      interval,
+      userId,
+      email,
+      returnUrl,
+      plan,
+    });
+
+    return stripeCheckoutSession?.url;
   },
 
   async cancelSubscription({ subscribableId, userId }) {
@@ -64,46 +69,140 @@ export default {
       .where({ id: subscribableId })
       .first();
     if (!subscribable) return;
-    return this.delegateTo(
-      subscribable,
-      SubscribableHandler
-    ).cancelSubscription({ userId });
+
+    const stripeCustomer = await this.getStripeCustomer({ userId });
+
+    if (!stripeCustomer) return;
+
+    const subscriptions = await this.api.subscriptions.list({
+      customer: stripeCustomer.id,
+      status: "active",
+    });
+
+    for (const { id } of subscriptions.data) {
+      await this.api.subscriptions.cancel(id);
+    }
   },
-};
 
-const SubscribableHandler = {
-  initialize(stripe, subscribable) {
-    this.stripe = stripe;
-    this.subscribable = subscribable;
-  },
+  async updateSubscriptionPlan({ subscribableId, userId, plan, interval }) {
+    const subscribable = await this.database.subscribables
+      .where({ id: subscribableId })
+      .first();
+    if (!subscribable) return;
 
-  async getStripeProduct() {
-    let stripeProductId = await this.subscribable.stripeProductId;
+    const stripeCustomer = await this.getStripeCustomer({ userId });
+    if (!stripeCustomer) return;
 
-    if (stripeProductId) {
-      return await this.stripe.api.products.retrieve(stripeProductId);
+    const subscriptions = await this.api.subscriptions.list({
+      customer: stripeCustomer.id,
+      status: "active",
+    });
+
+    if (subscriptions.data.length === 0) return;
+
+    const subscription = subscriptions.data[0];
+
+    const stripePrices = await this.getStripePrices(subscribable, plan);
+    const newPrice = stripePrices[interval];
+
+    if (!newPrice) {
+      throw new Error(`No price found for plan "${plan}" with interval "${interval}"`);
     }
 
-    const stripeProduct = await this.stripe.api.products.create({
-      name: this.subscribable.subscriptionConfig.name,
+    const planItem = subscription.items.data[0];
+
+    if (!planItem) {
+      throw new Error('Could not find plan item in subscription');
+    }
+
+    await this.api.subscriptions.update(subscription.id, {
+      items: [{
+        id: planItem.id,
+        price: newPrice.id,
+      }],
+      metadata: {
+        ...subscription.metadata,
+        blognamiPlan: plan,
+      }
+    });
+  },
+
+  async getStripeProduct(subscribable, planName = null) {
+    const config = subscribable.subscriptionConfig;
+
+    if (config.plans && planName) {
+      const planConfig = config.plans[planName];
+      if (!planConfig) {
+        throw new Error(`Plan "${planName}" not found in subscriptionConfig.plans`);
+      }
+
+      const existingRecord = await this.database.stripeProducts
+        .where({ name: planName, type: 'plan' }).first();
+
+      if (existingRecord) {
+        return await this.api.products.retrieve(existingRecord.stripeProductId);
+      }
+
+      const stripeProduct = await this.api.products.create({
+        name: planConfig.name,
+        metadata: {
+          blognamiEnvironment: process.env.NODE_ENV,
+          blognamiPlanName: planName,
+        },
+      });
+
+      await this.database.stripeProducts.insert({
+        name: planName,
+        type: 'plan',
+        stripeProductId: stripeProduct.id,
+      });
+
+      return stripeProduct;
+    }
+
+    let stripeProductId = await subscribable.stripeProductId;
+
+    if (stripeProductId) {
+      return await this.api.products.retrieve(stripeProductId);
+    }
+
+    const stripeProduct = await this.api.products.create({
+      name: config.name,
       metadata: {
         blognamiEnvironment: process.env.NODE_ENV,
       },
     });
 
-    await this.subscribable.update({ stripeProductId: stripeProduct.id });
+    await subscribable.update({ stripeProductId: stripeProduct.id });
 
     return stripeProduct;
   },
 
-  async getStripePrices() {
-    const { id: stripeProductId } = await this.getStripeProduct();
+  async getStripePrices(subscribable, planName = null) {
+    const config = subscribable.subscriptionConfig;
+
+    let monthlyPrice, yearlyPrice, currency;
+    if (config.plans && planName) {
+      const planConfig = config.plans[planName];
+      if (!planConfig) {
+        throw new Error(`Plan "${planName}" not found in subscriptionConfig.plans`);
+      }
+      monthlyPrice = planConfig.monthlyPrice;
+      yearlyPrice = planConfig.yearlyPrice;
+      currency = planConfig.currency || 'USD';
+    } else {
+      monthlyPrice = config.monthlyPrice;
+      yearlyPrice = config.yearlyPrice;
+      currency = config.currency || 'USD';
+    }
+
+    const { id: stripeProductId } = await this.getStripeProduct(subscribable, planName);
 
     const stripePrices = [];
     let starting_after;
     while (true) {
       const { data: currentStripePrices, has_more } =
-        await this.stripe.api.prices.list({
+        await this.api.prices.list({
           product: stripeProductId,
           limit: 100,
           starting_after,
@@ -112,9 +211,6 @@ const SubscribableHandler = {
       if (!has_more) break;
       starting_after = currentStripePrices[currentStripePrices.length - 1].id;
     }
-
-    const { monthlyPrice, yearlyPrice, currency = 'USD' } =
-      this.subscribable.subscriptionConfig;
 
     const out = {};
     const enableMonthly = monthlyPrice !== undefined;
@@ -136,13 +232,13 @@ const SubscribableHandler = {
         if (stripeMonthlyPrice.active) {
           out.monthly = stripeMonthlyPrice;
         } else {
-          out.monthly = await this.stripe.api.prices.update(
+          out.monthly = await this.api.prices.update(
             stripeMonthlyPrice.id,
             { active: true }
           );
         }
       } else {
-        out.monthly = await this.stripe.api.prices.create({
+        out.monthly = await this.api.prices.create({
           product: stripeProductId,
           currency: normalizedCurrency,
           unit_amount: normalizedMonthlyPrice,
@@ -161,7 +257,7 @@ const SubscribableHandler = {
         currency == normalizedCurrency
       )
         continue;
-      await this.stripe.api.prices.update(id, { active: false });
+      await this.api.prices.update(id, { active: false });
     }
 
     const stripeYearlyPrices = stripePrices.filter(
@@ -178,13 +274,13 @@ const SubscribableHandler = {
         if (stripeYearlyPrice.active) {
           out.yearly = stripeYearlyPrice;
         } else {
-          out.yearly = await this.stripe.api.prices.update(
+          out.yearly = await this.api.prices.update(
             stripeYearlyPrice.id,
             { active: true }
           );
         }
       } else {
-        out.yearly = await this.stripe.api.prices.create({
+        out.yearly = await this.api.prices.create({
           product: stripeProductId,
           currency: normalizedCurrency,
           unit_amount: normalizedYearlyPrice,
@@ -203,22 +299,22 @@ const SubscribableHandler = {
         currency == normalizedCurrency
       )
         continue;
-      await this.stripe.api.prices.update(id, { active: false });
+      await this.api.prices.update(id, { active: false });
     }
 
     return out;
   },
 
   async getStripeCustomer({ userId, email }) {
-    const user = await this.stripe.database.users.where({ id: userId }).first();
+    const user = await this.database.users.where({ id: userId }).first();
     if (!user) return;
 
     if (user.stripeCustomerId) {
-      return await this.stripe.api.customers.retrieve(user.stripeCustomerId);
+      return await this.api.customers.retrieve(user.stripeCustomerId);
     }
 
     if (email) {
-      const stripeCustomer = await this.stripe.api.customers.create({
+      const stripeCustomer = await this.api.customers.create({
         email,
         metadata: {
           blognamiUserId: userId,
@@ -229,23 +325,37 @@ const SubscribableHandler = {
     }
   },
 
-  async createCheckoutSession({
+  async createCheckoutSession(subscribable, {
     interval,
     userId,
     email,
     returnUrl = new URL(
       "/",
-      this.stripe.workspace.initialParams._url
+      this.workspace.initialParams._url
     ).toString(),
+    plan = null,
   }) {
-    const stripePrices = await this.getStripePrices();
+    const stripePrices = await this.getStripePrices(subscribable, plan);
     const stripePrice = stripePrices[interval];
 
     if (!stripePrice) return;
 
     const stripeCustomer = await this.getStripeCustomer({ userId, email });
 
-    return await this.stripe.api.checkout.sessions.create({
+    const metadata = {
+      blognamiSubscribableId: subscribable.id,
+      blognamiUserId: userId,
+    };
+
+    if (plan) {
+      metadata.blognamiPlan = plan;
+    }
+
+    if (interval) {
+      metadata.blognamiInterval = interval;
+    }
+
+    return await this.api.checkout.sessions.create({
       success_url: returnUrl,
       customer: stripeCustomer.id,
       line_items: [
@@ -256,43 +366,14 @@ const SubscribableHandler = {
       ],
       mode: "subscription",
       subscription_data: {
-        metadata: {
-          blognamiSubscribableId: this.subscribable.id,
-          blognamiUserId: userId,
-        }
+        metadata
       }
     });
   },
 
-  async createStripePaymentUrl({ interval, userId, email, returnUrl }) {
-    const stripeCheckoutSession = await this.createCheckoutSession({
-      interval,
-      userId,
-      email,
-      returnUrl,
-    });
-
-    return stripeCheckoutSession?.url;
-  },
-
-  async cancelSubscription({ userId }) {
-    const stripeCustomer = await this.getStripeCustomer({ userId });
-
-    if (!stripeCustomer) return;
-
-    const subscriptions = await this.stripe.api.subscriptions.list({
-      customer: stripeCustomer.id,
-      status: "active",
-    });
-
-    for (const { id } of subscriptions.data) {
-      await this.stripe.api.subscriptions.cancel(id);
-    }
-  },
-
   getWebhookUrl() {
-    const host = this.stripe.workspace.initialParams._headers.host;
-    const baseUrl = new URL("/", this.stripe.workspace.initialParams._url);
+    const host = this.workspace.initialParams._headers.host;
+    const baseUrl = new URL("/", this.workspace.initialParams._url);
     baseUrl.protocol = "https:";
     baseUrl.host = host;
     return new URL("/_actions/guest/stripe_webhook", baseUrl);
@@ -306,14 +387,14 @@ const SubscribableHandler = {
   async getStripeWebhookEndpoint() {
     const webhookUrl = this.getWebhookUrl();
     const { data: stripeWebhookEndpoints } =
-      await this.stripe.api.webhookEndpoints.list();
+      await this.api.webhookEndpoints.list();
 
     let out = stripeWebhookEndpoints.find(
       ({ url }) => url == webhookUrl.toString()
     );
 
     if (!out) {
-      out = await this.stripe.api.webhookEndpoints.create({
+      out = await this.api.webhookEndpoints.create({
         url: webhookUrl.toString(),
         enabled_events: [
           "customer.subscription.created",
@@ -324,17 +405,28 @@ const SubscribableHandler = {
         },
       });
 
-      this.stripe.update({ webhookSecret: out.secret });
+      this.update({ webhookSecret: out.secret });
     }
 
     return out;
   },
 
-  async syncStripeWithSubscribable() {
-    const { monthlyPrice, yearlyPrice } = this.subscribable.subscriptionConfig || {};
-    if (monthlyPrice === undefined && yearlyPrice === undefined) return;
+  async syncStripeWithSubscribable(subscribable) {
+    const config = subscribable.subscriptionConfig || {};
 
-    await this.getStripePrices();
+    if (config.plans) {
+      for (const planName of Object.keys(config.plans)) {
+        const planConfig = config.plans[planName];
+        if (planConfig.monthlyPrice !== undefined || planConfig.yearlyPrice !== undefined) {
+          await this.getStripePrices(subscribable, planName);
+        }
+      }
+    } else {
+      const { monthlyPrice, yearlyPrice } = config;
+      if (monthlyPrice === undefined && yearlyPrice === undefined) return;
+      await this.getStripePrices(subscribable);
+    }
+
     if (this.webhookUrlIsPublicallyAccessible())
       await this.getStripeWebhookEndpoint();
   },
