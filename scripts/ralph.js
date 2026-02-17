@@ -43,21 +43,39 @@ function validatePrd() {
 validatePrd();
 
 if (process.env.DOCKER !== '1') {
-    console.error('Error: Ralph must be run in Docker. Use "npm run ralph".');
+    console.error('Error: Ralph must be run in Docker. Use "npm run claude-sandbox -- node scripts/ralph.js".');
     process.exit(1);
 }
 
 const maxIterations = parseInt(process.env.RALPH_ITERATIONS || process.argv[2] || '10', 10);
 
-const prompt = `Read prd.json and progress.txt.
+const prompt = `Read prd.json and progress.md.
 Find the next task where "passes" is false.
 Implement it.
-Run "npm run test:quick" and fix any failures.
+Run "npm run test:quick" and fix any failures. If a test fails, consult progress.md for prior attempts and insights before debugging.
 Mark the task as passes: true in prd.json.
-Append what you did to progress.txt.
+Append a detailed entry to progress.md documenting what you did. Use this format:
+
+\`\`\`
+---  (only if progress.md already has content)
+
+## Task: <description>
+
+### Changes
+- \`path/to/file.js\`: <what changed and why>
+- Include brief code snippets or before/after diffs for non-trivial changes
+
+### Testing
+- What tests passed/failed and any fixes applied
+
+### Notes
+- Gotchas, lessons learned, or context for future iterations
+
+\`\`\`
+
 Commit your changes with conventional commit format. Do NOT add Co-Authored-By or any Claude/AI reference.
 ONLY DO ONE TASK AT A TIME.
-If all tasks pass, output <promise>COMPLETE</promise>.`;
+If all tasks pass, run "npm run test" (the full test suite). If full tests pass, output <promise>COMPLETE</promise>. If they fail, fix the failures and re-run until they pass.`;
 
 async function runIteration(i) {
     console.log(`\n--- Iteration ${i + 1}/${maxIterations} ---\n`);
