@@ -137,20 +137,6 @@ export default {
             showIf: 'admin'
         });
 
-        // SaaS Unsubscribe (only show for paid subscribers)
-        const tenant = await this.database.tenant;
-        if(tenant?.subscriptionTier === 'paid'){
-            this.addMenuItem('user', 'Settings', {
-                label: 'Cancel Blognami subscription',
-                url: '/_actions/admin/saas_unsubscribe',
-                target: '_overlay',
-                testId: 'saas-unsubscribe',
-                displayOrder: 200,
-                dataConfirm: 'Are you sure you want to cancel your subscription? You will lose any remaining subscription time and your blog will revert to demo mode with 3 days until expiry.',
-                showIf: 'admin'
-            });
-        }
-
         // Legal footer menu items
         this.addMenuItem('legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });
         this.addMenuItem('legal', { label: 'Privacy Policy', url: '/legal/privacy-policy' });

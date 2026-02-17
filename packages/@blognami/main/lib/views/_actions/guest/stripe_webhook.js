@@ -17,12 +17,12 @@ export default {
             const matches = event.type.match(/^customer\.subscription\.(created|deleted)$/);
             if(matches){
                 const type = matches[1];
-                const { metadata: { blognamiUserId: userId, blognamiSubscribableId: subscribableId } } = event.data.object;
+                const { metadata: { blognamiUserId: userId, blognamiSubscribableId: subscribableId, blognamiPlan: plan, blognamiInterval: interval } } = event.data.object;
                 const user = await this.database.users.where({ id: userId }).first();
                 const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
                 if(user && subscribable){
                     if(type == 'created'){
-                        await subscribable.subscribe(user, { tier: 'paid' });
+                        await subscribable.subscribe(user, { tier: 'paid', plan, interval });
                     } else {
                         await subscribable.unsubscribe(user, { force: true });
                     }

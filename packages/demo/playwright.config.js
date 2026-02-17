@@ -23,9 +23,13 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: 1,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [['html', { open: 'never' }]],
   /* Global test timeout - maximum time one test can run */
   timeout: 120000,
+  /* Global timeout for expect assertions */
+  expect: {
+    timeout: 10000,
+  },
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -36,11 +40,6 @@ export default defineConfig({
 
     /* Wait for elements to be actionable before performing actions */
     actionTimeout: 10000,
-    
-    /* Global timeout for expect assertions */
-    expect: {
-      timeout: 10000,
-    },
 
     testIdAttribute: 'data-test-id',
   },

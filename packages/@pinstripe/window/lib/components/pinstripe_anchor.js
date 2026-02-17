@@ -14,9 +14,9 @@ Component.register('pinstripe-anchor', {
         });
 
         const { target = '_self', method = 'GET', href, placeholder, preload } = this.params;
-        if(method == 'GET' && target != '_blank'){
+        if(target != '_blank'){
             const frame = target == '_overlay' ? this.frame : getFrame.call(this, target);
-            if(preload != undefined) this.document.preload(normalizeUrl(href, frame.url));
+            if(method == 'GET' && preload != undefined) this.document.preload(normalizeUrl(href, frame.url));
             if(placeholder != undefined) this.document.preload(normalizeUrl(placeholder, frame.url));
         }
 
