@@ -42,16 +42,10 @@ export default {
         const user = await this.session.user;
 
         return await this.database.transaction(async () => {
-            const nameBase = title.replace(/[^a-z0-9]/ig, ' ').trim().replace(/\s+/g, '-').toLowerCase();
-            let candidateName = nameBase;
-            let i = 2;
-            while(await this.database.tenants.where({ name: candidateName }).first()){
-                candidateName = `${nameBase}-${i}`;
-                i++;
-            }
-
+            const tenantName = crypto.randomUUID();
             const tenant = await this.database.tenants.insert({
-                name: candidateName
+                name: tenantName,
+                host: `${tenantName}.blognami.com`
             });
 
             const userName = user.name;
