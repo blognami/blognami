@@ -20,13 +20,15 @@
     "publish-all": "npm publish --workspaces",
     "reset-databases": "npm run reset-database --workspaces --if-present",
     "test:quick": "QUICK=true npm run test:unit && QUICK=true npm run test:e2e",
-    "ralph": "bash scripts/ralph-docker-run.sh",
-    "ralph:once": "bash scripts/ralph-docker-run.sh -e RALPH_ITERATIONS=1",
-    "ralph:docker:build": "docker build -f Dockerfile.ralph --build-arg GIT_USER_NAME=\"$(git config user.name)\" --build-arg GIT_USER_EMAIL=\"$(git config user.email)\" -t blognami-ralph .",
-    "ralph:docker:token": "claude setup-token",
-    "ralph:docker:clean": "docker volume rm blognami-ralph-nm",
-    "ralph:docker:shell": "bash scripts/ralph-docker-run.sh -it -- bash",
-    "ralph:reset": "echo '[]' > prd.json && > progress.txt"
+    "claude-sandbox": "node scripts/claude-sandbox.js",
+    "claude-sandbox:build": "docker build -f Dockerfile.claude-sandbox --build-arg GIT_USER_NAME=\"$(git config user.name)\" --build-arg GIT_USER_EMAIL=\"$(git config user.email)\" -t blognami-claude-sandbox .",
+    "claude-sandbox:token": "claude setup-token",
+    "claude-sandbox:clean": "docker volume rm blognami-claude-sandbox-nm",
+    "claude-sandbox:shell": "node scripts/claude-sandbox.js -it -- bash",
+    "ralph": "node scripts/claude-sandbox.js -- sh -c 'node scripts/ralph.js \"${RALPH_ITERATIONS:-10}\"'",
+    "ralph:once": "node scripts/claude-sandbox.js -e RALPH_ITERATIONS=1 -- sh -c 'node scripts/ralph.js \"${RALPH_ITERATIONS:-1}\"'",
+    "ralph:reset": "echo '[]' > prd.json && > progress.md",
+    "prompt": "node scripts/claude-sandbox.js -it -- sh -c 'node scripts/prompt.js $*' --"
   },
   "dependencies": {
     "nodemon": "^3.1.4"

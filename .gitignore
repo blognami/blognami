@@ -7,6 +7,7 @@ screenshots/
 downloads/
 packages/*test
 test-results/
+.claude/
 
 *.db
 *.db-journal
@@ -16,4 +17,3 @@ bundle.css
 bundle.css.map
 Gemfile.lock
 dump.sql
-progress.txt
