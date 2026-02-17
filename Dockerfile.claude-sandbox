@@ -1,0 +1,40 @@
+FROM node:22-bookworm
+
+# Install Playwright Chromium + system dependencies (needs root)
+ENV PLAYWRIGHT_BROWSERS_PATH=/opt/playwright-browsers
+RUN npx playwright@1.56.0 install --with-deps chromium
+
+# Install Stripe CLI
+RUN curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor -o /usr/share/keyrings/stripe.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" > /etc/apt/sources.list.d/stripe.list && \
+    apt-get update && apt-get install -y stripe sqlite3 && rm -rf /var/lib/apt/lists/*
+
+# Install Claude CLI globally
+RUN npm install -g @anthropic-ai/claude-code
+
+# Managed settings (highest precedence, cannot be overridden by Claude CLI)
+RUN mkdir -p /etc/claude-code && \
+    echo '{"skipDangerousModePermissionPrompt": true}' > /etc/claude-code/managed-settings.json
+
+# Set model via env var (avoids settings.json overwrite on first boot)
+ENV ANTHROPIC_MODEL=claude-opus-4-6
+
+# Create non-root user (Claude CLI refuses bypassPermissions as root)
+RUN useradd -m -s /bin/bash claude-sandbox
+
+WORKDIR /app
+
+# Pre-create node_modules owned by claude-sandbox so the named volume inherits ownership
+RUN mkdir -p node_modules && chown claude-sandbox:claude-sandbox node_modules
+
+USER claude-sandbox
+
+ARG GIT_USER_NAME="Claude Sandbox (Docker)"
+ARG GIT_USER_EMAIL="claude-sandbox@localhost"
+RUN git config --global user.name "$GIT_USER_NAME" && \
+    git config --global user.email "$GIT_USER_EMAIL"
+
+# Skip onboarding and bypass-permissions prompts (required for headless use)
+RUN echo '{"hasCompletedOnboarding": true, "bypassPermissionsModeAccepted": true}' > /home/claude-sandbox/.claude.json
+
+CMD ["sh", "-c", "if [ ! -f node_modules/.package-lock.json ]; then npm install; fi && claude --dangerously-skip-permissions"]
