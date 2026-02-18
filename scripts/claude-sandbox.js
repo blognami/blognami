@@ -19,6 +19,7 @@ const child = spawn('docker', [
     '-v', 'blognami-claude-sandbox-nm:/app/node_modules',
     '-e', 'CLAUDE_CODE_OAUTH_TOKEN',
     '-e', 'ANTHROPIC_API_KEY',
+    '-e', 'STRIPE_API_KEY',
     '-e', 'DOCKER=1',
     ...dockerFlags,
     'blognami-claude-sandbox',
