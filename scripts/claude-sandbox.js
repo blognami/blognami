@@ -11,6 +11,13 @@ if (command.length === 0 && !dockerFlags.includes('-it')) {
     dockerFlags.push('-it');
 }
 
+let ghToken;
+try {
+    ghToken = execSync('gh auth token', { stdio: ['pipe', 'pipe', 'pipe'] }).toString().trim();
+} catch {
+    // gh not installed or not authenticated — skip
+}
+
 execSync('npm run --silent claude-sandbox:build', { stdio: 'inherit' });
 
 const child = spawn('docker', [
@@ -21,6 +28,7 @@ const child = spawn('docker', [
     '-e', 'ANTHROPIC_API_KEY',
     '-e', 'STRIPE_API_KEY',
     '-e', 'DOCKER=1',
+    ...(ghToken ? ['-e', `GH_TOKEN=${ghToken}`] : []),
     ...dockerFlags,
     'blognami-claude-sandbox',
     ...command
