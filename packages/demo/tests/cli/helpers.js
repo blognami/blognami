@@ -36,5 +36,6 @@ export function inPackagesDir(fn){
 export function reset(){
     inPackagesDir(() => {
         run(`rm -rf *test`);
-    });   
+        run(`git checkout -- ../package-lock.json`);
+    });
 }
