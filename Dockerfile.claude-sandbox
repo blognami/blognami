@@ -4,10 +4,12 @@ FROM node:22-bookworm
 ENV PLAYWRIGHT_BROWSERS_PATH=/opt/playwright-browsers
 RUN npx playwright@1.56.0 install --with-deps chromium
 
-# Install Stripe CLI
+# Install Stripe CLI + GitHub CLI
 RUN curl -s https://packages.stripe.dev/api/security/keypair/stripe-cli-gpg/public | gpg --dearmor -o /usr/share/keyrings/stripe.gpg && \
     echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" > /etc/apt/sources.list.d/stripe.list && \
-    apt-get update && apt-get install -y stripe sqlite3 && rm -rf /var/lib/apt/lists/*
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" > /etc/apt/sources.list.d/github-cli.list && \
+    apt-get update && apt-get install -y stripe gh sqlite3 && rm -rf /var/lib/apt/lists/*
 
 # Install Claude CLI globally
 RUN npm install -g @anthropic-ai/claude-code
