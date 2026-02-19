@@ -37,6 +37,12 @@ export const styles = ({ colors, breakpointFor, remify }) => `
         font-variant-numeric: tabular-nums;
     }
 
+    .cta {
+        display: flex;
+        gap: ${remify(8)};
+        flex-wrap: wrap;
+    }
+
     .cta a {
         width: 100%;
     }
@@ -89,9 +95,12 @@ export const decorators = {
     }
 };
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export default {
     async render(){
-        const { expirySeconds, tenantId } = this.params;
+        const { expirySeconds, tenantId, tenantName } = this.params;
+        const showClaimButton = UUID_REGEX.test(tenantName);
 
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
@@ -105,6 +114,15 @@ export default {
                             target: '_overlay',
                             ['data-test-id']: 'demo-banner-subscribe-button',
                         })}
+                        ${() => {
+                            if(showClaimButton) return this.renderView('_button', {
+                                tagName: 'a',
+                                body: 'Claim your site',
+                                href: '/_claim_site',
+                                target: '_overlay',
+                                ['data-test-id']: 'demo-banner-claim-button',
+                            });
+                        }}
                     </div>
                 </div>
             </div>
