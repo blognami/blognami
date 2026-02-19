@@ -120,7 +120,7 @@ export default {
             });
         }));
 
-        if(contentType.match(/multipart\/(form-data|x-www-form-urlencoded)/)) promises.push(new Promise((resolve) => {
+        if(contentType.match(/multipart\/form-data|application\/x-www-form-urlencoded/)) promises.push(new Promise((resolve) => {
             const out = {};
             const busboy = Busboy({headers: request.headers, limits: {
                 fieldNameSize: limits.fieldNameSize,
