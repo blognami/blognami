@@ -118,7 +118,7 @@ export default {
                             if(showClaimButton) return this.renderView('_button', {
                                 tagName: 'a',
                                 body: 'Claim your site',
-                                href: '/_claim_site',
+                                href: '/_actions/admin/claim_site',
                                 target: '_overlay',
                                 ['data-test-id']: 'demo-banner-claim-button',
                             });

@@ -17,9 +17,25 @@ export default {
                 subscriptionTier: 'permanent'
             });
 
+            const uuidTenantName = '00000000-0000-0000-0000-000000000000';
+            const uuidTenant = await this.database.tenants.insert({
+                name: uuidTenantName,
+                host: `${uuidTenantName}.blognami.com`,
+                subscriptionTier: 'demo',
+                subscriptionExpiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+            });
+
             if(process.env.SKIP_FIXTURES == 'true') return;
 
             await portalTenant.runInNewWorkspace(async function(){
+                await this.database.users.insert({
+                    name: 'Admin',
+                    email: 'admin@example.com',
+                    role: 'admin'
+                });
+            });
+
+            await uuidTenant.runInNewWorkspace(async function(){
                 await this.database.users.insert({
                     name: 'Admin',
                     email: 'admin@example.com',

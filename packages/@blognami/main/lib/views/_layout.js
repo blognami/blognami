@@ -17,8 +17,20 @@ export default {
    async render(){
         const { meta = [], body } = this.params;
 
+        const url = this.initialParams._url;
+        const canonicalMeta = [];
+        if (url) {
+            const tenant = await this.database.tenant;
+            const canonicalHost = tenant ? tenant.host : url.hostname;
+            const canonicalUrl = `${url.protocol}//${canonicalHost}${url.pathname}`;
+            canonicalMeta.push({ tagName: 'link', rel: 'canonical', href: canonicalUrl });
+        }
+
         return this.renderView('_pinstripe/_shell', {
-            meta,
+            meta: [
+                ...canonicalMeta,
+                ...meta
+            ],
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">
                     ${this.renderView('_header')}

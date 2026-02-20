@@ -3,54 +3,84 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 
 export default {
     async render(){
-        const { slug } = this.params;
-
-        const errors = this.validateSubdomain(slug);
-        if(errors.length > 0){
-            return jsonResponse({ success: false, errors });
-        }
-
         const tenant = await this.database.tenant;
-        if(!tenant){
-            return jsonResponse({ success: false, errors: ['Tenant not found.'] });
-        }
+        const tenantId = tenant?.id;
+        const validateSubdomain = this.validateSubdomain;
+        const database = this.database;
 
-        if(!UUID_REGEX.test(tenant.name)){
-            return jsonResponse({ success: false, errors: ['You have already claimed a subdomain.'] });
-        }
+        const model = this.createModel({
+            meta(){
+                this.mustNotBeBlank('slug');
 
-        const { subscriptionTier } = tenant;
-        if(subscriptionTier !== 'demo' && !tenant.isActive){
-            return jsonResponse({ success: false, errors: ['An active subscription is required to claim a subdomain.'] });
-        }
+                this.addHook('validation', async function(){
+                    if(this.isValidationError('slug')) return;
 
-        const tenantId = tenant.id;
-        const oldHost = tenant.host;
+                    const slug = `${this.slug || ''}`.trim();
 
-        const existingByName = await this.database.withoutTenantScope.tenants.where({ name: slug }).first();
-        if(existingByName){
-            return jsonResponse({ success: false, errors: ['This subdomain is already taken.'] });
-        }
+                    const errors = validateSubdomain(slug);
+                    if(errors.length > 0){
+                        this.setValidationError('slug', errors[0]);
+                        return;
+                    }
 
-        const newHost = `${slug}.blognami.com`;
-        const existingByHost = await this.database.withoutTenantScope.tenants.where({ host: newHost }).first();
-        if(existingByHost){
-            return jsonResponse({ success: false, errors: ['This subdomain is already taken.'] });
-        }
+                    if(!tenant || !UUID_REGEX.test(tenant.name)){
+                        this.setValidationError('slug', 'You have already claimed a subdomain.');
+                        return;
+                    }
 
-        await this.runInNewPortalWorkspace(async function(){
-            const portalTenant = await this.database.tenants.where({ id: tenantId }).first();
-            await portalTenant.update({
-                name: slug,
-                host: newHost,
-                previousHost: oldHost
-            });
+                    const { subscriptionTier } = tenant;
+                    if(subscriptionTier !== 'demo' && !tenant.isActive){
+                        this.setValidationError('slug', 'An active subscription is required to claim a subdomain.');
+                        return;
+                    }
+
+                    const existingByName = await database.withoutTenantScope.tenants.where({ name: slug }).first();
+                    if(existingByName){
+                        this.setValidationError('slug', 'This subdomain is already taken.');
+                        return;
+                    }
+
+                    const newHost = `${slug}.blognami.com`;
+                    const existingByHost = await database.withoutTenantScope.tenants.where({ host: newHost }).first();
+                    if(existingByHost){
+                        this.setValidationError('slug', 'This subdomain is already taken.');
+                        return;
+                    }
+                });
+            }
         });
 
-        return jsonResponse({ success: true, newHost });
+        return this.renderForm(model, {
+            title: 'Claim Your Site',
+            fields: [{
+                label: 'Subdomain',
+                name: 'slug',
+                placeholder: 'my-awesome-blog',
+            }],
+            width: 'small',
+            submitTitle: 'Claim',
+
+            success: async ({ slug }) => {
+                const oldHost = tenant.host;
+                const newHost = `${slug}.blognami.com`;
+
+                await this.runInNewPortalWorkspace(async function(){
+                    const portalTenant = await this.database.tenants.where({ id: tenantId }).first();
+                    await portalTenant.update({
+                        name: slug,
+                        host: newHost,
+                        previousHost: oldHost
+                    });
+                });
+
+                const newUrl = `${this.params._url.protocol}//${newHost}`;
+
+                return this.renderHtml`
+                    <script>
+                        window.location.href = ${this.renderHtml(JSON.stringify(newUrl))};
+                    </script>
+                `;
+            }
+        });
     }
 };
-
-function jsonResponse(data){
-    return [200, { 'content-type': 'application/json' }, [JSON.stringify(data)]];
-}
