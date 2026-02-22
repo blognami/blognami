@@ -71,6 +71,18 @@ export default {
                         host: newHost,
                         previousHost: oldHost
                     });
+
+                    const oldTenantHost = await this.database.withoutTenantScope.hosts.where({ tenantId, type: 'internal', canonical: true }).first();
+                    if(oldTenantHost){
+                        await oldTenantHost.update({ type: 'redirect', canonical: false });
+                    }
+
+                    await this.database.withoutTenantScope.hosts.insert({
+                        tenantId,
+                        name: newHost,
+                        type: 'internal',
+                        canonical: true
+                    });
                 });
 
                 const newUrl = `${this.params._url.protocol}//${newHost}`;

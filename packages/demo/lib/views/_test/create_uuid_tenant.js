@@ -11,6 +11,13 @@ export default {
             subscriptionExpiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
         });
 
+        await this.database.withoutTenantScope.hosts.insert({
+            tenantId: tenant.id,
+            name: `${uuid}.blognami.com`,
+            type: 'internal',
+            canonical: true
+        });
+
         const sessionCookie = await tenant.runInNewWorkspace(async function(){
             const user = await this.database.users.insert({
                 name: 'Admin',

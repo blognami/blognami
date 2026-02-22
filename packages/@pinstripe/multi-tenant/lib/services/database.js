@@ -29,9 +29,14 @@ export default {
     }
 };
 
-function defaultCallback(){
+async function defaultCallback(){
     const headers = this.initialParams._headers;
     const hostname = this.initialParams._url.hostname;
     const host = (headers['host'] || hostname).replace(/\:\d+$/, '').toLowerCase();
-    return this.database.tenants.where({ host }).first();
+
+    const tenantHost = await this.database.withoutTenantScope.hosts
+        .where({ name: host, type: ['internal', 'verified'] })
+        .first();
+    if(tenantHost) return this.database.tenants.where({ id: tenantHost.tenantId }).first();
+    return null;
 }
