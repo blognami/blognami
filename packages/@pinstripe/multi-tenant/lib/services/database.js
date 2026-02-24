@@ -19,7 +19,7 @@ export default {
                 
                 if(typeof tenant == 'function') tenant = await tenant.call(this);
 
-                if(typeof tenant == 'string') tenant = await this.database.tenants.where({ name: tenant }).first();
+                if(typeof tenant == 'string') tenant = await this.database.tenants.where({ hosts: { name: tenant } }).first();
                 
                 if(tenant) this.database.tenant = tenant;
             }
@@ -29,9 +29,12 @@ export default {
     }
 };
 
-function defaultCallback(){
+async function defaultCallback(){
     const headers = this.initialParams._headers;
     const hostname = this.initialParams._url.hostname;
     const host = (headers['host'] || hostname).replace(/\:\d+$/, '').toLowerCase();
-    return this.database.tenants.where({ host }).first();
+
+    return this.database.withoutTenantScope.tenants.where({
+        hosts: { name: host, type: ['internal', 'verified'] }
+    }).first();
 }

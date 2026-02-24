@@ -68,7 +68,7 @@ if(process.env.TENANCY === 'multi'){
         const { withoutTenantScope: database } = _.database;
 
         // Get the existing portal tenant (created by seed_database)
-        const portal = await database.tenants.where({ name: 'portal' }).first();
+        const portal = await database.tenants.where({ hosts: { name: 'blognami.com' } }).first();
 
         // Create a user in portal database
         const portalUserId = await portal.runInNewWorkspace(async function(){
@@ -81,10 +81,7 @@ if(process.env.TENANCY === 'multi'){
         });
 
         // Create a different tenant and a user with the same email
-        const tenant = await database.tenants.insert({
-            name: 'tenant1',
-            host: 'tenant1.example.com'
-        });
+        const tenant = await database.tenants.insert({});
 
         const tenantUserId = await tenant.runInNewWorkspace(async function(){
             const { id } = await this.database.users.insert({
@@ -110,7 +107,7 @@ if(process.env.TENANCY === 'multi'){
         const { withoutTenantScope: database } = _.database;
 
         // Get the existing portal tenant
-        const portal = await database.tenants.where({ name: 'portal' }).first();
+        const portal = await database.tenants.where({ hosts: { name: 'blognami.com' } }).first();
 
         // Count initial users (may have admin from seed)
         const initialCount = await portal.runInNewWorkspace(async function(){
@@ -118,10 +115,7 @@ if(process.env.TENANCY === 'multi'){
         });
 
         // Create a tenant and user with a unique email
-        const tenant = await database.tenants.insert({
-            name: 'tenant1',
-            host: 'tenant1.example.com'
-        });
+        const tenant = await database.tenants.insert({});
 
         const tenantUserId = await tenant.runInNewWorkspace(async function(){
             const { id } = await this.database.users.insert({
@@ -152,17 +146,14 @@ if(process.env.TENANCY === 'multi'){
         const { withoutTenantScope: database } = _.database;
 
         // Get the existing portal tenant
-        const portal = await database.tenants.where({ name: 'portal' }).first();
+        const portal = await database.tenants.where({ hosts: { name: 'blognami.com' } }).first();
 
         const initialCount = await portal.runInNewWorkspace(async function(){
             return this.database.users.count();
         });
 
         // Create a tenant and user
-        const tenant = await database.tenants.insert({
-            name: 'tenant1',
-            host: 'tenant1.example.com'
-        });
+        const tenant = await database.tenants.insert({});
 
         const tenantUserId = await tenant.runInNewWorkspace(async function(){
             const { id } = await this.database.users.insert({
@@ -194,8 +185,8 @@ if(process.env.TENANCY === 'multi'){
         const { withoutTenantScope: database } = _.database;
 
         const [tenant1, tenant2] = await Promise.all([
-            database.tenants.insert({ name: 'tenant1', host: 'tenant1.example.com' }),
-            database.tenants.insert({ name: 'tenant2', host: 'tenant2.example.com' })
+            database.tenants.insert({}),
+            database.tenants.insert({})
         ]);
 
         const db1TenantId = await tenant1.runInNewWorkspace(async function(){
