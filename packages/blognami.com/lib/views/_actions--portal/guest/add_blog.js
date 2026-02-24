@@ -43,15 +43,18 @@ export default {
 
         return await this.database.transaction(async () => {
             const tenantName = crypto.randomUUID();
-            const tenant = await this.database.tenants.insert({
-                name: tenantName,
-                host: `${tenantName}.blognami.com`
-            });
+            const tenant = await this.database.tenants.insert({});
 
             const userName = user.name;
             const userEmail = user.email;
 
             await tenant.runInNewWorkspace(async function(){
+                await this.database.hosts.insert({
+                    name: `${tenantName}.blognami.com`,
+                    type: 'internal',
+                    canonical: true
+                });
+
                 await this.database.site.update({ title });
 
                 await this.database.users.insert({

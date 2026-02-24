@@ -6,6 +6,8 @@ export default {
     meta(){
         this.include('untenantable');
 
+        this.hasMany('hosts');
+
         this.addHook('beforeDelete', async function(){
             await this.runInNewWorkspace(async function(){
                 for(const tableName of Table.names){

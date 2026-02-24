@@ -13,8 +13,8 @@ export default {
 
     tenant(){
         const url = this.initialParams._url;
-        if(url.port == '3001') return 'portal';
+        if(url.port == '3001') return 'blognami.com';
         if(this.initialParams._headers.host == 'example.com') return;
-        return this.initialParams._headers['x-tenant'] || 'lorum-ipsum';
+        return this.initialParams._headers['x-tenant'] || 'lorum-ipsum.blognami.com';
     }
 };

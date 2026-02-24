@@ -7,22 +7,42 @@ export default {
     async run(){
         if(process.env.TENANCY === 'multi'){
             const lorumIpsumTenant = await this.database.tenants.insert({
-                name: 'lorum-ipsum',
                 subscriptionTier: 'demo',
                 subscriptionExpiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) // 3 days
             });
 
             const portalTenant = await this.database.tenants.insert({
-                name: 'portal',
                 subscriptionTier: 'permanent'
             });
 
             const uuidTenantName = '00000000-0000-0000-0000-000000000000';
             const uuidTenant = await this.database.tenants.insert({
-                name: uuidTenantName,
-                host: `${uuidTenantName}.blognami.com`,
                 subscriptionTier: 'demo',
                 subscriptionExpiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
+            });
+
+            await lorumIpsumTenant.runInNewWorkspace(async function(){
+                await this.database.hosts.insert({
+                    name: 'lorum-ipsum.blognami.com',
+                    type: 'internal',
+                    canonical: true
+                });
+            });
+
+            await portalTenant.runInNewWorkspace(async function(){
+                await this.database.hosts.insert({
+                    name: 'blognami.com',
+                    type: 'internal',
+                    canonical: true
+                });
+            });
+
+            await uuidTenant.runInNewWorkspace(async function(){
+                await this.database.hosts.insert({
+                    name: `${uuidTenantName}.blognami.com`,
+                    type: 'internal',
+                    canonical: true
+                });
             });
 
             if(process.env.SKIP_FIXTURES == 'true') return;

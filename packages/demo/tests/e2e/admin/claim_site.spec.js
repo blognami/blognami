@@ -1,7 +1,7 @@
 import { test, expect } from '../fixtures.js';
 import { QUICK, IS_MULTI_TENANT } from '../constants.js';
 
-const UUID_TENANT = '00000000-0000-0000-0000-000000000000';
+const UUID_TENANT = '00000000-0000-0000-0000-000000000000.blognami.com';
 
 async function signInToUuidTenant(playwright) {
   // Generate an OTP for the UUID tenant's admin user
@@ -30,11 +30,11 @@ async function signInToUuidTenant(playwright) {
   return sessionCookie;
 }
 
-async function claimViaApi(playwright, tenantName, sessionCookie, slug) {
+async function claimViaApi(playwright, tenantHostname, sessionCookie, slug) {
   const apiContext = await playwright.request.newContext({
     baseURL: 'http://127.0.0.1:3000',
     extraHTTPHeaders: {
-      'x-tenant': tenantName,
+      'x-tenant': tenantHostname,
       'cookie': sessionCookie,
       'accept': 'application/json'
     }
@@ -120,7 +120,7 @@ test.describe('Claim your site', () => {
       const createResponse = await page.request.get('/_test/create_uuid_tenant');
       const { uuid, sessionCookie } = await createResponse.json();
 
-      await claimViaApi(playwright, uuid, sessionCookie, 'test-redirect-blog');
+      await claimViaApi(playwright, `${uuid}.blognami.com`, sessionCookie, 'test-redirect-blog');
 
       const oldHost = `${uuid}.blognami.com`;
       const redirectResponse = await page.request.get('http://127.0.0.1:3000/some-path?foo=bar', {
@@ -144,7 +144,7 @@ test.describe('Claim your site', () => {
       const createResponse = await page.request.get('/_test/create_uuid_tenant');
       const { uuid, sessionCookie } = await createResponse.json();
 
-      await claimViaApi(playwright, uuid, sessionCookie, 'test-routes-blog');
+      await claimViaApi(playwright, `${uuid}.blognami.com`, sessionCookie, 'test-routes-blog');
 
       const oldHost = `${uuid}.blognami.com`;
 
@@ -176,10 +176,10 @@ test.describe('Claim your site', () => {
       const createResponse2 = await page.request.get('/_test/create_uuid_tenant');
       const { uuid: uuid2 } = await createResponse2.json();
 
-      await claimViaApi(playwright, uuid1, cookie1, 'test-isolation-blog');
+      await claimViaApi(playwright, `${uuid1}.blognami.com`, cookie1, 'test-isolation-blog');
 
       const unclaimed = await page.request.get('http://127.0.0.1:3000/', {
-        headers: { 'x-tenant': uuid2 },
+        headers: { 'x-tenant': `${uuid2}.blognami.com` },
         maxRedirects: 0
       });
       expect(unclaimed.status()).toBe(200);
@@ -210,12 +210,12 @@ test.describe('Claim your site', () => {
       const createResponse = await page.request.get('/_test/create_uuid_tenant');
       const { uuid, sessionCookie } = await createResponse.json();
 
-      await claimViaApi(playwright, uuid, sessionCookie, 'test-canonical-blog');
+      await claimViaApi(playwright, `${uuid}.blognami.com`, sessionCookie, 'test-canonical-blog');
 
       const claimedContext = await playwright.request.newContext({
         baseURL: 'http://127.0.0.1:3000',
         extraHTTPHeaders: {
-          'x-tenant': 'test-canonical-blog',
+          'x-tenant': 'test-canonical-blog.blognami.com',
           'cookie': sessionCookie
         }
       });

@@ -1,10 +1,7 @@
 
 export default {
     async migrate(){
-        await this.database.table('tenants', async tenants => {
-            await tenants.addColumn('name', 'string', { index: true });
-            await tenants.addColumn('host', 'string', { index: true });
-        });  
+        await this.database.table('tenants').create();
     
         const tableNames = Object.keys(this.database.info).filter(name => this.database.info[name] == 'table');
     

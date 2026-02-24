@@ -5,7 +5,7 @@ export default {
     get portalUser(){
         return defer(async () => {
             const database = await this.database.withoutTenantScope;
-            const portal = await database.tenants.where({ name: 'portal' }).first();
+            const portal = await database.tenants.where({ hosts: { name: 'blognami.com' } }).first();
             const email = this.email;
             const name = this.name;
             return portal.runInNewWorkspace(async function(){

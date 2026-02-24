@@ -23,7 +23,9 @@ export default {
                         return;
                     }
 
-                    if(!tenant || !UUID_REGEX.test(tenant.name)){
+                    const canonicalHost = await database.hosts.where({ canonical: true }).first();
+                    const subdomain = (canonicalHost?.name || '').replace(/\.blognami\.com$/, '');
+                    if(!tenant || !UUID_REGEX.test(subdomain)){
                         this.setValidationError('slug', 'You have already claimed a subdomain.');
                         return;
                     }
@@ -34,14 +36,8 @@ export default {
                         return;
                     }
 
-                    const existingByName = await database.withoutTenantScope.tenants.where({ name: slug }).first();
-                    if(existingByName){
-                        this.setValidationError('slug', 'This subdomain is already taken.');
-                        return;
-                    }
-
                     const newHost = `${slug}.blognami.com`;
-                    const existingByHost = await database.withoutTenantScope.tenants.where({ host: newHost }).first();
+                    const existingByHost = await database.withoutTenantScope.hosts.where({ name: newHost }).first();
                     if(existingByHost){
                         this.setValidationError('slug', 'This subdomain is already taken.');
                         return;
@@ -61,15 +57,19 @@ export default {
             submitTitle: 'Claim',
 
             success: async ({ slug }) => {
-                const oldHost = tenant.host;
                 const newHost = `${slug}.blognami.com`;
 
                 await this.runInNewPortalWorkspace(async function(){
-                    const portalTenant = await this.database.tenants.where({ id: tenantId }).first();
-                    await portalTenant.update({
-                        name: slug,
-                        host: newHost,
-                        previousHost: oldHost
+                    const oldTenantHost = await this.database.withoutTenantScope.hosts.where({ tenantId, type: 'internal', canonical: true }).first();
+                    if(oldTenantHost){
+                        await oldTenantHost.update({ type: 'redirect', canonical: false });
+                    }
+
+                    await this.database.withoutTenantScope.hosts.insert({
+                        tenantId,
+                        name: newHost,
+                        type: 'internal',
+                        canonical: true
                     });
                 });
 

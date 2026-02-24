@@ -4,7 +4,6 @@ export default {
         await this.database.table('tenants', async tenants => {
             await tenants.addColumn('subscriptionPlan', 'string', { index: true, default: 'none' });
             await tenants.addColumn('subscriptionInterval', 'string');
-            await tenants.addColumn('emailPackQuantity', 'integer', { default: 0 });
         });
     }
 };

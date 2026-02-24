@@ -53,6 +53,13 @@ export default {
                     target: '_overlay',
                     showIf: 'admin'
                 });
+
+                this.addMenuItem('user', 'Settings', {
+                    label: 'Custom domain',
+                    url: '/_actions/admin/connect_custom_domain',
+                    target: '_overlay',
+                    showIf: 'admin'
+                });
             }
         });
     }

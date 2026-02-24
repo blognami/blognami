@@ -8,9 +8,13 @@ export default {
 
         if(!tenant) return this.renderView('_404');
 
+        const canonicalHost = await tenant.hosts.where({ canonical: true }).first();
+
+        if(!canonicalHost) return this.renderView('_404');
+
         const session = await this.session;
-        
-        const url = `https://${tenant.name}.blognami.com/_actions/guest/transfer_session?id=${session.id}&passString=${session.passString}`;
+
+        const url = `https://${canonicalHost.name}/_actions/guest/transfer_session?id=${session.id}&passString=${session.passString}`;
 
         return [302, { 'Location': url }, []];
     }

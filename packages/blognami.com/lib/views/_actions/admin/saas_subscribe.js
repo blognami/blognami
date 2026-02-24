@@ -202,7 +202,6 @@ export default {
         // If plan and interval are provided, proceed to checkout
         if(plan && interval){
             const returnUrl = new URL('/', this.params._url);
-            returnUrl.host = tenant.host;
 
             const userEmail = user.email;
             const userName = user.name;

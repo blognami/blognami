@@ -99,8 +99,9 @@ const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12
 
 export default {
     async render(){
-        const { expirySeconds, tenantId, tenantName } = this.params;
-        const showClaimButton = UUID_REGEX.test(tenantName);
+        const { expirySeconds, tenantId, canonicalHostName } = this.params;
+        const subdomain = (canonicalHostName || '').replace(/\.blognami\.com$/, '');
+        const showClaimButton = UUID_REGEX.test(subdomain);
 
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
