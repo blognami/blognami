@@ -27,7 +27,7 @@
     "claude-sandbox:shell": "node scripts/claude-sandbox.js -it -- bash",
     "ralph": "node scripts/claude-sandbox.js -- sh -c 'node scripts/ralph.js \"${RALPH_ITERATIONS:-10}\"'",
     "ralph:once": "node scripts/claude-sandbox.js -e RALPH_ITERATIONS=1 -- sh -c 'node scripts/ralph.js \"${RALPH_ITERATIONS:-1}\"'",
-    "ralph:reset": "echo '[]' > prd.json && > progress.md",
+    "ralph:reset": "echo '# PRD' > prd.md",
     "prompt": "node scripts/claude-sandbox.js -it -- sh -c 'node scripts/prompt.js $*' --"
   },
   "dependencies": {

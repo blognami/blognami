@@ -403,25 +403,7 @@ No generated-by footers.
 
 ## Ralph / PRD
 
-Ralph is an automated task runner that uses Claude to implement tasks from `prd.json`.
-
-### PRD Schema (`prd.json`)
-
-```json
-[
-  {
-    "category": "functional | non-functional | bug | ...",
-    "description": "What needs to be done",
-    "steps": ["verification step 1", "verification step 2"],
-    "passes": false
-  }
-]
-```
-
-- **category**: Task type (string)
-- **description**: What to implement (string)
-- **steps**: How to verify it's done (array of strings)
-- **passes**: Whether the task is complete (boolean) — set to `true` after implementing and tests pass
+Ralph is an automated task runner that uses Claude to implement tasks from `prd.md`. Each task is an H2 section with inline metadata and notes. Ralph reads the markdown directly — no JSON schema or separate progress file.
 
 ### Claude Sandbox (Docker)
 
