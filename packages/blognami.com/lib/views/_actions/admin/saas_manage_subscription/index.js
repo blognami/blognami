@@ -213,6 +213,90 @@ export const styles = ({ colors, breakpointFor, remify, shadow }) => `
     .cancel-link:hover {
         color: ${colors.red[700]};
     }
+
+    .usage-section {
+        background: ${colors.gray[50]};
+        border: ${remify(2)} solid ${colors.gray[200]};
+        border-radius: ${remify(12)};
+        padding: ${remify(24)};
+        margin-bottom: ${remify(32)};
+    }
+
+    .usage-title {
+        font-size: ${remify(18)};
+        font-weight: 600;
+        color: ${colors.gray[900]};
+        margin-bottom: ${remify(16)};
+    }
+
+    .usage-period {
+        font-size: ${remify(14)};
+        color: ${colors.gray[600]};
+        margin-bottom: ${remify(16)};
+    }
+
+    .usage-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: ${remify(8)};
+    }
+
+    .usage-count {
+        font-size: ${remify(14)};
+        font-weight: 500;
+        color: ${colors.gray[700]};
+    }
+
+    .usage-percentage {
+        font-size: ${remify(14)};
+        font-weight: 600;
+        color: ${colors.gray[700]};
+    }
+
+    .usage-bar-bg {
+        width: 100%;
+        height: ${remify(8)};
+        background: ${colors.gray[200]};
+        border-radius: ${remify(4)};
+        overflow: hidden;
+    }
+
+    .usage-bar-fill {
+        height: 100%;
+        border-radius: ${remify(4)};
+        background: ${colors.lime[500]};
+        transition: width 0.3s ease;
+    }
+
+    .usage-warning {
+        display: flex;
+        align-items: flex-start;
+        gap: ${remify(12)};
+        margin-top: ${remify(16)};
+        padding: ${remify(12)} ${remify(16)};
+        background: ${colors.amber[50]};
+        border: ${remify(1)} solid ${colors.amber[300]};
+        border-radius: ${remify(8)};
+        font-size: ${remify(14)};
+        color: ${colors.amber[800]};
+        line-height: 1.5;
+    }
+
+    .usage-alert {
+        display: flex;
+        align-items: flex-start;
+        gap: ${remify(12)};
+        margin-top: ${remify(16)};
+        padding: ${remify(12)} ${remify(16)};
+        background: ${colors.red[50]};
+        border: ${remify(1)} solid ${colors.red[300]};
+        border-radius: ${remify(8)};
+        font-size: ${remify(14)};
+        color: ${colors.red[800]};
+        line-height: 1.5;
+        font-weight: 500;
+    }
 `;
 
 export const decorators = {
@@ -265,6 +349,17 @@ export default {
         const currentPlanConfig = currentPlan === 'starter' ? starterPlan :
                                   currentPlan === 'publisher' ? publisherPlan : null;
 
+        // Fetch email usage data
+        let emailsSent = 0;
+        const emailAllowance = tenant.monthlyEmailAllowance;
+        if(this.database.info.emailUsages){
+            const usage = await tenant.emailUsageForCurrentPeriod;
+            emailsSent = usage.emailsSent;
+        }
+        const usagePercent = emailAllowance > 0 ? Math.min(Math.round((emailsSent / emailAllowance) * 100), 100) : 0;
+        const now = new Date();
+        const periodLabel = now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
         return this.renderHtml`
             <pinstripe-modal>
                 <div class="${this.cssClasses.container}">
@@ -290,6 +385,27 @@ export default {
                             </div>
                         </div>
                     ` : ''}
+
+                    <div class="${this.cssClasses.usageSection}">
+                        <div class="${this.cssClasses.usageTitle}">Email Usage</div>
+                        <div class="${this.cssClasses.usagePeriod}">${periodLabel}</div>
+                        <div class="${this.cssClasses.usageStats}">
+                            <span class="${this.cssClasses.usageCount}">${emailsSent.toLocaleString()} / ${emailAllowance.toLocaleString()} emails sent</span>
+                            <span class="${this.cssClasses.usagePercentage}">${usagePercent}%</span>
+                        </div>
+                        <div class="${this.cssClasses.usageBarBg}">
+                            <div class="${this.cssClasses.usageBarFill}" style="width: ${usagePercent}%"></div>
+                        </div>
+                        ${usagePercent >= 100 ? this.renderHtml`
+                            <div class="${this.cssClasses.usageAlert}">
+                                You've reached your monthly email limit. Emails are paused until next month.
+                            </div>
+                        ` : usagePercent >= 80 ? this.renderHtml`
+                            <div class="${this.cssClasses.usageWarning}">
+                                You've used ${usagePercent}% of your monthly email allowance (${emailsSent.toLocaleString()} / ${emailAllowance.toLocaleString()}).
+                            </div>
+                        ` : ''}
+                    </div>
 
                     <div class="${this.cssClasses.billingToggle}">
                         <label>

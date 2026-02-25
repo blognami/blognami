@@ -13,10 +13,17 @@ export default {
         const tiers = ['paid'];
         if(access != 'paid') tiers.push('free');
 
-        // Check email allowance if tenant exists
+        // Check email allowance via usage tracking
         const tenant = await this.database.tenant;
-        let emailsSent = 0;
-        const emailAllowance = tenant ? tenant.monthlyEmailAllowance : Infinity;
+        let usage;
+        let emailAllowance = Infinity;
+
+        if(tenant){
+            emailAllowance = tenant.monthlyEmailAllowance;
+            if(this.database.info.emailUsages){
+                usage = await tenant.emailUsageForCurrentPeriod;
+            }
+        }
 
         let page = 1;
         while(true){
@@ -25,7 +32,7 @@ export default {
 
             for(const user of users){
                 // Check if we've reached the email allowance
-                if(emailsSent >= emailAllowance){
+                if(usage && usage.emailsSent >= emailAllowance){
                     console.warn(`Email allowance of ${emailAllowance} reached. Stopping email send.`);
                     return;
                 }
@@ -37,7 +44,10 @@ export default {
                     html
                 });
 
-                emailsSent++;
+                // Increment usage tracking
+                if(usage){
+                    await usage.incrementBy(1);
+                }
             }
             page++;
         }

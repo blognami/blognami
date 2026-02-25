@@ -1,46 +1,5 @@
 import { spawn } from 'node:child_process';
-import { readFileSync } from 'node:fs';
 import { createInterface } from 'node:readline';
-
-// Validate prd.json
-function validatePrd() {
-    let prd;
-    try {
-        prd = JSON.parse(readFileSync('prd.json', 'utf8'));
-    } catch (e) {
-        console.error('Error: prd.json is not valid JSON.');
-        process.exit(1);
-    }
-
-    if (!Array.isArray(prd)) {
-        console.error('Error: prd.json must be a JSON array.');
-        process.exit(1);
-    }
-
-    for (let i = 0; i < prd.length; i++) {
-        const item = prd[i];
-        if (typeof item.category !== 'string') {
-            console.error(`Error: prd.json[${i}].category must be a string.`);
-            process.exit(1);
-        }
-        if (typeof item.description !== 'string') {
-            console.error(`Error: prd.json[${i}].description must be a string.`);
-            process.exit(1);
-        }
-        if (!Array.isArray(item.steps) || !item.steps.every(s => typeof s === 'string')) {
-            console.error(`Error: prd.json[${i}].steps must be an array of strings.`);
-            process.exit(1);
-        }
-        if (typeof item.passes !== 'boolean') {
-            console.error(`Error: prd.json[${i}].passes must be a boolean.`);
-            process.exit(1);
-        }
-    }
-
-    return prd;
-}
-
-validatePrd();
 
 if (process.env.DOCKER !== '1') {
     console.error('Error: Ralph must be run in Docker. Use "npm run claude-sandbox -- node scripts/ralph.js".');
@@ -49,29 +8,27 @@ if (process.env.DOCKER !== '1') {
 
 const maxIterations = parseInt(process.env.RALPH_ITERATIONS || process.argv[2] || '10', 10);
 
-const prompt = `Read prd.json and progress.md.
-Find the next task where "passes" is false.
-Implement it.
-Run "npm run test:quick" and fix any failures. If a test fails, consult progress.md for prior attempts and insights before debugging.
-Mark the task as passes: true in prd.json.
-Append a detailed entry to progress.md documenting what you did. Use this format:
+const prompt = `Read prd.md.
 
-\`\`\`
----  (only if progress.md already has content)
+Each task is an H2 section with this format:
 
-## Task: <description>
-
-### Changes
-- \`path/to/file.js\`: <what changed and why>
-- Include brief code snippets or before/after diffs for non-trivial changes
-
-### Testing
-- What tests passed/failed and any fixes applied
+\`\`\`markdown
+## Task description here
+- **category:** functional
+- **status:** pending
+- **steps:**
+  - Verification step 1
+  - Verification step 2
 
 ### Notes
-- Gotchas, lessons learned, or context for future iterations
-
+- Notes from prior attempts (if any)
 \`\`\`
+
+Find the next task where **status:** is \`pending\`.
+Implement it.
+Run "npm run test:quick" and fix any failures. If a test fails, check the task's ### Notes subsection for prior attempts and insights before debugging.
+Set the task's **status:** to \`pass\` in prd.md.
+Add or update a ### Notes subsection under that task documenting what you did: files changed, testing results, gotchas, and lessons learned.
 
 Commit your changes with conventional commit format. Do NOT add Co-Authored-By or any Claude/AI reference.
 ONLY DO ONE TASK AT A TIME.

@@ -82,5 +82,23 @@ export default {
 
     get isActive(){
         return this.subscriptionPlan === 'starter' || this.subscriptionPlan === 'publisher';
+    },
+
+    get emailUsageForCurrentPeriod(){
+        const now = new Date();
+        const periodStart = new Date(now.getFullYear(), now.getMonth(), 1);
+        const periodEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+        return this.database.emailUsages.where({ tenantId: this.id, periodStart }).first().then(usage => {
+            if(usage) return usage;
+            return this.database.emailUsages.insert({
+                tenantId: this.id,
+                periodStart,
+                periodEnd,
+                emailsSent: 0,
+                createdAt: now,
+                updatedAt: now
+            });
+        });
     }
 };
