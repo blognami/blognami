@@ -1,4 +1,6 @@
 
+import { Row } from '@pinstripe/database';
+
 export default {
     meta(){
         this.schedule('* * * * 5'); // run every 5 minutes
@@ -7,11 +9,13 @@ export default {
     },
 
     async run(){
-        const now = new Date();
+        const { retentionDays } = Row.for('tenant').prototype;
+        const cutoff = new Date(Date.now() - retentionDays * 24 * 60 * 60 * 1000);
 
         await this.database.tenants.where({
             subscriptionTier: 'demo',
-            subscriptionExpiresAtLt: now
+            lifecycleStatus: 'paused',
+            subscriptionExpiresAtLt: cutoff
         }).delete();
     }
 };

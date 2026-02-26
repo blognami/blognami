@@ -7,12 +7,14 @@ export default {
             if(this.subscriptionTier) return;
             this.subscriptionTier = 'demo';
             this.subscriptionExpiresAt = new Date(Date.now() + this.demoSeconds);
+            this.lifecycleStatus = 'active';
         });
 
         this.addHook('afterSubscribe', async function({ plan, interval }){
             const updates = {
                 subscriptionTier: 'paid',
-                subscriptionExpiresAt: null
+                subscriptionExpiresAt: null,
+                lifecycleStatus: 'active'
             };
 
             if(plan){
@@ -36,6 +38,8 @@ export default {
     },
 
     demoSeconds: 3 * 24 * 60 * 60 * 1000, // 3 days
+
+    retentionDays: 30,
 
     get subscriptionConfig(){
         return {
