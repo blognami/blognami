@@ -48,6 +48,28 @@ export default {
         const { plan, interval } = this.params;
         const user = await this.session.user;
 
+        const existingCount = await this.database.withoutTenantScope
+            .users.where({ email: user.email }).count();
+
+        if(existingCount >= 3){
+            return this.renderHtml`
+                <pinstripe-modal>
+                    ${this.renderView('_panel', {
+                        title: 'Blog Limit Reached',
+                        body: this.renderHtml`<p>You have reached the maximum of 3 blogs per account.</p>`,
+                        footer: this.renderView('_button', {
+                            body: this.renderHtml`
+                                OK
+                                <script type="pinstripe">
+                                    this.parent.on('click', () => this.trigger('close'));
+                                </script>
+                            `
+                        })
+                    })}
+                </pinstripe-modal>
+            `;
+        }
+
         return await this.database.transaction(async () => {
             const tenantName = crypto.randomUUID();
             const tenant = await this.database.tenants.insert({});

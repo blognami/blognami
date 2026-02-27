@@ -79,6 +79,14 @@ test.describe('Claim your site', () => {
       await expect(helpers.topModal()).toContainText('at least 3 characters');
     });
 
+    test('reserved subdomain shows validation error', async ({ page, helpers }) => {
+      await page.getByTestId('demo-banner-claim-button').click();
+      await helpers.waitForPageToBeIdle();
+
+      await helpers.submitForm({ slug: 'admin' });
+      await expect(helpers.topModal()).toContainText('"admin" is a reserved name and cannot be used.');
+    });
+
     test('taken subdomain shows validation error', async ({ page, helpers }) => {
       test.skip(QUICK, 'Skipped in quick mode');
 
