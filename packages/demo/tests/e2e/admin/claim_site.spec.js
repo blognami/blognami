@@ -7,7 +7,7 @@ async function signInToUuidTenant(playwright) {
   // Generate an OTP for the UUID tenant's admin user
   const otpContext = await playwright.request.newContext({
     baseURL: 'http://127.0.0.1:3000',
-    extraHTTPHeaders: { 'x-tenant': UUID_TENANT }
+    extraHTTPHeaders: { 'x-host': UUID_TENANT }
   });
   const otpResponse = await otpContext.get('/_test/generate_otp?email=admin@example.com');
   const { otp } = await otpResponse.json();
@@ -34,7 +34,7 @@ async function claimViaApi(playwright, tenantHostname, sessionCookie, slug) {
   const apiContext = await playwright.request.newContext({
     baseURL: 'http://127.0.0.1:3000',
     extraHTTPHeaders: {
-      'x-tenant': tenantHostname,
+      'x-host': tenantHostname,
       'cookie': sessionCookie,
       'accept': 'application/json'
     }
@@ -66,7 +66,7 @@ test.describe('Claim your site', () => {
         domain: '127.0.0.1',
         path: '/',
       }]);
-      await page.setExtraHTTPHeaders({ 'x-tenant': UUID_TENANT });
+      await page.setExtraHTTPHeaders({ 'x-host': UUID_TENANT });
       await page.goto('/');
       await helpers.waitForPageToBeIdle();
     });
@@ -125,7 +125,7 @@ test.describe('Claim your site', () => {
       const oldHost = `${uuid}.blognami.com`;
       const redirectResponse = await page.request.get('http://127.0.0.1:3000/some-path?foo=bar', {
         headers: {
-          'x-tenant': 'nonexistent-for-redirect-test',
+          'x-host': 'nonexistent-for-redirect-test',
           'host': oldHost
         },
         maxRedirects: 0
@@ -149,7 +149,7 @@ test.describe('Claim your site', () => {
       const oldHost = `${uuid}.blognami.com`;
 
       const homepageResponse = await page.request.get('http://127.0.0.1:3000/', {
-        headers: { 'x-tenant': 'nonexistent-for-redirect-test', 'host': oldHost },
+        headers: { 'x-host': 'nonexistent-for-redirect-test', 'host': oldHost },
         maxRedirects: 0
       });
       expect(homepageResponse.status()).toBe(301);
@@ -158,7 +158,7 @@ test.describe('Claim your site', () => {
       expect(homepageLocation).toMatch(/\/$/);
 
       const contentResponse = await page.request.get('http://127.0.0.1:3000/posts/my-post', {
-        headers: { 'x-tenant': 'nonexistent-for-redirect-test', 'host': oldHost },
+        headers: { 'x-host': 'nonexistent-for-redirect-test', 'host': oldHost },
         maxRedirects: 0
       });
       expect(contentResponse.status()).toBe(301);
@@ -179,14 +179,14 @@ test.describe('Claim your site', () => {
       await claimViaApi(playwright, `${uuid1}.blognami.com`, cookie1, 'test-isolation-blog');
 
       const unclaimed = await page.request.get('http://127.0.0.1:3000/', {
-        headers: { 'x-tenant': `${uuid2}.blognami.com` },
+        headers: { 'x-host': `${uuid2}.blognami.com` },
         maxRedirects: 0
       });
       expect(unclaimed.status()).toBe(200);
 
       const oldHost1 = `${uuid1}.blognami.com`;
       const claimed = await page.request.get('http://127.0.0.1:3000/', {
-        headers: { 'x-tenant': 'nonexistent-for-redirect-test', 'host': oldHost1 },
+        headers: { 'x-host': 'nonexistent-for-redirect-test', 'host': oldHost1 },
         maxRedirects: 0
       });
       expect(claimed.status()).toBe(301);
@@ -196,7 +196,7 @@ test.describe('Claim your site', () => {
     test('unknown hostname returns 404', async ({ page }) => {
       const response = await page.request.get('http://127.0.0.1:3000/', {
         headers: {
-          'x-tenant': 'nonexistent-for-404-test',
+          'x-host': 'nonexistent-for-404-test',
           'host': 'totally-unknown.blognami.com'
         },
         maxRedirects: 0
@@ -215,7 +215,7 @@ test.describe('Claim your site', () => {
       const claimedContext = await playwright.request.newContext({
         baseURL: 'http://127.0.0.1:3000',
         extraHTTPHeaders: {
-          'x-tenant': 'test-canonical-blog.blognami.com',
+          'x-host': 'test-canonical-blog.blognami.com',
           'cookie': sessionCookie
         }
       });

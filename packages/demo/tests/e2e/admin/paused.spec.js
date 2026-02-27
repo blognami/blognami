@@ -16,7 +16,7 @@ async function setupPausedPage(page, helpers, data) {
     domain: '127.0.0.1',
     path: '/',
   }]);
-  await page.setExtraHTTPHeaders({ 'x-tenant': `${data.uuid}.blognami.com` });
+  await page.setExtraHTTPHeaders({ 'x-host': `${data.uuid}.blognami.com` });
   await page.goto('/');
   await helpers.waitForPageToBeIdle();
 }
@@ -45,7 +45,7 @@ test.describe('Paused tenant behavior', () => {
     const apiContext = await playwright.request.newContext({
       baseURL: 'http://127.0.0.1:3000',
       extraHTTPHeaders: {
-        'x-tenant': tenantHost,
+        'x-host': tenantHost,
         'cookie': data.sessionCookie
       }
     });
