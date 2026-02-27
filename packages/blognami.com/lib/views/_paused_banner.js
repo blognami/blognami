@@ -66,11 +66,11 @@ export default {
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
                 <div class="${this.cssClasses.container}">
-                    <div class="${this.cssClasses.message}">This site is paused and in read-only mode. It will be deleted after the retention period. Subscribe to reactivate your site.</div>
+                    <div class="${this.cssClasses.message}">Your demo has expired. This site is paused and in read-only mode. Choose a plan to reactivate your site and keep your content.</div>
                     <div class="${this.cssClasses.cta}">
                         ${this.renderView('_button', {
                             tagName: 'a',
-                            body: 'Subscribe to reactivate',
+                            body: 'Choose a plan to reactivate',
                             href: `/_actions/admin/saas_subscribe?tenantId=${tenantId}`,
                             target: '_overlay',
                             ['data-test-id']: 'paused-banner-subscribe-button',

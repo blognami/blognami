@@ -31,8 +31,10 @@ export default {
             lastAccessedAt: Date.now()
         });
 
-        return [302, { 
-            'Location': '/',
+        const { returnUrl } = this.params;
+
+        return [302, {
+            'Location': returnUrl || '/',
             'Set-Cookie': `pinstripeSession=${session.id}:${passString}; Path=/`
         }, []];
     }

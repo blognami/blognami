@@ -106,11 +106,11 @@ export default {
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
                 <div class="${this.cssClasses.container}">
-                    <div class="${this.cssClasses.message}">This demo will be automatically deleted in <span class="${this.cssClasses.countdown}" data-expiry-seconds="${expirySeconds}"></span>.</div>
+                    <div class="${this.cssClasses.message}">This is a free demo that expires in <span class="${this.cssClasses.countdown}" data-expiry-seconds="${expirySeconds}"></span>. Claim a subdomain, choose a plan, and optionally add a custom domain to keep your site.</div>
                     <div class="${this.cssClasses.cta}">
                         ${this.renderView('_button', {
                             tagName: 'a',
-                            body: 'Sign up to keep your data',
+                            body: 'Choose a plan',
                             href: `/_actions/admin/saas_subscribe?tenantId=${tenantId}`,
                             target: '_overlay',
                             ['data-test-id']: 'demo-banner-subscribe-button',

@@ -208,7 +208,6 @@ export default {
 
             // Create the holding page URL that will be returned to after Stripe checkout
             const holdingPageUrl = new URL('/_actions/admin/saas_subscription_holding_page', this.params._url);
-            holdingPageUrl.searchParams.set('tenantId', tenantId);
             holdingPageUrl.searchParams.set('plan', plan);
             holdingPageUrl.searchParams.set('interval', interval);
             holdingPageUrl.searchParams.set('returnUrl', returnUrl.toString());

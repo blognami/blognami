@@ -20,6 +20,13 @@ export default {
                 });
             }
 
+            // Pricing link (always visible when portal enabled)
+            this.addMenuItem('user', {
+                label: 'Pricing',
+                url: '/pricing',
+                displayOrder: 3
+            });
+
             // GitHub link (always visible when portal enabled)
             this.addMenuItem('user', {
                 label: 'GitHub',

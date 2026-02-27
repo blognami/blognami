@@ -31,7 +31,7 @@ test.describe('Custom domain', () => {
 
       const response = await page.request.get('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
         headers: {
-          'x-tenant': `${uuid}.blognami.com`,
+          'x-host': `${uuid}.blognami.com`,
           'cookie': sessionCookie
         }
       });
@@ -51,7 +51,7 @@ test.describe('Custom domain', () => {
 
       const response = await page.request.post('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
         headers: {
-          'x-tenant': `${uuid}.blognami.com`,
+          'x-host': `${uuid}.blognami.com`,
           'cookie': sessionCookie
         },
         form: { domain: 'not a valid domain!' }
@@ -69,7 +69,7 @@ test.describe('Custom domain', () => {
 
       const response = await page.request.post('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
         headers: {
-          'x-tenant': `${uuid}.blognami.com`,
+          'x-host': `${uuid}.blognami.com`,
           'cookie': sessionCookie
         },
         form: { domain: 'test.blognami.com' }
@@ -91,7 +91,7 @@ test.describe('Custom domain', () => {
 
       const response = await page.request.get('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
         headers: {
-          'x-tenant': `${uuid}.blognami.com`,
+          'x-host': `${uuid}.blognami.com`,
           'cookie': sessionCookie
         }
       });
@@ -130,7 +130,7 @@ test.describe('Custom domain', () => {
 
       const redirectResponse = await page.request.get('http://127.0.0.1:3000/', {
         headers: {
-          'x-tenant': 'nonexistent-for-redirect-test',
+          'x-host': 'nonexistent-for-redirect-test',
           'host': 'old.example.com'
         },
         maxRedirects: 0
@@ -144,7 +144,7 @@ test.describe('Custom domain', () => {
     test('unknown hostname returns 404', async ({ page }) => {
       const response = await page.request.get('http://127.0.0.1:3000/', {
         headers: {
-          'x-tenant': 'nonexistent-for-404-test',
+          'x-host': 'nonexistent-for-404-test',
           'host': 'completely-unknown.example.com'
         },
         maxRedirects: 0

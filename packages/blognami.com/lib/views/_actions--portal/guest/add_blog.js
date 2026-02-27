@@ -3,6 +3,8 @@ import crypto from 'crypto';
 
 export default {
     async render(){
+        const { plan, interval } = this.params;
+
         let user;
 
         if(await this.session){
@@ -10,8 +12,12 @@ export default {
         }
 
         if(!user){
+            let returnUrl = '/_actions/guest/add_blog';
+            if(plan) returnUrl += `?plan=${encodeURIComponent(plan)}`;
+            if(plan && interval) returnUrl += `&interval=${encodeURIComponent(interval)}`;
+
             return this.renderHtml`
-                <span data-component="pinstripe-anchor" data-href="/_actions/guest/sign_in?title=${encodeURIComponent('Demo')}&returnUrl=${encodeURIComponent(`/_actions/guest/add_blog`)}">
+                <span data-component="pinstripe-anchor" data-href="/_actions/guest/sign_in?title=${encodeURIComponent('Demo')}&returnUrl=${encodeURIComponent(returnUrl)}">
                     <script type="pinstripe">
                         this.parent.trigger('click');
                     </script>
@@ -39,6 +45,7 @@ export default {
     },
 
     async addPublication({ title }){
+        const { plan, interval } = this.params;
         const user = await this.session.user;
 
         return await this.database.transaction(async () => {
@@ -64,11 +71,57 @@ export default {
                 });
             });
 
-            const url = `/_actions/user/go_to_blog?id=${tenant.id}`;
+            if(plan && interval){
+                const tenantOrigin = `https://${tenantName}.blognami.com`;
+                const session = await this.session;
+
+                const returnUrl = `${tenantOrigin}/`;
+
+                const holdingPageUrl = new URL('/_actions/admin/saas_subscription_holding_page', tenantOrigin);
+                holdingPageUrl.searchParams.set('plan', plan);
+                holdingPageUrl.searchParams.set('interval', interval);
+                holdingPageUrl.searchParams.set('returnUrl', returnUrl);
+
+                const transferUrl = new URL('/_actions/guest/transfer_session', tenantOrigin);
+                transferUrl.searchParams.set('id', session.id);
+                transferUrl.searchParams.set('passString', session.passString);
+                transferUrl.searchParams.set('returnUrl', holdingPageUrl.toString());
+
+                const paymentUrl = await tenant.createSubscribeUrl(user, {
+                    plan,
+                    interval,
+                    returnUrl: transferUrl.toString()
+                });
+
+                if(!paymentUrl){
+                    return this.renderHtml`
+                        <pinstripe-modal>
+                            ${this.renderView('_panel', {
+                                title: 'Error',
+                                body: this.renderHtml`<p>Payment is not configured. Please contact support.</p>`,
+                                footer: this.renderView('_button', {
+                                    body: this.renderHtml`
+                                        OK
+                                        <script type="pinstripe">
+                                            this.parent.on('click', () => this.trigger('close'));
+                                        </script>
+                                    `
+                                })
+                            })}
+                        </pinstripe-modal>
+                    `;
+                }
+
+                return this.renderHtml`
+                    <script>
+                        window.location = ${this.renderHtml(JSON.stringify(paymentUrl))};
+                    </script>
+                `;
+            }
 
             return this.renderHtml`
                 <script>
-                    window.location = ${this.renderHtml(JSON.stringify(url))};
+                    window.location = ${this.renderHtml(JSON.stringify(`/_actions/user/go_to_blog?id=${tenant.id}`))};
                 </script>
             `;
         });
