@@ -249,6 +249,7 @@ export default {
             }
 
             return this.renderHtml`
+                ${this.renderView('_gtag', { event: 'plan_checkout_started', plan })}
                 <script type="pinstripe">
                     window.location.href = ${this.renderHtml(JSON.stringify(paymentUrl))};
                 </script>

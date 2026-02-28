@@ -76,6 +76,7 @@ export default {
                 const newUrl = `${this.params._url.protocol}//${newHost}`;
 
                 return this.renderHtml`
+                    ${this.renderView('_gtag', { event: 'claim_completed', tenant_id: tenantId, subscription_tier: 'demo' })}
                     <script>
                         window.location.href = ${this.renderHtml(JSON.stringify(newUrl))};
                     </script>

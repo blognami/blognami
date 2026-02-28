@@ -5,6 +5,10 @@ export default {
         adapter: process.env.DATABASE_ADAPTER || 'sqlite'
     },
 
+    googleAnalytics: {
+        measurementId: process.env.GA_MEASUREMENT_ID
+    },
+
     featureFlags(){
         const url = this.initialParams._url;
         if(url.port == '3001') return { portal: true };

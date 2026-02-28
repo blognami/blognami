@@ -8,7 +8,10 @@ export default {
                 if(tenant?.subscriptionPlan === plan && tenant?.subscriptionInterval === interval) break;
                 await new Promise(resolve => setTimeout(resolve, 2000));
             }
-            return this.renderRedirect({ url: returnUrl, target: '_parent' });
+            return this.renderHtml`
+                ${this.renderView('_gtag', { event: 'plan_activated', plan, subscription_tier: 'paid' })}
+                ${this.renderRedirect({ url: returnUrl, target: '_parent' })}
+            `;
         }
 
         return this.renderView('_layout', {

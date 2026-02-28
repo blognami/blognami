@@ -110,7 +110,10 @@ export default {
                     cloudflareCustomHostnameId
                 });
 
-                return this.renderRedirect({ target: '_parent' });
+                return this.renderHtml`
+                    ${this.renderView('_gtag', { event: 'custom_domain_connected', tenant_id: tenantId })}
+                    ${this.renderRedirect({ target: '_parent' })}
+                `;
             }
         });
     }

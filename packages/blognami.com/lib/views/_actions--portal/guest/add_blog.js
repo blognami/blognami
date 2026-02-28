@@ -135,6 +135,7 @@ export default {
                 }
 
                 return this.renderHtml`
+                    ${this.renderView('_gtag', { event: 'demo_created', tenant_id: tenant.id, subscription_tier: 'demo' })}
                     <script>
                         window.location = ${this.renderHtml(JSON.stringify(paymentUrl))};
                     </script>
@@ -142,6 +143,7 @@ export default {
             }
 
             return this.renderHtml`
+                ${this.renderView('_gtag', { event: 'demo_created', tenant_id: tenant.id, subscription_tier: 'demo' })}
                 <script>
                     window.location = ${this.renderHtml(JSON.stringify(`/_actions/user/go_to_blog?id=${tenant.id}`))};
                 </script>
