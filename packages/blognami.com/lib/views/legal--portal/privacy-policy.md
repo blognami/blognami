@@ -24,8 +24,9 @@ For privacy-related inquiries, contact us at:
 We collect the following types of personal data:  
 
 ### a) Information You Provide to Us  
-- **Account Information**: Name, email address, username, and password.  
-- **Profile Data**: Bio, profile picture, website links (if applicable).  
+- **Account Information**: Name, email address, and account role.
+- **Authentication Data**: Session tokens, sign-in timestamps, and cryptographic salts used for passwordless one-time-password (OTP) verification. We do not store passwords.
+- **Profile Data**: Bio, profile picture, website links (if applicable).
 - **Content Data**: Posts, comments, and other content you upload.  
 - **Communication Data**: Any messages or inquiries you send to us.  
 
