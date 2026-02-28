@@ -37,6 +37,6 @@ RUN git config --global user.name "$GIT_USER_NAME" && \
     git config --global user.email "$GIT_USER_EMAIL"
 
 # Skip onboarding and bypass-permissions prompts (required for headless use)
-RUN echo '{"hasCompletedOnboarding": true, "bypassPermissionsModeAccepted": true}' > /home/claude-sandbox/.claude.json
+RUN echo '{"hasCompletedOnboarding": true, "bypassPermissionsModeAccepted": true, "effortCalloutDismissed": true, "projects": {"/app": {"hasTrustDialogAccepted": true, "hasCompletedProjectOnboarding": true}}}' > /home/claude-sandbox/.claude.json
 
 CMD ["sh", "-c", "if [ ! -f node_modules/.package-lock.json ]; then npm install; fi && claude --dangerously-skip-permissions"]

@@ -48,6 +48,7 @@ export default {
                     });
                     
                     const [ status, headers, body ] = await that.renderHtml`
+                        ${that.renderView('_gtag', { event: 'otp_verified' })}
                         ${() => {
                             if(returnUrl) return that.renderHtml`
                                 ${that.renderRedirect({ url: returnUrl })}
