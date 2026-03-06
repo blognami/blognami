@@ -95,18 +95,14 @@ export const decorators = {
     }
 };
 
-const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
 export default {
     async render(){
-        const { expirySeconds, tenantId, canonicalHostName } = this.params;
-        const subdomain = (canonicalHostName || '').replace(/\.blognami\.com$/, '');
-        const showClaimButton = UUID_REGEX.test(subdomain);
+        const { expirySeconds, tenantId } = this.params;
 
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
                 <div class="${this.cssClasses.container}">
-                    <div class="${this.cssClasses.message}">This is a free demo that expires in <span class="${this.cssClasses.countdown}" data-expiry-seconds="${expirySeconds}"></span>. Claim a subdomain, choose a plan, and optionally add a custom domain to keep your site.</div>
+                    <div class="${this.cssClasses.message}">This is a free demo that expires in <span class="${this.cssClasses.countdown}" data-expiry-seconds="${expirySeconds}"></span> - choose a plan to keep your site.</div>
                     <div class="${this.cssClasses.cta}">
                         ${this.renderView('_button', {
                             tagName: 'a',
@@ -115,15 +111,6 @@ export default {
                             target: '_overlay',
                             ['data-test-id']: 'demo-banner-subscribe-button',
                         })}
-                        ${() => {
-                            if(showClaimButton) return this.renderView('_button', {
-                                tagName: 'a',
-                                body: 'Claim your site',
-                                href: '/_actions/admin/claim_site',
-                                target: '_overlay',
-                                ['data-test-id']: 'demo-banner-claim-button',
-                            });
-                        }}
                     </div>
                 </div>
             </div>

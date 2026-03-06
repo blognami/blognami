@@ -35,14 +35,29 @@ export const Model = Class.extend().include({
             mustBeAValidEmail(name, options = {}){
                 const { message = 'Must be a valid email',  ...otherOptions } = options;
                 return this.mustMatchPattern(name, /^[^@]+@[^@]+$/, { message, ...otherOptions });
+            },
+
+            toFormAdapter(){
+                return this.new().toFormAdapter();
             }
         });
     },
 
+    initialize(fields = {}){
+        this._initialFields = { ...fields };
+        Object.assign(this, fields);
+    },
+
     toFormAdapter(){
+        const fields = [];
+
+        for(const [name, value] of Object.entries(this._initialFields)){
+            fields.push({ name, value });
+        }
+
         return {
             title: 'Submit',
-            fields: [],
+            fields,
             submitTitle: 'Submit',
             cancelTitle: 'Cancel',
             submit: async (values, options = {}) => {

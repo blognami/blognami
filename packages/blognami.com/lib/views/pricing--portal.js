@@ -214,7 +214,7 @@ export default {
                                 isPrimary: true,
                                 isFullWidth: true,
                                 size: 'large',
-                                href: '/_actions/guest/add_blog?plan=starter&interval=monthly',
+                                href: '/_actions/user/add_blog?plan=starter&interval=monthly',
                                 target: '_overlay',
                                 ['data-plan-link']: 'starter'
                             })}
@@ -246,7 +246,7 @@ export default {
                                 isPrimary: true,
                                 isFullWidth: true,
                                 size: 'large',
-                                href: '/_actions/guest/add_blog?plan=publisher&interval=monthly',
+                                href: '/_actions/user/add_blog?plan=publisher&interval=monthly',
                                 target: '_overlay',
                                 ['data-plan-link']: 'publisher'
                             })}

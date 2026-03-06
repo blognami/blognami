@@ -252,7 +252,7 @@ export default {
                         })}
                         ${this.renderView('_button', {
                             tagName: 'a',
-                            href: '/_actions/guest/add_blog',
+                            href: '/_actions/user/add_blog',
                             target: '_overlay',
                             body: 'Demo',
                         })}

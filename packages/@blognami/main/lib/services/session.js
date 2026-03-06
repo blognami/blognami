@@ -1,6 +1,6 @@
 export default {
     create(){
-        return this.defer(async () => {
+        return this.defer(async () => this.context.root.getOrCreate('session', async () => {
             const { pinstripeSession } = this.cookies;
             if(!pinstripeSession){
                 return;
@@ -13,6 +13,6 @@ export default {
                 });
             }
             return session;
-        });
+        }));
     }
 };

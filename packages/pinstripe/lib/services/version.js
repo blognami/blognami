@@ -8,11 +8,10 @@ export default {
     
     create(){
         if(this.isClient) return this.defer(async () => {
-            if(!this.context.root.hasOwnProperty('version')){
+            return this.context.root.getOrCreate('version', async () => {
                 if(!cache) cache = fetch('/_pinstripe/_shell/version.json').then(response => response.json());
-                this.context.root.version = await cache
-            }
-            return this.context.root.version;
+                return await cache;
+            });
         });
         return this.defer(async () => {
             if(!cache){

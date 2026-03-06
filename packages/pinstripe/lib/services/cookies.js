@@ -1,7 +1,7 @@
 
 export default {
     create(){
-        if(!this.context.root.hasOwnProperty('cookies')){
+        return this.context.root.getOrCreate('cookies', () => {
             const cookies = {};
             const cookieHeader = this.initialParams._headers?.cookie;
             if(cookieHeader){
@@ -12,8 +12,7 @@ export default {
                     }
                 });
             }
-            this.context.root.cookies = cookies;
-        }
-        return this.context.root.cookies;
+            return cookies;
+        });
     }
 };

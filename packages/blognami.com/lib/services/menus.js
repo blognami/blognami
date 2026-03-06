@@ -14,7 +14,7 @@ export default {
 
                 this.addMenuItem('user', {
                     label: 'Demo',
-                    url: '/_actions/guest/add_blog',
+                    url: '/_actions/user/add_blog',
                     target: '_overlay',
                     displayOrder: 10
                 });
@@ -39,7 +39,7 @@ export default {
             if(await this.isSignedIn){
                 this.addMenuItem('user', 'Add', {
                     label: 'Blog',
-                    url: '/_actions/guest/add_blog',
+                    url: '/_actions/user/add_blog',
                     target: '_overlay'
                 });
 
@@ -52,20 +52,28 @@ export default {
         });
 
         this.addHook('initializeMenus', async function(){
+            if (!await this.isSignedIn || (await this.user).role !== 'admin') return;
+
             const tenant = await this.database.tenant;
-            if(tenant && (tenant.subscriptionPlan === 'starter' || tenant.subscriptionPlan === 'publisher')){
+            if(!tenant) return;
+
+            this.addMenuItem('user', 'Settings', {
+                label: 'Subdomain',
+                url: '/_actions/admin/edit_subdomain',
+                target: '_overlay'
+            });
+
+            if(tenant.subscriptionPlan === 'starter' || tenant.subscriptionPlan === 'publisher'){
                 this.addMenuItem('user', 'Settings', {
                     label: 'Manage subscription',
                     url: '/_actions/admin/saas_manage_subscription',
-                    target: '_overlay',
-                    showIf: 'admin'
+                    target: '_overlay'
                 });
 
                 this.addMenuItem('user', 'Settings', {
                     label: 'Custom domain',
                     url: '/_actions/admin/connect_custom_domain',
-                    target: '_overlay',
-                    showIf: 'admin'
+                    target: '_overlay'
                 });
             }
         });

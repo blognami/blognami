@@ -24,6 +24,7 @@ export default {
         });
 
         this.assignProps({
+            availableRoles: ['admin', 'user'],
             asapEmailNotificationDelay: 10 * 60 * 1000,
         });
 
@@ -36,6 +37,13 @@ export default {
                 new Date()
             );
         });
+    },
+
+    get impliedRoles(){
+        const { availableRoles } = this.constructor;
+        const index = availableRoles.indexOf(this.role);
+        if(index === -1) return ['guest'];
+        return [...availableRoles.slice(index), 'guest'];
     },
 
     async generatePassword(){

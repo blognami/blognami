@@ -27,11 +27,11 @@ test.describe('Custom domain', () => {
       test.skip(QUICK, 'Skipped in quick mode');
 
       const createResponse = await page.request.get('/_test/create_uuid_tenant');
-      const { uuid, sessionCookie } = await createResponse.json();
+      const { slug, sessionCookie } = await createResponse.json();
 
       const response = await page.request.get('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
         headers: {
-          'x-host': `${uuid}.blognami.com`,
+          'x-host': `${slug}.blognami.com`,
           'cookie': sessionCookie
         }
       });
@@ -47,11 +47,11 @@ test.describe('Custom domain', () => {
     test('invalid domain format shows validation error', async ({ page }) => {
       test.skip(QUICK, 'Skipped in quick mode');
 
-      const { uuid, sessionCookie } = await createPublisherTenant(page);
+      const { slug, sessionCookie } = await createPublisherTenant(page);
 
       const response = await page.request.post('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
         headers: {
-          'x-host': `${uuid}.blognami.com`,
+          'x-host': `${slug}.blognami.com`,
           'cookie': sessionCookie
         },
         form: { domain: 'not a valid domain!' }
@@ -65,11 +65,11 @@ test.describe('Custom domain', () => {
     test('blognami.com subdomain is rejected', async ({ page }) => {
       test.skip(QUICK, 'Skipped in quick mode');
 
-      const { uuid, sessionCookie } = await createPublisherTenant(page);
+      const { slug, sessionCookie } = await createPublisherTenant(page);
 
       const response = await page.request.post('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
         headers: {
-          'x-host': `${uuid}.blognami.com`,
+          'x-host': `${slug}.blognami.com`,
           'cookie': sessionCookie
         },
         form: { domain: 'test.blognami.com' }
@@ -86,12 +86,12 @@ test.describe('Custom domain', () => {
     test('shows connected domain with remove button', async ({ page }) => {
       test.skip(QUICK, 'Skipped in quick mode');
 
-      const { uuid, tenantId, sessionCookie } = await createPublisherTenant(page);
+      const { slug, tenantId, sessionCookie } = await createPublisherTenant(page);
       await addVerifiedHost(page, tenantId, 'my-custom.example.com');
 
       const response = await page.request.get('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
         headers: {
-          'x-host': `${uuid}.blognami.com`,
+          'x-host': `${slug}.blognami.com`,
           'cookie': sessionCookie
         }
       });
@@ -125,7 +125,7 @@ test.describe('Custom domain', () => {
     test('redirect-type host 301s to canonical host', async ({ page }) => {
       test.skip(QUICK, 'Skipped in quick mode');
 
-      const { uuid, tenantId } = await createPublisherTenant(page);
+      const { slug, tenantId } = await createPublisherTenant(page);
       await addRedirectHost(page, tenantId, 'old.example.com');
 
       const redirectResponse = await page.request.get('http://127.0.0.1:3000/', {
@@ -138,7 +138,7 @@ test.describe('Custom domain', () => {
 
       expect(redirectResponse.status()).toBe(301);
       const location = redirectResponse.headers()['location'];
-      expect(location).toContain(`${uuid}.blognami.com`);
+      expect(location).toContain(`${slug}.blognami.com`);
     });
 
     test('unknown hostname returns 404', async ({ page }) => {

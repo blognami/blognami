@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 
 export default {
     render(){
-        const { name, email, title, returnUrl } = this.params;
+        const { name, email, returnUrl } = this.params;
         
         const that = this;
 
@@ -19,7 +19,7 @@ export default {
                 }
             }),
             {
-                title,
+                title: 'Sign In',
                 fields: [{ name: 'email', type: 'hidden' }, { name: 'password', type: 'hidden' }, { name: 'name', label: 'Your Name'}],
                 submitTitle: 'Next',
                 width: 'small',

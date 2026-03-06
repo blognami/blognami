@@ -8,11 +8,10 @@ export default {
     
     create(){
         if(this.isClient) return this.defer(async () => {
-            if(!this.context.root.hasOwnProperty('environment')){
+            return this.context.root.getOrCreate('environment', async () => {
                 if(!cache) cache = fetch('/_pinstripe/_shell/environment.json').then(response => response.json());
-                this.context.root.environment = await cache
-            }
-            return this.context.root.environment;
+                return await cache;
+            });
         });
         return this.defer(async () => {
             if(!cache){

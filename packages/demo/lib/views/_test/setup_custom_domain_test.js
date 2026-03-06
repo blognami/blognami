@@ -1,12 +1,16 @@
 
 import crypto from 'crypto';
+import { inflector } from '@pinstripe/utils';
+
+let counter = 0;
 
 export default {
     async render(){
         const { action } = this.params;
 
         if(action === 'create_publisher_tenant'){
-            const uuid = crypto.randomUUID();
+            counter++;
+            const slug = await this.generateUniqueSubdomain(`Publisher Blog ${counter}`);
             const tenant = await this.database.withoutTenantScope.tenants.insert({
                 subscriptionTier: 'paid',
                 subscriptionPlan: 'publisher',
@@ -15,7 +19,7 @@ export default {
 
             const sessionCookie = await tenant.runInNewWorkspace(async function(){
                 await this.database.hosts.insert({
-                    name: `${uuid}.blognami.com`,
+                    name: `${slug}.blognami.com`,
                     type: 'internal',
                     canonical: true
                 });
@@ -34,7 +38,7 @@ export default {
                 return `pinstripeSession=${session.id}:${passString}`;
             });
 
-            return [200, { 'content-type': 'application/json' }, [JSON.stringify({ uuid, tenantId: tenant.id, sessionCookie })]];
+            return [200, { 'content-type': 'application/json' }, [JSON.stringify({ slug, tenantId: tenant.id, sessionCookie })]];
         }
 
         if(action === 'add_verified_host'){
@@ -82,5 +86,16 @@ export default {
         }
 
         return [400, { 'content-type': 'application/json' }, [JSON.stringify({ error: 'Unknown action' })]];
+    },
+
+    async generateUniqueSubdomain(title){
+        const base = inflector.dasherize(title);
+        let n = 1;
+        while(true){
+            const candidate = n > 1 ? `${base}-${n}` : base;
+            const existing = await this.database.withoutTenantScope.hosts.where({ name: `${candidate}.blognami.com` }).first();
+            if(!existing) return candidate;
+            n++;
+        }
     }
 };

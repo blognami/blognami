@@ -23,7 +23,7 @@ export default {
                     tagName: 'a',
                     target: '_overlay',
                     isPrimary: true,
-                    href: `/_actions/guest/subscribe?subscribableId=${await this.database.newsletter.id}`,
+                    href: `/_actions/user/subscribe?subscribableId=${await this.database.newsletter.id}`,
                     class: this.cssClasses.button,
                     body: 'Subscribe now',
                     ['data-test-id']: 'subscribe-now-button',

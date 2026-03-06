@@ -1,4 +1,6 @@
 
+import { defer } from './defer.js';
+
 export const Hookable = {
     meta(){
         this.assignProps({
@@ -41,38 +43,40 @@ export const Hookable = {
         });
     },
 
-    async runHook(name, options = {}){
-        const {
-            args = [],
-            stopIf = () => false,
-            beforeEach = undefined,
-            betweenEach = undefined,
-            afterEach = undefined,
-            ifNone = undefined,
-            filter = () => true,
-            sort = (a, b) => {
-                const aOrder = (typeof a === 'object' && a !== null && 'displayOrder' in a) ? a.displayOrder : 100;
-                const bOrder = (typeof b === 'object' && b !== null && 'displayOrder' in b) ? b.displayOrder : 100;
-                return aOrder - bOrder;
+    runHook(name, options = {}){
+        return defer(async () => {
+            const {
+                args = [],
+                stopIf = () => false,
+                beforeEach = undefined,
+                betweenEach = undefined,
+                afterEach = undefined,
+                ifNone = undefined,
+                filter = result => result != undefined,
+                sort = (a, b) => {
+                    const aOrder = (typeof a === 'object' && a !== null && 'displayOrder' in a) ? a.displayOrder : 100;
+                    const bOrder = (typeof b === 'object' && b !== null && 'displayOrder' in b) ? b.displayOrder : 100;
+                    return aOrder - bOrder;
+                }
+            } = options;
+
+            const out = [];
+            const hooks = this.constructor.allHooks;
+            const callbacks = hooks[name] || [];
+            for(const callback of callbacks){
+                if(typeof beforeEach === 'function') await beforeEach.call(this, ...args);
+                if(out.length > 0 && typeof betweenEach === 'function') out.push(await betweenEach.call(this, ...args));
+                const item = await callback.call(this, ...args);
+                out.push(item);
+                if(typeof afterEach === 'function') await afterEach.call(this, ...args);
+                if(await stopIf(item)) break;
             }
-        } = options;
 
-        const out = [];
-        const hooks = this.constructor.allHooks;
-        const callbacks = hooks[name] || [];
-        for(const callback of callbacks){
-            if(typeof beforeEach === 'function') await beforeEach.call(this, ...args);
-            if(out.length > 0 && typeof betweenEach === 'function') out.push(await betweenEach.call(this, ...args));
-            const item = await callback.call(this, ...args);
-            out.push(item);
-            if(typeof afterEach === 'function') await afterEach.call(this, ...args);
-            if(await stopIf(item)) break;
-        }
+            if(out.length === 0 && typeof ifNone === 'function'){
+                out.push(await ifNone.call(this, ...args));
+            }
 
-        if(out.length === 0 && typeof ifNone === 'function'){
-            out.push(await ifNone.call(this, ...args));
-        }
-
-        return out.filter(filter).sort(sort);
+            return out.filter(filter).sort(sort);
+        });
     }
 };

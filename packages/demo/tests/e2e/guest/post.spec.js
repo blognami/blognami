@@ -28,7 +28,7 @@ test.describe('Guest - Post page', () => {
       await page.getByTestId("main").getByTestId("add-comment").getByText("Add comment").click();
       await helpers.topModal().getByText("Cancel").click();
       await page.getByTestId("main").getByTestId("add-comment").getByText("Add comment").click();
-      await expect(helpers.topModal()).toContainText("Add comment");
+      await expect(helpers.topModal()).toContainText("Sign In");
 
       await helpers.submitForm({ email: "bob@example.com", legal: true });
       await helpers.submitForm({ password: "bob@example.com" });

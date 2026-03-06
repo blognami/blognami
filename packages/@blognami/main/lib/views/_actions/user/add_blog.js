@@ -1,29 +1,11 @@
 
-import crypto from 'crypto';
+import { inflector } from '@pinstripe/utils';
 
 export default {
     async render(){
         const { plan, interval } = this.params;
 
-        let user;
-
-        if(await this.session){
-            user = await this.session.user;
-        }
-
-        if(!user){
-            let returnUrl = '/_actions/guest/add_blog';
-            if(plan) returnUrl += `?plan=${encodeURIComponent(plan)}`;
-            if(plan && interval) returnUrl += `&interval=${encodeURIComponent(interval)}`;
-
-            return this.renderHtml`
-                <span data-component="pinstripe-anchor" data-href="/_actions/guest/sign_in?title=${encodeURIComponent('Demo')}&returnUrl=${encodeURIComponent(returnUrl)}">
-                    <script type="pinstripe">
-                        this.parent.trigger('click');
-                    </script>
-                </span>
-            `;
-        }
+        const user = await this.user;
 
         const model = this.createModel({
             meta(){
@@ -44,9 +26,23 @@ export default {
         });
     },
 
+    async generateUniqueSubdomain(title){
+        const base = inflector.dasherize(title);
+        let n = 1;
+        while(true){
+            const candidate = n > 1 ? `${base}-${n}` : base;
+            const errors = this.validateSubdomain(candidate);
+            if(errors.length === 0){
+                const existing = await this.database.withoutTenantScope.hosts.where({ name: `${candidate}.blognami.com` }).first();
+                if(!existing) return candidate;
+            }
+            n++;
+        }
+    },
+
     async addPublication({ title }){
         const { plan, interval } = this.params;
-        const user = await this.session.user;
+        const user = await this.user;
 
         const existingCount = await this.database.withoutTenantScope
             .users.where({ email: user.email }).count();
@@ -71,7 +67,7 @@ export default {
         }
 
         return await this.database.transaction(async () => {
-            const tenantName = crypto.randomUUID();
+            const slug = await this.generateUniqueSubdomain(title);
             const tenant = await this.database.tenants.insert({});
 
             const userName = user.name;
@@ -79,7 +75,7 @@ export default {
 
             await tenant.runInNewWorkspace(async function(){
                 await this.database.hosts.insert({
-                    name: `${tenantName}.blognami.com`,
+                    name: `${slug}.blognami.com`,
                     type: 'internal',
                     canonical: true
                 });
@@ -94,7 +90,7 @@ export default {
             });
 
             if(plan && interval){
-                const tenantOrigin = `https://${tenantName}.blognami.com`;
+                const tenantOrigin = `https://${slug}.blognami.com`;
                 const session = await this.session;
 
                 const returnUrl = `${tenantOrigin}/`;

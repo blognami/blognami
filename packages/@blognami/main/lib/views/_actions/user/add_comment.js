@@ -1,11 +1,5 @@
 export default {
     async render(){
-        if(await this.isSignedOut){
-            return this.renderRedirect({
-                url: `/_actions/guest/sign_in?title=${encodeURIComponent('Add comment')}&returnUrl=${encodeURIComponent(`/_actions/guest/add_comment?commentableId=${this.params.commentableId}`)}`
-            });
-        }
-
         return this.renderForm(this.database.comments, {
             fields: ['commentableId', { name: 'userId', value: await this.user.id }, { name: 'body', type: '_markdown_editor'}],
             success: this.success.bind(this)
