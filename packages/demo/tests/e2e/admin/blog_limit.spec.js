@@ -36,7 +36,7 @@ async function addBlogViaApi(playwright, sessionCookie, title) {
     }
   });
 
-  const response = await ctx.post('/_actions/guest/add_blog', {
+  const response = await ctx.post('/_actions/user/add_blog', {
     form: { title }
   });
 

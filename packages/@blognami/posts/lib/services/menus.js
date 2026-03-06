@@ -2,21 +2,21 @@ export default {
     meta(){
         this.addHook('initializeMenus', async function(){
             // Admin-only post links
-            this.addMenuItem('user', 'Add', {
-                label: 'Post',
-                url: '/_actions/admin/add_post',
-                target: '_overlay',
-                testId: 'add-post',
-                showIf: 'admin'
-            });
+            if (await this.isSignedIn && (await this.user).role === 'admin') {
+                this.addMenuItem('user', 'Add', {
+                    label: 'Post',
+                    url: '/_actions/admin/add_post',
+                    target: '_overlay',
+                    testId: 'add-post'
+                });
 
-            this.addMenuItem('user', 'Find', {
-                label: 'Post',
-                url: '/_actions/admin/find_post',
-                target: '_overlay',
-                testId: 'find-post',
-                showIf: 'admin'
-            });
+                this.addMenuItem('user', 'Find', {
+                    label: 'Post',
+                    url: '/_actions/admin/find_post',
+                    target: '_overlay',
+                    testId: 'find-post'
+                });
+            }
 
             // Add individual tags with post count badges
             const tags = await this.database.posts.tags.orderBy('name').all();

@@ -29,14 +29,14 @@ test.describe('Guest - Stripe newsletter subscription', () => {
     await expect(page.getByText('This content is for paying subscribers only.')).toBeVisible();
     await expect(page.getByTestId('post-body')).not.toBeVisible();
 
-    // Subscribe via Stripe
+    // Subscribe via Stripe (user action requires sign-in first)
     await page.getByTestId('subscribe-now-button').click();
-    await helpers.waitForPageToBeIdle();
-    await page.getByTestId('monthly-subscription-button').click();
     await helpers.waitForPageToBeIdle();
     await helpers.submitForm({ email: 'subscriber@example.com', legal: true });
     await helpers.submitForm({ password: 'subscriber@example.com' });
-    await helpers.submitForm({ name: 'Test Subscriber' }, { skipWaitForIdle: true });
+    await helpers.submitForm({ name: 'Test Subscriber' });
+    await helpers.waitForPageToBeIdle();
+    await page.getByTestId('monthly-subscription-button').click();
     await helpers.completeStripeCheckout('Test Subscriber');
 
     // Wait for holding page to redirect after confirming subscription

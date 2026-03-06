@@ -1,24 +1,6 @@
 import { test, expect } from '../fixtures.js';
 import { QUICK, STRIPE_ENABLED, IS_MULTI_TENANT } from '../constants.js';
 
-async function claimViaApi(playwright, tenantHostname, sessionCookie, slug) {
-  const apiContext = await playwright.request.newContext({
-    baseURL: 'http://127.0.0.1:3000',
-    extraHTTPHeaders: {
-      'x-host': tenantHostname,
-      'cookie': sessionCookie,
-      'accept': 'application/json'
-    }
-  });
-
-  const claimResponse = await apiContext.post('/_actions/admin/claim_site', {
-    form: { slug }
-  });
-  expect(claimResponse.ok()).toBe(true);
-
-  await apiContext.dispose();
-}
-
 test.describe('Custom domain paywall transition', () => {
   test.skip(!IS_MULTI_TENANT, 'Requires TENANCY=multi');
   test.skip(!STRIPE_ENABLED, 'Requires STRIPE_API_KEY');
@@ -31,19 +13,15 @@ test.describe('Custom domain paywall transition', () => {
   test('paywall blocks custom domain for unpaid tenant, unblocked after subscribing', async ({ playwright, page, helpers }) => {
     test.skip(QUICK, 'Skipped in quick mode');
 
-    // Step 1: Create a demo tenant and claim a subdomain
+    // Step 1: Create a demo tenant (subdomain is already title-based)
     const createResponse = await page.request.get('/_test/create_uuid_tenant');
-    const { uuid, sessionCookie } = await createResponse.json();
-    const guidHostname = `${uuid}.blognami.com`;
-
-    const slug = 'test-paywall-blog';
-    await claimViaApi(playwright, guidHostname, sessionCookie, slug);
-    const claimedHostname = `${slug}.blognami.com`;
+    const { slug, sessionCookie } = await createResponse.json();
+    const hostname = `${slug}.blognami.com`;
 
     // Step 2: Verify custom domain settings show paywall for unpaid tenant
     const paywallResponse = await page.request.get('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
       headers: {
-        'x-host': claimedHostname,
+        'x-host': hostname,
         'cookie': sessionCookie
       }
     });
@@ -59,7 +37,7 @@ test.describe('Custom domain paywall transition', () => {
       domain: '127.0.0.1',
       path: '/',
     }]);
-    await page.setExtraHTTPHeaders({ 'x-host': claimedHostname });
+    await page.setExtraHTTPHeaders({ 'x-host': hostname });
     await page.goto('/');
     await helpers.waitForPageToBeIdle();
 
@@ -79,7 +57,7 @@ test.describe('Custom domain paywall transition', () => {
     // Step 4: Verify custom domain form is now accessible (no paywall)
     const formResponse = await page.request.get('http://127.0.0.1:3000/_actions/admin/connect_custom_domain', {
       headers: {
-        'x-host': claimedHostname,
+        'x-host': hostname,
         'cookie': sessionCookie
       }
     });

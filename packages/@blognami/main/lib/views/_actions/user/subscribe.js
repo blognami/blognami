@@ -6,13 +6,13 @@ export default {
 
         if(!subscribable) return;
 
-        const { 
-            currency, 
-            monthlyPrice, 
-            monthlyFeatures, 
-            yearlyPrice, 
-            yearlyFeatures, 
-            freeFeatures 
+        const {
+            currency,
+            monthlyPrice,
+            monthlyFeatures,
+            yearlyPrice,
+            yearlyFeatures,
+            freeFeatures
         } = subscribable.subscriptionConfig;
 
         const options = [];
@@ -24,7 +24,7 @@ export default {
             title: 'Monthly',
             price: `${currencySymbol}${monthlyPrice} per month`,
             features: monthlyFeatures,
-            action: `/_actions/guest/subscribe?subscribableId=${subscribableId}&plan=monthly&returnUrl=${encodeURIComponent(returnUrl)}`
+            action: `/_actions/user/subscribe?subscribableId=${subscribableId}&plan=monthly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
         if(yearlyPrice !== undefined) options.push({
@@ -32,7 +32,7 @@ export default {
             title: 'Yearly',
             price: `${currencySymbol}${yearlyPrice} per year`,
             features: yearlyFeatures,
-            action: `/_actions/guest/subscribe?subscribableId=${subscribableId}&plan=yearly&returnUrl=${encodeURIComponent(returnUrl)}`
+            action: `/_actions/user/subscribe?subscribableId=${subscribableId}&plan=yearly&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
         if(freeFeatures) options.push({
@@ -40,7 +40,7 @@ export default {
             title: 'None',
             price: 'Free',
             features: freeFeatures,
-            action: `/_actions/guest/subscribe?subscribableId=${subscribableId}&plan=free&returnUrl=${encodeURIComponent(returnUrl)}`
+            action: `/_actions/user/subscribe?subscribableId=${subscribableId}&plan=free&returnUrl=${encodeURIComponent(returnUrl)}`
         });
 
         if(options.length == 1) plan = options[0].name;
@@ -61,15 +61,8 @@ export default {
                 })}
             </pinstripe-modal>
         `;
-        
-        let user;
-        if(await this.session){
-            user = await this.session.user;
-        }
 
-        if(!user) return this.renderRedirect({
-            url: `/_actions/guest/sign_in?title=${encodeURIComponent('Subscribe')}&returnUrl=${encodeURIComponent(`/_actions/guest/subscribe?subscribableId=${subscribableId}&plan=${plan}&returnUrl=${encodeURIComponent(returnUrl)}`)}`
-        });
+        const user = await this.user;
 
         const reloadHtml = this.renderHtml`
             <script type="pinstripe">

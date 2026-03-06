@@ -8,7 +8,7 @@ export default {
 
     create(){
         return this.defer(async () => {
-            if(!this.context.root.menus){
+            return this.context.root.getOrCreate('menus', async () => {
                 this.menus = {};
 
                 // Allow other modules to add menu items
@@ -16,71 +16,65 @@ export default {
 
                 this.normalizeMenus();
 
-                await this.filterMenus();
+                this.filterMenus();
 
                 this.sortMenus();
 
-                this.context.root.menus = this.menus;
-            }
-
-            return this.context.root.menus;
+                return this.menus;
+            });
         });
     },
 
     async initializeMenus(){
-        // Sign In link (shows when signed out)
-        this.addMenuItem('user', {
-            label: 'Sign in',
-            url: '/_actions/guest/sign_in',
-            target: '_overlay',
-            displayOrder: 1000,
-            preload: true,
-            testId: 'sign-in',
-            showIf: 'guest'
-        });
+        if (await this.isSignedOut) {
+            this.addMenuItem('user', {
+                label: 'Sign in',
+                url: '/_actions/guest/sign_in',
+                target: '_overlay',
+                displayOrder: 1000,
+                preload: true,
+                testId: 'sign-in'
+            });
+        }
 
-        // Admin-only user links
-        this.addMenuItem('user', 'Add', {
-            label: 'User',
-            url: '/_actions/admin/add_user',
-            target: '_overlay',
-            testId: 'add-user',
-            showIf: 'admin'
-        });
-
-        this.addMenuItem('user', 'Find', {
-            label: 'User',
-            url: '/_actions/admin/find_user',
-            target: '_overlay',
-            testId: 'find-user',
-            showIf: 'admin'
-        });
-
-        // Your Account menu (shows for any signed in user)
         if (await this.isSignedIn) {
             const user = await this.user;
+            const isAdmin = user.role === 'admin';
+
+            if (isAdmin) {
+                this.addMenuItem('user', 'Add', {
+                    label: 'User',
+                    url: '/_actions/admin/add_user',
+                    target: '_overlay',
+                    testId: 'add-user'
+                });
+
+                this.addMenuItem('user', 'Find', {
+                    label: 'User',
+                    url: '/_actions/admin/find_user',
+                    target: '_overlay',
+                    testId: 'find-user'
+                });
+            }
 
             this.addMenuItem('user', {
                 label: user.name,
                 testId: 'your-account',
-                displayOrder: 300,
-                showIf: ['user', 'admin']
+                displayOrder: 300
             });
 
             this.addMenuItem('user', user.name, {
                 label: 'Profile',
                 url: `/${user.slug}`,
                 target: '_top',
-                testId: 'profile',
-                showIf: ['user', 'admin']
+                testId: 'profile'
             });
 
             this.addMenuItem('user', user.name, {
                 label: 'Notification preferences',
                 url: '/_actions/user/edit_user_notification_preferences',
                 target: '_overlay',
-                testId: 'edit-user-notification-preferences',
-                showIf: ['user', 'admin']
+                testId: 'edit-user-notification-preferences'
             });
 
             this.addMenuItem('user', user.name, {
@@ -88,8 +82,7 @@ export default {
                 url: '/_actions/guest/sign_out',
                 target: '_overlay',
                 displayOrder: 200,
-                testId: 'sign-out',
-                showIf: ['user', 'admin']
+                testId: 'sign-out'
             });
 
             // Newsletter subscription (only show if user is subscribed)
@@ -106,36 +99,33 @@ export default {
                     url: `/_actions/user/unsubscribe?subscribableId=${await this.database.newsletter.id}`,
                     target: '_overlay',
                     testId: 'unsubscribe',
-                    dataConfirm: confirmMessage,
-                    showIf: ['user', 'admin']
+                    dataConfirm: confirmMessage
+                });
+            }
+
+            if (isAdmin) {
+                this.addMenuItem('user', 'Settings', {
+                    label: 'Site',
+                    url: '/_actions/admin/edit_site_meta',
+                    target: '_overlay',
+                    testId: 'edit-site-meta'
+                });
+
+                this.addMenuItem('user', 'Settings', {
+                    label: 'Stripe',
+                    url: '/_actions/admin/edit_stripe',
+                    target: '_overlay',
+                    testId: 'edit-stripe'
+                });
+
+                this.addMenuItem('user', 'Settings', {
+                    label: 'Newsletter',
+                    url: '/_actions/admin/edit_newsletter',
+                    target: '_overlay',
+                    testId: 'edit-site-membership'
                 });
             }
         }
-
-        // Admin-only Site Settings
-        this.addMenuItem('user', 'Settings', {
-            label: 'Site',
-            url: '/_actions/admin/edit_site_meta',
-            target: '_overlay',
-            testId: 'edit-site-meta',
-            showIf: 'admin'
-        });
-
-        this.addMenuItem('user', 'Settings', {
-            label: 'Stripe',
-            url: '/_actions/admin/edit_stripe',
-            target: '_overlay',
-            testId: 'edit-stripe',
-            showIf: 'admin'
-        });
-
-        this.addMenuItem('user', 'Settings', {
-            label: 'Newsletter',
-            url: '/_actions/admin/edit_newsletter',
-            target: '_overlay',
-            testId: 'edit-site-membership',
-            showIf: 'admin'
-        });
 
         // Legal footer menu items
         this.addMenuItem('legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });
@@ -240,25 +230,22 @@ export default {
         });
     },
 
-    async filterMenus() {
+    filterMenus() {
         for (const menuName of Object.keys(this.menus)) {
-            this.menus[menuName] = await this.filterMenuItems(this.menus[menuName]);
+            this.menus[menuName] = this.filterMenuItems(this.menus[menuName]);
         }
     },
 
-    async filterMenuItems(items) {
+    filterMenuItems(items) {
         if (!items || !Array.isArray(items)) return items;
 
         const filtered = [];
         for (const item of items) {
-            if (await this.shouldShowItem(item)) {
-                if (item.children) {
-                    item.children = await this.filterMenuItems(item.children);
-                }
-                // Only include item if it has a url or has children with urls
-                if (item.url || this.hasDescendantWithUrl(item)) {
-                    filtered.push(item);
-                }
+            if (item.children) {
+                item.children = this.filterMenuItems(item.children);
+            }
+            if (item.url || this.hasDescendantWithUrl(item)) {
+                filtered.push(item);
             }
         }
         return filtered;
@@ -267,21 +254,6 @@ export default {
     hasDescendantWithUrl(item) {
         if (!item.children || item.children.length === 0) return false;
         return item.children.some(child => child.url || this.hasDescendantWithUrl(child));
-    },
-
-    async shouldShowItem(item) {
-        if (item.showIf === undefined) return true;
-
-        const roles = Array.isArray(item.showIf) ? item.showIf : [item.showIf];
-
-        for (const role of roles) {
-            if (role === 'guest' && await this.isSignedOut) return true;
-            if (role !== 'guest' && await this.isSignedIn) {
-                const user = await this.user;
-                if (user.role === role) return true;
-            }
-        }
-        return false;
     },
 
     async loadMenuItemsFromAnnotations(){
