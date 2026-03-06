@@ -11,7 +11,7 @@ export default {
                 this.context
             ));
 
-            if(this.database.info.tenants){
+            if(await this.database.info.tenants){
                 let { tenant = defaultCallback } = await this.config;
 
                 const tenantId = this.initialParams._headers['x-tenant-id'];
@@ -21,7 +21,10 @@ export default {
 
                 if(typeof tenant == 'string') tenant = await this.database.tenants.where({ hosts: { name: tenant } }).first();
                 
-                if(tenant) this.database.tenant = tenant;
+                if(tenant) {
+                    this.database = await this.database;
+                    this.database.tenant = tenant;
+                }
             }
 
             return this.database;
