@@ -70,11 +70,10 @@ export default {
         if(this.isLeader) return;
 
         await this.database.lock(async () => {
-            const { leadJobCoordinators } = this.database;
-            const lead = await leadJobCoordinators.first();
+            const leadJobCoordinator = await this.database.leadJobCoordinator;
 
-            if(!lead){
-                await leadJobCoordinators.insert({
+            if(!leadJobCoordinator.jobCoordinatorId){
+                await leadJobCoordinator.update({
                     jobCoordinatorId: this.coordinatorId,
                     lastHeartbeatAt: new Date()
                 });
@@ -83,11 +82,11 @@ export default {
             }
 
             const now = await this.database.getUnixTimestamp();
-            const lastHeartbeat = Math.floor(lead.lastHeartbeatAt.getTime() / 1000);
+            const lastHeartbeat = leadJobCoordinator.lastHeartbeatAt ? Math.floor(leadJobCoordinator.lastHeartbeatAt.getTime() / 1000) : 0;
             const elapsed = (now - lastHeartbeat) * 1000;
 
             if(elapsed > LEADERSHIP_TIMEOUT_MS){
-                await lead.update({
+                await leadJobCoordinator.update({
                     jobCoordinatorId: this.coordinatorId,
                     lastHeartbeatAt: new Date()
                 });
@@ -97,11 +96,10 @@ export default {
     },
 
     async sendHeartbeat(){
-        const { leadJobCoordinators } = this.database;
-        const lead = await leadJobCoordinators.first();
+        const leadJobCoordinator = await this.database.leadJobCoordinator;
 
-        if(lead && lead.jobCoordinatorId === this.coordinatorId){
-            await lead.update({ lastHeartbeatAt: new Date() });
+        if(leadJobCoordinator.jobCoordinatorId === this.coordinatorId){
+            await leadJobCoordinator.update({ lastHeartbeatAt: new Date() });
         } else {
             this.isLeader = false;
         }
@@ -137,11 +135,10 @@ export default {
 
     async releaseLeadership(){
         await this.database.lock(async () => {
-            const { leadJobCoordinators } = this.database;
-            const lead = await leadJobCoordinators.first();
+            const leadJobCoordinator = await this.database.leadJobCoordinator;
 
-            if(lead && lead.jobCoordinatorId === this.coordinatorId){
-                await lead.update({
+            if(leadJobCoordinator.jobCoordinatorId === this.coordinatorId){
+                await leadJobCoordinator.update({
                     jobCoordinatorId: null,
                     lastHeartbeatAt: null
                 });
