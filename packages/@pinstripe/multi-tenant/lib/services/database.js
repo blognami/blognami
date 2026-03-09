@@ -21,9 +21,12 @@ export default {
 
                 if(typeof tenant == 'string') tenant = await this.database.tenants.where({ hosts: { name: tenant } }).first();
                 
-                if(tenant) {
-                    this.database = await this.database;
+                this.database = await this.database;
+
+                if(typeof tenant == 'object') {
                     this.database.tenant = tenant;
+                } else {
+                    this.database.tenant = undefined;
                 }
             }
 
