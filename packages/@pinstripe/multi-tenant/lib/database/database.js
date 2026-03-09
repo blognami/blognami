@@ -1,13 +1,14 @@
 
-import { Database } from '@pinstripe/database';
+import { Database, Row } from '@pinstripe/database';
 
 Database.include({
     meta(){
         const { singleton } = this.prototype;
 
         this.include({
-            singleton(...args){
-                if(this.tenant) return singleton.call(this, ...args);
+            singleton(name){
+                const { untenantable } = Row.for(name);
+                if(untenantable || this.tenant) return singleton.call(this, name);
             }
         });
     },
