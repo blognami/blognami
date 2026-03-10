@@ -7,16 +7,27 @@ Row.include({
 
         this.include({
             initialize(database, fields, ...args){
-                if(!this.constructor.untenantable && database.scopedByTenant){
-                    return initialize.call(this, database, { ...fields, tenantId: database.tenant?.id }, ...args);
+                if(database.scopedByTenant){
+                    if(this.constructor.untenantable){
+                        if(database.tenant?.id && !fields?.tenantId){
+                            return initialize.call(this, database, { ...fields, tenantId: database.tenant.id }, ...args);
+                        }
+                    } else {
+                        return initialize.call(this, database, { ...fields, tenantId: database.tenant?.id }, ...args);
+                    }
                 }
                 return initialize.call(this, database, fields, ...args);
             },
 
             update(fields, ...args){
-                const columns = Table.for(this.constructor.collectionName).columns;
-                if(!this.constructor.untenantable && this.database.scopedByTenant){
-                    return update.call(this, { ...fields, tenantId: this.database.tenant?.id }, ...args);
+                if(this.database.scopedByTenant){
+                    if(this.constructor.untenantable){
+                        if(this.database.tenant?.id && !fields?.tenantId){
+                            return update.call(this, { ...fields, tenantId: this.database.tenant.id }, ...args);
+                        }
+                    } else {
+                        return update.call(this, { ...fields, tenantId: this.database.tenant?.id }, ...args);
+                    }
                 }
                 return update.call(this, fields, ...args);
             }

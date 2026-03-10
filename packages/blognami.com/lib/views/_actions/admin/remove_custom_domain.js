@@ -4,7 +4,7 @@ export default {
         const tenant = await this.database.tenant;
         if(!tenant) return [404, { 'content-type': 'text/plain' }, ['Not found']];
 
-        const customDomain = await this.database.hosts.where({ type: 'verified' }).first();
+        const customDomain = await this.database.hosts.where({ tenantId: tenant.id, type: 'verified' }).first();
         if(!customDomain){
             return this.renderRedirect({ target: '_parent' });
         }

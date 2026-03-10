@@ -6,7 +6,7 @@ export default {
         const validateSubdomain = this.validateSubdomain;
         const database = this.database;
 
-        const canonicalHost = await database.hosts.where({ canonical: true }).first();
+        const canonicalHost = await database.hosts.where({ tenantId, canonical: true }).first();
         const currentSubdomain = (canonicalHost?.name || '').replace(/\.blognami\.com$/, '');
 
         const model = this.createModel({

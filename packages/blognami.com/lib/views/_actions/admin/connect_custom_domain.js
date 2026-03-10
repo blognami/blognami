@@ -26,7 +26,7 @@ export default {
             `;
         }
 
-        const existingCustomDomain = await this.database.hosts.where({ type: 'verified' }).first();
+        const existingCustomDomain = await this.database.hosts.where({ tenantId, type: 'verified' }).first();
         if(existingCustomDomain){
             return this.renderHtml`
                 <pinstripe-modal>
