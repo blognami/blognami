@@ -1,6 +1,6 @@
 export default {
-    render(){
-        const { type, data } = this.params.image;
-        return [ 200, { 'content-type': `image/${type}`}, [ data ]];
+    async render(){
+        const { image } = this.params;
+        return [ 200, { 'content-type': `image/${image.type}`}, [ await image.data ]];
     }
 };

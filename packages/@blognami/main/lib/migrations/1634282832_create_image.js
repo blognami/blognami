@@ -4,7 +4,7 @@ export default {
             await images.addColumn('title', 'string');
             await images.addColumn('slug', 'string', { index: true });
             await images.addColumn('type', 'string');
-            await images.addColumn('data', 'binary');
+            await images.addColumn('blobId', 'string');
         });
     }
 };
