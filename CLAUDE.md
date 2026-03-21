@@ -49,7 +49,7 @@ packages/
 │   ├── pages/              # Static pages
 │   └── tags/               # Tagging system
 ├── blognami/               # Meta-package (bundles all @blognami/*)
-├── demo/                   # Example project with tests
+├── blognami-demo/          # Example project with tests
 ├── blognami.com/           # Marketing site
 └── pinstripejs.com/        # Framework docs
 ```
@@ -390,7 +390,7 @@ const userPosts = await user.posts.all();
 
 Unit tests live next to the code they test (e.g., `lib/command.test.js` tests `lib/command.js`).
 
-Integration/feature tests live in `packages/demo/tests/` organized by type:
+Integration/feature tests live in `packages/blognami-demo/tests/` organized by type:
 - `models/` - Model tests (e.g., `user.test.js`)
 - `services/` - Service tests
 - `cli/` - CLI command tests

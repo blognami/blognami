@@ -1,6 +1,5 @@
 export const LOGO_PNG = 'tests/e2e/logo.png';
 export const STRIPE_ENABLED = !!process.env.STRIPE_API_KEY;
-export const IS_MULTI_TENANT = process.env.TENANCY === 'multi';
 export const QUICK = process.env.QUICK === 'true';
 
 export const POST_TITLES = [

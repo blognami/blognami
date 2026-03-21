@@ -20,8 +20,6 @@ npx pinstripe start-server
 
 Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
 
-For more details, see the [Getting Started Guide](https://blognami.com/docs/guides/getting-started).
-
 ## Architecture
 
 ```
@@ -68,8 +66,7 @@ For more details, see the [Getting Started Guide](https://blognami.com/docs/guid
 
 | Package | Description |
 |---------|-------------|
-| [demo](./packages/demo) | Example project with tests |
-| [blognami.com](./packages/blognami.com) | Marketing site |
+| [blognami-demo](./packages/blognami-demo) | Example project with tests |
 | [pinstripejs.com](./packages/pinstripejs.com) | Framework documentation site |
 
 ## Development

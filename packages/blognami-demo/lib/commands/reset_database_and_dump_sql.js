@@ -14,8 +14,6 @@ export default {
         // 2. Setup Stripe config (if STRIPE_API_KEY is set)
         const secretKey = process.env.STRIPE_API_KEY;
         if (secretKey) {
-            const isMultiTenant = process.env.TENANCY === 'multi';
-
             // Get webhook secret (same for all forwarding URLs)
             const webhookSecret = execSync('stripe listen --print-secret', { encoding: 'utf8' }).trim();
 
@@ -23,13 +21,6 @@ export default {
             await this.runInNewWorkspace(async function() {
                 await this.database.stripe.update({ secretKey, webhookSecret });
             });
-
-            // Store in portal database if multi-tenant
-            if (isMultiTenant) {
-                await this.runInNewPortalWorkspace(async function() {
-                    await this.database.stripe.update({ secretKey, webhookSecret });
-                });
-            }
         }
 
         // 3. Close database connection before dumping (SQLite requires this)

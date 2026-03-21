@@ -3,7 +3,6 @@ import { defineConfig, devices } from '@playwright/test';
 
 process.env.NODE_ENV ??= 'test';
 process.env.TENANCY ??= 'multi';
-process.env.JOB_PROCESSING ??= 'distributed';
 
 /**
  * @see https://playwright.dev/docs/test-configuration
