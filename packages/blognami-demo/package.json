@@ -5,7 +5,8 @@
   "version": "0.35.0",
   "license": "MIT",
   "exports": {
-    ".": "./lib/index.js"
+    ".": "./lib/index.js",
+    "./tests/*": "./tests/*"
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
