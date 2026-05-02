@@ -16,6 +16,11 @@ export const styles = ({ breakpointFor, remify }) => `
         max-width: ${remify(650)};
     }
 
+    .content-full-width {
+        max-width: none;
+        margin: 0 auto;
+    }
+
     ${breakpointFor('md')} {
         .root {
             padding: 0 ${remify(24)};
@@ -29,8 +34,9 @@ export const styles = ({ breakpointFor, remify }) => `
 
 export default {
     async render(){
+        const { sidebar = this.renderView('_sidebar') } = this.params;
         const body = await this.params.body;
-        
+
         const virtualDom = this.parseHtml(body);
 
         const tocLinks = [];
@@ -53,9 +59,9 @@ export default {
 
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
-                ${this.renderView('_sidebar')}
+                ${sidebar}
 
-                <main class="${this.cssClasses.content}" data-test-id="main">
+                <main class="${this.cssClasses.content}${sidebar ? '' : ` ${this.cssClasses.contentFullWidth}`}" data-test-id="main">
                     ${body}
                 </main>
 

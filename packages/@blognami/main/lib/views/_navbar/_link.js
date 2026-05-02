@@ -18,9 +18,9 @@ export const styles = ({ colors, remify }) => `
 
 export default {
     render(){
-        const { url, target, label, testId, preload } = this.params;
+        const { url, target, label, testId, preload, activeHighlight } = this.params;
 
-        const isActive = this.initialParams._url.pathname === url;
+        const isActive = activeHighlight !== false && this.initialParams._url.pathname === url;
         const activeClass = isActive ? ` ${this.cssClasses.linkActive}` : '';
 
         return this.renderTag('a', {

@@ -15,7 +15,7 @@ export const styles = ({ colors }) => `
 
 export default {
    async render(){
-        const { meta = [], body } = this.params;
+        const { meta = [], body, sidebar } = this.params;
 
         return this.renderView('_pinstripe/_shell', {
             meta,
@@ -23,7 +23,7 @@ export default {
                 <div class="${this.cssClasses.root}">
                     ${this.renderView('_header')}
 
-                    ${this.renderView('_main', { body })}
+                    ${this.renderView('_main', { body, sidebar })}
 
                     ${this.renderView('_footer')}
                 </div>
