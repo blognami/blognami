@@ -70,7 +70,12 @@ export default {
 
     async extractParams(request, baseUrl, limits){
         const { method, url, headers } = request;
-        const _url = new URL(url, baseUrl);
+
+        const forwardedHost = (headers['x-forwarded-host'] || '').split(',')[0].trim();
+        const forwardedProto = (headers['x-forwarded-proto'] || '').split(',')[0].trim();
+        const host = forwardedHost || headers.host || baseUrl.host;
+        const proto = forwardedProto || baseUrl.protocol.replace(/:$/, '');
+        const _url = new URL(url, `${proto}://${host}`);
 
         const urlParams = {};
         _url.searchParams.forEach((value, key) => {
