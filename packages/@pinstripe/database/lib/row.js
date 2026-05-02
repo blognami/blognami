@@ -309,7 +309,8 @@ function defineRelationship({ name, type, collectionName, fromKey, toKey, cascad
 
     if(cascadeDelete) {
         this.addHook('beforeDelete', async function(){
-            await this[name].delete();
+            const related = await this[name];
+            if(related) await related.delete();
         });
     }
 
