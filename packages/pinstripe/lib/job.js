@@ -29,12 +29,12 @@ export const Job = Class.extend().include({
                 return this;
             },
 
-            async run(name, params = {}){
+            async run(name, params = {}, parentContext){
                 const JobClass = this;
                 await Workspace.run(async function(){
                     Object.assign(this.initialParams, params);
                     await JobClass.create(name, this.context).run();
-                });
+                }, parentContext);
             },
         });
     },

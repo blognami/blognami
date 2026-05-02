@@ -9,9 +9,12 @@ export const Workspace = Class.extend().include({
         this.include(ServiceConsumer);
 
         this.assignProps({
-            async run(fn){
+            async run(fn, parentContext){
                 await importAll();
                 return await Context.new().run(async context => {
+                    if(parentContext?._serviceInterceptors){
+                        context._serviceInterceptors = { ...parentContext._serviceInterceptors };
+                    }
                     const workspace = this.new(context);
                     return await fn.call(workspace, workspace);
                 });

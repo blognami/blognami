@@ -21,10 +21,11 @@ export default {
     runInNewWorkspace(fn){
         const tenantId = this.id;
         const client = this.database.client.clone();
+        const parentContext = this.database.context;
         return Workspace.run(function(){
             this.initialParams._headers['x-tenant-id'] = tenantId;
             this.context.root.databaseClient = client;
             return fn.call(this, this);
-        });
+        }, parentContext);
     }
 };

@@ -3,6 +3,7 @@ import { Job } from '../job.js';
 
 export default {
     create(){
-        return (name, params = {}) => Job.run(name, params);
+        const { context, initialParams } = this;
+        return (name, params = {}) => Job.run(name, { ...initialParams, ...params }, context);
     }
 };

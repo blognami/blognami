@@ -8,11 +8,11 @@ export default {
 
     create(){
         return fn => {
-            const { initialParams } = this;
+            const { initialParams, context } = this;
             return Workspace.run(function(){
                 Object.assign(this.initialParams, initialParams);
                 return fn.call(this, this);
-            });
+            }, context);
         };
     }
 };

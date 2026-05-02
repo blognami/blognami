@@ -9,7 +9,11 @@ export const ServiceConsumer = {
     },
 
     __getMissing(target, name){
-        if(ServiceFactory.mixins[name]) return ServiceFactory.create(name, this.context).create();
+        if(ServiceFactory.mixins[name]){
+            const service = ServiceFactory.create(name, this.context).create();
+            const interceptor = this.context._serviceInterceptors?.[name];
+            return interceptor ? interceptor(service) : service;
+        }
     }
 }
 
