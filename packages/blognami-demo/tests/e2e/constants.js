@@ -1,4 +1,4 @@
-export const LOGO_PNG = 'tests/e2e/logo.png';
+export const LOGO_PNG = new URL('./logo.png', import.meta.url).pathname;
 export const STRIPE_ENABLED = !!process.env.STRIPE_API_KEY;
 export const QUICK = process.env.QUICK === 'true';
 

@@ -8,7 +8,8 @@ export default {
 
         // 1. Reset database
         execSync(`pinstripe reset-database`, {
-            env: process.env
+            env: process.env,
+            stdio: 'inherit'
         });
 
         // 2. Setup Stripe config (if STRIPE_API_KEY is set)
