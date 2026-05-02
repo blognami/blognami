@@ -85,7 +85,7 @@ class PageHelpers {
 
   async waitForPageToBeIdle() {
     await this.page.waitForTimeout(100); // Small delay to allow state changes
-    await this.page.locator('html.idle').waitFor();
+    await this.page.locator('html.idle').waitFor({ timeout: 30000 });
   }
 
   async completeStripeCheckout(billingName) {
