@@ -1,6 +1,13 @@
 
 import { View } from "../view.js";
 
+export function mappedViewNameFor(viewName){
+    return viewName.split('/')
+        .filter(part => !part.startsWith('--'))
+        .map(part => part.replace(/--[^/]+$/, ''))
+        .join('/');
+}
+
 export default {
     meta(){
         this.addToClient();
@@ -56,7 +63,7 @@ export default {
         for(const [name, isEnabled] of Object.entries(featureFlags)){
             if(!isEnabled) continue;
             for(let viewName of View.names){
-                const mappedName = viewName.replace(/--[^/]+/g, '');
+                const mappedName = mappedViewNameFor(viewName);
                 if(mappedName == viewName) continue;
                 const featureNames = View.for(viewName).featuresIsEnabledFor;
                 if(!featureNames.includes(name)) continue;
