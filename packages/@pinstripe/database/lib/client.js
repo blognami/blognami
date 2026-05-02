@@ -10,6 +10,9 @@ const transactionAsyncLock = AsyncLock.new();
 let connection;
 let connectionCounter = 0;
 let connectionPromise;
+let silencePromise;
+let activeOperations = 0;
+let drainResolve;
 
 export const Client = Class.extend().include({
     initialize(config){
@@ -28,149 +31,168 @@ export const Client = Class.extend().include({
     },
 
     async run(query, options = {}){
-        if(!this.connected){
-            this.connected = true;
-            connectionCounter++;
-        }
+        while(
+            silencePromise
+            && !options.skipSilencePromise
+            && !this.lockLevel
+            && !this.transactionLevel
+        ) await silencePromise;
 
-        while(connectionPromise && !options.skipConnectionPromise) await connectionPromise;
+        return trackActivity(async () => {
+            if(!this.connected){
+                this.connected = true;
+                connectionCounter++;
+            }
 
-        if(!connection){
-            connectionPromise = this.adapt(this, {
-                async mysql(){
-                    const { adapter, database, ...connectionConfig } = this.config;
-                    connection = mysql.createPool({
-                        ...connectionConfig,
-                        waitForConnections: true,
-                        connectionLimit: 1,
-                        queueLimit: 0,
-                        enableKeepAlive: true,
-                        keepAliveInitialDelay: 10000
-                    });
-                    const databases = (await this.run('show databases')).map(row => row['Database']);
-                    if(!databases.includes(database)){
-                        await this.run(`create database ${database}`, { skipConnectionPromise: true });
+            while(connectionPromise && !options.skipConnectionPromise) await connectionPromise;
+
+            if(!connection){
+                connectionPromise = this.adapt(this, {
+                    async mysql(){
+                        const { adapter, database, ...connectionConfig } = this.config;
+                        connection = mysql.createPool({
+                            ...connectionConfig,
+                            waitForConnections: true,
+                            connectionLimit: 1,
+                            queueLimit: 0,
+                            enableKeepAlive: true,
+                            keepAliveInitialDelay: 10000
+                        });
+                        const bootstrapOptions = { skipConnectionPromise: true, skipSilencePromise: true };
+                        const databases = (await this.run('show databases', bootstrapOptions)).map(row => row['Database']);
+                        if(!databases.includes(database)){
+                            await this.run(`create database ${database}`, bootstrapOptions);
+                        }
+                        await this.run(`use ${database}`, bootstrapOptions);
+                    },
+
+                    async sqlite(){
+                        const { filename } = this.config;
+                        connection = new sqlite.Database(filename);
+                        connection.configure('busyTimeout', 10000);
                     }
-                    await this.run(`use ${database}`, { skipConnectionPromise: true });
-                },
+                });
+                await connectionPromise;
+                connectionPromise = undefined;
+            }
 
-                async sqlite(){
-                    const { filename } = this.config;
-                    connection = new sqlite.Database(filename);
-                    connection.configure('busyTimeout', 10000);
-                }
-            });
-            await connectionPromise;
-            connectionPromise = undefined;
-        }
-
-        return run.call(this, ...prepare.call(this, await resolveQuery(query)));
+            return run.call(this, ...prepare.call(this, await resolveQuery(query)));
+        });
     },
 
     async lock(fn){
-        let out;
-        this.lockLevel++;
-        await lockAsyncLock.lock({ skip: this.lockLevel > 1 }, async () => {
-            await this.adapt(this, {
-                async mysql(){
-                    if(this.lockLevel == 1){
-                        await this.run(`select get_lock('pinstripe_lock', -1)`);
-                    }
-                    
-                    try {
-                        out = await fn();
-                    } catch(e){
-                        this.lockLevel = 0;
-                        await this.run(`select release_lock('pinstripe_lock')`);
-                        throw e;
-                    }
+        while(
+            silencePromise
+            && !this.lockLevel
+            && !this.transactionLevel
+        ) await silencePromise;
 
-                    if(this.lockLevel == 1){
-                        await this.run(`select release_lock('pinstripe_lock')`);
-                    }
-                },
+        return trackActivity(async () => {
+            let out;
+            this.lockLevel++;
+            await lockAsyncLock.lock({ skip: this.lockLevel > 1 }, async () => {
+                await this.adapt(this, {
+                    async mysql(){
+                        if(this.lockLevel == 1){
+                            await this.run(`select get_lock('pinstripe_lock', -1)`);
+                        }
 
-                async sqlite(){
-                    out = await this.transaction(fn);
-                }
+                        try {
+                            out = await fn();
+                        } catch(e){
+                            this.lockLevel = 0;
+                            await this.run(`select release_lock('pinstripe_lock')`);
+                            throw e;
+                        }
+
+                        if(this.lockLevel == 1){
+                            await this.run(`select release_lock('pinstripe_lock')`);
+                        }
+                    },
+
+                    async sqlite(){
+                        out = await this.transaction(fn);
+                    }
+                });
             });
+            this.lockLevel--;
+            return out;
         });
-        this.lockLevel--;
-        return out;
     },
 
     async transaction(fn){
-        let out;
-        this.transactionLevel++;
-        await transactionAsyncLock.lock({ skip: this.transactionLevel > 1 }, async () => {
-            if(this.transactionLevel == 1){
-                await this.adapt(this, {
+        while(
+            silencePromise
+            && !this.lockLevel
+            && !this.transactionLevel
+        ) await silencePromise;
+
+        return trackActivity(async () => {
+            let out;
+            this.transactionLevel++;
+            await transactionAsyncLock.lock({ skip: this.transactionLevel > 1 }, async () => {
+                if(this.transactionLevel == 1){
+                    await this.adapt(this, {
+                        async mysql(){
+                            await this.run('start transaction');
+                        },
+
+                        async sqlite(){
+                            await this.run('pragma locking_mode = exclusive');
+                            await this.run('begin exclusive transaction');
+                        }
+                    });
+                }
+
+                try {
+                    out = await fn();
+                } catch(e){
+                    if(this.transactionLevel > 0) await this.adapt(this, {
+                        async mysql(){
+                            await this.run('rollback');
+                        },
+
+                        async sqlite(){
+                            await this.run('rollback');
+                            await this.run('pragma locking_mode = normal');
+                        }
+                    });
+                    this.transactionLevel = 0;
+                    throw e;
+                }
+
+                if(this.transactionLevel == 1) await this.adapt(this, {
                     async mysql(){
-                        await this.run('start transaction');
+                        await this.run('commit');
                     },
 
                     async sqlite(){
-                        await this.run('pragma locking_mode = exclusive');
-                        await this.run('begin exclusive transaction');
-                    }
-                });
-            }
-            
-            try {
-                out = await fn();
-            } catch(e){
-                if(this.transactionLevel > 0) await this.adapt(this, {
-                    async mysql(){
-                        await this.run('rollback');
-                    },
-
-                    async sqlite(){
-                        await this.run('rollback');
+                        await this.run('commit');
                         await this.run('pragma locking_mode = normal');
                     }
                 });
-                this.transactionLevel = 0;
-                throw e;
-            }
-            
-            if(this.transactionLevel == 1) await this.adapt(this, {
-                async mysql(){
-                    await this.run('commit');
-                },
-
-                async sqlite(){
-                    await this.run('commit');
-                    await this.run('pragma locking_mode = normal');
-                }
             });
+            this.transactionLevel--;
+            return out;
         });
-        this.transactionLevel--;
-        return out;
     },
 
     async drop(){
-        const isSqlite = this.config.adapter === 'sqlite';
-
-        if(isSqlite){
-            // For SQLite, close connection BEFORE deleting file.
-            // Force close since file deletion invalidates all connections anyway.
-            const _connection = connection;
-            if(_connection){
-                connection = undefined;
-                connectionCounter = 0;
-                this.connected = false;
-                await new Promise((resolve, reject) => {
-                    _connection.close(error => error ? reject(error) : resolve());
-                });
-            }
-            if(existsSync(this.config.filename)){
-                unlinkSync(this.config.filename);
-            }
-        } else {
-            // MySQL: drop database then cleanup connection
-            await this.run(`drop database ${this.config.database}`);
-            await this.destroy();
-        }
+        await this.withSilence(async () => {
+            await this.adapt(this, {
+                async sqlite(){
+                    if(existsSync(this.config.filename)){
+                        unlinkSync(this.config.filename);
+                    }
+                },
+                async mysql(){
+                    await this.run(
+                        `drop database ${this.config.database}`,
+                        { skipSilencePromise: true }
+                    );
+                }
+            });
+        });
     },
 
     async destroy(){
@@ -192,6 +214,40 @@ export const Client = Class.extend().include({
                 });
             }
         });
+    },
+
+    async withSilence(fn){
+        while(silencePromise) await silencePromise;
+        let releaseSilence;
+        silencePromise = new Promise(resolve => { releaseSilence = resolve; });
+
+        const closeConnection = async () => {
+            if(!connection) return;
+            const _connection = connection;
+            connection = undefined;
+            try {
+                await this.adapt(this, {
+                    async mysql(){ await _connection.end(); },
+                    async sqlite(){
+                        await new Promise((resolve, reject) => {
+                            _connection.close(error => error ? reject(error) : resolve());
+                        });
+                    }
+                });
+            } catch {}
+        };
+
+        try {
+            if(activeOperations > 0){
+                await new Promise(resolve => { drainResolve = resolve; });
+            }
+            await closeConnection();
+            return await fn();
+        } finally {
+            await closeConnection();
+            silencePromise = undefined;
+            releaseSilence();
+        }
     },
 
     adapt(...args){
@@ -277,6 +333,20 @@ export const Client = Class.extend().include({
     }
 });
 
+
+async function trackActivity(fn){
+    activeOperations++;
+    try {
+        return await fn();
+    } finally {
+        activeOperations--;
+        if(activeOperations === 0 && drainResolve){
+            const resolve = drainResolve;
+            drainResolve = undefined;
+            resolve();
+        }
+    }
+}
 
 async function resolveQuery(query){
     let out = await query;

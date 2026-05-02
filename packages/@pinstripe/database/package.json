@@ -6,6 +6,10 @@
   "exports": {
     ".": "./lib/index.js"
   },
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "cd lib && node --test"
+  },
   "dependencies": {
     "mysql2": "^3.10.1",
     "pinstripe": "^0.35.0",

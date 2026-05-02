@@ -68,6 +68,10 @@ export const Database = Class.extend().include({
         await this.client.destroy();
     },
 
+    withSilence(fn){
+        return this.client.withSilence(fn);
+    },
+
     lock(fn){
         return this.client.lock(fn);
     },
