@@ -372,11 +372,9 @@ export default {
   },
 
   getWebhookUrl() {
-    const host = this.workspace.initialParams._headers.host;
-    const baseUrl = new URL("/", this.workspace.initialParams._url);
-    baseUrl.protocol = "https:";
-    baseUrl.host = host;
-    return new URL("/_actions/guest/stripe_webhook", baseUrl);
+    const { _headers: { host }, _url } = this.workspace.initialParams;
+    const hostname = host ? host.replace(/:\d+$/, '') : _url.hostname;
+    return new URL(`https://${hostname}/_actions/guest/stripe_webhook`);
   },
 
   webhookUrlIsPublicallyAccessible() {
