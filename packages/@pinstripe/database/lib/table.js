@@ -110,6 +110,7 @@ export const Table = Class.extend().include({
         this.pageSize = pageSize;
         this.skipCount = skipCount;
         this.exists = Object.keys(this.constructor.columns).length > 0;
+
     },
 
     clone(){
@@ -132,7 +133,7 @@ export const Table = Class.extend().include({
         throw new Error(`Can't join to unknown collection "${collectionName}".`);
     },
 
-    where(...args){
+    async where(...args){
         if(typeof args[0] == 'string' || Array.isArray(args[0])){
             this.expressions.push(args);
             return this;
@@ -144,7 +145,7 @@ export const Table = Class.extend().include({
             const name = names.shift();
             const fn = this.constructor.scopes[name];
             if(!fn) throw new Error(`No such scope "${name}" exists for "${this.constructor.name}".`);
-            fn.call(this, scopedBy[name]);
+            await fn.call(this, scopedBy[name]);
         }
         return this;
     },
@@ -173,7 +174,7 @@ export const Table = Class.extend().include({
         return this;
     },
 
-    all(){
+    async all(){
         return this.database.run(this.toSql());
     },
 
