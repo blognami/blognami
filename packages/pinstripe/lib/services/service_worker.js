@@ -21,6 +21,15 @@ export default {
     
         addEventListener("fetch", (event) => {
             event.respondWith((async () => {
+                if (event.request.mode === 'navigate') {
+                    const isPinstripeApp = await fetch('/_pinstripe/_shell/version.json', { cache: 'no-store' }).then(response => response.ok).catch(() => !navigator.onLine);
+
+                    if(!isPinstripeApp){
+                        await self.registration.unregister();
+                        return fetch(event.request);
+                    }
+                }
+
                 const request1 = event.request.clone();
                 const request2 = event.request.clone();
                 
