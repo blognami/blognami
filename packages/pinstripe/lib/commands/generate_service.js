@@ -1,7 +1,7 @@
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Generates a new service file in the lib/services directory.'
         });
         

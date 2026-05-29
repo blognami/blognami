@@ -4,7 +4,7 @@ import { ServiceFactory } from 'pinstripe';
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Lists all available services in the current project.'
         });
     },

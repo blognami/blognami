@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
+import 'haberdash/node';
 import chalk from 'chalk';
 
 import { Project } from './lib/project.js';
 import { Command } from './lib/command.js';
 import { importAll } from './lib/import_all.js';
 import { Workspace } from './lib/workspace.js';
-import { ValidationError } from './lib/validation_error.js';
+import { ValidationError } from 'haberdash';
 import { inflector } from '@pinstripe/utils';
 
 (async () => {

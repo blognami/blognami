@@ -1,21 +1,13 @@
 
 import { Class } from './class.js';
-import { Inflector } from './inflector.js';
-import { ImportableRegistry } from './importable_registry.js';
-import { Hookable } from './hookable.js';
+import { AbstractServiceFactory } from 'haberdash';
 
-export const ServiceFactory = Class.extend().include({
+export const ServiceFactory = Class.extend('ServiceFactory').include({
     meta(){
-        this.assignProps({ name: 'ServiceFactory' });
-
-        this.include(ImportableRegistry);
-        this.include(Hookable);
+        this.include(AbstractServiceFactory);
+        this.include(this.Consumerable);
 
         this.assignProps({
-            normalizeName(name){
-                return Inflector.instance.camelize(name);
-            },
-
             addToClient(){
                 this._addToClient = true;
             }

@@ -2,7 +2,7 @@
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Generates a new job file in the lib/jobs directory.'
         });
 

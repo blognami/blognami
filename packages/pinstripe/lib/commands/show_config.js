@@ -1,7 +1,7 @@
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Displays the current project configuration in JSON format.'
         });
     },

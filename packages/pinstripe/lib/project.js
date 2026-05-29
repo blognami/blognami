@@ -3,11 +3,11 @@ import { promisify } from 'util';
 import { realpath, readFile, existsSync } from 'fs';
 
 import { Class } from './class.js';
-import { Singleton } from './singleton.js';
+import { AbstractSingleton } from 'haberdash';
 
 export const Project = Class.extend().include({
     meta(){
-        this.include(Singleton)
+        this.include(AbstractSingleton)
     },
 
     async initialize(){

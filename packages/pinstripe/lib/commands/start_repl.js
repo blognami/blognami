@@ -1,7 +1,7 @@
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Starts an interactive REPL (Read-Eval-Print Loop) session for the project.'
         });
     },

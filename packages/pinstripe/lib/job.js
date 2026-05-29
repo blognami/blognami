@@ -1,16 +1,14 @@
 
 import { Class } from './class.js';
 import { inflector } from './inflector.js';
-import { ImportableRegistry } from './importable_registry.js';
-import { ServiceConsumer } from './service_consumer.js';
+import { AbstractImportableRegistry } from 'haberdash';
+import { ServiceFactory } from './service_factory.js';
 import { Workspace } from './workspace.js';
 
-export const Job = Class.extend().include({
+export const Job = Class.extend('Job').include({
     meta(){
-        this.assignProps({ name: 'Job' });
-
-        this.include(ImportableRegistry);
-        this.include(ServiceConsumer);
+        this.include(AbstractImportableRegistry);
+        this.include(ServiceFactory.Consumerable);
 
         this.assignProps({
             normalizeName(name){

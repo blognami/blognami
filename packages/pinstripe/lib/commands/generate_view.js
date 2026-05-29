@@ -4,7 +4,7 @@ import { readFile } from 'fs/promises';
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Generates a new view file in the lib/views directory.'
         });
 

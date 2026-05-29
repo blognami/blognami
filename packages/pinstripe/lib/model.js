@@ -1,11 +1,11 @@
 
 import { Class } from './class.js';
-import { Validateable } from './validateable.js';
+import { Validatable } from 'haberdash';
 
 
 export const Model = Class.extend().include({
     meta(){
-        this.include(Validateable);
+        this.include(Validatable);
 
         this.assignProps({
             mustNotBeBlank(name, options = {}){

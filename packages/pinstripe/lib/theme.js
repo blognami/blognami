@@ -4,10 +4,8 @@ import { deepMerge } from "@pinstripe/utils";
 import { Class } from "./class.js";
 import { themeDefaultDesignTokens } from "./theme_default_design_tokens.js";
 
-export const Theme = Class.extend().include({
+export const Theme = Class.extend("Theme").include({
   meta() {
-    this.assignProps({ name: "Theme" });
-
     this.assignProps({
       defineDesignTokens(designTokens) {
         const { initialize } = this.prototype;

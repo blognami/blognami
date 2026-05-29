@@ -1,7 +1,7 @@
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Runs a job by name from the lib/jobs directory.'
         });
 

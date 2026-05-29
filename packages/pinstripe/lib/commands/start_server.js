@@ -1,7 +1,7 @@
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Starts the web server and optionally the job worker.'
         });
 

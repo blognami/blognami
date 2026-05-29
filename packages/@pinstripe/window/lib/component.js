@@ -6,10 +6,8 @@ import { Registry } from './registry.js';
 import { ComponentEvent } from './component_event.js';
 import { generateProofOfWork } from './proof_of_work.js'
 
-export const Component = Class.extend().include({
+export const Component = Class.extend('Component').include({
     meta(){
-        this.assignProps({ name: 'Component' });
-
         this.include(Registry);
 
         this.assignProps({

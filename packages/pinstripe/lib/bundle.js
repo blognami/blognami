@@ -6,12 +6,12 @@ import { dirSync } from 'tmp';
 import { fileURLToPath } from 'url';
 
 import { Class } from './class.js';
-import { ImportableRegistry } from './importable_registry.js';
+import { AbstractImportableRegistry } from 'haberdash';
 import { Project } from './project.js';
 
 export const Bundle = Class.extend().include({
     meta(){
-        this.include(ImportableRegistry);
+        this.include(AbstractImportableRegistry);
 
         this.assignProps({
             get modules(){

@@ -1,13 +1,2 @@
 
-export const Singleton = {
-    meta(){
-        this.assignProps({
-            get instance(){
-                if(!this.hasOwnProperty('_instance')){
-                    this._instance = this.new();
-                }
-                return this._instance;
-            }
-        })
-    }
-};
+export { AbstractSingleton as Singleton } from 'haberdash/lib/abstract_singleton.js';

@@ -5,18 +5,16 @@ import { default as mimeTypes } from 'mime-types'; // pinstripe-if-client: const
 import * as crypto from 'crypto'; // pinstripe-if-client: const crypto = undefined;
 
 import { Class } from './class.js';
-import { ImportableRegistry } from './importable_registry.js';
-import { ServiceConsumer } from './service_consumer.js';
-import { Annotatable } from './annotatable.js';
-import { Hookable } from './hookable.js';
+import { AbstractImportableRegistry } from 'haberdash';
+import { ServiceFactory } from './service_factory.js';
+import { Annotatable } from 'haberdash';
+import { Hookable } from 'haberdash';
 import { inflector } from '@pinstripe/utils';
 
-export const View = Class.extend().include({
+export const View = Class.extend('View').include({
     meta(){
-        this.assignProps({ name: 'View' });
-
-        this.include(ImportableRegistry);
-        this.include(ServiceConsumer);
+        this.include(AbstractImportableRegistry);
+        this.include(ServiceFactory.Consumerable);
         this.include(Annotatable);
         this.include(Hookable);
 
@@ -41,14 +39,14 @@ export const View = Class.extend().include({
             run(context, name, fn){
                 return context.fork().run(async context => {
                     context.view = await this.create(name, context);
-                    return fn.call(context.view, context.view);
+                    return fn.call(context.view);
                 });
             },
 
             render(context, name, params = {}){
-                return this.run(context, name, view => {
-                    view.context.params = params;
-                    return view.render();
+                return this.run(context, name, function(){
+                    this.context.params = params;
+                    return this.render();
                 });
             },
 

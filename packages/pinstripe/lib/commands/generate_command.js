@@ -2,7 +2,7 @@
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Generates a new command file in the lib/commands directory.'
         });
         

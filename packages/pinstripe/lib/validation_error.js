@@ -1,7 +1,2 @@
 
-export class ValidationError extends Error {
-    constructor(errors = {}) {
-        super(JSON.stringify(errors));
-        this.errors = errors
-    }
-}
+export { ValidationError } from 'haberdash/lib/validation_error.js';

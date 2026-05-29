@@ -24,5 +24,5 @@ if (typeof navigator != 'undefined' && "serviceWorker" in navigator) {
 }
 
 if(typeof window == 'undefined' && typeof addEventListener == 'function'){
-    Workspace.run(({ serviceWorker }) => serviceWorker.start());
+    Workspace.run(function() { return this.serviceWorker.start(); });
 }

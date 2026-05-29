@@ -1,5 +1,5 @@
 
-import { ValidationError } from '../validation_error.js';
+import { ValidationError } from 'haberdash';
 import { Inflector } from '../inflector.js';
 import { verifyProofOfWork } from '@pinstripe/window';
 

@@ -8,10 +8,8 @@ import { defer } from '@pinstripe/utils';
 import { inflector } from '@pinstripe/utils';
 import { COLUMN_TYPE_TO_FORM_FIELD_TYPE_MAP, KEY_TYPES } from './constants.js';
 
-export const Row = Model.extend().include({
+export const Row = Model.extend('Row').include({
     meta(){
-        this.assignProps({ name: 'Row' });
-
         this.include(ImportableRegistry);
 
         this.assignProps({

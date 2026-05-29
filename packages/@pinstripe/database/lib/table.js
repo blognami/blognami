@@ -15,10 +15,8 @@ import {
 } from './constants.js';
 import { Union } from "./union.js";
 
-export const Table = Class.extend().include({
+export const Table = Class.extend('Table').include({
     meta(){
-        this.assignProps({ name: 'Table' });
-
         this.include(ImportableRegistry);
 
         const { warmCache } = this;

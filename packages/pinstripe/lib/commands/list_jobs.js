@@ -4,7 +4,7 @@ import { Job } from 'pinstripe';
 
 export default {
     meta(){
-        this.annotate({
+        this.assignProps({
             description: 'Lists all available jobs in the current project.'
         });
     },

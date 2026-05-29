@@ -2,10 +2,8 @@
 import { Class } from '@pinstripe/utils';
 import { ImportableRegistry } from 'pinstripe';
 
-export const Migration = Class.extend().include({
+export const Migration = Class.extend('Migration').include({
     meta(){
-        this.assignProps({ name: 'Migration' });
-
         this.include(ImportableRegistry);
 
         this.assignProps({
