@@ -6,8 +6,8 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test(`site`, () => Workspace.run(async _ => {
-    const { site, sites } = _.database;
+test(`site`, () => Workspace.run(async function() {
+    const { site, sites } = this.database;
 
     const { title } = await site;
 
@@ -17,8 +17,8 @@ test(`site`, () => Workspace.run(async _ => {
 }));
 
 if(process.env.TENANCY === 'multi'){
-    test(`site with multi-tenancy and tenant exists`, () => Workspace.run(async _ => {
-        const { tenant, site, sites } = _.database;
+    test(`site with multi-tenancy and tenant exists`, () => Workspace.run(async function() {
+        const { tenant, site, sites } = this.database;
 
         assert.equal(typeof await tenant, 'object');
 
@@ -26,14 +26,14 @@ if(process.env.TENANCY === 'multi'){
 
         assert.equal(await sites.count(), 1);
 
-        assert.equal(await _.database.run(`select * from sites`).length, 1);
+        assert.equal(await this.database.run(`select * from sites`).length, 1);
     }));
     
 
-    test(`site with multi-tenancy and tenant does not exist`, () => Workspace.run(async _ => {
-        _.initialParams._headers.host = 'example.com';
+    test(`site with multi-tenancy and tenant does not exist`, () => Workspace.run(async function() {
+        this.initialParams._headers.host = 'example.com';
         
-        const { tenant, site, sites } = _.database;
+        const { tenant, site, sites } = this.database;
 
         assert.equal(typeof await tenant, 'undefined');
 
@@ -41,6 +41,6 @@ if(process.env.TENANCY === 'multi'){
 
         assert.equal(await sites.count(), 0);
 
-        assert.equal(await _.database.run(`select * from sites`).length, 0);
+        assert.equal(await this.database.run(`select * from sites`).length, 0);
     }));
 }

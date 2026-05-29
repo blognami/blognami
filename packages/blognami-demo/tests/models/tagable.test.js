@@ -6,8 +6,8 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test(`tagable`, () => Workspace.run(async _ => {
-    const { users, tagables, posts, tags, tagableTags } = _.database;
+test(`tagable`, () => Workspace.run(async function() {
+    const { users, tagables, posts, tags, tagableTags } = this.database;
 
     assert.equal(await tagables.count(), 0);
 

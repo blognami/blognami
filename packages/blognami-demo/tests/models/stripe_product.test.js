@@ -5,8 +5,8 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test('stripeProduct CRUD', () => Workspace.run(async _ => {
-    const { stripeProducts } = _.database;
+test('stripeProduct CRUD', () => Workspace.run(async function() {
+    const { stripeProducts } = this.database;
 
     assert.equal(await stripeProducts.count(), 0);
 
@@ -29,8 +29,8 @@ test('stripeProduct CRUD', () => Workspace.run(async _ => {
     assert.equal(await stripeProducts.count(), 0);
 }));
 
-test('stripeProduct lookup by name and type', () => Workspace.run(async _ => {
-    const { stripeProducts } = _.database;
+test('stripeProduct lookup by name and type', () => Workspace.run(async function() {
+    const { stripeProducts } = this.database;
 
     await stripeProducts.insert({
         name: 'starter',
@@ -54,8 +54,8 @@ test('stripeProduct lookup by name and type', () => Workspace.run(async _ => {
     assert.equal(noMatch, undefined);
 }));
 
-test('stripeProduct validates required fields', () => Workspace.run(async _ => {
-    const { stripeProducts } = _.database;
+test('stripeProduct validates required fields', () => Workspace.run(async function() {
+    const { stripeProducts } = this.database;
 
     try {
         await stripeProducts.insert({});

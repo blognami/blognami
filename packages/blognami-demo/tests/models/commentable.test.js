@@ -6,8 +6,8 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test(`commentable`, () => Workspace.run(async _ => {
-    const { users, commentables, comments, posts } = _.database;
+test(`commentable`, () => Workspace.run(async function() {
+    const { users, commentables, comments, posts } = this.database;
 
     assert.equal(await commentables.count(), 0);
 

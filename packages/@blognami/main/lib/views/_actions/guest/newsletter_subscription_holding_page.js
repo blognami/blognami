@@ -4,11 +4,11 @@ export default {
 
         if(action === 'poll'){
             while(true){
-                const isSubscribed = await this.runInNewWorkspace(async _ => {
-                    const subscribable = await _.database.subscribables
+                const isSubscribed = await this.runInNewWorkspace(async function() {
+                    const subscribable = await this.database.subscribables
                         .where({ id: subscribableId }).first();
                     if(!subscribable) return false;
-                    const user = await _.database.users.where({ id: userId }).first();
+                    const user = await this.database.users.where({ id: userId }).first();
                     if(!user) return false;
                     return subscribable.isSubscribed(user, { tier: 'paid' });
                 });

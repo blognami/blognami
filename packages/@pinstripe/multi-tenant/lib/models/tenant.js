@@ -25,7 +25,7 @@ export default {
         return Workspace.run(function(){
             this.initialParams._headers['x-tenant-id'] = tenantId;
             this.context.root.databaseClient = client;
-            return fn.call(this, this);
+            return fn.call(this);
         }, parentContext);
     }
 };

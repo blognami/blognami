@@ -6,8 +6,8 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test(`revisable`, () => Workspace.run(async _ => {
-    const { revisables, revisions, users, posts } = _.database;
+test(`revisable`, () => Workspace.run(async function() {
+    const { revisables, revisions, users, posts } = this.database;
 
     assert.equal(await revisables.count(), 0);
     assert.equal(await revisions.count(), 0);

@@ -6,8 +6,8 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test(`session`, () => Workspace.run(async _ => {
-    const { sessions, users } = _.database;
+test(`session`, () => Workspace.run(async function() {
+    const { sessions, users } = this.database;
 
     assert.equal(await sessions.count(), 0);
 

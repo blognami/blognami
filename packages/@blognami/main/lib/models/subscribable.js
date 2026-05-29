@@ -67,10 +67,11 @@ export default {
     waitForSubscriptionToBeDeletedTimeout: 30000,
 
     async waitForSubscriptionToBeDeleted(userId){
+        const { id } = this;
         const timeout = Date.now() + this.waitForSubscriptionToBeDeletedTimeout;
         while(Date.now() < timeout) {
-            const exists = await this.workspace.runInNewWorkspace(async _ => {
-                const subscribable = await _.database.subscribables.where({ id: this.id }).first();
+            const exists = await this.workspace.runInNewWorkspace(async function(){
+                const subscribable = await this.database.subscribables.where({ id }).first();
                 return await subscribable.subscriptions.where({ userId }).first();
             });
             if(!exists) break;

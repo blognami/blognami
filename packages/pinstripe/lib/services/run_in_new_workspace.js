@@ -11,7 +11,7 @@ export default {
             const { initialParams, context } = this;
             return Workspace.run(function(){
                 Object.assign(this.initialParams, initialParams);
-                return fn.call(this, this);
+                return fn.call(this);
             }, context);
         };
     }

@@ -8,8 +8,8 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test(`newsletter`, () => Workspace.run(async _ => {
-    const { newsletter } = _.database;
+test(`newsletter`, () => Workspace.run(async function() {
+    const { newsletter } = this.database;
     const { enableFree, enableMonthly, enableYearly } = await newsletter;
 
     assert.equal(enableFree, true);

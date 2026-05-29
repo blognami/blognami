@@ -40,13 +40,15 @@ export default {
                         password = await this.database.site.generatePassword(email);
                     }
 
-                    this.runInNewWorkspace(({ sendMail }) => sendMail({ 
-                        to: email,
-                        subject: 'Your one-time-password',
-                        text({ line }){
-                            line(`Your one-time-password: "${password}" - this will be valid for approximately 3 mins.`);
-                        }
-                    }));
+                    this.runInNewWorkspace(function(){
+                        return this.sendMail({
+                            to: email,
+                            subject: 'Your one-time-password',
+                            text({ line }){
+                                line(`Your one-time-password: "${password}" - this will be valid for approximately 3 mins.`);
+                            }
+                        });
+                    });
 
                     return this.renderRedirect({
                         url: `/_actions/guest/sign_in/verify_password?email=${encodeURIComponent(email)}${optionalParams}`

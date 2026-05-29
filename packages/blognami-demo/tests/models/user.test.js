@@ -6,8 +6,8 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test(`user`, () => Workspace.run(async _ => {
-    const { users, posts, tags, tagableTags } = _.database;
+test(`user`, () => Workspace.run(async function() {
+    const { users, posts, tags, tagableTags } = this.database;
 
     assert.equal(await users.count(), 0);
 
@@ -64,8 +64,8 @@ test(`user`, () => Workspace.run(async _ => {
 }));
 
 if(process.env.TENANCY === 'multi'){
-    test(`tenant.runInNewWorkspace provides isolated context`, () => Workspace.run(async _ => {
-        const { withoutTenantScope: database } = _.database;
+    test(`tenant.runInNewWorkspace provides isolated context`, () => Workspace.run(async function() {
+        const { withoutTenantScope: database } = this.database;
 
         const [tenant1, tenant2] = await Promise.all([
             database.tenants.insert({}),

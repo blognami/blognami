@@ -8,9 +8,9 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test(`subscribable`, () => Workspace.run(async _ => {
+test(`subscribable`, () => Workspace.run(async function() {
 
-    const { subscribables, newsletter, users, subscriptions } = _.database;
+    const { subscribables, newsletter, users, subscriptions } = this.database;
 
     const initialSubscribablesCount = await subscribables.count();
 
