@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "name": "haberdash",
+  "description": "Shared base framework for Pinstripe and Sartor.",
+  "version": "0.36.0",
+  "author": "Jody Salt",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js",
+    "./lib/*": "./lib/*",
+    "./node": "./node/index.js"
+  },
+  "scripts": {
+    "clean": "rm -rf ./node_modules",
+    "test": "npm run test:unit",
+    "test:unit": "cd lib && node --test"
+  },
+  "dependencies": {
+    "chalk": "^4.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/haberdash"
+  }
+}
