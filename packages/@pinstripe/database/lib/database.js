@@ -7,12 +7,9 @@ import { Row } from './row.js';
 import { Migrator } from './migrator.js';
 
 let loadSchemaPromise;
+let infoCache;
 
-export const Database = Class.extend().include({
-
-    meta(){
-        this.assignProps({ name: 'database' });
-    },
+export const Database = Class.extend('database').include({
 
     async initialize(client, context){
         this.client = client;
@@ -59,7 +56,8 @@ export const Database = Class.extend().include({
     },
 
     async reset(){
-        await this.destroy();
+        this.client.cache = {};
+        infoCache = undefined;
         loadSchemaPromise = loadSchema.call(this, this.client);
         await loadSchemaPromise;
     },
@@ -86,6 +84,7 @@ export const Database = Class.extend().include({
 
     async drop(){
         await this.client.drop();
+        infoCache = undefined;
         loadSchemaPromise = undefined;
     },
 
@@ -114,6 +113,7 @@ export const Database = Class.extend().include({
     },
     
     get info(){
+        if(infoCache) return infoCache;
         const out = {};
         Table.names.forEach(name => {
             out[name] = 'table';
@@ -129,6 +129,7 @@ export const Database = Class.extend().include({
                 out[collectionName] = 'table';
             }
         });
+        infoCache = out;
         return out;
     },
 
