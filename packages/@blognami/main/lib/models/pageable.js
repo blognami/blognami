@@ -37,7 +37,7 @@ export default {
     },
 
     generateCandidateSlug(n){
-        const out = inflector.dasherize(this.title || this.name);
+        const out = inflector.dasherize((this.title || this.name)?.toLowerCase());
         if(n > 1){
             return `${out}-${n}`;
         }

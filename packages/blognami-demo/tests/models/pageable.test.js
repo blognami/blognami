@@ -6,8 +6,8 @@ import { Workspace, reset } from './helpers.js';
 
 beforeEach(reset);
 
-test(`pageable`, () => Workspace.run(async _ => {
-    const { pageables, users, posts, tag } = _.database;
+test(`pageable`, () => Workspace.run(async function() {
+    const { pageables, users, posts, tag } = this.database;
 
     assert.equal(await pageables.count(), 0);
 
@@ -27,11 +27,11 @@ test(`pageable`, () => Workspace.run(async _ => {
     assert.equal(await pageables.count(), 2);
 }));
 
-test(`candidate slug skips view name collision`, () => Workspace.run(async _ => {
-    const { users, posts } = _.database;
+test(`candidate slug skips view name collision`, () => Workspace.run(async function() {
+    const { users, posts } = this.database;
 
-    const originalViewMap = await _.viewMap;
-    _.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
+    const originalViewMap = await this.viewMap;
+    this.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
 
     const user = await users.insert({
         name: 'Admin',
@@ -47,11 +47,11 @@ test(`candidate slug skips view name collision`, () => Workspace.run(async _ => 
     assert.equal(post.slug, 'about-2');
 }));
 
-test(`candidate slug is unaffected when no view collision`, () => Workspace.run(async _ => {
-    const { users, posts } = _.database;
+test(`candidate slug is unaffected when no view collision`, () => Workspace.run(async function() {
+    const { users, posts } = this.database;
 
-    const originalViewMap = await _.viewMap;
-    _.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
+    const originalViewMap = await this.viewMap;
+    this.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
 
     const user = await users.insert({
         name: 'Admin',
@@ -67,11 +67,11 @@ test(`candidate slug is unaffected when no view collision`, () => Workspace.run(
     assert.equal(post.slug, 'my-great-post');
 }));
 
-test(`synthetic viewMap entry causes slug fallthrough`, () => Workspace.run(async _ => {
-    const { users, posts } = _.database;
+test(`synthetic viewMap entry causes slug fallthrough`, () => Workspace.run(async function() {
+    const { users, posts } = this.database;
 
-    const originalViewMap = await _.viewMap;
-    _.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, widgets: 'widgets' }));
+    const originalViewMap = await this.viewMap;
+    this.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, widgets: 'widgets' }));
 
     const user = await users.insert({
         name: 'Admin',
@@ -87,8 +87,8 @@ test(`synthetic viewMap entry causes slug fallthrough`, () => Workspace.run(asyn
     assert.equal(post.slug, 'widgets-2');
 }));
 
-test(`explicit slug colliding with viewMap is rejected`, () => Workspace.run(async _ => {
-    const { users, posts } = _.database;
+test(`explicit slug colliding with viewMap is rejected`, () => Workspace.run(async function() {
+    const { users, posts } = this.database;
 
     const user = await users.insert({
         name: 'Admin',
@@ -96,8 +96,8 @@ test(`explicit slug colliding with viewMap is rejected`, () => Workspace.run(asy
         role: 'admin'
     });
 
-    const originalViewMap = await _.viewMap;
-    _.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
+    const originalViewMap = await this.viewMap;
+    this.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
 
     try {
         await posts.insert({
@@ -111,11 +111,11 @@ test(`explicit slug colliding with viewMap is rejected`, () => Workspace.run(asy
     }
 }));
 
-test(`explicit slug not in viewMap passes validation`, () => Workspace.run(async _ => {
-    const { users, posts } = _.database;
+test(`explicit slug not in viewMap passes validation`, () => Workspace.run(async function() {
+    const { users, posts } = this.database;
 
-    const originalViewMap = await _.viewMap;
-    _.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
+    const originalViewMap = await this.viewMap;
+    this.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
 
     const user = await users.insert({
         name: 'Admin',
@@ -133,8 +133,20 @@ test(`explicit slug not in viewMap passes validation`, () => Workspace.run(async
     assert.equal(post.slug, 'about-thoughts');
 }));
 
-test(`existing pageable with colliding slug can be re-saved unchanged`, () => Workspace.run(async _ => {
-    const { users, posts } = _.database;
+test(`generateCandidateSlug lowercases before dasherizing so acronyms don't split`, () => Workspace.run(async function() {
+    const { users, posts } = this.database;
+
+    const user = await users.insert({ name: 'Admin', email: 'admin@example.com', role: 'admin' });
+
+    const post = await posts.insert({ userId: user.id, title: 'My CMS Guide' });
+    assert.equal(post.slug, 'my-cms-guide');
+
+    const post2 = await posts.insert({ userId: user.id, title: 'CMS' });
+    assert.equal(post2.slug, 'cms');
+}));
+
+test(`existing pageable with colliding slug can be re-saved unchanged`, () => Workspace.run(async function() {
+    const { users, posts } = this.database;
 
     const user = await users.insert({
         name: 'Admin',
@@ -149,8 +161,8 @@ test(`existing pageable with colliding slug can be re-saved unchanged`, () => Wo
 
     assert.equal(post.slug, 'about');
 
-    const originalViewMap = await _.viewMap;
-    _.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
+    const originalViewMap = await this.viewMap;
+    this.serviceManager.intercept('viewMap', () => ({ ...originalViewMap, about: 'about' }));
 
     await post.update({ title: 'About Us' });
 
