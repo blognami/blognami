@@ -2,14 +2,14 @@
   "type": "module",
   "name": "@blognami/tags",
   "description": "Implements tags in the main app.",
-  "version": "0.35.0",
+  "version": "0.36.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "@blognami/main": "^0.35.0",
-    "@pinstripe/database": "^0.35.0"
+    "@blognami/main": "^0.36.0",
+    "@pinstripe/database": "^0.36.0"
   },
   "repository": {
     "type": "git",
