@@ -28,7 +28,6 @@ export default {
                 ],
                 submitTitle: 'Next',
                 requiresProofOfWork: true,
-                width: 'small',
         
                 success: async ({ email }) => {
                     const user = await this.database.users.where({ email }).first();
@@ -40,12 +39,19 @@ export default {
                         password = await this.database.site.generatePassword(email);
                     }
 
+                    const displayPassword = `${password.slice(0, 4)}-${password.slice(4)}`;
+
                     this.runInNewWorkspace(function(){
                         return this.sendMail({
                             to: email,
                             subject: 'Your one-time-password',
                             text({ line }){
-                                line(`Your one-time-password: "${password}" - this will be valid for approximately 3 mins.`);
+                                line('Your one-time password is:');
+                                line();
+                                line(`    ${displayPassword}`);
+                                line();
+                                line(`It's not case-sensitive, and the dash is optional — type it however's easiest.`);
+                                line('Valid for about 3 minutes.');
                             }
                         });
                     });

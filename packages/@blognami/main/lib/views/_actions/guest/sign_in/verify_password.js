@@ -31,8 +31,8 @@ export default {
                 title: 'Sign In',
                 fields: [{ name: 'password', type: 'password', label: 'Your one-time-password', placeholder: 'Enter the one-time-password this has just been sent to you (via email).' }],
                 submitTitle: 'Next',
-                width: 'small',
-                
+                requiresProofOfWork: true,
+
                 async success(){
                     const user = await that.database.users.where({ email }).first();
                     if(!user) return that.renderRedirect({ url: `/_actions/guest/sign_in/create_account?email=${encodeURIComponent(email)}&password=${encodeURIComponent(await that.database.site.generatePassword(email))}${optionalParams}`});
