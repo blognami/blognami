@@ -1,7 +1,7 @@
 
 export default {
     render(){
-        const { name, value, error, cssClasses, hasSaveChangesButton = false } = this.params;
+        const { name, value, error, cssClasses, hasSaveChangesButton = false, contextUrl } = this.params;
 
         return this.renderTag('textarea', {
             name,
@@ -12,6 +12,7 @@ export default {
             'data-preload': true,
             'data-test-id': 'markdown-input',
             'data-has-save-changes-button': hasSaveChangesButton ? 'true' : 'false',
+            'data-context-url': contextUrl,
             body: value
         });
     }
