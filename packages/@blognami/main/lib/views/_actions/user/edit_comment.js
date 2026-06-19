@@ -12,11 +12,16 @@ export default {
                 {
                     name: 'body',
                     type: '_markdown_editor',
+                    contextUrl: this.contextUrl(comment),
                     overlayLinks: user.role == 'admin' ? [ { href: `/_actions/admin/revisions?revisableId=${comment.id}&name=body`, 'data-test-id': 'revisions', body: 'Revisions' } ] : undefined,
                 }
             ],
             success: this.success.bind(this)
         });
+    },
+
+    contextUrl(comment){
+        return `/_actions/user/comment_context?commentableId=${comment.commentableId}`;
     },
 
     async success(){

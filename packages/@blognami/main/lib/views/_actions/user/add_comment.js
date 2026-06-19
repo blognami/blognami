@@ -1,9 +1,15 @@
 export default {
     async render(){
         return this.renderForm(this.database.comments, {
-            fields: ['commentableId', { name: 'userId', value: await this.user.id }, { name: 'body', type: '_markdown_editor'}],
+            fields: ['commentableId', { name: 'userId', value: await this.user.id }, { name: 'body', type: '_markdown_editor', contextUrl: this.contextUrl() }],
             success: this.success.bind(this)
         });
+    },
+
+    contextUrl(){
+        const { commentableId } = this.params;
+        if(!commentableId) return;
+        return `/_actions/user/comment_context?commentableId=${commentableId}`;
     },
 
     async success({ id }){

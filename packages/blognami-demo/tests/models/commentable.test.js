@@ -34,6 +34,10 @@ test(`commentable`, () => Workspace.run(async function() {
     assert.equal(await commentables.count(), 2);
     assert.equal(await post.comments.count(), 1);
 
+    const orderedComments = await post.comments.orderBy('createdAt').orderBy('id').paginate(1, 10).all();
+    assert.equal(orderedComments.length, 1);
+    assert.equal(orderedComments[0].body, 'Comment 1');
+
     const comment = await post.comments.first();
     assert.equal(comment.body, 'Comment 1');
     assert.equal(await comment.commentable.id, post.id);
