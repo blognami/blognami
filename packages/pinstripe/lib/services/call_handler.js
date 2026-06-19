@@ -18,6 +18,9 @@ export default {
         this.context.params = this.normalizeParams(params);
         
         const out = this.normalizeResponse(await this.render());
+        if(out && this.params._url.pathname.match(/(^|\/)_/)){
+            out[1]['x-robots-tag'] ??= 'noindex';
+        }
         if(out) return out;
 
         return [404, {'content-type': 'text/plain'}, ['Not found']];

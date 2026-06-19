@@ -9,7 +9,7 @@ export default {
     create(){
         if(this.isClient) return this.defer(async () => {
             return this.context.root.getOrCreate('version', async () => {
-                if(!cache) cache = fetch('/_pinstripe/_shell/version.json').then(response => response.json());
+                if(!cache) cache = fetch('/_pinstripe/_shell/version.json').then(response => response.json()).then(data => data.version);
                 return await cache;
             });
         });

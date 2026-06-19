@@ -1,7 +1,24 @@
 
 import { LruCache } from '../lru_cache.js';
+import { MarkupNode } from '../markup_node.js';
 
 export const loadCache = LruCache.new();
+
+// Accept header for HTML frame loads: advertises that the frame can consume a
+// pre-parsed, serialized MarkupNode tree (parsed off the main thread by the
+// service worker) as well as raw text/html.
+export const HTML_FRAME_ACCEPT_HEADER = 'text/html, application/vnd.pinstripe.markup-node+json';
+
+// Read a frame response into a serialized MarkupNode JSON string. The worker
+// hands back the serialized type directly; a raw text/html fallback is parsed
+// once here and serialized. Keeps loadCache uniform — every entry is a
+// serialized string, so cache hits deserialize without re-parsing.
+export async function readSerializedMarkup(response){
+    const contentType = response.headers.get('Content-Type') || '';
+    const text = await response.text();
+    if(contentType.match(/application\/vnd\.pinstripe\.markup-node\+json/i)) return text;
+    return new MarkupNode().appendHtml(text).serialize();
+}
 
 export function loadFrame({ confirm, target, method, url, placeholderUrl, values = this.values, requiresProofOfWork = false, skipPatch = false } = {}){
     if(confirm && !window.confirm(confirm)){

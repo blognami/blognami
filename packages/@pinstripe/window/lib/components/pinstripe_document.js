@@ -1,6 +1,6 @@
 
 import { Component } from "../component.js";
-import { loadCache, normalizeUrl } from "./helpers.js";
+import { loadCache, normalizeUrl, HTML_FRAME_ACCEPT_HEADER, readSerializedMarkup } from "./helpers.js";
 
 const preloading = {};
 
@@ -95,16 +95,28 @@ Component.register('pinstripe-document', {
         const previousUrl = this.url.toString();
         const normalizedUrl = normalizeUrl(url, previousUrl).toString();
 
+        const previous = new URL(previousUrl);
+        const target = new URL(normalizedUrl);
+        const isHashOnlyChange = method == 'GET'
+            && previousUrl != normalizedUrl
+            && previous.origin == target.origin
+            && previous.pathname == target.pathname
+            && previous.search == target.search;
+
         if(method == 'GET' && previousUrl != normalizedUrl){
             if(replace){
                 history.replaceState(normalizedUrl, null, normalizedUrl);
             } else {
                 history.pushState(normalizedUrl, null, normalizedUrl);
-                window.scrollTo(0, 0);
+                if(!isHashOnlyChange) window.scrollTo(0, 0);
             }
         }
 
-        await this.constructor.for('pinstripe-frame').prototype.load.call(this, url, options);
+        if(isHashOnlyChange){
+            this.url = url;
+        } else {
+            await this.constructor.for('pinstripe-frame').prototype.load.call(this, url, options);
+        }
 
         if(!this.url.hash) return;
 
@@ -126,9 +138,8 @@ Component.register('pinstripe-document', {
         if(loadCache.get(`${this.document.loadCacheNamespace}:${url}`)) return;
         if(preloading[url.toString()]) return;
         preloading[url.toString()] = true;
-        const response = await fetch(url);
-        const html = await response.text();
-        loadCache.put(`${this.document.loadCacheNamespace}:${url}`, html);
+        const response = await fetch(url, { headers: { Accept: HTML_FRAME_ACCEPT_HEADER } });
+        loadCache.put(`${this.document.loadCacheNamespace}:${url}`, await readSerializedMarkup(response));
         delete preloading[url.toString()];
     }
 });

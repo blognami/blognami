@@ -1,6 +1,7 @@
 
 import { Component } from "../component.js";
-import { loadCache, normalizeUrl } from "./helpers.js";
+import { MarkupNode } from "../markup_node.js";
+import { loadCache, normalizeUrl, HTML_FRAME_ACCEPT_HEADER } from "./helpers.js";
 
 Component.register('pinstripe-frame', {
     initialize(...args){
@@ -46,39 +47,49 @@ Component.register('pinstripe-frame', {
         this.url = url;
         const { method = 'GET', headers = {}, placeholderUrl, useCache = this.params.useCache == 'true', skipPatch = this.params.skipPatch == 'true' } = options;
         const normalizedHeaders = headers instanceof Headers ? headers : new Headers(headers);
-        const acceptHeader = normalizedHeaders.get('Accept') || '*/*';
-        const isHtmlRequest = acceptHeader.match(/text\/html|\*\/\*/i);
-        const cachedHtml = method == 'GET' && isHtmlRequest ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
-        if(cachedHtml) {
+        if(!normalizedHeaders.has('Accept')) normalizedHeaders.set('Accept', HTML_FRAME_ACCEPT_HEADER);
+        const acceptHeader = normalizedHeaders.get('Accept');
+        const isHtmlRequest = acceptHeader.match(/text\/html|\*\/\*|application\/vnd\.pinstripe\.markup-node\+json/i);
+        const cachedMarkup = method == 'GET' && isHtmlRequest ? loadCache.get(`${this.document.loadCacheNamespace}:${url}`) : undefined;
+        if(cachedMarkup) {
             if(useCache){
                 this.status = 'complete';
-                if(!skipPatch) this.patch(cachedHtml);
+                if(!skipPatch) this.patch(MarkupNode.deserialize(cachedMarkup));
                 await clearEventLoop();
                 progressBar.stop();
                 return;
             }
             this.status = 'using-cached-html';
-            if(!skipPatch) this.patch(cachedHtml);
+            if(!skipPatch) this.patch(MarkupNode.deserialize(cachedMarkup));
         }
         let minimumDelay = 0;
-        if(!cachedHtml && placeholderUrl && isHtmlRequest) {
-            const placeholderHtml = loadCache.get(`${this.document.loadCacheNamespace}:${placeholderUrl}`);
-            if(placeholderHtml) {
+        if(!cachedMarkup && placeholderUrl && isHtmlRequest) {
+            const placeholderMarkup = loadCache.get(`${this.document.loadCacheNamespace}:${placeholderUrl}`);
+            if(placeholderMarkup) {
                 this.status = 'using-placeholder-html';
-                if(!skipPatch) this.patch(placeholderHtml);
+                if(!skipPatch) this.patch(MarkupNode.deserialize(placeholderMarkup));
                 minimumDelay = 300;
             }
         }
         try {
-            this._pendingResponse = this.fetch(this.url, { minimumDelay, ...options });
+            this._pendingResponse = this.fetch(this.url, { minimumDelay, ...options, headers: normalizedHeaders });
             const response = await this._pendingResponse;
             const contentTypeHeader = response.headers.get('Content-Type') || '';
             let body;
-            if(contentTypeHeader.match(/text\/html/i)) {
-                const html = await response.text();
+            if(contentTypeHeader.match(/application\/vnd\.pinstripe\.markup-node\+json/i)) {
+                const serialized = await response.text();
+                const node = MarkupNode.deserialize(serialized);
                 this.status = 'complete';
-                if(!skipPatch) this.patch(html);
-                if(html != cachedHtml && method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, html);
+                if(!skipPatch) this.patch(node);
+                if(serialized != cachedMarkup && method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, serialized);
+                body = node;
+            } else if(contentTypeHeader.match(/text\/html/i)) {
+                const html = await response.text();
+                const node = new MarkupNode().appendHtml(html);
+                const serialized = node.serialize();
+                this.status = 'complete';
+                if(!skipPatch) this.patch(node);
+                if(serialized != cachedMarkup && method == 'GET') loadCache.put(`${this.document.loadCacheNamespace}:${this.url}`, serialized);
                 body = html;
             } else if(contentTypeHeader.match(/application\/json/i)){
                 body = await response.json();
