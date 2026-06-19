@@ -1,13 +1,13 @@
 {
   "type": "module",
   "name": "@pinstripe/blob-store",
-  "version": "0.37.0",
+  "version": "0.41.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "pinstripe": "^0.37.0"
+    "pinstripe": "^0.41.0"
   },
   "repository": {
     "type": "git",

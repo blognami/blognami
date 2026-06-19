@@ -2,20 +2,22 @@
   "type": "module",
   "name": "@pinstripe/window",
   "description": "A slick web framework for your browser.",
-  "version": "0.37.0",
+  "version": "0.41.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "scripts": {
-    "clean": "rm -rf ./node_modules"
+    "clean": "rm -rf ./node_modules",
+    "test:unit": "cd lib && node --test"
   },
   "dependencies": {
-    "@pinstripe/utils": "^0.37.0"
+    "@pinstripe/utils": "^0.41.0"
   },
   "devDependencies": {
-    "esbuild": "^0.25.1"
+    "esbuild": "^0.25.1",
+    "jsdom": "^29.1.1"
   },
   "repository": {
     "type": "git",

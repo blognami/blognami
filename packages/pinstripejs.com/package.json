@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "name": "pinstripejs.com",
-  "version": "0.37.0",
+  "version": "0.41.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
