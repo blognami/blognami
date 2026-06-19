@@ -11,6 +11,10 @@ export const styles = ({ colors, remify }) => `
     .header {
         text-align: right;
     }
+    .link {
+        color: ${colors.semantic.accent};
+        text-decoration: none;
+    }
     .body, .header {
         padding: ${remify(7)};
     }
@@ -26,7 +30,7 @@ export default {
         return this.renderHtml`
             <div class="${this.cssClasses.root}">
                 <div class="${this.cssClasses.header}">
-                    <a href="${url}" target="_overlay" ${linkTestId ? this.renderHtml`data-test-id="${linkTestId}"` : ''}>Edit</a>
+                    <a class="${this.cssClasses.link}" href="${url}" target="_overlay" ${linkTestId ? this.renderHtml`data-test-id="${linkTestId}"` : ''}>Edit</a>
                 </div>
                 <div class="${this.cssClasses.body}" ${bodyTestId ? this.renderHtml`data-test-id="${bodyTestId}"` : ''}>
                     ${body}

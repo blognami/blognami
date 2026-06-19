@@ -34,6 +34,7 @@ test.describe('Admin - Home page', () => {
         await expect(page).not.toHaveTitle(/Apple pear/);
         await expect(page.getByTestId("main").getByTestId("home-meta")).not.toContainText("Meta title: Apple pear");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-home-meta").click();
         await helpers.submitForm({ metaTitle: "Apple pear" });
 
@@ -46,6 +47,7 @@ test.describe('Admin - Home page', () => {
         await expect(page.locator("head meta[name=description]")).not.toBeAttached();
         await expect(page.getByTestId("main").getByTestId("home-meta")).not.toContainText("Meta description: Apple plum");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-home-meta").click();
         await helpers.submitForm({ metaDescription: "Apple plum" });
 

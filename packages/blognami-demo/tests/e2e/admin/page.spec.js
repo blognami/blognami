@@ -70,6 +70,7 @@ test.describe('Admin - Basic page', () => {
         await expect(page).not.toHaveTitle(/Apple pear/);
         await expect(page.getByTestId("main").getByTestId("page-meta")).not.toContainText("Meta title: Apple pear");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-page-meta").click();
         await helpers.submitForm({ metaTitle: "Apple pear" });
 
@@ -82,6 +83,7 @@ test.describe('Admin - Basic page', () => {
         await expect(page.locator("head meta[name=description]")).not.toBeAttached();
         await expect(page.getByTestId("main").getByTestId("page-meta")).not.toContainText("Meta description: Apple plum");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-page-meta").click();
         await helpers.submitForm({ metaDescription: "Apple plum" });
 
@@ -95,6 +97,7 @@ test.describe('Admin - Basic page', () => {
         await expect(page.getByTestId("main").getByTestId("page-meta")).not.toContainText("Slug: foo-bar");
         await expect(page).not.toHaveURL(/\/foo-bar/);
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-page-meta").click();
         await helpers.submitForm({ slug: "foo-bar" });
 
@@ -107,10 +110,12 @@ test.describe('Admin - Basic page', () => {
       test(`should have an interface to allow the user to edit the published flag`, async ({ page, helpers }) => {
         await expect(page.getByTestId("main").getByTestId("page-meta")).toContainText("Published: true");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-page-meta").click();
         await helpers.submitForm({ published: false });
         await expect(page.getByTestId("main").getByTestId("page-meta")).toContainText("Published: false");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-page-meta").click();
         await helpers.submitForm({ published: true });
         await expect(page.getByTestId("main").getByTestId("page-meta")).toContainText("Published: true");
@@ -119,7 +124,7 @@ test.describe('Admin - Basic page', () => {
 
     test(`should have an interface to allow the user to delete the current page`, async ({ page, helpers }) => {
       await expect(page.getByTestId("main").getByTestId("page-title")).toBeVisible();
-      await page.getByTestId("main").getByTestId("toggle-danger-area").click();
+      await page.getByTestId("main").getByTestId("tab-danger").click();
       await page.getByTestId("main").getByTestId("delete-page").click();
       await expect(page.getByTestId("main").getByTestId("page-title")).not.toBeVisible();
     });

@@ -20,7 +20,7 @@ test.describe('Admin - Smoke', () => {
     await expect(page.getByTestId("main").getByTestId("post-title")).toContainText("Banana split");
 
     // Delete post
-    await page.getByTestId("main").getByTestId("toggle-danger-area").click();
+    await page.getByTestId("main").getByTestId("tab-danger").click();
     await page.getByTestId("main").getByTestId("delete-post").click();
     await expect(page.getByTestId("main").getByTestId("post-title")).not.toBeVisible();
   });

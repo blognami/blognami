@@ -40,10 +40,12 @@ test.describe('Admin - User page', () => {
       test(`should have an interface to allow the user to edit the name`, async ({ page, helpers }) => {
         await expect(page.getByTestId("main").getByTestId("user-meta")).toContainText("Name: Admin");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-user-meta").click();
         await helpers.submitForm({ name: "Foo bar" });
         await expect(page.getByTestId("main").getByTestId("user-meta")).toContainText("Name: Foo bar");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-user-meta").click();
         await helpers.submitForm({ name: "Admin" });
         await expect(page.getByTestId("main").getByTestId("user-meta")).toContainText("Name: Admin");
@@ -55,6 +57,7 @@ test.describe('Admin - User page', () => {
         await expect(page).not.toHaveTitle(/Apple pear/);
         await expect(page.getByTestId("main").getByTestId("user-meta")).not.toContainText("Meta title: Apple pear");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-user-meta").click();
         await helpers.submitForm({ metaTitle: "Apple pear" });
 
@@ -67,6 +70,7 @@ test.describe('Admin - User page', () => {
         await expect(page.locator('head meta[name="description"]')).not.toBeAttached();
         await expect(page.getByTestId("main").getByTestId("user-meta")).not.toContainText("Meta description: Apple plum");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-user-meta").click();
         await helpers.submitForm({ metaDescription: "Apple plum" });
 
@@ -80,6 +84,7 @@ test.describe('Admin - User page', () => {
         await expect(page.getByTestId("main").getByTestId("user-meta")).not.toContainText("Slug: foo-bar");
         await expect(page).not.toHaveURL(/foo-bar/);
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-user-meta").click();
         await helpers.submitForm({ slug: "foo-bar" });
 
@@ -91,13 +96,15 @@ test.describe('Admin - User page', () => {
     });
 
     test(`should have an interface to allow the user to delete the current user - but a user can't delete themself`, async ({ page, helpers }) => {
+      await page.getByTestId("main").getByTestId("tab-meta").click();
       await expect(page.getByTestId("main").getByTestId("user-meta")).toBeVisible();
-      await page.getByTestId("main").getByTestId("toggle-danger-area").click();
+      await page.getByTestId("main").getByTestId("tab-danger").click();
       await page.getByTestId("main").getByTestId("delete-user").click();
 
       await expect(helpers.topModal()).toContainText("Access denied");
       await expect(helpers.topModal()).toContainText("You can't delete your own account - another admin must do this for you.");
       await helpers.topModal().getByText("OK").click();
+      await page.getByTestId("main").getByTestId("tab-meta").click();
       await expect(page.getByTestId("main").getByTestId("user-meta")).toBeVisible();
 
       await page.getByTestId("navbar").getByTestId("add").click();
@@ -108,8 +115,9 @@ test.describe('Admin - User page', () => {
         email: "apple.orange@example.com",
       });
       await expect(page).toHaveURL(/apple-orange/);
+      await page.getByTestId("main").getByTestId("tab-meta").click();
       await expect(page.getByTestId("main").getByTestId("user-meta")).toBeVisible();
-      await page.getByTestId("main").getByTestId("toggle-danger-area").click();
+      await page.getByTestId("main").getByTestId("tab-danger").click();
       await page.getByTestId("main").getByTestId("delete-user").click();
       await expect(page.getByTestId("main").getByTestId("user-meta")).not.toBeVisible();
     });

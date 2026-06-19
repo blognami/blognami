@@ -1,29 +1,44 @@
 
 export default {
-    meta(){
-        this.addHook('renderBody', async function(){
-            const { tag } = this.params;
-            let user;
-            if(await this.session){
-                user = await this.session.user;
-            }
-            
-            const isAdmin = user?.role == 'admin';
-        
-            if(isAdmin) return this.renderHtml`
-                ${this.renderView('_editable_area', {
-                    url: `/_actions/admin/edit_tag_meta?id=${tag.id}`,
-                    body: this.renderHtml`
-                        <p><b>Name:</b> ${tag.name}</p>
-                        <p><b>Meta title:</b> ${tag.metaTitle}</p>
-                        <p><b>Meta description:</b> ${tag.metaDescription}</p>
-                        <p><b>Slug:</b> ${tag.slug}</p>
-                    `,
-                    linkTestId: "edit-tag-meta",
-                    bodyTestId: "tag-meta"
-                })}
+    async render(){
+        const { tag } = this.params;
 
-                ${this.renderView('_danger_area', {
+        let user;
+        if(await this.session){
+            user = await this.session.user;
+        }
+
+        const isAdmin = user?.role == 'admin';
+
+        const meta = [];
+        meta.push({ title: tag.metaTitle || tag.name });
+        if(tag.metaDescription) meta.push({ name: 'description', content: tag.metaDescription });
+
+        const body = isAdmin ? this.renderView('_tabs', {
+            tabs: [
+                {
+                    title: 'Posts',
+                    testId: 'tab-posts',
+                    body: this.runHook('renderBody')
+                },
+                {
+                    title: 'Meta',
+                    testId: 'tab-meta',
+                    body: this.renderView('_editable_area', {
+                        url: `/_actions/admin/edit_tag_meta?id=${tag.id}`,
+                        body: this.renderHtml`
+                            <p><b>Name:</b> ${tag.name}</p>
+                            <p><b>Meta title:</b> ${tag.metaTitle}</p>
+                            <p><b>Meta description:</b> ${tag.metaDescription}</p>
+                            <p><b>Slug:</b> ${tag.slug}</p>
+                        `,
+                        linkTestId: "edit-tag-meta",
+                        bodyTestId: "tag-meta"
+                    })
+                },
+                {
+                    title: 'Danger',
+                    testId: 'tab-danger',
                     body: this.renderView('_button', {
                         tagName: 'a',
                         href: `/_actions/admin/delete_tag?id=${tag.id}`,
@@ -35,21 +50,13 @@ export default {
                         ['data-test-id']: 'delete-tag',
                         body: 'Delete this Tag!'
                     })
-                })}
-            `.assignProps({ displayOrder: 200 });
-        });
-    },
+                }
+            ]
+        }) : this.runHook('renderBody');
 
-    async render(){
-        const { tag } = this.params;
-        
-        const meta = [];
-        meta.push({ title: tag.metaTitle || tag.name });
-        if(tag.metaDescription) meta.push({ name: 'description', content: tag.metaDescription });
-    
         return this.renderView('_layout', {
             meta,
-            body: this.runHook('renderBody')
+            body
         });
     }
 };

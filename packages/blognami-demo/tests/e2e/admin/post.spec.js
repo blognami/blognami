@@ -142,6 +142,7 @@ test.describe('Admin - Post page', () => {
         }
 
         await expect(page.getByTestId("main").getByTestId("tagable-tags")).toContainText("Tags: none");
+        await page.getByTestId("main").getByTestId("tab-tags").click();
         await page.getByTestId("main").getByTestId("edit-tagable-tags").click();
 
         for (const name of tagNames) {
@@ -150,11 +151,33 @@ test.describe('Admin - Post page', () => {
         }
 
         await helpers.closeTopModal();
-        await expect(page.getByTestId("main").getByTestId("tagable-tags")).toContainText('Tags: "Apple", "Pear", "Plum"');
+        for (const name of tagNames) {
+          await expect(page.getByTestId("main").getByTestId("tagable-tags")).toContainText(name);
+        }
+        await expect(page.getByTestId("main").getByTestId("tagable-tags")).not.toContainText("none");
 
         for (const title of tagNames) {
           await expect(page.getByTestId("sidebar").getByTestId("tags")).toContainText(title);
         }
+      });
+
+      test(`should have an interface to allow the user to create a tag from within the tags modal`, async ({ page, helpers }) => {
+        await expect(page.getByTestId("main").getByTestId("tagable-tags")).toContainText("Tags: none");
+        await page.getByTestId("main").getByTestId("tab-tags").click();
+        await page.getByTestId("main").getByTestId("edit-tagable-tags").click();
+
+        await expect(helpers.topModal().getByTestId("create-tag")).not.toBeVisible();
+        await helpers.topModal().locator('input[name="q"]').fill("Quince");
+        await helpers.waitForPageToBeIdle();
+
+        await helpers.topModal().getByTestId("create-tag").click();
+        await helpers.waitForPageToBeIdle();
+        await expect(helpers.topModal().getByTestId("create-tag")).not.toBeVisible();
+        await expect(helpers.topModal().getByText("Quince")).toBeVisible();
+
+        await helpers.closeTopModal();
+        await expect(page.getByTestId("main").getByTestId("tagable-tags")).toContainText("Quince");
+        await expect(page.getByTestId("sidebar").getByTestId("tags")).toContainText("Quince");
       });
     });
 
@@ -165,6 +188,7 @@ test.describe('Admin - Post page', () => {
         await expect(page).not.toHaveTitle(/Apple pear/);
         await expect(page.getByTestId("main").getByTestId("post-meta")).not.toContainText("Meta title: Apple pear");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-post-meta").click();
         await helpers.submitForm({ metaTitle: "Apple pear" });
 
@@ -177,6 +201,7 @@ test.describe('Admin - Post page', () => {
         await expect(page.locator("head meta[name=description]")).not.toBeAttached();
         await expect(page.getByTestId("main").getByTestId("post-meta")).not.toContainText("Meta description: Apple plum");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-post-meta").click();
         await helpers.submitForm({ metaDescription: "Apple plum" });
 
@@ -190,6 +215,7 @@ test.describe('Admin - Post page', () => {
         await expect(page.getByTestId("main").getByTestId("post-meta")).not.toContainText("Slug: foo-bar");
         await expect(page).not.toHaveURL(/\/foo-bar/);
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-post-meta").click();
         await helpers.submitForm({ slug: "foo-bar" });
 
@@ -203,11 +229,13 @@ test.describe('Admin - Post page', () => {
         await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Enable comments: true");
         await expect(page.getByTestId("main").getByTestId("add-comment")).toBeVisible();
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-post-meta").click();
         await helpers.submitForm({ enableComments: false });
         await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Enable comments: false");
         await expect(page.getByTestId("main").getByTestId("add-comment")).not.toBeVisible();
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-post-meta").click();
         await helpers.submitForm({ enableComments: true });
         await expect(page.getByTestId("main").getByTestId("post-meta")).toContainText("Enable comments: true");
@@ -217,7 +245,7 @@ test.describe('Admin - Post page', () => {
 
     test(`should have an interface to allow the user to delete the current post`, async ({ page, helpers }) => {
       await expect(page.getByTestId("main").getByTestId("post-title")).toBeVisible();
-      await page.getByTestId("main").getByTestId("toggle-danger-area").click();
+      await page.getByTestId("main").getByTestId("tab-danger").click();
       await page.getByTestId("main").getByTestId("delete-post").click();
       await expect(page.getByTestId("main").getByTestId("post-title")).not.toBeVisible();
     });

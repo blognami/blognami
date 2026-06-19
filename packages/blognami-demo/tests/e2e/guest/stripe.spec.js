@@ -19,6 +19,7 @@ test.describe('Guest - Stripe newsletter subscription', () => {
     // Set a post to paid access
     await page.getByTestId("main").getByText("Alexandra Burgs").click();
     await helpers.waitForPageToBeIdle();
+    await page.getByTestId("main").getByTestId("tab-meta").click();
     await page.getByTestId("main").getByTestId("edit-post-meta").click();
     await helpers.submitForm({ access: 'paid' });
 
