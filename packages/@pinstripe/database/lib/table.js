@@ -253,8 +253,21 @@ export const Table = Class.extend('Table').include({
 
         for(let i = 0; i < this.orderedBy.length; i++){
             const [ columnName, direction = 'asc' ] = this.orderedBy[i];
+            const sortDirection = direction == 'asc' ? 'asc' : 'desc';
+            const columnReference = this.tableReference.createColumnReference(columnName);
             out.push(i == 0 ? ' order by ' : ', ');
-            out.push(`? ${direction == 'asc' ? 'asc' : 'desc'}`, this.tableReference.createColumnReference(columnName));
+            this.database.client.adapt(this, {
+                mysql(){
+                    out.push(
+                        KEY_TYPES.includes(this.constructor.columns[columnName]) ? `bin_to_uuid(?) ${sortDirection}` : `? ${sortDirection}`,
+                        columnReference
+                    );
+                },
+
+                sqlite(){
+                    out.push(`? ${sortDirection}`, columnReference);
+                }
+            });
         }
         
         if(typeof this.pageSize == 'number'){
