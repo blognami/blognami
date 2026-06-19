@@ -18,3 +18,11 @@ Cardoon is an agent-orchestration framework: a CLI for launching agent sessions,
 ## Using the Cardoon CLI
 
 To drive the CLI from inside a session — listing commands, running them, or spawning sub-agents — read `using-cardoon-cli.md`.
+
+## Creating commits
+
+When you need to create a git commit, read `creating-commits.md` for the project's commit conventions.
+
+## Running long commands
+
+Run long-running commands (test suites, builds, migrations) in the **foreground** — let the `Bash` call block until they exit. Never background-and-poll: a one-shot agent session cannot terminate while a background shell is still alive, which silently wedges the whole loop. Never use the Bash tool's `run_in_background` option either: a one-shot session terminates the moment the turn ends, so ending a turn to await a background task kills the run outright. The safe `wait "$!"` pattern and the self-matching `pgrep` footgun to avoid are detailed in `using-cardoon-cli.md`.

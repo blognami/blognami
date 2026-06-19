@@ -1,5 +1,6 @@
 ---
 description: Runs the Ralph loop — orchestrator finds pending tasks and delegates each to a fresh worker sub-agent for implementation.
+tags: [ralph]
 params:
   role:
     type: string
@@ -38,10 +39,12 @@ If no pending entry exists, print "No pending tasks." and stop.
 Run via Bash (substitute the exact heading — shell-quote it to handle spaces and special characters):
 
 ```bash
-cardoon complete-tasks --role='"worker"' --task-heading='"EXACT HEADING HERE"'
+cardoon complete-tasks --role worker --task-heading 'EXACT HEADING HERE'
 ```
 
-Wait for the process to exit (blocking — do not proceed until it finishes). Capture the sub-session number from the `Log: tail -f <path>/index.md` line printed to stdout — it's the trailing `<NNNN>` segment (the sub-session's own directory name).
+Pass params as space-separated `--flag value` pairs — the CLI does not support `--flag=value` or JSON-quoted values.
+
+Run it in the **foreground** with the Bash tool's `timeout` parameter set to `14400000` (4 hours) so the call blocks until the worker exits. Never set `run_in_background`: this session is headless — it terminates the moment you end your turn, so ending your turn to "wait" for a background task ends the session, and the CLI then kills the still-running worker a few seconds later. Capture the sub-session number from the `Log: tail -f <path>/index.md` line printed to stdout — it's the trailing `<NNNN>` segment (the sub-session's own directory name).
 
 Include `Sub-session [<NNNN>](sessions/<NNNN>/index.md).` in your response.
 
@@ -67,14 +70,14 @@ Your job is to implement exactly one task (the one named by `taskHeading`) and m
 
 Read `tasks.md`. Find the entry whose H2 heading exactly matches `taskHeading`. Extract:
 - The `steps` bullet list — these are your acceptance criteria.
-- The `feature:` value if present.
+- The `ticket:` value if present.
 - The `category`.
 
 If no matching entry is found, print an error and exit without modifying any file.
 
 ### 2. Read supporting docs
 
-If a `feature:` back-link is present (e.g. `docs/features/billing/plan-upgrades.md`), read that file for fuller context. If it doesn't exist, note it and proceed from the task entry alone.
+If a `ticket:` back-link is present (e.g. `docs/tickets/open/plan-upgrades/index.md`), read that file for fuller context. If it doesn't exist, note it and proceed from the task entry alone.
 
 Also read `CLAUDE.md` at the repo root to understand the repo's coding norms.
 
@@ -93,6 +96,10 @@ Make the changes required to satisfy every step. Follow the norms in `CLAUDE.md`
 
 Edit `tasks.md`: on the matching entry, change `- **status:** pending` to `- **status:** done`. Touch only that line — do not reorder or reformat anything else.
 
-### 6. Report
+### 6. Commit
+
+Create exactly one commit capturing this task's work — the implementation changes plus the `tasks.md` status flip. Follow the commit conventions in the cardoon playbook's `creating-commits.md`; stage only the files this task touched.
+
+### 7. Report
 
 Print a short summary: the task heading, what changed, and which steps were satisfied.

@@ -4,7 +4,7 @@ The `cardoon` binary (or `npx cardoon`) is how you invoke commands, scaffold ent
 
 ## Listing and running commands
 
-`cardoon list-commands` prints every registered command. `cardoon <name> --help` shows per-command params. Run a command with `cardoon <name> [params]`.
+`cardoon list-commands` prints every registered command. `cardoon <name> --help` shows per-command params. Run a command with `cardoon <name> [params]`, passing params as space-separated `--flag value` pairs (shell-quote values containing spaces) — the CLI does not support `--flag=value` or JSON-quoted values.
 
 ## Authorable entities and their generators
 
@@ -52,7 +52,24 @@ Always wait for one sub-session to finish before kicking off the next. Two reaso
 1. **Session-directory race.** `allocateDir` (`cardoon/lib/services/logger.js:22-34`) uses `readdirSync` + `mkdirSync({ recursive: true })` with no lock. Concurrent allocators can pick the same `NNNN` — `mkdirSync` with `recursive: true` does not error on an existing directory — and both sub-sessions silently append to the same files.
 2. **Workspace file races.** Sub-sessions edit the shared workspace. Running two write-touching commands at once races on any file they both touch.
 
-Sequential dispatch also matches Claude CLI's single-threaded tool-call model — a `Bash` tool call blocks until the sub-process exits.
+Sequential dispatch also matches a one-shot agent's single-threaded execution model — a `Bash` call blocks until the sub-process exits.
+
+## Run long commands in the foreground — never background-and-poll
+
+A one-shot (non-interactive) agent session will not exit while a background shell it spawned is still alive. Because the sub-agent pattern relies on a blocking `Bash` call that only returns once the sub-process exits, one leaked background process wedges the whole loop: the agent finishes its work but cannot terminate, so the parent's blocking `Bash` never returns and the orchestrator hangs indefinitely.
+
+So run long-running commands — test suites, builds, migrations — in the **foreground** and let the `Bash` call block until they finish. Do not start them in the background and poll for completion.
+
+The Bash tool's `run_in_background` option is just as fatal, via the opposite mechanism: a one-shot session terminates the moment the model ends its turn, so ending a turn to "wait" for a background task's completion notification ends the session on the spot — and the CLI terminates still-running background children a few seconds after the final result, killing the child mid-flight. Long blocking calls are safe instead — cardoon raises the Bash tool's timeout caps (`BASH_DEFAULT_TIMEOUT_MS` / `BASH_MAX_TIMEOUT_MS`) in every session it spawns, so pass an explicit `timeout` (up to `14400000`, 4 hours) rather than backgrounding.
+
+If you genuinely must background a job, `wait` on the exact PID you started — never poll with a pattern matcher:
+
+```bash
+npm test > /tmp/test.log 2>&1 &   # only if unavoidable
+wait "$!"                          # waits on THIS pid, then returns
+```
+
+Never wait with `while kill -0 $(pgrep -f "<pattern>"); do sleep …; done`. `pgrep -f` matches against full command lines, and the polling shell's own command line contains the pattern string — so the loop matches itself, `kill -0` always succeeds, and it spins forever. This footgun once hung a `complete-tasks` worker on a `pgrep -f "node.*test-lock"` loop that matched its own shell, blocking the entire Ralph run until the process was killed by hand.
 
 ## Worked example
 
