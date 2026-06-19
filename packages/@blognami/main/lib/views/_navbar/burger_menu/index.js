@@ -45,7 +45,7 @@ export default {
         const contentItems = await this.menus.content || [];
 
         return this.renderHtml`
-            <pinstripe-modal>
+            <pinstripe-modal height="full">
                 <div class="${this.cssClasses.root}">
                     ${userItems.map(item =>
                         this.renderView('_navbar/burger_menu/_link_group_section', item)

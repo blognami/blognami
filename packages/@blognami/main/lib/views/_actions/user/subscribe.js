@@ -46,7 +46,7 @@ export default {
         if(options.length == 1) plan = options[0].name;
 
         if(!plan) return this.renderHtml`
-            <pinstripe-modal>
+            <pinstripe-modal width="medium" height="full">
                 ${this.renderView('_panel', {
                     title: 'Choose a subscription plan',
                     body: this.renderView('_actions/guest/_subscription_options', { options }),

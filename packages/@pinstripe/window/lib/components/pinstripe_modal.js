@@ -9,9 +9,7 @@ const MOBILE_HEIGHT_MAP = {
 const DESKTOP_WIDTH_MAP = {
     small: '600px',
     medium: '800px',
-    large: '1000px',
-    auto: '0',
-    full: '0'
+    large: '1000px'
 };
 
 const DESKTOP_HEIGHT_MAP = {
@@ -26,11 +24,13 @@ Component.register('pinstripe-modal', {
 
         this.document.body.clip();
 
-        const { width = 'medium', height = 'auto' } = this.params;
+        const { width = 'small', height = 'content' } = this.params;
 
-        const mobileHeight = MOBILE_HEIGHT_MAP[height] || height;
-        const desktopWidth = DESKTOP_WIDTH_MAP[width] || width;
-        const desktopHeight = DESKTOP_HEIGHT_MAP[height] || height;
+        const isContentHeight = height === 'content';
+        const isFullWidth = width === 'full';
+        const mobileHeight = isContentHeight ? 'auto' : `minmax(${MOBILE_HEIGHT_MAP[height] || height}, auto)`;
+        const desktopWidth = isFullWidth ? '0' : (DESKTOP_WIDTH_MAP[width] || width);
+        const desktopHeight = isContentHeight ? 'auto' : `minmax(${DESKTOP_HEIGHT_MAP[height] || height}, auto)`;
 
         this.shadow.patch(`
             <style>
@@ -87,6 +87,7 @@ Component.register('pinstripe-modal', {
                     width: 100vw;
                     min-height: 100vh;
                     display: grid;
+                    align-content: ${isContentHeight ? 'center' : 'stretch'};
                     grid-template-columns: [grid-start] 1rem [full-start] auto [full-end] 1rem [grid-end];
                     grid-template-rows: [grid-start] 0 [top-start] 7.2rem [top-end] 0 [full-start] ${mobileHeight} [full-end] 1rem [grid-end];
                 }
@@ -116,7 +117,7 @@ Component.register('pinstripe-modal', {
                     }
 
                     .body {
-                        grid-area: full / ${['auto', 'full'].includes(desktopWidth) ? 'full' : 'fixed'};
+                        grid-area: full / ${isFullWidth ? 'full' : 'fixed'};
                         display: flex;
                         flex-direction: column;
                         align-items: stretch;

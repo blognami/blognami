@@ -41,7 +41,7 @@ export default {
     render(){
         return this.renderView('_pinstripe/_content', {
             body: this.renderHtml`
-                <pinstripe-modal>
+                <pinstripe-modal height="full">
                     <div class="${this.cssClasses.root}">
                         <div class="${this.cssClasses.container}">
                             <div class="${this.cssClasses.spinner}"></div>

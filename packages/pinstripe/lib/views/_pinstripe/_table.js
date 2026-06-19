@@ -76,7 +76,7 @@ export const decorators = {
 export default {
     render(){
         return this.renderHtml`
-            <pinstripe-modal width="medium">
+            <pinstripe-modal height="full">
                 ${this.renderView('_pinstripe/_panel', {
                     title: this.params.title,
                     body: this.renderHtml`

@@ -1,37 +1,36 @@
 
-export const styles = ({ remify }) => `
+export const styles = ({ remify, colors, radius, text, fontWeight }) => `
     .root {
         width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
+        background-color: ${colors.white};
+        border-radius: ${radius.lg};
+        overflow: hidden;
     }
-    .header, .body, .footer {
+    .header, .footer {
         display: block;
-        padding: ${remify(20)};
+        padding: ${remify(14)} ${remify(20)};
+        background-color: ${colors.gray[50]};
     }
     .header {
-        background-color: whitesmoke;
-        border-bottom: ${remify(1)} solid #dbdbdb;
-        border-top-left-radius: ${remify(6)};
-        border-top-right-radius: ${remify(6)};
-    }
-    .title {
-        color: #363636;
-        flex-grow: 1;
-        flex-shrink: 0;
-        font-size: ${remify(24)};
-        line-height: 1;
-    }
-    .body {
-        background-color: white;
-        flex-grow: 1;
+        border-bottom: ${remify(1)} solid ${colors.gray[200]};
     }
     .footer {
-        background-color: whitesmoke;
-        border-bottom-left-radius: ${remify(6)};
-        border-bottom-right-radius: ${remify(6)};
-        border-top: ${remify(1)} solid #dbdbdb;
+        border-top: ${remify(1)} solid ${colors.gray[200]};
+    }
+    .title {
+        color: ${colors.gray[900]};
+        font-size: ${text.xl.size};
+        line-height: 1.2;
+        font-weight: ${fontWeight.semibold};
+    }
+    .body {
+        display: block;
+        padding: ${remify(20)};
+        background-color: ${colors.white};
+        flex-grow: 1;
     }
 `;
 

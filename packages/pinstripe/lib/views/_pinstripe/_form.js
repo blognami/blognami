@@ -161,8 +161,8 @@ export default {
             submitTitle,
             cancelTitle,
             class: _class,
-            width = 'medium',
-            height = 'auto'
+            width = 'small',
+            height = 'full'
         } = this.params;
 
         return this.renderHtml`

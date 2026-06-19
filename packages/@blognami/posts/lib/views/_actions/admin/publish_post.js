@@ -9,7 +9,6 @@ export default {
                 { name: 'emailSubscribers', type: 'checkbox', label: 'Email subscribers', value: true }
             ],
             submitTitle: 'Publish',
-            width: 'small',
 
             success: async ({ emailSubscribers }) => {
                 await post.update({
