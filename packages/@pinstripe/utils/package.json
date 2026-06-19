@@ -2,7 +2,7 @@
   "type": "module",
   "name": "@pinstripe/utils",
   "description": "A utility library with meta programming.",
-  "version": "0.37.0",
+  "version": "0.41.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -16,8 +16,7 @@
   },
   "dependencies": {
     "chalk": "^4.1.0",
-    "haberdash": "0.37.0",
-    "html-entities": "^2.3.2"
+    "haberdash": "0.41.0"
   },
   "repository": {
     "type": "git",

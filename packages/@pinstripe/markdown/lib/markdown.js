@@ -1,11 +1,14 @@
 
 
-import MarkdownIt from 'markdown-it';
-
 import { Class } from './class.js';
-import { parseHtml } from './virtual_node.js';
+import { MarkupNode } from './markup_node.js';
 import { Html } from './html.js';
 import { inflector } from '@pinstripe/utils';
+
+const headingSlug = (text) =>
+    inflector.dasherize(`${text}`.toLowerCase())
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
 
 export const Markdown = Class.extend().include({
     meta(){
@@ -23,9 +26,8 @@ export const Markdown = Class.extend().include({
         this.allowHtml = allowHtml;
     },
 
-    render(){
-        const html = new MarkdownIt({ html: this.allowHtml, linkify: true }).use(injectLineNumbers).render(this.value || '');
-        const virtualNode = parseHtml(html);
+    async render(){
+        const virtualNode = await MarkupNode.fromMarkdown(this.value || '').render();
 
         const idCounters = {};
 
@@ -33,7 +35,7 @@ export const Markdown = Class.extend().include({
             const matches = heading.type.match(/^h([1-6])$/);
             if(!matches) return;
             const text = heading.text;
-            let id = `heading-${inflector.dasherize(text)}`;
+            let id = `heading-${headingSlug(text)}`;
             if(id in idCounters){
                 idCounters[id]++;
                 id = `${id}-${idCounters[id]}`;
@@ -70,16 +72,9 @@ export const Markdown = Class.extend().include({
             };
             paragraph.children = [];
         });
+
+        if(!this.allowHtml) virtualNode.sanitize();
+
         return Html.new(virtualNode.toString());
     }
 });
-
-const injectLineNumbers = (md) => {
-    md.renderer.rules.paragraph_open = (tokens, idx, options, env, slf) => {
-        if (tokens[idx].map) {
-            const line = tokens[idx].map[0];
-            tokens[idx].attrSet('data-line-number', `${line + 1}`);
-        }
-        return slf.renderToken(tokens, idx, options, env, slf);
-    }
-};

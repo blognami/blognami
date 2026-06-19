@@ -78,7 +78,7 @@ async function loadMarkdownFile(userId, filePath){
 
     if(!entity.title){
         const renderedBody = await this.renderMarkdown(body);
-        this.parseHtml(renderedBody).traverse(node => {
+        (await this.parseHtml(renderedBody)).traverse(node => {
             if(node.type == 'h1') entity.title = node.text;
         });
     }

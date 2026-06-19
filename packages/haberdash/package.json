@@ -2,7 +2,7 @@
   "type": "module",
   "name": "haberdash",
   "description": "Shared base framework for Pinstripe and Cardoon.",
-  "version": "0.37.0",
+  "version": "0.41.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -16,7 +16,8 @@
     "test:unit": "cd lib && node --test"
   },
   "dependencies": {
-    "chalk": "^4.1.0"
+    "chalk": "^4.1.0",
+    "html-entities": "^2.3.2"
   },
   "repository": {
     "type": "git",

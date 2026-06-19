@@ -37,7 +37,7 @@ export default {
         const { sidebar = this.renderView('_sidebar') } = this.params;
         const body = await this.params.body;
 
-        const virtualDom = this.parseHtml(body);
+        const virtualDom = await this.parseHtml(body);
 
         const tocLinks = [];
 

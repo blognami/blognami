@@ -17,3 +17,4 @@ export * from './context.js';
 export * from './file_system.js';
 export * from './import_all.js'; // pinstripe-if-client: export const importAll = undefined;
 export * from './text.js';
+export * from './markup_node.js';

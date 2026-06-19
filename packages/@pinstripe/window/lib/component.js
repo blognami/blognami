@@ -1,7 +1,7 @@
 
 import { Class } from './class.js';
 import { TEXT_ONLY_TAGS } from './constants.js';
-import { VirtualNode } from './virtual_node.js';
+import { MarkupNode } from './markup_node.js';
 import { Registry } from './registry.js';
 import { ComponentEvent } from './component_event.js';
 import { generateProofOfWork } from './proof_of_work.js'
@@ -426,6 +426,18 @@ export const Component = Class.extend('Component').include({
             initChildren.call(this);
             return this.children;
         }
+        if(arg1 instanceof MarkupNode){
+            const node = arg1;
+            this._virtualNodeFilters.forEach(filter => filter.call(node, node));
+            cleanChildren.call(this);
+            if(TEXT_ONLY_TAGS.includes(this.type)){
+                insert.call(new Component(this.node, true), { type: '#text', attributes: { value: node.text }, children: [] }, null, false);
+            } else {
+                patchChildren.call(new Component(this.node, true), node.children);
+            }
+            initChildren.call(this);
+            return this.children;
+        }
         const attributes = arg1;
         patchAttributes.call(this, attributes);
         return this;
@@ -607,7 +619,7 @@ function prepend(html, referenceChild){
 }
 
 function createVirtualNode(html){
-    const out = VirtualNode.fromString(html);
+    const out = new MarkupNode().appendHtml(html);
     this._virtualNodeFilters.forEach(filter => filter.call(out, out));
     return out;
 }

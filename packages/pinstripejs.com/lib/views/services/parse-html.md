@@ -18,18 +18,18 @@ this.parseHtml(htmlString)
 
 ### Returns
 
-- VirtualNode tree structure
+- MarkupNode tree structure
 
 ## Description
 
-The `parseHtml` service converts HTML strings into VirtualNode objects for traversal and manipulation. Useful for content processing, URL extraction, and HTML transformation.
+The `parseHtml` service converts HTML strings into MarkupNode objects for traversal and manipulation. Useful for content processing, URL extraction, and HTML transformation.
 
-## VirtualNode API
+## MarkupNode API
 
 ```javascript
 node.type          // Element type ('div', '#text', '#comment', '#fragment')
 node.attributes    // Object of element attributes
-node.children      // Array of child VirtualNodes
+node.children      // Array of child MarkupNodes
 node.text          // Concatenated text content of all descendants
 node.traverse(fn)  // Recursively call fn on all nodes
 node.toString()    // Serialize back to HTML

@@ -69,7 +69,7 @@ export default {
         page.headers = headers;
         if(status != 200 || headers['content-type'] != 'text/html') return;
         const html = data.join('');
-        const virtualDom = this.parseHtml(html);
+        const virtualDom = await this.parseHtml(html);
         const urls = this.extractUrls(virtualDom);
         while(urls.length){
             const url = urls.shift();
