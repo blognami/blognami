@@ -33,6 +33,7 @@ test.describe('Admin - Tag page', () => {
         await expect(page).not.toHaveTitle(/Apple pear/);
         await expect(page.getByTestId("main").getByTestId("tag-meta")).not.toContainText("Meta title: Apple pear");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-tag-meta").click();
         await helpers.submitForm({ metaTitle: "Apple pear" });
 
@@ -45,6 +46,7 @@ test.describe('Admin - Tag page', () => {
         await expect(page.locator('head meta[name="description"]')).not.toBeAttached();
         await expect(page.getByTestId("main").getByTestId("tag-meta")).not.toContainText("Meta description: Apple plum");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-tag-meta").click();
         await helpers.submitForm({ metaDescription: "Apple plum" });
 
@@ -55,10 +57,12 @@ test.describe('Admin - Tag page', () => {
       test(`should have an interface to allow the user to edit the name`, async ({ page, helpers }) => {
         await expect(page.getByTestId("main").getByTestId("tag-meta")).toContainText("Name: Excepturi Corporis");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-tag-meta").click();
         await helpers.submitForm({ name: "Foo bar" });
         await expect(page.getByTestId("main").getByTestId("tag-meta")).toContainText("Name: Foo bar");
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-tag-meta").click();
         await helpers.submitForm({ name: "Excepturi Corporis" });
         await expect(page.getByTestId("main").getByTestId("tag-meta")).toContainText("Name: Excepturi Corporis");
@@ -70,6 +74,7 @@ test.describe('Admin - Tag page', () => {
         await expect(page.getByTestId("main").getByTestId("tag-meta")).not.toContainText("Slug: foo-bar");
         await expect(page).not.toHaveURL(/foo-bar/);
 
+        await page.getByTestId("main").getByTestId("tab-meta").click();
         await page.getByTestId("main").getByTestId("edit-tag-meta").click();
         await helpers.submitForm({ slug: "foo-bar" });
 
@@ -81,8 +86,9 @@ test.describe('Admin - Tag page', () => {
     });
 
     test(`should have an interface to allow the user to delete the current tag`, async ({ page, helpers }) => {
+      await page.getByTestId("main").getByTestId("tab-meta").click();
       await expect(page.getByTestId("main").getByTestId("tag-meta")).toBeVisible();
-      await page.getByTestId("main").getByTestId("toggle-danger-area").click();
+      await page.getByTestId("main").getByTestId("tab-danger").click();
       await page.getByTestId("main").getByTestId("delete-tag").click();
       await expect(page.getByTestId("main").getByTestId("tag-meta")).not.toBeVisible();
     });
