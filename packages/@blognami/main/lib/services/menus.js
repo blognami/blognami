@@ -67,6 +67,7 @@ export default {
                 label: 'Profile',
                 url: `/${user.slug}`,
                 target: '_top',
+                placeholder: '/_placeholders/user',
                 testId: 'profile'
             });
 

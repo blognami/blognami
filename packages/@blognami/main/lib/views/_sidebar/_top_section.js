@@ -19,11 +19,12 @@ export default {
     },
 
     async renderSections(){
-        const body = this.parseHtml(
+        const body = await this.parseHtml(
             await this.renderMarkdown(
                 await this.database.site.navigation
             )
         );
+        await this.applyPlaceholders(body);
         const sections = {};
         let currentSection = 'Top';
         for(const child of body.children) {
@@ -57,6 +58,32 @@ export default {
         return out;
     },
 
+    extractSlugFromHref(href){
+        const match = `${href || ''}`.match(/^\/([^/#?]+)$/);
+        return match ? match[1] : undefined;
+    },
+
+    async applyPlaceholders(body){
+        const anchors = [];
+        body.traverse(node => {
+            if(node.type === 'a' && this.extractSlugFromHref(node.attributes.href)) anchors.push(node);
+        });
+        if(!anchors.length) return;
+
+        const pageables = await this.database.pageables
+            .where({ slug: anchors.map(anchor => this.extractSlugFromHref(anchor.attributes.href)) }).all();
+        const pageableTypeBySlug = {};
+        for(const pageable of pageables) pageableTypeBySlug[pageable.slug] = pageable.constructor.name;
+
+        const viewMap = await this.viewMap;
+        for(const anchor of anchors){
+            const pageableType = pageableTypeBySlug[this.extractSlugFromHref(anchor.attributes.href)];
+            if(pageableType && viewMap[`_placeholders/${pageableType}`]){
+                anchor.attributes['data-placeholder'] = `/_placeholders/${pageableType}`;
+            }
+        }
+    },
+
     extractListItems(ul) {
         const out = [];
         for(const li of ul.children) {
@@ -68,6 +95,7 @@ export default {
             if(a){
                 item.label = a.children.map(c => c.type === '#text' ? c.attributes.value : '').join('').trim();
                 item.url = a.attributes.href;
+                if(a.attributes['data-placeholder']) item.placeholder = a.attributes['data-placeholder'];
             } else {
                 item.label = li.children.map(c => c.type === '#text' ? c.attributes.value : '').join('').trim();
             }

@@ -55,7 +55,7 @@ export default {
                                 if (url) {
                                     const isActive = this.initialParams._url.pathname === url;
                                     const activeClass = isActive ? this.renderHtml` ${this.cssClasses.linkActive}` : '';
-                                    return this.renderHtml`<a href="${url}" class="${this.cssClasses.link}${activeClass}">
+                                    return this.renderHtml`<a href="${url}" class="${this.cssClasses.link}${activeClass}"${link.placeholder ? this.renderHtml` data-placeholder="${link.placeholder}"` : ''}>
                                         <span>${label}</span>
                                         ${badge ? this.renderHtml`<span class="${this.cssClasses.badge}">${badge}</span>` : ''}
                                     </a>`;

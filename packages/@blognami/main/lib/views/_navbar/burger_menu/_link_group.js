@@ -85,7 +85,7 @@ export default {
                             ${() => {
                                 if (url) {
                                     const { dataConfirm } = link;
-                                    return this.renderHtml`<a href="${url}" class="${this.cssClasses.link}" target="${target}" data-confirm="${dataConfirm || null}">${label}</a>`;
+                                    return this.renderHtml`<a href="${url}" class="${this.cssClasses.link}" target="${target}" data-confirm="${dataConfirm || null}"${link.placeholder ? this.renderHtml` data-placeholder="${link.placeholder}"` : ''}>${label}</a>`;
                                 }
                                 return this.renderHtml`<span class="${this.cssClasses.link}">${label}</span>`;
                             }}

@@ -34,7 +34,7 @@ export default {
         `;
 
         return this.renderView('_layout', {
-            meta: [{ title: "Loading post..." }],
+            meta: [{ title: "Loading page..." }],
             body: this.renderHtml`
                 <section>
                     ${this.renderView('_meta_bar', {
