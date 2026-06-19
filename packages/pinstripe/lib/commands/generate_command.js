@@ -5,7 +5,8 @@ export default {
         this.assignProps({
             description: 'Generates a new command file in the lib/commands directory.'
         });
-        
+        this.tag('core');
+
         this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the command to create (in snake_case).' });
     },
 

@@ -4,6 +4,7 @@ export default {
         this.annotate({
             description: 'Resets the database by dropping it completely and then reinitializing with migrations and seeds. Use with caution!'
         });
+        this.tag('database');
     },
 
     async run(){

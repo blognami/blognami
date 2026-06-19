@@ -4,7 +4,8 @@ export default {
         this.annotate({
             description: 'Generates a new model file in the lib/models directory and creates an associated migration if needed.'
         });
-        
+        this.tag('database');
+
         this.hasParam('name', { 
             type: 'string', 
             alias: 'arg1', 

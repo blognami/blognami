@@ -3,6 +3,7 @@ export default {
         this.assignProps({
             description: 'Stops the sandbox container.'
         });
+        this.tag('sandbox');
     },
 
     async run(){

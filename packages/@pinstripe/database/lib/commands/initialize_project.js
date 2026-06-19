@@ -2,6 +2,7 @@
 export default {
    meta(){
       this.addHook('run', 'generateSeedDatabaseCommand');
+      this.tag('database');
    },
 
    async generateSeedDatabaseCommand(){

@@ -3,6 +3,7 @@ export default {
         this.assignProps({
             description: 'Runs a command inside the sandbox container (interactive). Defaults to bash.'
         });
+        this.tag('sandbox');
 
         this.hasParam('command', { type: 'string', alias: 'arg1', optional: true, description: 'The command to run (defaults to bash).' });
     },

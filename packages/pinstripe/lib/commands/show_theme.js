@@ -3,6 +3,7 @@ export default {
         this.assignProps({
             description: 'Displays the current project theme configuration in JSON format.'
         });
+        this.tag('core');
     },
 
     async run() {

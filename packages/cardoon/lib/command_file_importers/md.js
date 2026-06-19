@@ -59,10 +59,13 @@ Command.FileImporter.register('md', {
             throw new Error(`Markdown command at ${filePath} declares reserved param 'follow'.`);
         }
 
+        const { tags = [], ...rest } = frontMatter;
+
         Command.register(relativeFilePathWithoutExtension, {
             meta(){
                 this.filePaths.push(filePath);
-                this.assignProps({ ...frontMatter, sandboxed: true });
+                this.assignProps({ ...rest, sandboxed: true });
+                for(const t of tags) this.tag(t);
 
                 for(const [name, spec] of paramEntries){
                     this.hasParam(name, spec);

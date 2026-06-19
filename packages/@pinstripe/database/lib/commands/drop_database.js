@@ -4,6 +4,7 @@ export default {
         this.annotate({
             description: 'Drops the database, removing all tables and data. Use with caution!'
         });
+        this.tag('database');
     },
 
     async run(){

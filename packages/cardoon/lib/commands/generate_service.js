@@ -11,6 +11,7 @@ export default {
             description: 'Generates a new service file in the project .cardoon/lib/services directory. If a service with this name already exists, its source is copied locally so it can be customised, and hands off to an agent to implement it.',
             sandboxed: true
         });
+        this.tag('core');
 
         this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the service to create.' });
         this.hasParam('skipAgentHandoff', {

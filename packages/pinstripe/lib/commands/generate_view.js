@@ -7,6 +7,7 @@ export default {
         this.assignProps({
             description: 'Generates a new view file in the lib/views directory.'
         });
+        this.tag('view');
 
         this.hasParam('name', { type: 'string', description: 'The name of the view to create (has a .js file extension by default).' });
     },

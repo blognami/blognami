@@ -12,7 +12,7 @@ export const Command = Class.extend('Command').include({
         this.assignProps({
             binaryName: 'cardoon',
 
-            async run(context, name = 'list-commands', params = {}){
+            async run(context, name, params = {}){
                 if(Array.isArray(params) && this.shouldRouteToSandbox(name)){
                     return ServiceFactory.Workspace.run(async function(){
                         const result = await this.sandbox.run(['npx', 'cardoon', name, ...params], { interactive: true });

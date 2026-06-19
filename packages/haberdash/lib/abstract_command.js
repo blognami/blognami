@@ -45,26 +45,19 @@ export const AbstractCommand = {
             }
         });
 
-        this.register('list-commands', {
-            meta(){
-                this.assignProps({
-                    description: 'Lists all available commands and shows how to get help for specific commands.'
-                });
-            },
-
-            run(){
-                const CommandHost = this.constructor.registry;
-                console.log('');
-                console.log('The following commands are available:');
-                console.log('');
-                CommandHost.names.forEach(commandName => {
-                    console.log(`  * ${chalk.green(commandName)}`);
-                });
-                console.log('');
+        const listCommands = this.createListCommand({
+            noun: 'commands',
+            after({ registry }){
                 console.log('For more information on a specific command, run:');
                 console.log('');
-                console.log(chalk.cyan(`  ${CommandHost.binaryName} COMMAND_NAME --help`));
-                console.log('');
+                console.log(chalk.cyan(`  ${registry.binaryName} COMMAND_NAME --help`));
+            }
+        });
+
+        this.register('list-commands', {
+            meta(){
+                this.include(listCommands);
+                this.tag('core');
             }
         });
 
@@ -73,7 +66,13 @@ export const AbstractCommand = {
                 return inflector.dasherize(name);
             },
 
-            async run(context, name = 'list-commands', params = {}){
+            async run(context, name, params = {}){
+                if(name === undefined){
+                    name = 'list-commands';
+                } else if(!this.mixins[this.normalizeName(name)]){
+                    if(Array.isArray(params)) params = [name, ...params];
+                    name = 'list-commands';
+                }
                 await context.fork().run(async context => {
                     const Class = this.for(name);
                     context.params = Array.isArray(params) ? Class.coerceParams(Class.extractParams(params)) : params;

@@ -4,6 +4,7 @@ export default {
             description: 'Opens an interactive agent session against the configured provider, seeded with the configured Cardoon playbooks.',
             sandboxed: true
         });
+        this.tag('agent');
     },
 
     async run(){

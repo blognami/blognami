@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert";
+import chalk from "chalk";
 
 import { Class } from "./class.js";
 import { AbstractCommand } from "./abstract_command.js";
@@ -233,4 +234,91 @@ test("AbstractCommand binaryName can be overridden", () => {
   const MyCommand = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
   MyCommand.binaryName = "mycli";
   assert.equal(MyCommand.binaryName, "mycli");
+});
+
+test("list-commands self-tags 'core' and declares the 'filter' param", () => {
+  const MyCommand = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
+  const ListCommands = MyCommand.for("list-commands");
+  assert.deepEqual(ListCommands.tags, ["core"]);
+  assert.deepEqual(ListCommands.extractParams(["san"]), { filter: ["san"] });
+  assert.deepEqual(ListCommands.extractParams(["--filter", "san"]), { filter: ["san"] });
+  assert.deepEqual(
+    ListCommands.coerceParams(ListCommands.extractParams(["san"])),
+    { filter: "san" }
+  );
+  assert.deepEqual(
+    ListCommands.coerceParams(ListCommands.extractParams(["--filter", "san"])),
+    { filter: "san" }
+  );
+});
+
+test("list-commands fuzzy-filters, highlights matches, prints Available tags, and handles no-match", () => {
+  const MyCommand = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
+  MyCommand.register("run-in-sandbox", { meta(){ this.tag("sandbox"); } });
+  MyCommand.register("start-sandbox", { meta(){ this.tag("sandbox"); } });
+  MyCommand.register("generate-command", { meta(){ this.tag("core"); } });
+  MyCommand.register("santiago", {});
+
+  const stripAnsi = (s) => s.replace(/\x1b\[[0-9;]*m/g, "");
+  const UNDERLINE = "\x1b[4m";
+  const captureRun = (params) => {
+    const raw = [];
+    const original = console.log;
+    const originalLevel = chalk.level;
+    chalk.level = 1;
+    console.log = (...args) => raw.push(args.join(" "));
+    try {
+      const command = MyCommand.for("list-commands").new();
+      command.context = { params };
+      command.run();
+    } finally {
+      console.log = original;
+      chalk.level = originalLevel;
+    }
+    return { raw, plain: raw.map(stripAnsi) };
+  };
+
+  // Unfiltered: no highlighting, Available tags footer, no "matching" header, help footer present.
+  const all = captureRun({});
+  assert.ok(all.plain.includes("The following commands are available:"));
+  assert.ok(all.plain.includes("  * run-in-sandbox (sandbox)"));
+  assert.ok(all.plain.includes("  * start-sandbox (sandbox)"));
+  assert.ok(all.plain.includes("  * generate-command (core)"));
+  assert.ok(all.plain.includes("  * santiago"));
+  assert.ok(all.plain.includes("  * list-commands (core)"));
+  assert.ok(all.plain.includes("Available tags: core, sandbox."));
+  assert.ok(all.plain.includes("For more information on a specific command, run:"));
+  assert.ok(all.plain.some(l => l.includes("COMMAND_NAME --help")), "help footer renders the COMMAND_NAME --help hint");
+  assert.ok(!all.raw.some(l => l.includes(UNDERLINE)), "no underline codes in unfiltered output");
+
+  // Filtered with 'san': matches 4 names + tag 'sandbox'; highlight the substring.
+  const filtered = captureRun({ filter: "san" });
+  assert.ok(filtered.plain.includes("The following commands matching 'san' are available:"));
+  assert.ok(filtered.plain.includes("  * run-in-sandbox (sandbox)"));
+  assert.ok(filtered.plain.includes("  * start-sandbox (sandbox)"));
+  assert.ok(filtered.plain.includes("  * santiago"));
+  assert.ok(!filtered.plain.some(l => l.includes("generate-command")), "non-matching command excluded");
+  assert.ok(!filtered.plain.some(l => l.startsWith("Available tags:")), "no Available tags footer when filtered");
+  assert.ok(filtered.plain.includes("For more information on a specific command, run:"), "help footer still renders when filtered");
+  // Underline applied within the command name (e.g. run-in-sandbox).
+  const sandboxLine = filtered.raw.find(l => stripAnsi(l) === "  * run-in-sandbox (sandbox)");
+  assert.ok(sandboxLine, "found run-in-sandbox line");
+  assert.ok(sandboxLine.includes(`${UNDERLINE}san\x1b[24m`), "name substring 'san' is underlined");
+  // The tag 'sandbox' should also be underlined within the suffix.
+  const tagUnderlineCount = (sandboxLine.match(new RegExp(`${UNDERLINE.replace("[", "\\[")}san`, "g")) || []).length;
+  assert.ok(tagUnderlineCount >= 2, "underline appears in both the name and the tag");
+
+  // Case-insensitive matching highlights.
+  const upper = captureRun({ filter: "SAN" });
+  const upperLine = upper.raw.find(l => stripAnsi(l) === "  * run-in-sandbox (sandbox)");
+  assert.ok(upperLine.includes(`${UNDERLINE}san\x1b[24m`), "case-insensitive filter still underlines original-case substring");
+
+  // No-match: print 'No commands matching ...' with no 'available' header; don't throw; still prints help footer.
+  let noMatch;
+  assert.doesNotThrow(() => {
+    noMatch = captureRun({ filter: "zzz" });
+  });
+  assert.ok(noMatch.plain.includes("  No commands matching 'zzz'."));
+  assert.ok(!noMatch.plain.some(l => l.includes("available:")), "no 'available' header when no matches");
+  assert.ok(noMatch.plain.includes("For more information on a specific command, run:"), "help footer still renders on no-match");
 });

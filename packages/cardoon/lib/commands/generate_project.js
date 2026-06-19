@@ -9,6 +9,7 @@ export default {
         this.assignProps({
             description: 'Generates a new .cardoon/ directory for the current project.'
         });
+        this.tag('core');
     },
 
     async run(){
@@ -94,7 +95,7 @@ export default {
                 line('# Skip onboarding and bypass-permissions prompts (required for headless use)');
                 line('RUN echo \'{"hasCompletedOnboarding": true, "bypassPermissionsModeAccepted": true, "effortCalloutDismissed": true, "projects": {"/app": {"hasTrustDialogAccepted": true, "hasCompletedProjectOnboarding": true}}}\' > /home/cardoon/.claude.json');
                 line();
-                line('CMD ["sh", "-c", "if [ ! -f node_modules/.package-lock.json ]; then npm install; fi && tail -f /dev/null"]');
+                line('CMD ["sh", "-c", "cd /app/.cardoon && if [ ! -f node_modules/.package-lock.json ]; then npm install; fi; cd /app && if [ -f package.json ] && [ ! -f node_modules/.package-lock.json ]; then npm install; fi && tail -f /dev/null"]');
                 line();
             });
 

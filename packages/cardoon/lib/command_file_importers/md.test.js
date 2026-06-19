@@ -110,6 +110,22 @@ describe('Command FileImporter md', () => {
         await assert.rejects(() => importer.importFile(), /reserved param 'follow'/);
     });
 
+    it('frontmatter tags map to tag() and do not leak as a param/prop', async () => {
+        await importMd('tags-test', [
+            '---',
+            'description: Tags test',
+            'tags: [ralph]',
+            '---',
+            'Body.'
+        ].join('\n'));
+
+        const Cls = Command.for('tags-test');
+        assert.deepStrictEqual(Cls.tags, ['ralph']);
+        assert.ok(!Object.prototype.hasOwnProperty.call(Cls.params, 'tags'));
+        const instance = new Cls({ params: {} });
+        assert.strictEqual(instance.tags, undefined);
+    });
+
     it('declares a built-in follow boolean flag with alias f', async () => {
         await importMd('follow-decl', '---\ndescription: Follow flag\n---\nBody.');
         assert.deepStrictEqual(Command.for('follow-decl').params.follow, {

@@ -7,7 +7,8 @@ export default {
       this.assignProps({
          description: 'Generates a new Pinstripe project with the specified dependencies and configuration.'
       });
-      
+      this.tag('core');
+
       this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the project to create.' });
       this.hasParam('with', { type: 'string', optional: true, description: 'Additional dependencies to include (space-separated).' });
    },

@@ -21,6 +21,7 @@ export default {
             description: 'Scaffolds a new command file (markdown by default; pass an explicit `.js` extension for a JS command) in the project `.cardoon/lib/commands/` directory and hands off to an agent to implement it. If a command with this name already exists, its source is copied locally so it can be customised.',
             sandboxed: true
         });
+        this.tag('core');
 
         this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the command to create.' });
         this.hasParam('skipAgentHandoff', {

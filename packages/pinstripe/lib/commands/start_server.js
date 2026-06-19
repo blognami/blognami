@@ -4,6 +4,7 @@ export default {
         this.assignProps({
             description: 'Starts the web server and optionally the job worker.'
         });
+        this.tag('server');
 
         this.hasParam('host', {
             type: 'string',

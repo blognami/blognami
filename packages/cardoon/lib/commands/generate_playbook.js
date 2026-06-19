@@ -11,6 +11,7 @@ export default {
             description: 'Generates a new playbook directory in the project .cardoon/lib/playbooks directory. If a playbook with this name already exists, its directory contents are copied locally so they can be customised, and hands off to an agent to write it.',
             sandboxed: true
         });
+        this.tag('playbook');
 
         this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the playbook to create.' });
         this.hasParam('skipAgentHandoff', {
