@@ -18,19 +18,27 @@ export default {
             title,
             body: this.renderHtml`
                 <section>
-                    ${this.renderView('_content', {
-                        body: this.renderHtml`
-                            <h1 data-test-id="${testId}-title">${title}</h1>
-                            ${() => {
-                                if(isAdmin) return this.renderView('_editable_area', {
+                    ${() => {
+                        const titleHtml = this.renderHtml`<h1 data-test-id="${testId}-title">${title}</h1>`;
+
+                        if(isAdmin) return this.renderHtml`
+                            <div>
+                                ${this.renderView('_content', { body: titleHtml })}
+                                ${this.renderView('_editable_area', {
                                     url: `/_actions/admin/edit_site_${this.inflector.snakeify(title)}`,
-                                    body: content,
+                                    body: this.renderView('_content', { body: content }),
                                     linkTestId: `edit-${testId}-body`
-                                });
-                                return content;
-                            }}
-                        `
-                    })}
+                                })}
+                            </div>
+                        `;
+
+                        return this.renderView('_content', {
+                            body: this.renderHtml`
+                                ${titleHtml}
+                                ${content}
+                            `
+                        });
+                    }}
                 </section>
             `
         });
