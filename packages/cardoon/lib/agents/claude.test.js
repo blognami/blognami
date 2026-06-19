@@ -2,7 +2,24 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 
 import 'haberdash/node';
-import { RELAY_KEY, relayEnv, StreamProcessor } from './claude.js';
+import claude, { RELAY_KEY, relayEnv, StreamProcessor } from './claude.js';
+
+function mockSpawner() {
+    let captured;
+    let capturedOpts;
+    const spawner = (cmd, args, opts) => {
+        captured = args;
+        capturedOpts = opts;
+        return { on(event, cb){ if (event === 'close') cb(0); } };
+    };
+    spawner.args = () => captured;
+    spawner.opts = () => capturedOpts;
+    return spawner;
+}
+
+function flag(args, name) {
+    return args[args.indexOf(name) + 1];
+}
 
 function msg(...blocks) {
     return JSON.stringify({ type: 'assistant', message: { content: blocks } });
@@ -107,5 +124,47 @@ describe('relayEnv', () => {
         const l1 = relayEnv(stripped);
         assert.strictEqual(l1.CLAUDE_CODE_OAUTH_TOKEN, 'tok');
         assert.strictEqual(l1.PATH, '/container');
+    });
+});
+
+describe('claude agent – bash timeout caps', () => {
+    it('raises the bash timeout caps in the spawned env', async () => {
+        const spawner = mockSpawner();
+        await claude.run({ interactive: true, spawner });
+        const env = spawner.opts().env;
+        assert.strictEqual(env.BASH_DEFAULT_TIMEOUT_MS, '600000');
+        assert.strictEqual(env.BASH_MAX_TIMEOUT_MS, '14400000');
+    });
+
+    it('options.env overrides the caps', async () => {
+        const spawner = mockSpawner();
+        await claude.run({ interactive: true, spawner, env: { BASH_MAX_TIMEOUT_MS: '60000' } });
+        assert.strictEqual(spawner.opts().env.BASH_MAX_TIMEOUT_MS, '60000');
+    });
+});
+
+describe('claude agent – model selection', () => {
+    it('defaults model to opus', async () => {
+        const spawner = mockSpawner();
+        await claude.run({ interactive: true, spawner });
+        assert.strictEqual(flag(spawner.args(), '--model'), 'opus');
+    });
+
+    it('explicit model overrides default', async () => {
+        const spawner = mockSpawner();
+        await claude.run({ interactive: true, spawner, model: 'sonnet' });
+        assert.strictEqual(flag(spawner.args(), '--model'), 'sonnet');
+    });
+
+    it('defaults effort to xhigh', async () => {
+        const spawner = mockSpawner();
+        await claude.run({ interactive: true, spawner });
+        assert.strictEqual(flag(spawner.args(), '--effort'), 'xhigh');
+    });
+
+    it('explicit effort overrides default', async () => {
+        const spawner = mockSpawner();
+        await claude.run({ interactive: true, spawner, effort: 'high' });
+        assert.strictEqual(flag(spawner.args(), '--effort'), 'high');
     });
 });

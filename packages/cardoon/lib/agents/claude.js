@@ -24,17 +24,27 @@ export default {
     },
 
     async run(options = {}){
-        const { onLog, spawner = spawn, cwd, env, model, systemPrompt, prompt, interactive } = options;
+        const { onLog, spawner = spawn, cwd, env, model = 'opus', effort = 'xhigh', systemPrompt, prompt, interactive } = options;
 
         const promptText = prompt ?? '';
         const systemText = systemPrompt;
 
         // DISABLE_AUTOUPDATER silences the claude CLI's auto-update check — noise for programmatic runs.
-        const spawnOpts = { cwd, env: relayEnv({ ...process.env, DISABLE_AUTOUPDATER: '1', ...env }) };
+        // The bash timeout caps default to 2/10 minutes — too short for the blocking foreground
+        // worker-spawn calls the playbooks mandate (a headless session dies the moment the model
+        // ends its turn, so waiting on a background task is not an option).
+        const spawnOpts = { cwd, env: relayEnv({
+            ...process.env,
+            DISABLE_AUTOUPDATER: '1',
+            BASH_DEFAULT_TIMEOUT_MS: '600000',
+            BASH_MAX_TIMEOUT_MS: '14400000',
+            ...env,
+        }) };
 
         if (interactive) {
             const args = ['--permission-mode', 'bypassPermissions'];
             if (model) args.push('--model', model);
+            if (effort) args.push('--effort', effort);
             if (systemText) args.push('--system-prompt', systemText);
             if (promptText) args.push(promptText);
 
@@ -52,6 +62,7 @@ export default {
             '--output-format', 'stream-json',
         ];
         if (model) args.push('--model', model);
+        if (effort) args.push('--effort', effort);
         if (systemText) args.push('--system-prompt', systemText);
         args.push('-p', promptText);
 

@@ -4,7 +4,9 @@ export default {
     create(){
         return this.defer(async () => this.context.root.getOrCreate('agent', async () => {
             const config = await this.config;
-            const defaultProvider = config.agent?.provider ?? 'claude';
+            const agentConfig = config.agent ?? {};
+            const defaultProvider = agentConfig.provider ?? 'claude';
+            const providerOptions = agentConfig.providers ?? {};
             const context = this.context;
             const instances = new Map();
             const render = async value => typeof value == 'function' ? (await PromptText.render(value)).toString() : (value ?? '');
@@ -15,6 +17,7 @@ export default {
                         instances.set(provider, Agent.create(provider, context));
                     }
                     return instances.get(provider).run({
+                        ...(providerOptions[provider] ?? {}),
                         ...rest,
                         systemPrompt: systemPrompt == null ? undefined : await render(systemPrompt),
                         prompt: await render(prompt),

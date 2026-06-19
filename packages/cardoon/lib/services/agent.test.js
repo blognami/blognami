@@ -70,6 +70,18 @@ describe('agent service – prompt rendering', () => {
         assert.strictEqual(capturedArgs.prompt, 'usr');
     });
 
+    it('forwards configured provider options', async () => {
+        const agent = service.create.call(mockThis({ agent: { providers: { claude: { model: 'sonnet' } } } }));
+        await agent.run({});
+        assert.strictEqual(capturedArgs.model, 'sonnet');
+    });
+
+    it('run-time options override configured provider options', async () => {
+        const agent = service.create.call(mockThis({ agent: { providers: { claude: { model: 'sonnet' } } } }));
+        await agent.run({ model: 'haiku' });
+        assert.strictEqual(capturedArgs.model, 'haiku');
+    });
+
     it('playbooks() callback renders with live registry state', async () => {
         Object.keys(Playbook.mixins).forEach(name => Playbook.unregister(name));
         const fakePath = '/tmp/test-playbook/index.md';
