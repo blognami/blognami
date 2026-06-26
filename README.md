@@ -3,9 +3,20 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/blognami/blognami?style=social)](https://github.com/blognami/blognami/stargazers)
 
-**Blognami** is an open-source, passwordless blogging platform built on top of **Pinstripe**, a full-stack JavaScript web framework.
+**Blognami** is an open-source, passwordless blogging platform for people who just want to write. Compose in Markdown, distraction-free, and publish — there's no password to manage and no admin sprawl to fight.
 
-This monorepo contains the complete codebase for both Blognami and Pinstripe, along with all related packages.
+It's built on **Pinstripe**, a full-stack JavaScript framework developed in the same monorepo, in parallel with the app it powers. This repository contains the complete codebase for both.
+
+## Why Blognami?
+
+Blognami started life over four years ago as a Ruby app and has since been ported to JavaScript. It exists for a few connected reasons:
+
+- **A framework kept honest by a real app.** The best framework isn't designed in isolation from theory — it's grown alongside a real application. Blognami is that application, and Pinstripe is the framework that falls out of building it. The app keeps the framework practical, and doubles as a reference implementation for anyone building on Pinstripe.
+- **Most web apps are really blogs.** Social networks, job boards, news sites, fitness trackers — they all capture and present content over time. Get a blog right and you've exercised the core patterns behind most of the web.
+- **A saner alternative to WordPress.** WordPress powers a huge slice of the internet, but often feels held together with chewing gum and a prayer. Blognami aims for something cleaner and more modern.
+- **Writing first.** Inspired by the early days of Ghost, Blognami leans into plain Markdown and distraction-free composition. You can just write text, and still produce really good articles.
+
+Read the full story: [Why Blognami](https://jodysalt.com/why-blognami).
 
 ## Quick Start
 
@@ -23,19 +34,21 @@ Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
 ## Architecture
 
 ```
-┌─────────────────────────────┐
-│        Blognami App         │
-│  (Pages, Posts, Tags, etc)  │
-├─────────────────────────────┤
-│     Pinstripe Framework     │
-│  (Core runtime, CLI, DB,    │
-│   auth, multi-tenancy)      │
-├─────────────────────────────┤
-│   Node.js + MySQL/SQLite    │
-└─────────────────────────────┘
+┌──────────────────────────────────────┐
+│             Blognami App             │
+│       (Posts, Pages, Tags, Admin)    │
+├──────────────────────────────────────┤
+│          Pinstripe Framework         │
+│    (Runtime, CLI, DB, views, auth,   │
+│     multi-tenancy, static sites)     │
+├──────────────────────────────────────┤
+│         Haberdash (shared base)      │
+├──────────────────────────────────────┤
+│       Node.js  +  MySQL / SQLite     │
+└──────────────────────────────────────┘
 ```
 
-**Blognami** is the ready-to-use blogging application. **Pinstripe** is the underlying framework that provides the core runtime, database layer, CLI tooling, and extensibility system.
+**Blognami** is the ready-to-use blogging application. **Pinstripe** is the underlying framework that provides the runtime, database layer, CLI tooling, view system, passwordless auth, and extensibility. **Haberdash** is the small shared base both Pinstripe and its sibling agent-orchestration framework, **Cardoon**, are built on.
 
 ## Package Overview
 
@@ -55,25 +68,33 @@ Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
 |---------|-------------|
 | [pinstripe](./packages/pinstripe) | Core framework and CLI |
 | [@pinstripe/database](./packages/@pinstripe/database) | MySQL and SQLite database layer |
-| [@pinstripe/utils](./packages/@pinstripe/utils) | Meta-programming utilities |
 | [@pinstripe/window](./packages/@pinstripe/window) | Browser-side framework |
 | [@pinstripe/markdown](./packages/@pinstripe/markdown) | Markdown processing |
 | [@pinstripe/one-time-token](./packages/@pinstripe/one-time-token) | Passwordless authentication |
 | [@pinstripe/multi-tenant](./packages/@pinstripe/multi-tenant) | Multi-tenancy support |
 | [@pinstripe/static-site](./packages/@pinstripe/static-site) | Static site generation |
+| [@pinstripe/blob-store](./packages/@pinstripe/blob-store) | Blob and file storage |
+| [@pinstripe/utils](./packages/@pinstripe/utils) | Meta-programming utilities |
 
-### Other Packages
+### Foundations & Tooling
 
 | Package | Description |
 |---------|-------------|
-| [blognami-demo](./packages/blognami-demo) | Example project with tests |
+| [haberdash](./packages/haberdash) | Shared base framework for Pinstripe and Cardoon |
+| [cardoon](./packages/cardoon) | Agent-orchestration framework built on Haberdash |
+
+### Apps & Sites
+
+| Package | Description |
+|---------|-------------|
+| [blognami-demo](./packages/blognami-demo) | Example project and the home for the test suite |
 | [pinstripejs.com](./packages/pinstripejs.com) | Framework documentation site |
 
 ## Development
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22+ (current LTS; CI runs on 22.x and 24.x)
 - npm 9+
 
 ### Setup
@@ -104,17 +125,21 @@ npm run test:e2e     # Playwright end-to-end tests
 
 ### CLI Commands
 
-The Pinstripe CLI provides commands for development:
+The Pinstripe CLI ships with each project. Outside a project, `generate-project` and `list-commands` are available; the rest become available once you're inside a generated project:
 
 ```bash
-npx pinstripe start-server       # Run development server
+npx pinstripe list-commands      # List every registered command
+npx pinstripe start-server       # Run the development server
 npx pinstripe generate-view      # Create a new view
+npx pinstripe generate-model     # Create a new model
 npx pinstripe generate-command   # Create a new command
 npx pinstripe generate-service   # Create a new service
+npx pinstripe migrate-database   # Run pending database migrations
 npx pinstripe list-views         # List all registered views
-npx pinstripe list-commands      # List all registered commands
 npx pinstripe list-services      # List all registered services
 ```
+
+Run `npx pinstripe COMMAND --help` for the parameters a specific command accepts.
 
 ## Contributing
 
