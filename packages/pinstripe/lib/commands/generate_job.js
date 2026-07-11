@@ -5,7 +5,6 @@ export default {
         this.assignProps({
             description: 'Generates a new job file in the lib/jobs directory.'
         });
-        this.tag('job');
 
         this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the job to create (in snake_case).' });
     },

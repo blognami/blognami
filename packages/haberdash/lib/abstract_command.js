@@ -36,9 +36,6 @@ export const AbstractCommand = {
 
         this.addHook('validation', async function(){
             for(const paramName of Object.keys(this.params)){
-                if(['help', 'h', 'interactive', 'i'].includes(paramName)) {
-                    continue;
-                }
                 if(!this.constructor.params[paramName]){
                     this.setValidationError(paramName, `Unknown parameter`);
                 }
@@ -57,7 +54,6 @@ export const AbstractCommand = {
         this.register('list-commands', {
             meta(){
                 this.include(listCommands);
-                this.tag('core');
             }
         });
 
@@ -78,7 +74,7 @@ export const AbstractCommand = {
                     context.params = Array.isArray(params) ? Class.coerceParams(Class.extractParams(params)) : params;
                     const command = Class.new(context);
 
-                    if(context.params.help || context.params.h){
+                    if(context.params.help){
                         await command.showHelp();
                         return;
                     }
@@ -86,7 +82,7 @@ export const AbstractCommand = {
                     const paramsCount = Object.keys(context.params).length;
                     const requiredParamsCount = Object.values(Class.params).filter(p => !p.optional).length;
                     const missingRequired = paramsCount < requiredParamsCount;
-                    const isExplicitlyInteractive = context.params.interactive || context.params.i;
+                    const isExplicitlyInteractive = context.params.interactive;
                     const isInteractiveTerminal = process.stdin.isTTY && process.stdout.isTTY;
 
                     if(isExplicitlyInteractive || (missingRequired && isInteractiveTerminal)){
@@ -98,17 +94,26 @@ export const AbstractCommand = {
                 });
             },
 
+            // Merged copy of this class's own params and every ancestor's,
+            // root-first so own declarations override inherited ones.
             get params(){
-                if(!this.hasOwnProperty('_params')){
-                    this._params = {};
+                const chain = [];
+                let current = this;
+                while(current){
+                    if(current.hasOwnProperty('_params')) chain.unshift(current._params);
+                    current = Object.getPrototypeOf(current);
                 }
-                return this._params;
+                return Object.assign({}, ...chain);
             },
 
             hasParam(name, options = {}){
                 const { type = 'string', optional = false, ...otherParams } = options;
 
-                this.params[name] = {
+                if(!this.hasOwnProperty('_params')){
+                    this._params = {};
+                }
+
+                this._params[name] = {
                     type,
                     optional,
                     ...otherParams
@@ -179,10 +184,22 @@ export const AbstractCommand = {
                 return out;
             }
         });
-    },
 
-    get params(){
-        return this.context?.params || {};
+        this.hasParam('help', {
+            type: 'boolean',
+            optional: true,
+            alias: 'h',
+            excludeFromInteractiveMode: true,
+            description: 'Show this help message'
+        });
+
+        this.hasParam('interactive', {
+            type: 'boolean',
+            optional: true,
+            alias: 'i',
+            excludeFromInteractiveMode: true,
+            description: 'Prompt for all parameters interactively'
+        });
     },
 
     showHelp(){
@@ -230,7 +247,6 @@ export const AbstractCommand = {
             }
         }
 
-        usage += ' ' + chalk.dim('[--help]');
         console.log(usage);
         console.log('');
 
@@ -302,16 +318,6 @@ export const AbstractCommand = {
                 }
             }
         }
-
-        console.log(chalk.bold('Global Options:'));
-        console.log(`  ${chalk.green('help')} (${chalk.yellow('-h')}) ${chalk.dim('[boolean]')} ${chalk.dim('(optional)')}`);
-        console.log(`    Show this help message`);
-        console.log(`    ${chalk.dim(`Usage: ${commandName} --help`)}`);
-        console.log('');
-        console.log(`  ${chalk.green('interactive')} (${chalk.yellow('-i')}) ${chalk.dim('[boolean]')} ${chalk.dim('(optional)')}`);
-        console.log(`    Prompt for all parameters interactively`);
-        console.log(`    ${chalk.dim(`Usage: ${commandName} --interactive`)}`);
-        console.log('');
     },
 
     async acquireParamsInteractively(){
@@ -323,13 +329,17 @@ export const AbstractCommand = {
         console.log('');
 
         for(const [paramName, paramConfig] of Object.entries(paramsToAcquire)){
-            const { type = 'string', optional = false, description = '', alias } = paramConfig;
+            const { type = 'string', optional = false, description = '', alias, excludeFromInteractiveMode = false } = paramConfig;
+
+            if(excludeFromInteractiveMode) {
+                continue;
+            }
 
             if(this.params[paramName] !== undefined) {
                 continue;
             }
 
-            const isExplicitlyInteractive = this.params.interactive || this.params.i;
+            const isExplicitlyInteractive = this.params.interactive;
             if(optional && !isExplicitlyInteractive) {
                 continue;
             }

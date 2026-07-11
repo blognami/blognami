@@ -3,72 +3,47 @@ import assert from 'node:assert';
 import chalk from 'chalk';
 
 import { Class } from './class.js';
+import { Context } from './context.js';
 import { AbstractRegistry } from './abstract_registry.js';
 import { AbstractCommand } from './abstract_command.js';
+import { AbstractServiceFactory } from './abstract_service_factory.js';
 
 const makeRegistry = () => Class.extend().include({ meta(){ this.include(AbstractRegistry); } });
 
-test('a class with no tag() call has tags === []', () => {
-    const Registry = makeRegistry();
-    Registry.register('alpha', {});
-    assert.deepEqual(Registry.for('alpha').tags, []);
+// A command's this.params comes from the params service inherited from
+// AbstractServiceFactory, resolved through the ServiceFactory.Consumerable trap.
+const ServiceFactory = Class.extend().include({
+    meta(){ this.include(AbstractServiceFactory); this.include(this.Consumerable); }
 });
 
-test('tag() accumulates tags and dedupes duplicates', () => {
-    const Registry = makeRegistry();
-    Registry.register('alpha', {
-        meta(){
-            this.tag('a');
-            this.tag('b');
-            this.tag('a');
-        }
-    });
-    assert.deepEqual(Registry.for('alpha').tags, ['a', 'b']);
+const makeCommand = () => Class.extend().include({
+    meta(){ this.include(AbstractCommand); this.include(ServiceFactory.Consumerable); }
 });
 
-test('tags array is a fresh literal per class (no shared-array aliasing)', () => {
-    const Registry = makeRegistry();
-    Registry.register('alpha', { meta(){ this.tag('a'); } });
-    Registry.register('beta', {});
-    assert.deepEqual(Registry.for('alpha').tags, ['a']);
-    assert.deepEqual(Registry.for('beta').tags, []);
-});
+const contextWithParams = (params = {}) => {
+    const context = Context.new();
+    context.params = params;
+    return context;
+};
 
-test('tags getter returns the sorted, de-duplicated union of every class\'s tags', () => {
+test('namesMatching returns name-substring hits as a sorted subset', () => {
     const Registry = makeRegistry();
-    Registry.register('alpha', { meta(){ this.tag('sandbox'); this.tag('core'); } });
-    Registry.register('beta', { meta(){ this.tag('core'); } });
-    Registry.register('gamma', { meta(){ this.tag('ralph'); } });
-    Registry.register('delta', {});
-
-    assert.deepEqual(Registry.tags, ['core', 'ralph', 'sandbox']);
-});
-
-test('tags getter returns [] when no class is tagged', () => {
-    const Registry = makeRegistry();
-    Registry.register('alpha', {});
-    Registry.register('beta', {});
-    assert.deepEqual(Registry.tags, []);
-});
-
-test('namesMatching returns name-substring and tag-substring hits as a sorted subset', () => {
-    const Registry = makeRegistry();
-    Registry.register('run-in-sandbox', { meta(){ this.tag('sandbox'); } });
-    Registry.register('start-sandbox', { meta(){ this.tag('sandbox'); } });
-    Registry.register('generate-command', { meta(){ this.tag('core'); } });
+    Registry.register('run-in-sandbox', {});
+    Registry.register('start-sandbox', {});
+    Registry.register('generate-command', {});
     Registry.register('santiago', {});
-    Registry.register('list-services', { meta(){ this.tag('sandbox'); } });
+    Registry.register('list-services', {});
 
     assert.deepEqual(
         Registry.namesMatching('san'),
-        ['list-services', 'run-in-sandbox', 'santiago', 'start-sandbox']
+        ['run-in-sandbox', 'santiago', 'start-sandbox']
     );
 });
 
 test('namesMatching is case-insensitive', () => {
     const Registry = makeRegistry();
-    Registry.register('run-in-sandbox', { meta(){ this.tag('sandbox'); } });
-    Registry.register('generate-command', { meta(){ this.tag('core'); } });
+    Registry.register('run-in-sandbox', {});
+    Registry.register('generate-command', {});
 
     assert.deepEqual(Registry.namesMatching('SAN'), Registry.namesMatching('san'));
     assert.deepEqual(Registry.namesMatching('SAN'), ['run-in-sandbox']);
@@ -76,25 +51,25 @@ test('namesMatching is case-insensitive', () => {
 
 test('namesMatching returns [] for an unmatched query', () => {
     const Registry = makeRegistry();
-    Registry.register('alpha', { meta(){ this.tag('core'); } });
+    Registry.register('alpha', {});
     assert.deepEqual(Registry.namesMatching('zzz'), []);
 });
 
 test('createListCommand builds a list command mixin over a registry', () => {
     const Widgets = makeRegistry();
-    Widgets.register('alpha-widget', { meta(){ this.tag('shiny'); } });
+    Widgets.register('alpha-widget', {});
     Widgets.register('beta-widget', {});
 
     const listWidgets = Widgets.createListCommand({ noun: 'widgets' });
 
-    const Command = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
+    const Command = makeCommand();
     Command.register('list-widgets', { meta(){ this.include(listWidgets); } });
 
     const ListWidgets = Command.for('list-widgets');
 
     assert.equal(ListWidgets.description, 'Lists all available widgets in the current project.');
-    assert.deepEqual(ListWidgets.extractParams(['shiny']), { filter: ['shiny'] });
-    assert.deepEqual(ListWidgets.extractParams(['--filter', 'shiny']), { filter: ['shiny'] });
+    assert.deepEqual(ListWidgets.extractParams(['alpha']), { filter: ['alpha'] });
+    assert.deepEqual(ListWidgets.extractParams(['--filter', 'alpha']), { filter: ['alpha'] });
 
     const stripAnsi = (s) => s.replace(/\x1b\[[0-9;]*m/g, '');
     const UNDERLINE = '\x1b[4m';
@@ -106,7 +81,7 @@ test('createListCommand builds a list command mixin over a registry', () => {
         console.log = (...args) => raw.push(args.join(' '));
         try {
             const command = ListWidgets.new();
-            command.context = { params };
+            command.context = contextWithParams(params);
             command.run();
         } finally {
             console.log = original;
@@ -115,31 +90,21 @@ test('createListCommand builds a list command mixin over a registry', () => {
         return { raw, plain: raw.map(stripAnsi) };
     };
 
-    // Unfiltered: header, tagged + untagged rows, Available tags footer, no highlighting.
+    // Unfiltered: header, all rows, no highlighting.
     const all = captureRun({});
     assert.ok(all.plain.includes('The following widgets are available:'));
-    assert.ok(all.plain.includes('  * alpha-widget (shiny)'));
+    assert.ok(all.plain.includes('  * alpha-widget'));
     assert.ok(all.plain.includes('  * beta-widget'));
-    assert.ok(all.plain.includes('Available tags: shiny.'));
     assert.ok(!all.raw.some(l => l.includes(UNDERLINE)), 'no underline in unfiltered output');
 
-    // Filtered with 'shi': matches alpha-widget via tag; highlight 'shi' in name (n/a) and in tag.
-    const filtered = captureRun({ filter: 'shi' });
-    assert.ok(filtered.plain.includes("The following widgets matching 'shi' are available:"));
-    assert.ok(filtered.plain.includes('  * alpha-widget (shiny)'));
+    // Filtered with 'alpha': matches alpha-widget by name; highlight the substring; beta excluded.
+    const filtered = captureRun({ filter: 'alpha' });
+    assert.ok(filtered.plain.includes("The following widgets matching 'alpha' are available:"));
+    assert.ok(filtered.plain.includes('  * alpha-widget'));
     assert.ok(!filtered.plain.some(l => l.includes('beta-widget')), 'non-matching command excluded');
-    assert.ok(!filtered.plain.some(l => l.startsWith('Available tags:')), 'no Available tags footer when filtered');
-    const shinyLine = filtered.raw.find(l => stripAnsi(l) === '  * alpha-widget (shiny)');
-    assert.ok(shinyLine, 'found alpha-widget line');
-    assert.ok(shinyLine.includes(`${UNDERLINE}shi\x1b[24m`), "tag substring 'shi' is underlined");
-
-    // Filter with name-substring hit and tag-substring hit: highlight in both.
-    Widgets.register('shimmer-widget', { meta(){ this.tag('shiny'); } });
-    const both = captureRun({ filter: 'shi' });
-    const shimmerLine = both.raw.find(l => stripAnsi(l) === '  * shimmer-widget (shiny)');
-    assert.ok(shimmerLine, 'found shimmer-widget line');
-    const occurrences = (shimmerLine.match(new RegExp(`${UNDERLINE.replace('[', '\\[')}shi`, 'g')) || []).length;
-    assert.ok(occurrences >= 2, 'underline appears in both the name and the tag');
+    const alphaLine = filtered.raw.find(l => stripAnsi(l) === '  * alpha-widget');
+    assert.ok(alphaLine, 'found alpha-widget line');
+    assert.ok(alphaLine.includes(`${UNDERLINE}alpha\x1b[24m`), "name substring 'alpha' is underlined");
 
     // No-match: print 'No widgets matching ...' and don't throw.
     let noMatch;
@@ -154,7 +119,7 @@ test('createListCommand highlight() underlines every case-insensitive occurrence
     const Widgets = makeRegistry();
     const listWidgets = Widgets.createListCommand({ noun: 'widgets' });
 
-    const Command = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
+    const Command = makeCommand();
     Command.register('list-widgets', { meta(){ this.include(listWidgets); } });
 
     const ListWidgets = Command.for('list-widgets');
@@ -163,11 +128,11 @@ test('createListCommand highlight() underlines every case-insensitive occurrence
     chalk.level = 1;
     try {
         const command = ListWidgets.new();
-        command.context = { params: { filter: 'abc' } };
+        command.context = contextWithParams({ filter: 'abc' });
         const highlighted = command.highlight('abcABC');
         assert.equal(highlighted, `${chalk.underline('abc')}${chalk.underline('ABC')}`);
 
-        command.context = { params: {} };
+        command.context = contextWithParams({});
         assert.equal(command.highlight('abcABC'), 'abcABC');
     } finally {
         chalk.level = originalLevel;
@@ -188,7 +153,7 @@ test('createListCommand invokes the after callback once with { registry }', () =
         }
     });
 
-    const Command = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
+    const Command = makeCommand();
     Command.register('list-widgets', { meta(){ this.include(listWidgets); } });
 
     const ListWidgets = Command.for('list-widgets');
@@ -197,7 +162,7 @@ test('createListCommand invokes the after callback once with { registry }', () =
     console.log = () => {};
     try {
         const command = ListWidgets.new();
-        command.context = { params: {} };
+        command.context = contextWithParams({});
         command.run();
         assert.equal(calls.length, 1);
         assert.strictEqual(calls[0].registry, Widgets);

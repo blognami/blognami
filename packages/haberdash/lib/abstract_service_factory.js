@@ -10,6 +10,11 @@ export const AbstractServiceFactory = {
     meta(){
         this.include(AbstractImportableRegistry);
         this.include(Hookable);
+
+        this.register('params', {
+            create(){ return this.context.getOrCreate('params', () => ({})); }
+        });
+
         const Factory = this;
         this.assignProps({
             normalizeName(name){

@@ -71,8 +71,7 @@ export const AbstractRegistry = {
                     classes[normalizedName] = this.registry.extend(normalizedName).include({
                         meta(){
                             this.assignProps({
-                                includes: [], filePaths: [], tags: [],
-                                tag(name){ if(!this.tags.includes(name)) this.tags.push(name); }
+                                includes: [], filePaths: []
                             });
                             this.include(this.mixins[normalizedName] || {});
                         }
@@ -81,16 +80,9 @@ export const AbstractRegistry = {
                 return classes[normalizedName];
             },
 
-            get tags(){
-                return [...new Set(this.names.flatMap(name => this.for(name).tags ?? []))].sort();
-            },
-
             namesMatching(query){
                 const q = query.toLowerCase();
-                return this.names.filter(name =>
-                    name.toLowerCase().includes(q) ||
-                    (this.for(name).tags ?? []).some(t => t.toLowerCase().includes(q))
-                );
+                return this.names.filter(name => name.toLowerCase().includes(q));
             },
 
             createListCommand({ noun, after } = {}){
@@ -98,7 +90,7 @@ export const AbstractRegistry = {
                 return {
                     meta(){
                         this.assignProps({ description: `Lists all available ${noun} in the current project.` });
-                        this.hasParam('filter', { type: 'string', alias: 'arg1', optional: true, description: `Filter ${noun} by partial name or tag.` });
+                        this.hasParam('filter', { type: 'string', alias: 'arg1', optional: true, description: `Filter ${noun} by partial name.` });
                     },
 
                     highlight(text){
@@ -134,14 +126,8 @@ export const AbstractRegistry = {
                             }
                             console.log('');
                             names.forEach(name => {
-                                const tags = [...(registry.for(name).tags ?? [])].sort();
-                                const suffix = tags.length ? ` (${tags.map(t => this.highlight(t)).join(', ')})` : '';
-                                console.log(`  * ${chalk.green(this.highlight(name))}${suffix}`);
+                                console.log(`  * ${chalk.green(this.highlight(name))}`);
                             });
-                            if(!filter && registry.tags.length){
-                                console.log('');
-                                console.log(`Available tags: ${registry.tags.join(', ')}.`);
-                            }
                         }
                         if(after){
                             console.log('');

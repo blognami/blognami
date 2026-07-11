@@ -3,9 +3,23 @@ import assert from "node:assert";
 import chalk from "chalk";
 
 import { Class } from "./class.js";
+import { Context } from "./context.js";
 import { AbstractCommand } from "./abstract_command.js";
+import { AbstractServiceFactory } from "./abstract_service_factory.js";
 
 const Command = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
+
+// A command's this.params is supplied by the params service inherited from
+// AbstractServiceFactory, resolved through the ServiceFactory.Consumerable trap.
+const ServiceFactory = Class.extend().include({
+  meta(){ this.include(AbstractServiceFactory); this.include(this.Consumerable); }
+});
+
+const contextWithParams = (params = {}) => {
+  const context = Context.new();
+  context.params = params;
+  return context;
+};
 
 test("Command.extractParams", () => {
   assert.deepEqual(Command.extractParams([]), {});
@@ -220,6 +234,62 @@ test("Command.coerceParams", () => {
   );
 });
 
+test("help and interactive params are declared on the base command", () => {
+  assert.deepEqual(Command.extractParams(["-h"]), { help: [] });
+  assert.deepEqual(Command.extractParams(["-i"]), { interactive: [] });
+  assert.deepEqual(Command.coerceParams(Command.extractParams(["-h"])), {
+    help: true,
+  });
+  assert.deepEqual(Command.coerceParams(Command.extractParams(["--interactive"])), {
+    interactive: true,
+  });
+});
+
+test("Command params are inherited from ancestor classes", () => {
+  const Registry = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
+  Registry.hasParam("branch", { type: "string", optional: true });
+
+  Registry.register("deploy", {
+    meta(){
+      this.hasParam("target", { type: "string", alias: "arg1", optional: true });
+    }
+  });
+  const Deploy = Registry.for("deploy");
+
+  assert.deepEqual(Object.keys(Deploy.params).sort(), ["branch", "help", "interactive", "target"]);
+
+  assert.deepEqual(Object.keys(Registry.params), ["help", "interactive", "branch"]);
+
+  assert.deepEqual(
+    Deploy.coerceParams(Deploy.extractParams(["production", "--branch", "foo"])),
+    { target: "production", branch: "foo" }
+  );
+
+  Registry.register("override", {
+    meta(){
+      this.hasParam("branch", { type: "boolean", optional: true });
+    }
+  });
+  assert.equal(Registry.for("override").params.branch.type, "boolean");
+  assert.equal(Registry.params.branch.type, "string");
+});
+
+test("inherited required params fail validation when missing", async () => {
+  const Registry = Class.extend().include({ meta(){ this.include(AbstractCommand); this.include(ServiceFactory.Consumerable); } });
+  Registry.hasParam("tenant", { type: "string" });
+  Registry.register("deploy", {});
+
+  const command = Registry.for("deploy").new();
+  command.context = contextWithParams({});
+  await assert.rejects(
+    () => command.validate(),
+    error => error.errors?.tenant === "Must not be blank"
+  );
+
+  command.context = contextWithParams({ tenant: "acme" });
+  await command.validate();
+});
+
 test("AbstractCommand includes list-commands by default", () => {
   const MyCommand = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
   assert(MyCommand.names.includes("list-commands"), "list-commands should be registered");
@@ -236,10 +306,9 @@ test("AbstractCommand binaryName can be overridden", () => {
   assert.equal(MyCommand.binaryName, "mycli");
 });
 
-test("list-commands self-tags 'core' and declares the 'filter' param", () => {
+test("list-commands declares the 'filter' param", () => {
   const MyCommand = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
   const ListCommands = MyCommand.for("list-commands");
-  assert.deepEqual(ListCommands.tags, ["core"]);
   assert.deepEqual(ListCommands.extractParams(["san"]), { filter: ["san"] });
   assert.deepEqual(ListCommands.extractParams(["--filter", "san"]), { filter: ["san"] });
   assert.deepEqual(
@@ -252,11 +321,11 @@ test("list-commands self-tags 'core' and declares the 'filter' param", () => {
   );
 });
 
-test("list-commands fuzzy-filters, highlights matches, prints Available tags, and handles no-match", () => {
-  const MyCommand = Class.extend().include({ meta(){ this.include(AbstractCommand); } });
-  MyCommand.register("run-in-sandbox", { meta(){ this.tag("sandbox"); } });
-  MyCommand.register("start-sandbox", { meta(){ this.tag("sandbox"); } });
-  MyCommand.register("generate-command", { meta(){ this.tag("core"); } });
+test("list-commands fuzzy-filters by name, highlights matches, and handles no-match", () => {
+  const MyCommand = Class.extend().include({ meta(){ this.include(AbstractCommand); this.include(ServiceFactory.Consumerable); } });
+  MyCommand.register("run-in-sandbox", {});
+  MyCommand.register("start-sandbox", {});
+  MyCommand.register("generate-command", {});
   MyCommand.register("santiago", {});
 
   const stripAnsi = (s) => s.replace(/\x1b\[[0-9;]*m/g, "");
@@ -269,7 +338,7 @@ test("list-commands fuzzy-filters, highlights matches, prints Available tags, an
     console.log = (...args) => raw.push(args.join(" "));
     try {
       const command = MyCommand.for("list-commands").new();
-      command.context = { params };
+      command.context = contextWithParams(params);
       command.run();
     } finally {
       console.log = original;
@@ -278,39 +347,34 @@ test("list-commands fuzzy-filters, highlights matches, prints Available tags, an
     return { raw, plain: raw.map(stripAnsi) };
   };
 
-  // Unfiltered: no highlighting, Available tags footer, no "matching" header, help footer present.
+  // Unfiltered: no highlighting, no "matching" header, help footer present.
   const all = captureRun({});
   assert.ok(all.plain.includes("The following commands are available:"));
-  assert.ok(all.plain.includes("  * run-in-sandbox (sandbox)"));
-  assert.ok(all.plain.includes("  * start-sandbox (sandbox)"));
-  assert.ok(all.plain.includes("  * generate-command (core)"));
+  assert.ok(all.plain.includes("  * run-in-sandbox"));
+  assert.ok(all.plain.includes("  * start-sandbox"));
+  assert.ok(all.plain.includes("  * generate-command"));
   assert.ok(all.plain.includes("  * santiago"));
-  assert.ok(all.plain.includes("  * list-commands (core)"));
-  assert.ok(all.plain.includes("Available tags: core, sandbox."));
+  assert.ok(all.plain.includes("  * list-commands"));
   assert.ok(all.plain.includes("For more information on a specific command, run:"));
   assert.ok(all.plain.some(l => l.includes("COMMAND_NAME --help")), "help footer renders the COMMAND_NAME --help hint");
   assert.ok(!all.raw.some(l => l.includes(UNDERLINE)), "no underline codes in unfiltered output");
 
-  // Filtered with 'san': matches 4 names + tag 'sandbox'; highlight the substring.
+  // Filtered with 'san': matches names containing 'san'; highlight the substring.
   const filtered = captureRun({ filter: "san" });
   assert.ok(filtered.plain.includes("The following commands matching 'san' are available:"));
-  assert.ok(filtered.plain.includes("  * run-in-sandbox (sandbox)"));
-  assert.ok(filtered.plain.includes("  * start-sandbox (sandbox)"));
+  assert.ok(filtered.plain.includes("  * run-in-sandbox"));
+  assert.ok(filtered.plain.includes("  * start-sandbox"));
   assert.ok(filtered.plain.includes("  * santiago"));
   assert.ok(!filtered.plain.some(l => l.includes("generate-command")), "non-matching command excluded");
-  assert.ok(!filtered.plain.some(l => l.startsWith("Available tags:")), "no Available tags footer when filtered");
   assert.ok(filtered.plain.includes("For more information on a specific command, run:"), "help footer still renders when filtered");
   // Underline applied within the command name (e.g. run-in-sandbox).
-  const sandboxLine = filtered.raw.find(l => stripAnsi(l) === "  * run-in-sandbox (sandbox)");
+  const sandboxLine = filtered.raw.find(l => stripAnsi(l) === "  * run-in-sandbox");
   assert.ok(sandboxLine, "found run-in-sandbox line");
   assert.ok(sandboxLine.includes(`${UNDERLINE}san\x1b[24m`), "name substring 'san' is underlined");
-  // The tag 'sandbox' should also be underlined within the suffix.
-  const tagUnderlineCount = (sandboxLine.match(new RegExp(`${UNDERLINE.replace("[", "\\[")}san`, "g")) || []).length;
-  assert.ok(tagUnderlineCount >= 2, "underline appears in both the name and the tag");
 
   // Case-insensitive matching highlights.
   const upper = captureRun({ filter: "SAN" });
-  const upperLine = upper.raw.find(l => stripAnsi(l) === "  * run-in-sandbox (sandbox)");
+  const upperLine = upper.raw.find(l => stripAnsi(l) === "  * run-in-sandbox");
   assert.ok(upperLine.includes(`${UNDERLINE}san\x1b[24m`), "case-insensitive filter still underlines original-case substring");
 
   // No-match: print 'No commands matching ...' with no 'available' header; don't throw; still prints help footer.

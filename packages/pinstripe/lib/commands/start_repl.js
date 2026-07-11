@@ -4,7 +4,6 @@ export default {
         this.assignProps({
             description: 'Starts an interactive REPL (Read-Eval-Print Loop) session for the project.'
         });
-        this.tag('core');
     },
 
     async run(){

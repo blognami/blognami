@@ -4,7 +4,6 @@ export default {
         this.annotate({
             description: 'Initializes the database by running migrations and seeding data.'
         });
-        this.tag('database');
     },
 
     async run(){

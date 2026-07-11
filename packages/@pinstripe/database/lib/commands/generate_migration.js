@@ -4,7 +4,6 @@ export default {
         this.annotate({
             description: 'Generates a new database migration file in the lib/migrations directory.'
         });
-        this.tag('database');
 
         this.hasParam('suffix', { 
             type: 'string', 

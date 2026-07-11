@@ -4,7 +4,6 @@ export default {
         this.assignProps({
             description: 'Displays the current project configuration in JSON format.'
         });
-        this.tag('core');
     },
 
     async run(){

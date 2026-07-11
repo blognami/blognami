@@ -4,7 +4,6 @@ export default {
         this.annotate({
             description: 'Runs all pending database migrations to update the database schema.'
         });
-        this.tag('database');
     },
 
     async run(){

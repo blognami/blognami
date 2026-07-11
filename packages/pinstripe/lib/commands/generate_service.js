@@ -4,7 +4,6 @@ export default {
         this.assignProps({
             description: 'Generates a new service file in the lib/services directory.'
         });
-        this.tag('core');
 
         this.hasParam('name', { type: 'string', alias: 'arg1', description: 'The name of the service to create (in snake_case).' });
     },
