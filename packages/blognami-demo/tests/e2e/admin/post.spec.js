@@ -123,6 +123,289 @@ test.describe('Admin - Post page', () => {
       await expect(page.getByTestId("main").getByTestId("post-body").locator('img[src="/logo-png"]')).toBeVisible();
     });
 
+    test(`should open a sign-in overlay above the editor without losing content when the session expires on Save Changes`, async ({ page, helpers }) => {
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+      await page.keyboard.press(process.platform === 'darwin' ? 'Meta+a' : 'Control+a');
+      await page.keyboard.type('Session expired draft');
+      await helpers.waitForPageToBeIdle();
+
+      const saveButton = helpers.topModal().locator('[data-part="save-changes-button"]');
+      await expect(saveButton).toBeVisible();
+
+      await page.context().clearCookies();
+      await saveButton.click();
+      await helpers.waitForPageToBeIdle();
+
+      // Layer 3: the dropped auth redirect routes to inline re-auth — a sign-in
+      // overlay opens stacked above the still-open editor (rather than a phantom
+      // success), with the edit held intact underneath and no failure surfaced.
+      await expect(helpers.topModal().locator('input[name="email"]')).toBeVisible();
+      await expect(page.locator('textarea[name="value"]')).toHaveValue('Session expired draft');
+      await expect(page.getByTestId('save-error')).not.toBeVisible();
+    });
+
+    test(`should re-authenticate inline and resubmit the held edit when the session expires on Save Changes`, async ({ page, helpers }) => {
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+
+      const draftText = 'Re-authenticated body edit';
+      await page.keyboard.press(process.platform === 'darwin' ? 'Meta+a' : 'Control+a');
+      await page.keyboard.type(draftText);
+      await helpers.waitForPageToBeIdle();
+
+      const saveButton = helpers.topModal().locator('[data-part="save-changes-button"]');
+      await expect(saveButton).toBeVisible();
+
+      // Expire the session, then save: the dropped auth redirect opens a sign-in
+      // overlay stacked above the still-open editor.
+      await page.context().clearCookies();
+      await saveButton.click();
+      await helpers.waitForPageToBeIdle();
+
+      await expect(helpers.topModal().locator('input[name="email"]')).toBeVisible();
+      await expect(page.locator('textarea[name="value"]')).toHaveValue(draftText);
+
+      // Complete the OTP sign-in in the overlay.
+      await helpers.submitForm({ email: "admin@example.com", legal: true });
+      await helpers.submitForm({ password: "admin@example.com" });
+      await helpers.waitForPageToBeIdle();
+
+      // The overlay closes and the held edit is resubmitted (not retyped): the
+      // Save Changes button clears and no failure is shown.
+      await expect(page.locator('input[name="email"]')).toHaveCount(0);
+      await expect(page.locator('[data-part="save-changes-button"]')).toBeHidden();
+      await expect(page.getByTestId('save-error')).not.toBeVisible();
+
+      // The resubmitted save persisted: a reload shows the new body.
+      await page.reload();
+      await helpers.waitForPageToBeIdle();
+      await expect(page.getByTestId("main").getByTestId("post-body")).toContainText(draftText);
+    });
+
+    test(`should autosave the editor content to localStorage and clear it on a successful save`, async ({ page, helpers }) => {
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+
+      const editor = helpers.topModal();
+      const valueTextarea = editor.locator('textarea[name="value"]');
+      await valueTextarea.waitFor();
+
+      const baseline = await valueTextarea.inputValue();
+      const draftText = 'Autosaved draft body';
+
+      await valueTextarea.click();
+      await page.keyboard.press(process.platform === 'darwin' ? 'Meta+a' : 'Control+a');
+      await page.keyboard.type(draftText);
+      await helpers.waitForPageToBeIdle();
+
+      const readDrafts = () => page.evaluate(() =>
+        Object.keys(window.localStorage)
+          .filter(key => key.startsWith('markdown-editor-draft:'))
+          .map(key => ({ key, ...JSON.parse(window.localStorage.getItem(key)) }))
+      );
+
+      // The write is debounced (~500ms) on input.
+      await expect.poll(async () => (await readDrafts()).length).toBe(1);
+
+      const [draft] = await readDrafts();
+      expect(draft.value).toBe(draftText);
+      expect(draft.baseline).toBe(baseline);
+      expect(typeof draft.savedAt).toBe('number');
+
+      // A confirmed successful save clears the draft.
+      await editor.locator('[data-part="save-changes-button"]').click();
+      await helpers.waitForPageToBeIdle();
+
+      await expect.poll(async () => (await readDrafts()).length).toBe(0);
+    });
+
+    test(`should restore an autosaved draft on reopen and let the user discard it`, async ({ page, helpers }) => {
+      const readDrafts = () => page.evaluate(() =>
+        Object.keys(window.localStorage)
+          .filter(key => key.startsWith('markdown-editor-draft:'))
+          .map(key => ({ key, ...JSON.parse(window.localStorage.getItem(key)) }))
+      );
+
+      // Open the post-body editor and capture the server value.
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+
+      const baseline = await helpers.topModal().locator('textarea[name="value"]').inputValue();
+      const draftText = 'Draft body to be restored';
+
+      // Type an edit to create a draft, then wait for the debounced write.
+      await helpers.topModal().locator('textarea[name="value"]').click();
+      await page.keyboard.press(process.platform === 'darwin' ? 'Meta+a' : 'Control+a');
+      await page.keyboard.type(draftText);
+      await helpers.waitForPageToBeIdle();
+      await expect.poll(async () => (await readDrafts()).length).toBe(1);
+
+      // Abandon the edit without saving. A reload models the crash/navigation the
+      // draft is meant to survive: the in-memory editor content (and the cached
+      // edit frame) is gone, but the localStorage draft persists.
+      await page.reload();
+      await helpers.waitForPageToBeIdle();
+
+      // Reopen the post-body editor: the draft is restored behind a banner.
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+
+      const editor = helpers.topModal();
+      await expect(editor.getByTestId('restore-banner')).toBeVisible();
+      await expect(editor.locator('textarea[name="value"]')).toHaveValue(draftText);
+      // The restored draft is unsaved content, so Save Changes is offered immediately.
+      await expect(editor.locator('[data-part="save-changes-button"]')).toBeVisible();
+
+      // Discard reverts the editor to the server value, evicts the draft, and
+      // leaves nothing to save.
+      await editor.getByTestId('discard-draft').click();
+      await helpers.waitForPageToBeIdle();
+      await expect(editor.locator('textarea[name="value"]')).toHaveValue(baseline);
+      await expect(editor.getByTestId('restore-banner')).not.toBeVisible();
+      await expect(editor.locator('[data-part="save-changes-button"]')).toBeHidden();
+      await expect.poll(async () => (await readDrafts()).length).toBe(0);
+    });
+
+    test(`should hide the restore banner once the user starts editing`, async ({ page, helpers }) => {
+      const readDrafts = () => page.evaluate(() =>
+        Object.keys(window.localStorage)
+          .filter(key => key.startsWith('markdown-editor-draft:'))
+          .map(key => ({ key, ...JSON.parse(window.localStorage.getItem(key)) }))
+      );
+
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+
+      const draftText = 'Draft body kept by editing';
+      await helpers.topModal().locator('textarea[name="value"]').click();
+      await page.keyboard.press(process.platform === 'darwin' ? 'Meta+a' : 'Control+a');
+      await page.keyboard.type(draftText);
+      await helpers.waitForPageToBeIdle();
+      await expect.poll(async () => (await readDrafts()).length).toBe(1);
+
+      await page.reload();
+      await helpers.waitForPageToBeIdle();
+
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+
+      const editor = helpers.topModal();
+      await expect(editor.getByTestId('restore-banner')).toBeVisible();
+      await expect(editor.locator('[data-part="save-changes-button"]')).toBeVisible();
+
+      // Editing dismisses the notice; Save Changes stays since the content is still unsaved.
+      await editor.locator('textarea[name="value"]').click();
+      await page.keyboard.type('!');
+      await expect(editor.getByTestId('restore-banner')).not.toBeVisible();
+      await expect(editor.locator('[data-part="save-changes-button"]')).toBeVisible();
+    });
+
+    test(`should keep the restored draft and clear it on save`, async ({ page, helpers }) => {
+      const readDrafts = () => page.evaluate(() =>
+        Object.keys(window.localStorage)
+          .filter(key => key.startsWith('markdown-editor-draft:'))
+          .map(key => ({ key, ...JSON.parse(window.localStorage.getItem(key)) }))
+      );
+
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+
+      const draftText = 'Draft body to be saved';
+      await helpers.topModal().locator('textarea[name="value"]').click();
+      await page.keyboard.press(process.platform === 'darwin' ? 'Meta+a' : 'Control+a');
+      await page.keyboard.type(draftText);
+      await helpers.waitForPageToBeIdle();
+      await expect.poll(async () => (await readDrafts()).length).toBe(1);
+
+      await page.reload();
+      await helpers.waitForPageToBeIdle();
+
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+
+      const editor = helpers.topModal();
+      await expect(editor.getByTestId('restore-banner')).toBeVisible();
+      await expect(editor.locator('[data-part="save-changes-button"]')).toBeVisible();
+
+      // Saving the restored draft without editing first hides the banner, then the
+      // confirmed save clears the draft.
+      await editor.locator('[data-part="save-changes-button"]').click();
+      await helpers.waitForPageToBeIdle();
+      await expect(editor.getByTestId('restore-banner')).not.toBeVisible();
+      await expect(editor.locator('[data-part="save-changes-button"]')).toBeHidden();
+      await expect.poll(async () => (await readDrafts()).length).toBe(0);
+    });
+
+    test(`should prompt only once when restoring a draft that changed elsewhere`, async ({ page, helpers }) => {
+      const readDrafts = () => page.evaluate(() =>
+        Object.keys(window.localStorage)
+          .filter(key => key.startsWith('markdown-editor-draft:'))
+          .map(key => ({ key, ...JSON.parse(window.localStorage.getItem(key)) }))
+      );
+
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+
+      const draftText = 'Draft body that diverged from the server';
+      await helpers.topModal().locator('textarea[name="value"]').click();
+      await page.keyboard.press(process.platform === 'darwin' ? 'Meta+a' : 'Control+a');
+      await page.keyboard.type(draftText);
+      await helpers.waitForPageToBeIdle();
+      await expect.poll(async () => (await readDrafts()).length).toBe(1);
+
+      // Count restore confirms by stubbing window.confirm in every frame (the editor
+      // renders inside a pinstripe-frame, so a page-level dialog listener can't see it).
+      // The tally lives in localStorage, which is shared across same-origin frames.
+      await page.addInitScript(() => {
+        window.confirm = (message) => {
+          const calls = JSON.parse(window.localStorage.getItem('__restoreConfirmCalls') || '[]');
+          calls.push(message);
+          window.localStorage.setItem('__restoreConfirmCalls', JSON.stringify(calls));
+          return true; // act as if the user clicked OK
+        };
+      });
+
+      await page.reload();
+      await helpers.waitForPageToBeIdle();
+
+      // With the editor closed (nothing will rewrite the draft), make it look like the
+      // field changed elsewhere since: rewrite the recorded baseline so it no longer
+      // matches the current server value. Reset the confirm tally for the open below.
+      await page.evaluate(() => {
+        const key = Object.keys(window.localStorage).find(k => k.startsWith('markdown-editor-draft:'));
+        const record = JSON.parse(window.localStorage.getItem(key));
+        record.baseline = 'a baseline that no longer matches the server value';
+        window.localStorage.setItem(key, JSON.stringify(record));
+        window.localStorage.removeItem('__restoreConfirmCalls');
+      });
+
+      await page.getByTestId("main").getByTestId("edit-post-body").click();
+      await helpers.topModal().locator('textarea[name="body"]').click();
+      await helpers.topModal().locator('textarea[name="value"]').waitFor();
+
+      const editor = helpers.topModal();
+      await expect(editor.getByTestId('restore-banner')).toBeVisible();
+      await expect(editor.locator('textarea[name="value"]')).toHaveValue(draftText);
+      await helpers.waitForPageToBeIdle();
+
+      // The editor double-renders on open; a regression re-prompts on the second render.
+      const confirmCalls = await page.evaluate(() =>
+        JSON.parse(window.localStorage.getItem('__restoreConfirmCalls') || '[]')
+      );
+      expect(confirmCalls).toHaveLength(1);
+      expect(confirmCalls[0]).toContain('changed elsewhere');
+    });
+
     test.describe("tags", () => {
       test(`should have an interface to allow the user to edit the tags`, async ({ page, helpers }) => {
         const tagNames = ["Apple", "Pear", "Plum"];
