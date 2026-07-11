@@ -35,6 +35,7 @@ export const styles = ({ colors, shadow, remify, fonts }) => `
         flex: 1 1 0;
         height: 100%;
         min-height: 0;
+        min-width: 0;
     }
     .side-panes {
         display: flex;
@@ -61,6 +62,7 @@ export const styles = ({ colors, shadow, remify, fonts }) => `
     .preview-pane {
         flex: 1 1 0;
         min-height: 0;
+        min-width: 0;
         overflow-y: auto;
         padding: 1em;
     }
@@ -68,6 +70,7 @@ export const styles = ({ colors, shadow, remify, fonts }) => `
         display: none;
         flex: 0 1 auto;
         max-height: 50%;
+        min-width: 0;
         overflow-y: auto;
         padding: 1em;
         border-bottom: ${remify(1)} solid ${colors.gray[300]};
