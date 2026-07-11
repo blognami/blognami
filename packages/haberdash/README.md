@@ -1,6 +1,6 @@
 # Haberdash
 
-Shared base framework for Pinstripe and Cardoon. Provides runtime conventions — class composition, hooks, registries, service injection, file discovery, context propagation — extracted into a neutral package. Pinstripe and Cardoon both depend on it; neither depends on the other.
+Shared base framework for Pinstripe and Kraal. Provides runtime conventions — class composition, hooks, registries, service injection, file discovery, context propagation — extracted into a neutral package. Pinstripe and Kraal both depend on it; neither depends on the other.
 
 ## Class
 
@@ -98,7 +98,7 @@ const Saver = Class.extend('Saver').include({
 
 ## Registries
 
-`AbstractRegistry` lets a class hold a named map of subclasses. `AbstractImportableRegistry` extends that with file-system discovery — subclasses are loaded from a directory by convention. `AbstractCommand` builds on the importable registry to define a CLI command tree, and is what Cardoon uses to compose its standalone CLI.
+`AbstractRegistry` lets a class hold a named map of subclasses. `AbstractImportableRegistry` extends that with file-system discovery — subclasses are loaded from a directory by convention. `AbstractCommand` builds on the importable registry to define a CLI command tree, and is what Kraal uses to compose its standalone CLI.
 
 ## Service factory
 
@@ -106,7 +106,7 @@ const Saver = Class.extend('Saver').include({
 
 ## Context
 
-`Context` is the root carrier passed through a request or command run. Children inherit from a root and propagate values down — used by Pinstripe for request-scoped state and by Cardoon for command-scoped state.
+`Context` is the root carrier passed through a request or command run. Children inherit from a root and propagate values down — used by Pinstripe for request-scoped state and by Kraal for command-scoped state.
 
 ## Other primitives
 

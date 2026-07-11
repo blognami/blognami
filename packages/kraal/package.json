@@ -1,14 +1,15 @@
 {
   "type": "module",
-  "name": "haberdash",
-  "description": "Shared base framework for Pinstripe and Kraal.",
+  "name": "kraal",
+  "description": "A sandboxing tool built on haberdash.",
   "version": "0.43.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
-    ".": "./lib/index.js",
-    "./lib/*": "./lib/*",
-    "./node": "./node/index.js"
+    ".": "./lib/index.js"
+  },
+  "bin": {
+    "kraal": "./cli.js"
   },
   "scripts": {
     "clean": "rm -rf ./node_modules",
@@ -16,12 +17,12 @@
     "test:unit": "cd lib && node --test"
   },
   "dependencies": {
-    "chalk": "^4.1.0",
-    "html-entities": "^2.3.2"
+    "haberdash": "^0.43.0",
+    "chalk": "^4.1.0"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/blognami/blognami.git",
-    "directory": "packages/haberdash"
+    "directory": "packages/kraal"
   }
 }
