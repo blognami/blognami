@@ -2,7 +2,7 @@
   "type": "module",
   "name": "pinstripe",
   "description": "A slick web framework for Node.js.",
-  "version": "0.41.0",
+  "version": "0.43.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -19,9 +19,9 @@
   },
   "dependencies": {
     "@csstools/postcss-oklab-function": "^4.0.11",
-    "@pinstripe/utils": "^0.41.0",
-    "haberdash": "^0.41.0",
-    "@pinstripe/window": "^0.41.0",
+    "@pinstripe/utils": "^0.43.0",
+    "haberdash": "^0.43.0",
+    "@pinstripe/window": "^0.43.0",
     "autoprefixer": "^10.4.21",
     "bcrypt": "^5.0.1",
     "busboy": "^1.6.0",

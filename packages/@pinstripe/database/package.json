@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@pinstripe/database",
-  "version": "0.41.0",
+  "version": "0.43.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "mysql2": "^3.10.1",
-    "pinstripe": "^0.41.0",
+    "pinstripe": "^0.43.0",
     "sqlite3": "^5.1.7"
   },
   "repository": {
