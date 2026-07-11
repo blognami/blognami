@@ -13,8 +13,17 @@ export const Union = Class.extend().include({
                 return Row.for(rowName).includedIn.filter(name => !Row.for(name).abstract).map(name => Row.for(name).collectionName);
             },
 
-            create(name, database){
-                return this.new(database, this.tableNamesFor(name).map(tableName => this.Table.create(tableName, database)));
+            async create(name, database){
+                const scopeName = `usedAs${inflector.capitalize(inflector.singularize(name))}`;
+                const tables = [];
+                for(const tableName of this.tableNamesFor(name)){
+                    const table = this.Table.create(tableName, database);
+                    if(this.Table.for(tableName).scopes[scopeName]){
+                        await table.where({ [scopeName]: true });
+                    }
+                    tables.push(table);
+                }
+                return this.new(database, tables);
             }
         });
     },

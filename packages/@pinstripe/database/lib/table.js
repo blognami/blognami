@@ -1,7 +1,7 @@
 
 import { Class } from '@pinstripe/utils';
 import { inflector } from '@pinstripe/utils';
-import { ImportableRegistry } from 'pinstripe';
+import { ImportableRegistry, Workspace } from 'pinstripe';
 import { TableReference } from "./table_reference.js";
 import {
     TYPE_TO_MYSQL_COLUMN_TYPE_MAP,
@@ -109,6 +109,10 @@ export const Table = Class.extend('Table').include({
         this.skipCount = skipCount;
         this.exists = Object.keys(this.constructor.columns).length > 0;
 
+    },
+
+    get workspace(){
+        return Workspace.new(this.database.context);
     },
 
     clone(){
