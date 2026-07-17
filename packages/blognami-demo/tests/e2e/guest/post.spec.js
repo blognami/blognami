@@ -28,7 +28,7 @@ test.describe('Guest - Post page', () => {
       await page.getByTestId("main").getByTestId("add-comment").getByText("Add comment").click();
       await helpers.topModal().getByText("Cancel").click();
       await page.getByTestId("main").getByTestId("add-comment").getByText("Add comment").click();
-      await expect(helpers.topModal()).toContainText("Sign In");
+      await expect(helpers.topModal()).toContainText("Add comment");
 
       await helpers.submitForm({ email: "bob@example.com", legal: true });
       await helpers.submitForm({ password: "bob@example.com" });
@@ -52,7 +52,7 @@ test.describe('Guest - Post page', () => {
 
     test(`should support nested reply chains with a reply link on every comment`, async ({ page, helpers }) => {
       await page.getByTestId("main").getByTestId("add-comment").getByText("Add comment").click();
-      await expect(helpers.topModal()).toContainText("Sign In");
+      await expect(helpers.topModal()).toContainText("Add comment");
       await helpers.submitForm({ email: "bob@example.com", legal: true });
       await helpers.submitForm({ password: "bob@example.com" });
       await helpers.submitForm({ name: "Bob" });
@@ -86,7 +86,7 @@ test.describe('Guest - Post page', () => {
 
     test(`should cap nesting depth with a continue this thread link to a sub-thread view`, async ({ page, helpers }) => {
       await page.getByTestId("main").getByTestId("add-comment").getByText("Add comment").click();
-      await expect(helpers.topModal()).toContainText("Sign In");
+      await expect(helpers.topModal()).toContainText("Add comment");
       await helpers.submitForm({ email: "bob@example.com", legal: true });
       await helpers.submitForm({ password: "bob@example.com" });
       await helpers.submitForm({ name: "Bob" });
@@ -137,7 +137,7 @@ test.describe('Guest - Post page', () => {
 
     test(`should allow collapsing and expanding a comment branch`, async ({ page, helpers }) => {
       await page.getByTestId("main").getByTestId("add-comment").getByText("Add comment").click();
-      await expect(helpers.topModal()).toContainText("Sign In");
+      await expect(helpers.topModal()).toContainText("Add comment");
       await helpers.submitForm({ email: "bob@example.com", legal: true });
       await helpers.submitForm({ password: "bob@example.com" });
       await helpers.submitForm({ name: "Bob" });
@@ -182,7 +182,7 @@ test.describe('Guest - Post page', () => {
 
     test(`should incrementally load long comment lists with a load more control`, async ({ page, helpers }) => {
       await page.getByTestId("main").getByTestId("add-comment").getByText("Add comment").click();
-      await expect(helpers.topModal()).toContainText("Sign In");
+      await expect(helpers.topModal()).toContainText("Add comment");
       await helpers.submitForm({ email: "bob@example.com", legal: true });
       await helpers.submitForm({ password: "bob@example.com" });
       await helpers.submitForm({ name: "Bob" });
@@ -222,7 +222,7 @@ test.describe('Guest - Post page', () => {
 
     test(`should show only what is being commented on in the context pane of the markdown editor`, async ({ page, helpers }) => {
       await page.getByTestId("main").getByTestId("add-comment").getByText("Add comment").click();
-      await expect(helpers.topModal()).toContainText("Sign In");
+      await expect(helpers.topModal()).toContainText("Add comment");
       await helpers.submitForm({ email: "bob@example.com", legal: true });
       await helpers.submitForm({ password: "bob@example.com" });
       await helpers.submitForm({ name: "Bob" });

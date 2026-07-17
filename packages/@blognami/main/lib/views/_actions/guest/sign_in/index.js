@@ -1,11 +1,14 @@
 
 export default {
     async render(){
-        const { returnUrl } = this.params;
+        const { returnUrl, title } = this.params;
 
         let optionalParams = '';
         if(returnUrl){
             optionalParams += `&returnUrl=${encodeURIComponent(returnUrl)}`;
+        }
+        if(title){
+            optionalParams += `&title=${encodeURIComponent(title)}`;
         }
 
         return this.renderForm(
@@ -21,7 +24,7 @@ export default {
                 }
             }),
             {
-                title: 'Sign In',
+                title: title || 'Sign In',
                 fields: [
                     { name: 'email', label: 'Your email', placeholder: "We'll send a one-time-password to this address." },
                     { name: 'legal', type: 'checkbox', label: this.renderHtml`I agree to the <a href="/legal/terms-of-service" target="_blank">terms of service</a>, and acknowledge I have read the <a href="/legal/privacy-policy" target="_blank">privacy policy</a> and <a href="/legal/cookie-policy" target="_blank">cookie policy</a>.` }

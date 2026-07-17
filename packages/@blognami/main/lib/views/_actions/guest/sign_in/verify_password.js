@@ -3,11 +3,14 @@ import * as crypto from 'crypto';
 
 export default {
     render(){
-        const { returnUrl, email } = this.params;
+        const { returnUrl, email, title } = this.params;
 
         let optionalParams = '';
         if(returnUrl){
             optionalParams += `&returnUrl=${encodeURIComponent(returnUrl)}`;
+        }
+        if(title){
+            optionalParams += `&title=${encodeURIComponent(title)}`;
         }
         
         const that = this;
@@ -28,7 +31,7 @@ export default {
                 }
             }),
             {
-                title: 'Sign In',
+                title: title || 'Sign In',
                 fields: [{ name: 'password', type: 'password', label: 'Your one-time-password', placeholder: 'Enter the one-time-password this has just been sent to you (via email).' }],
                 submitTitle: 'Next',
                 requiresProofOfWork: true,
