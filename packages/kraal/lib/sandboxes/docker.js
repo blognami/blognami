@@ -3,8 +3,6 @@ import { existsSync, readFileSync, readdirSync } from 'fs';
 import { basename, join } from 'path';
 import { spawn } from 'child_process';
 
-import { WORKTREES_DIR } from '../services/git.js';
-
 // Minimal npm-workspace pattern expansion (segments with `*` wildcards, e.g.
 // `packages/*`) — fs.globSync would cover this but is experimental and warns.
 const expandWorkspacePattern = (projectRoot, pattern) => {
@@ -57,24 +55,22 @@ export default {
         const projectRoot = project.rootPath;
         const projectSlug = basename(projectRoot);
         const baseName = config.sandbox?.name ?? `kraal-${projectSlug}-sandbox`;
-        const branch = this.params.branch;
-        const isBranch = Boolean(branch) && branch !== await this.git.branch;
-        const name = isBranch ? `${baseName}--${branch.replace(/[^a-zA-Z0-9_.-]/g, '-')}` : baseName;
+        let name = baseName;
+        let commonDir = null;
+        if (await this.git.isWorktree) {
+            const branch = await this.git.branch;
+            if (!branch) throw new Error('sandbox target requires a branch — the worktree is on a detached HEAD');
+            name = `${baseName}--${branch.replace(/[^a-zA-Z0-9_.-]/g, '-')}`;
+            commonDir = await this.git.commonDir;
+        }
         const tag = baseName;
-        const worktreePath = isBranch ? `${WORKTREES_DIR}/${branch}` : null;
-        const workDir = isBranch ? `/app/${worktreePath}` : '/app';
-        const volumes = isBranch
-            ? [
-                ...this.resolveVolumes(projectRoot, name),
-                ...this.resolveVolumes(join(projectRoot, worktreePath), name, worktreePath)
-            ]
-            : this.resolveVolumes(projectRoot, name);
-        return { projectRoot, name, tag, config, volumes, isBranch, worktreePath, workDir };
+        const volumes = this.resolveVolumes(projectRoot, name);
+        return { projectRoot, name, tag, config, volumes, commonDir, workDir: '/app' };
     },
 
     // Shadow every node_modules the container's npm can write to with a named
     // volume — otherwise Linux binaries land on the host through the bind mount.
-    resolveVolumes(projectRoot, name, prefix = ''){
+    resolveVolumes(projectRoot, name){
         const paths = ['node_modules'];
         const packageJsonPath = join(projectRoot, 'package.json');
         if(existsSync(packageJsonPath)){
@@ -90,13 +86,10 @@ export default {
                 }
             }
         }
-        return paths.map(path => {
-            const fullPath = prefix ? `${prefix}/${path}` : path;
-            return {
-                path: fullPath,
-                volume: `${name}-${fullPath.replace(/[^a-zA-Z0-9_.-]/g, '-')}`
-            };
-        });
+        return paths.map(path => ({
+            path,
+            volume: `${name}-${path.replace(/[^a-zA-Z0-9_.-]/g, '-')}`
+        }));
     },
 
     // The sandbox image definition, generated in memory and piped to
@@ -135,7 +128,7 @@ export default {
             'RUN git config --global user.name "Kraal (Docker)" && \\',
             '    git config --global user.email "kraal@localhost"',
             '',
-            'CMD ["sh", "-c", "cd ${KRAAL_APP_DIR:-/app} && if [ -f package.json ] && [ ! -f node_modules/.package-lock.json ]; then npm ci || npm install; fi && tail -f /dev/null"]'
+            'CMD ["sh", "-c", "cd /app && if [ -f package.json ] && [ ! -f node_modules/.package-lock.json ]; then npm ci || npm install; fi && tail -f /dev/null"]'
         );
         return lines.join('\n') + '\n';
     },
@@ -147,10 +140,7 @@ export default {
     },
 
     async start(){
-        // Must precede resolveSettings so worktree volume resolution can see
-        // the worktree's package.json.
-        await this.git.ensureWorktree(this.params.branch);
-        const { projectRoot, name, tag, config, volumes, isBranch, worktreePath, workDir } = await this.resolveSettings();
+        const { projectRoot, name, tag, config, volumes, commonDir } = await this.resolveSettings();
 
         // Always build — Docker's layer cache makes this a fast no-op unless
         // the generated Dockerfile (e.g. the config's install script) changed
@@ -191,13 +181,11 @@ export default {
             }
 
             const runArgs = ['run', '-d', '--name', name, '-v', `${projectRoot}:/app`];
-            // The worktree lives under node_modules, which the named volume
-            // below shadows — bind it back in on top (docker layers nested
-            // mounts by target depth, so argv order doesn't matter).
-            if (isBranch) runArgs.push('-v', `${join(projectRoot, worktreePath)}:/app/${worktreePath}`);
+            // Mirror the primary repo's git dir at its host-absolute path so
+            // the worktree's .git gitdir pointer and the commondir back-pointer
+            // both resolve inside the container.
+            if (commonDir) runArgs.push('-v', `${commonDir}:${commonDir}`);
             for (const { path, volume } of volumes) runArgs.push('-v', `${volume}:/app/${path}`);
-            // Points the image's first-boot npm install at the worktree.
-            if (isBranch) runArgs.push('-e', `KRAAL_APP_DIR=${workDir}`);
             // Bake config env into the container so the CMD sees it too (e.g. a
             // playwright postinstall during the startup npm ci); exec-time -e
             // flags still override per run.
@@ -231,9 +219,6 @@ export default {
         if (volumes.length) {
             await this.exec('docker', ['volume', 'rm', '-f', ...volumes.map(({ volume }) => volume)]);
         }
-        // Container first so its bind mount is released; the branch itself is
-        // kept, only the worktree checkout goes.
-        await this.git.removeWorktree(this.params.branch);
     },
 
     // Assembles the `docker exec` argv, including the env injected into the

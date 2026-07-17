@@ -1,16 +1,14 @@
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { join, relative, isAbsolute } from 'node:path';
-
-export const WORKTREES_DIR = 'node_modules/.kraal/worktrees';
+import { resolve } from 'node:path';
 
 export default {
     create(){
         return {
             branch: this.defer(() => this.branch()),
             identity: this.defer(() => this.identity()),
-            ...this.bindProps(['ensureWorktree', 'removeWorktree'])
+            isWorktree: this.defer(() => this.isWorktree()),
+            commonDir: this.defer(() => this.commonDir())
         };
     },
 
@@ -48,44 +46,31 @@ export default {
         });
     },
 
-    // Resolves to nothing unless a branch other than the checked-out one is
-    // requested — that's what keeps every worktree/branch path a no-op in the
-    // default case.
-    async target(branch){
-        if(!branch || branch === await this.branch()) return null;
-        const project = await this.project;
-        await this.run(['check-ref-format', '--branch', branch]);
-        return join(project.rootPath, WORKTREES_DIR, branch);
-    },
-
-    async ensureWorktree(branch){
-        const path = await this.target(branch);
-        if(!path) return null;
-        const dotGit = join(path, '.git');
-        if(!existsSync(dotGit)){
-            // Drop stale registrations (e.g. after a host npm ci wiped
-            // node_modules) so the same path can be re-added.
-            await this.run(['worktree', 'prune']);
-            let branchExists = true;
+    // True iff the project root is a linked worktree: its git dir differs from
+    // the repo's common git dir.
+    async isWorktree(){
+        return this.context.root.getOrCreate('gitIsWorktree', async () => {
             try {
-                await this.run(['rev-parse', '--verify', '--quiet', `refs/heads/${branch}`]);
+                const project = await this.project;
+                const gitDir = resolve(project.rootPath, await this.run(['rev-parse', '--git-dir'], ['ignore', 'pipe', 'ignore']));
+                const commonDir = resolve(project.rootPath, await this.run(['rev-parse', '--git-common-dir'], ['ignore', 'pipe', 'ignore']));
+                return gitDir !== commonDir;
             } catch {
-                branchExists = false;
+                return false;
             }
-            await this.run(branchExists ? ['worktree', 'add', path, branch] : ['worktree', 'add', '-b', branch, path]);
-            // Rewrite the worktree's gitdir pointer to a relative path so it
-            // resolves both on the host and under the /app bind mount in the
-            // sandbox container.
-            const gitdir = readFileSync(dotGit, 'utf8').replace(/^gitdir:\s*/, '').trim();
-            if(isAbsolute(gitdir)) writeFileSync(dotGit, `gitdir: ${relative(path, gitdir)}\n`);
-        }
-        return path;
+        });
     },
 
-    async removeWorktree(branch){
-        const path = await this.target(branch);
-        if(!path) return;
-        if(existsSync(path)) await this.run(['worktree', 'remove', '--force', path]);
-        await this.run(['worktree', 'prune']);
+    // The repo's common git dir as an absolute path (the primary checkout's
+    // .git, even when invoked from a linked worktree).
+    async commonDir(){
+        return this.context.root.getOrCreate('gitCommonDir', async () => {
+            try {
+                const project = await this.project;
+                return resolve(project.rootPath, await this.run(['rev-parse', '--git-common-dir'], ['ignore', 'pipe', 'ignore']));
+            } catch {
+                return null;
+            }
+        });
     }
 };

@@ -7,12 +7,6 @@ export const Command = Class.extend('Command').include({
         this.include(AbstractCommand);
         this.include(ServiceFactory.Consumerable);
 
-        this.hasParam('branch', {
-            type: 'string',
-            optional: true,
-            description: 'Target a sandbox for the given git branch (worktree); defaults to the current checked-out branch.'
-        });
-
         const { run } = this;
 
         this.assignProps({

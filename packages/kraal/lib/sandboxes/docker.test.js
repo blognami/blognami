@@ -23,7 +23,6 @@ describe('docker sandbox – spinner integration', () => {
 
         instance = Object.create(docker);
         instance.params = {};
-        instance.git = { ensureWorktree: async () => null, removeWorktree: async () => {} };
         instance.resolveSettings = async () => ({
             projectRoot: '/fake',
             name: 'test-sandbox',
@@ -231,67 +230,32 @@ describe('docker sandbox – spinner integration', () => {
         ]);
     });
 
-    it('mounts the worktree and points first-boot install at it for branch containers', async () => {
-        const ensureCalls = [];
-        instance.git = {
-            ensureWorktree: async () => { ensureCalls.push(execLog.length); return '/fake/node_modules/.kraal/worktrees/foo'; },
-            removeWorktree: async () => {},
-        };
+    it('mounts the common git dir at its host-absolute path for worktree containers', async () => {
         instance.resolveSettings = async () => ({
             projectRoot: '/fake',
             name: 'test-sandbox--foo',
             tag: 'test-sandbox',
             config: {},
-            volumes: [
-                { path: 'node_modules', volume: 'test-sandbox--foo-node_modules' },
-                { path: 'node_modules/.kraal/worktrees/foo/node_modules', volume: 'test-sandbox--foo-node_modules-.kraal-worktrees-foo-node_modules' },
-            ],
-            isBranch: true,
-            worktreePath: 'node_modules/.kraal/worktrees/foo',
-            workDir: '/app/node_modules/.kraal/worktrees/foo',
+            volumes: [],
+            commonDir: '/host/repo/.git',
         });
         stubExec(
             ok(),                    // docker build → success (inside spinner)
             ok('sha256:img'),        // docker image inspect → built image id
             fail(),                  // docker container inspect → not found
-            ok(),                    // docker run --rm -u root … chown (init)
             ok(),                    // docker run -d … (main)
         );
 
         await instance.start();
 
-        assert.deepStrictEqual(ensureCalls, [0], 'git.ensureWorktree runs before any docker call');
         assert.deepStrictEqual(execLog[0], ['docker', 'build', '-t', 'test-sandbox', '-'], 'image tag stays the base name');
-        assert.deepStrictEqual(execLog[4], [
+        assert.deepStrictEqual(execLog[3], [
             'docker', 'run', '-d', '--name', 'test-sandbox--foo',
             '-v', '/fake:/app',
-            '-v', '/fake/node_modules/.kraal/worktrees/foo:/app/node_modules/.kraal/worktrees/foo',
-            '-v', 'test-sandbox--foo-node_modules:/app/node_modules',
-            '-v', 'test-sandbox--foo-node_modules-.kraal-worktrees-foo-node_modules:/app/node_modules/.kraal/worktrees/foo/node_modules',
-            '-e', 'KRAAL_APP_DIR=/app/node_modules/.kraal/worktrees/foo',
+            '-v', '/host/repo/.git:/host/repo/.git',
             'test-sandbox',
         ]);
-    });
-
-    it('remove() also removes the worktree after the container and volumes', async () => {
-        const removeCalls = [];
-        instance.git = { ensureWorktree: async () => null, removeWorktree: async () => removeCalls.push(execLog.length) };
-        instance.resolveSettings = async () => ({
-            projectRoot: '/fake',
-            name: 'test-sandbox--foo',
-            tag: 'test-sandbox',
-            volumes: [
-                { path: 'node_modules', volume: 'test-sandbox--foo-node_modules' },
-            ],
-        });
-        stubExec(
-            ok(),             // docker rm -f
-            ok(),             // docker volume rm -f
-        );
-
-        await instance.remove();
-
-        assert.deepStrictEqual(removeCalls, [2], 'git.removeWorktree runs after container and volume removal');
+        assert.ok(!execLog[3].some(arg => arg.includes('KRAAL_APP_DIR')));
     });
 
     it('remove() removes the container then its named volumes', async () => {
@@ -315,6 +279,45 @@ describe('docker sandbox – spinner integration', () => {
             ['docker', 'rm', '-f', 'test-sandbox'],
             ['docker', 'volume', 'rm', '-f', 'test-sandbox-node_modules', 'test-sandbox-packages-a-node_modules'],
         ]);
+    });
+});
+
+describe('docker sandbox – settings resolution', () => {
+    const makeInstance = (git) => {
+        const instance = Object.create(docker);
+        instance.config = {};
+        instance.project = { rootPath: '/fake/repo' };
+        instance.git = git;
+        return instance;
+    };
+
+    it('targets the base container from the primary checkout', async () => {
+        const settings = await makeInstance({ isWorktree: false }).resolveSettings();
+
+        assert.strictEqual(settings.name, 'kraal-repo-sandbox');
+        assert.strictEqual(settings.tag, 'kraal-repo-sandbox');
+        assert.strictEqual(settings.commonDir, null);
+        assert.strictEqual(settings.workDir, '/app');
+    });
+
+    it('suffixes the container name with the sanitized branch inside a worktree', async () => {
+        const settings = await makeInstance({
+            isWorktree: true,
+            branch: 'feat/foo',
+            commonDir: '/host/repo/.git',
+        }).resolveSettings();
+
+        assert.strictEqual(settings.name, 'kraal-repo-sandbox--feat-foo');
+        assert.strictEqual(settings.tag, 'kraal-repo-sandbox');
+        assert.strictEqual(settings.commonDir, '/host/repo/.git');
+        assert.strictEqual(settings.workDir, '/app');
+    });
+
+    it('rejects inside a worktree on a detached HEAD', async () => {
+        await assert.rejects(
+            () => makeInstance({ isWorktree: true, branch: null }).resolveSettings(),
+            /detached HEAD/
+        );
     });
 });
 
@@ -346,10 +349,10 @@ describe('docker sandbox – Dockerfile generation', () => {
         assert.ok(!dockerfile.includes('.kraal'));
     });
 
-    it('parameterizes the first-boot install dir via KRAAL_APP_DIR', () => {
+    it('runs the first-boot install at /app', () => {
         const dockerfile = docker.buildDockerfile();
 
-        assert.match(dockerfile, /CMD \["sh", "-c", "cd \$\{KRAAL_APP_DIR:-\/app\} && /);
+        assert.match(dockerfile, /CMD \["sh", "-c", "cd \/app && /);
     });
 });
 
@@ -441,26 +444,6 @@ describe('docker sandbox – volume resolution', () => {
             .find(({ path }) => path.startsWith('packages/'));
 
         assert.strictEqual(volume, 'test-sandbox-packages--scope-b-node_modules');
-    });
-
-    it('prefixes paths and volume names when resolving a worktree checkout', () => {
-        const root = makeProjectRoot({
-            'package.json': JSON.stringify({ workspaces: ['packages/*'] }),
-            'packages/a/package.json': '{}',
-        });
-
-        const volumes = docker.resolveVolumes(root, 'test-sandbox--foo', 'node_modules/.kraal/worktrees/foo');
-
-        assert.deepStrictEqual(volumes, [
-            {
-                path: 'node_modules/.kraal/worktrees/foo/node_modules',
-                volume: 'test-sandbox--foo-node_modules-.kraal-worktrees-foo-node_modules',
-            },
-            {
-                path: 'node_modules/.kraal/worktrees/foo/packages/a/node_modules',
-                volume: 'test-sandbox--foo-node_modules-.kraal-worktrees-foo-packages-a-node_modules',
-            },
-        ]);
     });
 
     it('dedupes workspaces that overlap each other', () => {

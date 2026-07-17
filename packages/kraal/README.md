@@ -49,3 +49,13 @@ export default {
 - `remove-sandbox` — removes the container and its named volumes
 - `run-in-sandbox [command]` — runs a command (default `bash`) inside the sandbox
 - any command defined under `sandbox.commands` in `kraal.js` (see [Custom commands](#custom-commands))
+
+## Worktrees
+
+Every kraal command adapts to the worktree it is invoked from. Run from the primary checkout, commands target the base container (`sandbox.name`); run from a linked worktree checked out on branch `foo`, they target `<sandbox.name>--foo` (branch names are sanitized `[^a-zA-Z0-9_.-]` → `-`). All containers share one image.
+
+Worktrees are created and removed with standard `git worktree` — kraal never creates or manages them, and `remove-sandbox` removes only the container and its named volumes.
+
+### Migrating from `--branch`
+
+Earlier versions created worktrees under `node_modules/.kraal/worktrees` via the removed `--branch` param. These are now orphaned — clean them up with `git worktree remove <path> && git worktree prune`.
