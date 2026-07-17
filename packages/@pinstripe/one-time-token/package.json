@@ -1,13 +1,13 @@
 {
   "type": "module",
   "name": "@pinstripe/one-time-token",
-  "version": "0.43.0",
+  "version": "0.44.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "pinstripe": "^0.43.0"
+    "pinstripe": "^0.44.0"
   },
   "repository": {
     "type": "git",

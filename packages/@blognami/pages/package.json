@@ -2,15 +2,15 @@
   "type": "module",
   "name": "@blognami/pages",
   "description": "Implements pages in the main app.",
-  "version": "0.43.0",
+  "version": "0.44.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "@blognami/main": "^0.43.0",
-    "@pinstripe/database": "^0.43.0",
-    "@pinstripe/markdown": "^0.43.0"
+    "@blognami/main": "^0.44.0",
+    "@pinstripe/database": "^0.44.0",
+    "@pinstripe/markdown": "^0.44.0"
   },
   "repository": {
     "type": "git",

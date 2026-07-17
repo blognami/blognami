@@ -2,7 +2,7 @@
   "type": "module",
   "name": "haberdash",
   "description": "Shared base framework for Pinstripe and Kraal.",
-  "version": "0.43.0",
+  "version": "0.44.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {

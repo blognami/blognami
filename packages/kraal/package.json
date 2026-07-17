@@ -2,7 +2,7 @@
   "type": "module",
   "name": "kraal",
   "description": "A sandboxing tool built on haberdash.",
-  "version": "0.43.0",
+  "version": "0.44.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -17,7 +17,7 @@
     "test:unit": "cd lib && node --test"
   },
   "dependencies": {
-    "haberdash": "^0.43.0",
+    "haberdash": "^0.44.0",
     "chalk": "^4.1.0"
   },
   "repository": {

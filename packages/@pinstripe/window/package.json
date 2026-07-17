@@ -2,7 +2,7 @@
   "type": "module",
   "name": "@pinstripe/window",
   "description": "A slick web framework for your browser.",
-  "version": "0.43.0",
+  "version": "0.44.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -13,7 +13,7 @@
     "test:unit": "cd lib && node --test"
   },
   "dependencies": {
-    "@pinstripe/utils": "^0.43.0"
+    "@pinstripe/utils": "^0.44.0"
   },
   "devDependencies": {
     "esbuild": "^0.25.1",

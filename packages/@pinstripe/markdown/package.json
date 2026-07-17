@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@pinstripe/markdown",
-  "version": "0.43.0",
+  "version": "0.44.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
@@ -11,7 +11,7 @@
     "test:unit": "cd lib && node --test"
   },
   "dependencies": {
-    "@pinstripe/utils": "^0.43.0",
-    "pinstripe": "^0.43.0"
+    "@pinstripe/utils": "^0.44.0",
+    "pinstripe": "^0.44.0"
   }
 }
