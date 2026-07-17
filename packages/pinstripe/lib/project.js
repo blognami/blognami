@@ -53,14 +53,14 @@ export const Project = Class.extend().include({
     }
 });
 
-const findInPath = async (offset, base) => {
+export const findInPath = async (offset, base) => {
     const out = [];
     while(base) {
         const candidatePath = `${base}/${offset}`;
         if(existsSync(candidatePath)){
             out.push(await promisify(realpath)(candidatePath));
         }
-        if(base == '/'){
+        if(base == '/' || existsSync(`${base}/.git`)){
             break;
         }
         base = await promisify(realpath)(`${base}/..`);
