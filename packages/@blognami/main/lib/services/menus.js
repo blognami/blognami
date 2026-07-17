@@ -128,6 +128,19 @@ export default {
             }
         }
 
+        const ctaState = await this.database.newsletter.ctaState(await this.user);
+        if (ctaState != 'none') {
+            this.addMenuItem('user', {
+                id: 'subscribe',
+                label: ctaState == 'upgrade' ? 'Upgrade' : 'Subscribe',
+                url: `/_actions/user/subscribe?subscribableId=${await this.database.newsletter.id}`,
+                target: '_overlay',
+                displayOrder: 1001,
+                isPrimary: true,
+                testId: 'subscribe'
+            });
+        }
+
         // Legal footer menu items
         this.addMenuItem('legal', { label: 'Terms of Service', url: '/legal/terms-of-service' });
         this.addMenuItem('legal', { label: 'Privacy Policy', url: '/legal/privacy-policy' });
@@ -167,6 +180,11 @@ export default {
         }
 
         items.push(props);
+    },
+
+    removeMenuItem(menuName, id){
+        if(!this.menus[menuName]) return;
+        this.menus[menuName] = this.menus[menuName].filter(item => item.id !== id);
     },
 
     normalizeMenus() {

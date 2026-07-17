@@ -89,12 +89,10 @@ export default {
                             </div>
                         `;
 
-                        if(!userHasAccess) return this.renderView('_content', {
-                            body: this.renderHtml`
-                                ${title}
-                                ${this.renderView('_subscription_cta', { access: page.access })}
-                            `
-                        });
+                        if(!userHasAccess) return this.renderHtml`
+                            ${this.renderView('_content', { body: title })}
+                            ${this.renderView('_subscription_cta', { access: page.access, noun: 'page', withheld: true })}
+                        `;
 
                         return this.renderView('_content', {
                             body: this.renderHtml`

@@ -1,6 +1,6 @@
 export default {
     async render(){
-        let { subscribableId, plan, returnUrl } = this.params;
+        let { subscribableId, plan, returnUrl = '/' } = this.params;
 
         const subscribable = await this.database.subscribables.where({ id: subscribableId }).first();
 

@@ -14,6 +14,17 @@ export default {
         });
     },
 
+    async ctaState(user){
+        if(user?.role == 'admin') return 'none';
+        if(!this.enableFree && !this.enableMonthly && !this.enableYearly) return 'none';
+        if(await this.isSubscribed(user, { tier: 'paid' })) return 'none';
+        if(await this.isSubscribed(user)){
+            if(this.enableMonthly || this.enableYearly) return 'upgrade';
+            return 'none';
+        }
+        return 'subscribe';
+    },
+
     get subscriptionConfig(){
         const out = {
             name: 'Newsletter',

@@ -27,7 +27,7 @@ test.describe('Guest - Stripe newsletter subscription', () => {
     await helpers.signOut();
     await page.goto('/alexandra-burgs');
     await helpers.waitForPageToBeIdle();
-    await expect(page.getByText('This content is for paying subscribers only.')).toBeVisible();
+    await expect(page.getByText('This post is for paid members. Upgrade to keep reading.')).toBeVisible();
     await expect(page.getByTestId('post-body')).not.toBeVisible();
 
     // Subscribe via Stripe (user action requires sign-in first)
@@ -42,7 +42,7 @@ test.describe('Guest - Stripe newsletter subscription', () => {
 
     // Wait for holding page to redirect after confirming subscription
     await helpers.waitForPageToBeIdle();
-    await expect(page.getByText('This content is for paying subscribers only.')).not.toBeVisible();
+    await expect(page.getByText('This post is for paid members. Upgrade to keep reading.')).not.toBeVisible();
     await expect(page.getByTestId('post-body')).toBeVisible();
 
     // Cancel subscription via UI
@@ -55,7 +55,7 @@ test.describe('Guest - Stripe newsletter subscription', () => {
     // Navigate back to paid post and verify access is revoked
     await page.getByTestId('main').getByText('Alexandra Burgs').click();
     await helpers.waitForPageToBeIdle();
-    await expect(page.getByText('This content is for paying subscribers only.')).toBeVisible();
+    await expect(page.getByText('This post is for paid members. Upgrade to keep reading.')).toBeVisible();
     await expect(page.getByTestId('post-body')).not.toBeVisible();
   });
 });
