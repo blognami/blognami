@@ -77,7 +77,7 @@ export default {
                 // no change (so ignore)
             } else if(options.skipIfExists){
                 console.log(chalk.blue(`Skipping file "${filePath}" (as it already exists)`));
-            } else if(options.force || await confirm(`Are you sure you want to update ${filePath}?`)){
+            } else if(options.force || await this.confirm(`Are you sure you want to update ${filePath}?`)){
                 console.log(chalk.red(`Updating file "${filePath}"`));
                 await promisify(fs.writeFile)(name, data);
             }
