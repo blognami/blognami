@@ -31,8 +31,6 @@ export default {
          await this.generatePinstripeConfig();
    
          await this.generateLibIndex();
-      
-         await this.generateReadme();
 
          this.installDependencies();
 
@@ -137,25 +135,6 @@ export default {
          line(`import { importAll } from 'pinstripe';`);
          line();
          line(`importAll(import.meta.url);`);
-         line();
-      });
-   },
-
-   async generateReadme(){
-      const { generateFile } = this.fsBuilder;
-
-      await generateFile(`README.md`, ({ line, indent }) => {
-         line();
-         line(`# ${this.name}`);
-         line();
-         line('## Getting started');
-         line();
-         line('```bash');
-         indent(({ line }) => {
-            line('pinstripe initialize-database');
-            line('pinstripe start-server');
-         });
-         line('```');
          line();
       });
    },
