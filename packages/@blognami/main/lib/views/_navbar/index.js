@@ -51,7 +51,7 @@ export default {
         const items = await this.menus.user || [];
 
         return this.renderHtml`
-            <header class="${this.cssClasses.root}" id="pinstripe-scroll-top" data-test-id="navbar">
+            <header class="${this.cssClasses.root}" id="blognami-scroll-top" data-test-id="navbar">
                 <div class="${this.cssClasses.container}">
                     ${this.renderView('_navbar/_branding')}
                     <nav class="${this.cssClasses.linkGroup}">

@@ -46,7 +46,7 @@ export default {
                     <circle cx="8.5" cy="8.5" r="1.5"></circle>
                     <path d="M21 15l-5-5L5 21"></path>
                 </svg>
-                <button data-component="pinstripe-anchor" data-href="/_actions/admin/add_image" data-target="_overlay">Add Image</button>
+                <button data-component="blognami-anchor" data-href="/_actions/admin/add_image" data-target="_overlay">Add Image</button>
             </div>
         `;
     }

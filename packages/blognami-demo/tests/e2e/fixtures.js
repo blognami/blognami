@@ -14,12 +14,14 @@ class PageHelpers {
     await this.page.getByTestId('navbar').getByTestId('sign-in').click();
     await this.submitForm({ email, legal: true });
     await this.submitForm({ password: email });
+    await expect(this.page.getByTestId('navbar').getByTestId('your-account')).toBeVisible();
   }
 
   async signOut() {
     await this.page.getByTestId('navbar').getByTestId("your-account").click();
-    await this.page.getByTestId('sign-out').click();
+    await this.topPopover().getByTestId('sign-out').click();
     await this.waitForPageToBeIdle();
+    await expect(this.page.getByTestId('navbar').getByTestId('sign-in')).toBeVisible();
   }
 
   async submitForm(values = {}, options = {}) {
@@ -70,11 +72,11 @@ class PageHelpers {
   }
 
   topModal() {
-    return this.page.locator('html.idle pinstripe-modal').last();
+    return this.page.locator('html.idle blognami-modal').last();
   }
 
   topPopover() {
-    return this.page.locator('html.idle pinstripe-popover').last();
+    return this.page.locator('html.idle blognami-popover').last();
   }
 
   async closeTopModal() {

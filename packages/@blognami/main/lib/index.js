@@ -1,8 +1,8 @@
 
-import { importAll } from 'pinstripe';
-import '@pinstripe/blob-store';
-import '@pinstripe/database';
-import '@pinstripe/markdown';
-import '@pinstripe/one-time-token';
+import { importAll } from 'blognami';
+import '@blognami/blob-store';
+import '@blognami/database';
+import '@blognami/markdown';
+import '@blognami/one-time-token';
 
 importAll(import.meta.url);

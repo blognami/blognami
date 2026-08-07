@@ -17,7 +17,7 @@ export default {
    async render(){
         const { meta = [], body, sidebar } = this.params;
 
-        return this.renderView('_pinstripe/_shell', {
+        return this.renderView('_blognami/_shell', {
             meta,
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">

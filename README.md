@@ -5,13 +5,13 @@
 
 **Blognami** is an open-source, passwordless blogging platform for people who just want to write. Compose in Markdown, distraction-free, and publish — there's no password to manage and no admin sprawl to fight.
 
-It's built on **Pinstripe**, a full-stack JavaScript framework developed in the same monorepo, in parallel with the app it powers. This repository contains the complete codebase for both.
+It's built on the **Blognami framework**, a full-stack JavaScript framework developed in the same monorepo, in parallel with the app it powers. This repository contains the complete codebase for both.
 
 ## Why Blognami?
 
 Blognami started life over four years ago as a Ruby app and has since been ported to JavaScript. It exists for a few connected reasons:
 
-- **A framework kept honest by a real app.** The best framework isn't designed in isolation from theory — it's grown alongside a real application. Blognami is that application, and Pinstripe is the framework that falls out of building it. The app keeps the framework practical, and doubles as a reference implementation for anyone building on Pinstripe.
+- **A framework kept honest by a real app.** The best framework isn't designed in isolation from theory — it's grown alongside a real application. Blognami is that application, and the Blognami framework falls out of building it. The app keeps the framework practical, and doubles as a reference implementation for anyone building on it.
 - **Most web apps are really blogs.** Social networks, job boards, news sites, fitness trackers — they all capture and present content over time. Get a blog right and you've exercised the core patterns behind most of the web.
 - **A saner alternative to WordPress.** WordPress powers a huge slice of the internet, but often feels held together with chewing gum and a prayer. Blognami aims for something cleaner and more modern.
 - **Writing first.** Inspired by the early days of Ghost, Blognami leans into plain Markdown and distraction-free composition. You can just write text, and still produce really good articles.
@@ -23,10 +23,10 @@ Read the full story: [Why Blognami](https://jodysalt.com/why-blognami).
 Create a new Blognami blog:
 
 ```bash
-npx pinstripe generate-project --name my-blog --with blognami
+npx blognami generate-project --name my-blog --with blognami
 cd my-blog
-npx pinstripe initialize-database
-npx pinstripe start-server
+npx blognami initialize-database
+npx blognami start-server
 ```
 
 Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
@@ -38,7 +38,7 @@ Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
 │             Blognami App             │
 │       (Posts, Pages, Tags, Admin)    │
 ├──────────────────────────────────────┤
-│          Pinstripe Framework         │
+│          Blognami Framework          │
 │    (Runtime, CLI, DB, views, auth,   │
 │     multi-tenancy, static sites)     │
 ├──────────────────────────────────────┤
@@ -48,7 +48,7 @@ Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
 └──────────────────────────────────────┘
 ```
 
-**Blognami** is the ready-to-use blogging application. **Pinstripe** is the underlying framework that provides the runtime, database layer, CLI tooling, view system, passwordless auth, and extensibility. **Haberdash** is the small shared base both Pinstripe and its sibling agent-orchestration framework, **Cardoon**, are built on.
+**Blognami** is both the ready-to-use blogging application and the underlying framework that provides the runtime, database layer, CLI tooling, view system, passwordless auth, and extensibility. **Haberdash** is the small shared base both Blognami and its sibling agent-orchestration framework, **Kraal**, are built on.
 
 ## Package Overview
 
@@ -56,39 +56,38 @@ Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
 
 | Package | Description |
 |---------|-------------|
-| [blognami](./packages/blognami) | Meta-package bundling all Blognami features |
+| [blognami](./packages/blognami) | Core framework, CLI, and meta-package bundling all Blognami features |
 | [@blognami/main](./packages/@blognami/main) | Core application logic, admin UI, authentication |
 | [@blognami/posts](./packages/@blognami/posts) | Blog post management |
 | [@blognami/pages](./packages/@blognami/pages) | Static page management |
 | [@blognami/tags](./packages/@blognami/tags) | Tagging system |
+| [@blognami/docs](./packages/@blognami/docs) | Framework documentation, served at `/docs` |
 
-### Pinstripe Framework
+### Framework Packages
 
 | Package | Description |
 |---------|-------------|
-| [pinstripe](./packages/pinstripe) | Core framework and CLI |
-| [@pinstripe/database](./packages/@pinstripe/database) | MySQL and SQLite database layer |
-| [@pinstripe/window](./packages/@pinstripe/window) | Browser-side framework |
-| [@pinstripe/markdown](./packages/@pinstripe/markdown) | Markdown processing |
-| [@pinstripe/one-time-token](./packages/@pinstripe/one-time-token) | Passwordless authentication |
-| [@pinstripe/multi-tenant](./packages/@pinstripe/multi-tenant) | Multi-tenancy support |
-| [@pinstripe/static-site](./packages/@pinstripe/static-site) | Static site generation |
-| [@pinstripe/blob-store](./packages/@pinstripe/blob-store) | Blob and file storage |
-| [@pinstripe/utils](./packages/@pinstripe/utils) | Meta-programming utilities |
+| [@blognami/database](./packages/@blognami/database) | MySQL and SQLite database layer |
+| [@blognami/window](./packages/@blognami/window) | Browser-side framework |
+| [@blognami/markdown](./packages/@blognami/markdown) | Markdown processing |
+| [@blognami/one-time-token](./packages/@blognami/one-time-token) | Passwordless authentication |
+| [@blognami/multi-tenant](./packages/@blognami/multi-tenant) | Multi-tenancy support |
+| [@blognami/static-site](./packages/@blognami/static-site) | Static site generation |
+| [@blognami/blob-store](./packages/@blognami/blob-store) | Blob and file storage |
+| [@blognami/utils](./packages/@blognami/utils) | Meta-programming utilities |
 
 ### Foundations & Tooling
 
 | Package | Description |
 |---------|-------------|
-| [haberdash](./packages/haberdash) | Shared base framework for Pinstripe and Cardoon |
-| [cardoon](./packages/cardoon) | Agent-orchestration framework built on Haberdash |
+| [haberdash](./packages/haberdash) | Shared base framework for Blognami and Kraal |
+| [kraal](./packages/kraal) | Agent-orchestration framework built on Haberdash |
 
 ### Apps & Sites
 
 | Package | Description |
 |---------|-------------|
 | [blognami-demo](./packages/blognami-demo) | Example project and the home for the test suite |
-| [pinstripejs.com](./packages/pinstripejs.com) | Framework documentation site |
 
 ## Development
 
@@ -125,21 +124,21 @@ npm run test:e2e     # Playwright end-to-end tests
 
 ### CLI Commands
 
-The Pinstripe CLI ships with each project. Outside a project, `generate-project` and `list-commands` are available; the rest become available once you're inside a generated project:
+The Blognami CLI ships with each project. Outside a project, `generate-project` and `list-commands` are available; the rest become available once you're inside a generated project:
 
 ```bash
-npx pinstripe list-commands      # List every registered command
-npx pinstripe start-server       # Run the development server
-npx pinstripe generate-view      # Create a new view
-npx pinstripe generate-model     # Create a new model
-npx pinstripe generate-command   # Create a new command
-npx pinstripe generate-service   # Create a new service
-npx pinstripe migrate-database   # Run pending database migrations
-npx pinstripe list-views         # List all registered views
-npx pinstripe list-services      # List all registered services
+npx blognami list-commands      # List every registered command
+npx blognami start-server       # Run the development server
+npx blognami generate-view      # Create a new view
+npx blognami generate-model     # Create a new model
+npx blognami generate-command   # Create a new command
+npx blognami generate-service   # Create a new service
+npx blognami migrate-database   # Run pending database migrations
+npx blognami list-views         # List all registered views
+npx blognami list-services      # List all registered services
 ```
 
-Run `npx pinstripe COMMAND --help` for the parameters a specific command accepts.
+Run `npx blognami COMMAND --help` for the parameters a specific command accepts.
 
 ## Contributing
 

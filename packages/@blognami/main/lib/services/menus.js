@@ -1,4 +1,4 @@
-import { View } from 'pinstripe';
+import { View } from 'blognami';
 
 export default {
     meta(){

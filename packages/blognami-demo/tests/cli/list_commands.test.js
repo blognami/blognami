@@ -8,8 +8,8 @@ import { reset, inPackagesDir, run } from './helpers.js';
 
 afterEach(reset);
 
-test(`pinstripe list-commands`, () => inPackagesDir(() => {
-    assert.equal(run(`npx pinstripe list-commands`).stdout, [
+test(`blognami list-commands`, () => inPackagesDir(() => {
+    assert.equal(run(`npx blognami list-commands`).stdout, [
         'The following commands are available:',
         '',
         '  * generate-project',
@@ -17,14 +17,14 @@ test(`pinstripe list-commands`, () => inPackagesDir(() => {
         '',
         'For more information on a specific command, run:',
         '',
-        '  pinstripe COMMAND_NAME --help'
+        '  blognami COMMAND_NAME --help'
     ].join('\n'));
 
-    run(`npx pinstripe generate-project --name list-commands-test --with blognami`);
+    run(`npx blognami generate-project --name list-commands-test --with blognami`);
 
     chdir('list-commands-test');
 
-    assert.equal(run(`npx pinstripe list-commands`).stdout, [
+    assert.equal(run(`npx blognami list-commands`).stdout, [
         'The following commands are available:',
         '',
         '  * drop-database',
@@ -52,12 +52,12 @@ test(`pinstripe list-commands`, () => inPackagesDir(() => {
         '',
         'For more information on a specific command, run:',
         '',
-        '  pinstripe COMMAND_NAME --help'
+        '  blognami COMMAND_NAME --help'
         ].join('\n'));
 }));
 
-test(`pinstripe`, () => inPackagesDir(() => {
-    assert.equal(run(`npx pinstripe`).stdout, [
+test(`blognami`, () => inPackagesDir(() => {
+    assert.equal(run(`npx blognami`).stdout, [
         'The following commands are available:',
         '',
         '  * generate-project',
@@ -65,14 +65,14 @@ test(`pinstripe`, () => inPackagesDir(() => {
         '',
         'For more information on a specific command, run:',
         '',
-        '  pinstripe COMMAND_NAME --help'
+        '  blognami COMMAND_NAME --help'
     ].join('\n'));
 
-    run(`npx pinstripe generate-project --name list-commands-test --with blognami`);
+    run(`npx blognami generate-project --name list-commands-test --with blognami`);
 
     chdir('list-commands-test');
 
-    assert.equal(run(`npx pinstripe`).stdout, [
+    assert.equal(run(`npx blognami`).stdout, [
         'The following commands are available:',
         '',
         '  * drop-database',
@@ -100,6 +100,6 @@ test(`pinstripe`, () => inPackagesDir(() => {
         '',
         'For more information on a specific command, run:',
         '',
-        '  pinstripe COMMAND_NAME --help'
+        '  blognami COMMAND_NAME --help'
         ].join('\n'));
 }));

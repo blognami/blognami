@@ -7,7 +7,7 @@ export default {
         const { rootPath } = await this.project;
 
         // 1. Reset database
-        execSync(`pinstripe reset-database`, {
+        execSync(`blognami reset-database`, {
             env: process.env,
             stdio: 'inherit'
         });

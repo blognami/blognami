@@ -15,11 +15,11 @@ export default {
         }
 
         return this.renderHtml`
-            <pinstripe-popover>
-                <pinstripe-menu>
+            <blognami-popover>
+                <blognami-menu>
                     ${currentItems.map(item => this.renderView('_navbar/menu/_link', item))}
-                </pinstripe-menu>
-            </pinstripe-popover>
+                </blognami-menu>
+            </blognami-popover>
         `;
     }
 };

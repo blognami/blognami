@@ -1,6 +1,6 @@
 # Haberdash
 
-Shared base framework for Pinstripe and Kraal. Provides runtime conventions — class composition, hooks, registries, service injection, file discovery, context propagation — extracted into a neutral package. Pinstripe and Kraal both depend on it; neither depends on the other.
+Shared base framework for Blognami and Kraal. Provides runtime conventions — class composition, hooks, registries, service injection, file discovery, context propagation — extracted into a neutral package. Blognami and Kraal both depend on it; neither depends on the other.
 
 ## Class
 
@@ -106,7 +106,7 @@ const Saver = Class.extend('Saver').include({
 
 ## Context
 
-`Context` is the root carrier passed through a request or command run. Children inherit from a root and propagate values down — used by Pinstripe for request-scoped state and by Kraal for command-scoped state.
+`Context` is the root carrier passed through a request or command run. Children inherit from a root and propagate values down — used by Blognami for request-scoped state and by Kraal for command-scoped state.
 
 ## Other primitives
 

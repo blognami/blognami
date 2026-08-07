@@ -3,7 +3,7 @@ import '../../lib/index.js';
 
 import test from 'node:test';
 
-import { Workspace } from 'pinstripe';
+import { Workspace } from 'blognami';
 
 test(`database.lock (1)`, () => Workspace.run(async function(){
     await Promise.all([

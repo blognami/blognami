@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "name": "@blognami/markdown",
+  "version": "0.45.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "scripts": {
+    "test": "npm run test:unit",
+    "test:unit": "cd lib && node --test"
+  },
+  "dependencies": {
+    "@blognami/utils": "^0.45.0",
+    "blognami": "^0.45.0"
+  }
+}

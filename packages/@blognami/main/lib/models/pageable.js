@@ -1,4 +1,4 @@
-import { inflector } from '@pinstripe/utils';
+import { inflector } from '@blognami/utils';
 
 export default {
     meta(){
@@ -10,7 +10,7 @@ export default {
                 while(true){
                     const candidateSlug = this.generateCandidateSlug(n);
                     const isReservedByViewMap = Object.prototype.hasOwnProperty.call(viewMap, candidateSlug);
-                    const existingPageableWithSlug = this.database.pageables.where({ slug: candidateSlug }).first();
+                    const existingPageableWithSlug = this.findPageableWithSlug(candidateSlug);
                     if(!isReservedByViewMap && !(await existingPageableWithSlug)){
                         this.slug = candidateSlug;
                         break;
@@ -21,8 +21,8 @@ export default {
         });
 
         this.addHook('validation', async function(){
-            const otherPageableWithSlugCount = this.database.pageables.where({ idNe: this.id, slug: this.slug }).count();
-            if(!this.isValidationError('slug') && await otherPageableWithSlugCount){
+            const otherPageableWithSlug = this.findPageableWithSlug(this.slug, { idNe: this.id });
+            if(!this.isValidationError('slug') && await otherPageableWithSlug){
                 this.setValidationError('slug', 'Must be unique');
             }
             const slugChanged = this.slug !== this._initialFields.slug;
@@ -34,6 +34,10 @@ export default {
                 }
             }
         });
+    },
+
+    findPageableWithSlug(slug, scopedBy = {}){
+        return this.database.pageables.where({ ...scopedBy, slug }).first();
     },
 
     generateCandidateSlug(n){

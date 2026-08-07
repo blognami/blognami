@@ -96,7 +96,7 @@ export const decorators = {
 
 
         let scrollTopOffset = 0;
-        const scrollTopElementId = this.document.head.find('meta[name="pinstripe-scroll-top-element-id"]')?.params.content || 'pinstripe-scroll-top';
+        const scrollTopElementId = this.document.head.find('meta[name="blognami-scroll-top-element-id"]')?.params.content || 'blognami-scroll-top';
         const scrollTopElement = this.document.find(`#${scrollTopElementId}`);
         if(scrollTopElement){
             scrollTopOffset = scrollTopElement.node.getBoundingClientRect().bottom + 10;

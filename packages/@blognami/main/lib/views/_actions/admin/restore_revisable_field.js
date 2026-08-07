@@ -3,7 +3,7 @@ export default {
         const { name, value } = await this.database.revisions.where({ id: this.params.id }).first();
 
         return this.renderHtml`
-            <script type="pinstripe">
+            <script type="blognami">
                 const { name, value } = ${this.renderHtml(JSON.stringify({ name, value }))};
                 this.form.inputs.forEach(input => {
                     if(input.name == name){

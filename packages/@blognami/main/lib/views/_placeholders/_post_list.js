@@ -27,7 +27,7 @@ const rem = px => `${px / 16}rem`;
 
 export default {
     render(){
-        const line = (width, height) => this.renderHtml`<pinstripe-skeleton width="${width}" height="${rem(height)}"></pinstripe-skeleton>`;
+        const line = (width, height) => this.renderHtml`<blognami-skeleton width="${width}" height="${rem(height)}"></blognami-skeleton>`;
 
         const card = () => this.renderHtml`
             <article class="${this.cssClasses.card}">

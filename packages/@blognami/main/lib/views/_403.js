@@ -4,7 +4,7 @@ export default {
         const { message } = this.params;
 
         const [ status, headers, body ] = await this.renderHtml`
-            <pinstripe-modal>
+            <blognami-modal>
                 ${
                     this.renderView('_panel', {
                         title: 'Access denied',
@@ -14,14 +14,14 @@ export default {
                         footer: this.renderView('_button', {
                             body: this.renderHtml`
                                 OK
-                                <script type="pinstripe">
+                                <script type="blognami">
                                     this.parent.on('click', () => this.trigger('close'));
                                 </script>
                             `
                         })
                     })
                 }
-            </pinstripe-modal>
+            </blognami-modal>
         `.toResponseArray();
 
         return [403, headers, body];

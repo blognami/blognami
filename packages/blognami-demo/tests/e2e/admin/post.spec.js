@@ -364,7 +364,7 @@ test.describe('Admin - Post page', () => {
       await expect.poll(async () => (await readDrafts()).length).toBe(1);
 
       // Count restore confirms by stubbing window.confirm in every frame (the editor
-      // renders inside a pinstripe-frame, so a page-level dialog listener can't see it).
+      // renders inside a blognami-frame, so a page-level dialog listener can't see it).
       // The tally lives in localStorage, which is shared across same-origin frames.
       await page.addInitScript(() => {
         window.confirm = (message) => {

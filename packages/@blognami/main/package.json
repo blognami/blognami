@@ -12,12 +12,12 @@
     "clean": "rm -rf ./node_modules"
   },
   "dependencies": {
-    "@pinstripe/blob-store": "^0.45.0",
-    "@pinstripe/database": "^0.45.0",
-    "@pinstripe/markdown": "^0.45.0",
-    "@pinstripe/one-time-token": "^0.45.0",
-    "@pinstripe/utils": "^0.45.0",
-    "pinstripe": "^0.45.0",
+    "@blognami/blob-store": "^0.45.0",
+    "@blognami/database": "^0.45.0",
+    "@blognami/markdown": "^0.45.0",
+    "@blognami/one-time-token": "^0.45.0",
+    "@blognami/utils": "^0.45.0",
+    "blognami": "^0.45.0",
     "stripe": "^16.9.0"
   },
   "repository": {

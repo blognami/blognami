@@ -1,0 +1,14 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "@blognami/docs",
+  "version": "0.45.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "scripts": {
+    "start": "blognami start-server --host 127.0.0.1:3002",
+    "reset-database": "blognami reset-database"
+  }
+}

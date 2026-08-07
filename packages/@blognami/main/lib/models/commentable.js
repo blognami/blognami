@@ -1,4 +1,4 @@
-import { defer } from '@pinstripe/utils';
+import { defer } from '@blognami/utils';
 
 export default {
     meta(){

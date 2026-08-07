@@ -28,7 +28,7 @@ export default {
                     ${async () => {
                         if(await posts.count() > 0) return this.renderView('_posts', {
                             posts,
-                            loadMoreUrl: `/?pageSize=${pageSize + 10}`
+                            loadMoreUrl: `?pageSize=${pageSize + 10}`
                         });
                         return this.renderHtml`
                             Additional posts will be published soon.

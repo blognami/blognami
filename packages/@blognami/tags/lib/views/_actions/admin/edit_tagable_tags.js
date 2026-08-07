@@ -138,8 +138,8 @@ export default {
 
         return this.renderHtml`
             <div class="${this.cssClasses.wrapper}">
-                <pinstripe-modal height="full">
-                    ${this.renderView('_pinstripe/_panel', {
+                <blognami-modal height="full">
+                    ${this.renderView('_blognami/_panel', {
                         title: 'Tags',
                         body: this.renderHtml`
                             <div class="${this.cssClasses.search}">
@@ -179,21 +179,21 @@ export default {
                             ${() => {
                                 if(pageCount > 1) return this.renderHtml`
                                     <div class="${this.cssClasses.pagination}">
-                                        ${this.renderView('_pinstripe/_pagination', { pageCount, page, q })}
+                                        ${this.renderView('_blognami/_pagination', { pageCount, page, q })}
                                     </div>
                                 `;
                             }}
                         `,
-                        footer: this.renderView('_pinstripe/_button', {
+                        footer: this.renderView('_blognami/_button', {
                             body: this.renderHtml`
                                 Close
-                                <script type="pinstripe">
+                                <script type="blognami">
                                     this.parent.on('click', () => this.trigger('close'));
                                 </script>
                             `,
                         })
                     })}
-                </pinstripe-modal>
+                </blognami-modal>
             </div>
         `;
     }

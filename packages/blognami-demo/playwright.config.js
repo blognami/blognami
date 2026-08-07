@@ -49,7 +49,7 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pinstripe reset-database-and-dump-sql && npm run start -- --without-jobs',
+    command: 'blognami reset-database-and-dump-sql && npm run start -- --without-jobs',
     url: 'http://127.0.0.1:3000',
     reuseExistingServer: true,
     timeout: 300000,

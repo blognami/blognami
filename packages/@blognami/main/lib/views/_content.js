@@ -1,6 +1,6 @@
 
 export default {
     render(){
-        return this.renderView('_pinstripe/_content', this.params);
+        return this.renderView('_blognami/_content', this.params);
     }
 }

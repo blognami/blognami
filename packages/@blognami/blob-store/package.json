@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "name": "@blognami/blob-store",
+  "version": "0.45.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "dependencies": {
+    "blognami": "^0.45.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/@blognami/blob-store"
+  }
+}

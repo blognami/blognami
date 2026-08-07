@@ -1,2 +1,2 @@
 
-export { ServiceFactory as default } from 'pinstripe';
+export { ServiceFactory as default } from 'blognami';

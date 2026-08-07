@@ -1,7 +1,7 @@
 
 import '@blognami/main';
 
-import { importAll } from 'pinstripe';
-import '@pinstripe/database';
+import { importAll } from 'blognami';
+import '@blognami/database';
 
 importAll(import.meta.url);

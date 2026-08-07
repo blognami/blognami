@@ -46,7 +46,7 @@ export const AbstractServiceFactory = {
 
                             this.assignProps({
                                 async run(fn, parentContext){
-                                    const { importAll } = await import('./import_all.js'); // pinstripe-if-client: const importAll = () => {};
+                                    const { importAll } = await import('./import_all.js'); // blognami-if-client: const importAll = () => {};
                                     await importAll();
                                     return await Context.new().run(async context => {
                                         if(parentContext?._serviceInterceptors){

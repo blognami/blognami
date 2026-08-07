@@ -41,7 +41,7 @@ export default {
                         ${() => {
                             if(returnUrl) return that.renderHtml`
                                 ${that.renderRedirect({ url: returnUrl })}
-                                <script type="pinstripe">
+                                <script type="blognami">
                                     const { document } = this;
                                     this.overlay.on('close', () => document.load());
                                 </script>
@@ -50,7 +50,7 @@ export default {
                         }}
                     `.toResponseArray();
             
-                    headers['Set-Cookie'] = `pinstripeSession=${session.id}:${passString}; Path=/`;
+                    headers['Set-Cookie'] = `blognamiSession=${session.id}:${passString}; Path=/`;
             
                     return [ status, headers, body ];
                 }

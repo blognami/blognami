@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "haberdash",
-  "description": "Shared base framework for Pinstripe and Kraal.",
+  "description": "Shared base framework for Blognami and Kraal.",
   "version": "0.45.0",
   "author": "Jody Salt",
   "license": "MIT",

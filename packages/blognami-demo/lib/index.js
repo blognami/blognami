@@ -1,13 +1,13 @@
 
-import 'pinstripe';
-import '@pinstripe/database';
+import 'blognami';
+import '@blognami/database';
 import '@blognami/main';
 
-import { importAll } from 'pinstripe';
+import { importAll } from 'blognami';
 
 const modules = ['@blognami/pages', '@blognami/posts', '@blognami/tags'];
 if(process.env.TENANCY === 'multi'){
-    modules.push('@pinstripe/multi-tenant');
+    modules.push('@blognami/multi-tenant');
 }
 for(const module of modules){
     await import(module);

@@ -45,7 +45,7 @@ export default {
         const contentItems = await this.menus.content || [];
 
         return this.renderHtml`
-            <pinstripe-modal height="full">
+            <blognami-modal height="full">
                 <div class="${this.cssClasses.root}">
                     ${userItems.map(item =>
                         this.renderView('_navbar/burger_menu/_link_group_section', item)
@@ -55,7 +55,7 @@ export default {
                         this.renderView('_navbar/burger_menu/_link_group_section', item)
                     )}
                 </div>
-            </pinstripe-modal>
+            </blognami-modal>
         `;
     }
 }

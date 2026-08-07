@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert';
 
-import { Command } from 'pinstripe';
+import { Command } from 'blognami';
 
 Command.register('test-fields', {
     meta(){

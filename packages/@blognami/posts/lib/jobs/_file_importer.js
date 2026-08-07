@@ -1,1 +1,1 @@
-export { Job as default } from 'pinstripe';
+export { Job as default } from 'blognami';

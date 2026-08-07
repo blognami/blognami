@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "clean": "npm run clean && rm -rf ./node_modules",
-    "start": "npm start --workspace blognami-demo & npm start  --workspace pinstripejs.com",
-    "start:pinstripejs.com": "npm run start --workspace pinstripejs.com",
+    "start": "npm start --workspace blognami-demo",
+    "start:docs": "npm run start --workspace @blognami/docs",
     "watch": "nodemon -e js,jsx,md,css,html --exec 'npm run start'",
     "test": "npm run test:unit && npm run test:services && npm run test:models && npm run test:cli && npm run test:e2e",
     "test:unit": "npm run test:unit --workspaces --if-present",
@@ -34,7 +34,6 @@
   },
   "workspaces": [
     "packages/*",
-    "packages/@blognami/*",
-    "packages/@pinstripe/*"
+    "packages/@blognami/*"
   ]
 }

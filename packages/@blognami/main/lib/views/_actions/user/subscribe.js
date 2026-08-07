@@ -46,26 +46,26 @@ export default {
         if(options.length == 1) plan = options[0].name;
 
         if(!plan) return this.renderHtml`
-            <pinstripe-modal width="medium" height="full">
+            <blognami-modal width="medium" height="full">
                 ${this.renderView('_panel', {
                     title: 'Choose a subscription plan',
                     body: this.renderView('_actions/guest/_subscription_options', { options }),
                     footer: this.renderView('_button', {
                         body: this.renderHtml`
                             Cancel
-                            <script type="pinstripe">
+                            <script type="blognami">
                                 this.parent.on('click', () => this.trigger('close'));
                             </script>
                         `
                     })
                 })}
-            </pinstripe-modal>
+            </blognami-modal>
         `;
 
         const user = await this.user;
 
         const reloadHtml = this.renderHtml`
-            <script type="pinstripe">
+            <script type="blognami">
                 this.overlay.frame.load();
             </script>
         `;
@@ -85,7 +85,7 @@ export default {
         holdingPageUrl.searchParams.set('returnUrl', returnUrl);
 
         return this.renderHtml`
-            <script type="pinstripe">
+            <script type="blognami">
                 window.location.href = ${this.renderHtml(JSON.stringify(await subscribable.createSubscribeUrl(user, { interval: plan, returnUrl: holdingPageUrl.toString() })))};
             </script>
         `;

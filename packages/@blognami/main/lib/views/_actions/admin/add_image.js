@@ -7,7 +7,7 @@ export default {
             success(image){
                 return that.renderHtml`
                     <span class="${that.cssClassesFor('_markdown_editor/modal').lineInserter}" data-line-content="![${image.title}](/${image.slug})">
-                        <script type="pinstripe">
+                        <script type="blognami">
                             this.parent.trigger('click');
                         </script>
                     </span>
