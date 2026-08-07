@@ -1,13 +1,13 @@
 {
   "type": "module",
   "name": "@blognami/static-site",
-  "version": "0.45.0",
+  "version": "0.46.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "blognami": "^0.45.0"
+    "blognami": "^0.46.0"
   },
   "repository": {
     "type": "git",

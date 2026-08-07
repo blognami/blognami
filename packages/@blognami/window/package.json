@@ -2,7 +2,7 @@
   "type": "module",
   "name": "@blognami/window",
   "description": "A slick web framework for your browser.",
-  "version": "0.45.0",
+  "version": "0.46.0",
   "author": "Jody Salt",
   "license": "MIT",
   "exports": {
@@ -13,7 +13,7 @@
     "test:unit": "cd lib && node --test"
   },
   "dependencies": {
-    "@blognami/utils": "^0.45.0"
+    "@blognami/utils": "^0.46.0"
   },
   "devDependencies": {
     "esbuild": "^0.25.1",

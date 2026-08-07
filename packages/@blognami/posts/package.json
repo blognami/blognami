@@ -2,16 +2,16 @@
   "type": "module",
   "name": "@blognami/posts",
   "description": "Implements posts in the main app.",
-  "version": "0.45.0",
+  "version": "0.46.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "@blognami/main": "^0.45.0",
-    "@blognami/tags": "^0.45.0",
-    "@blognami/database": "^0.45.0",
-    "@blognami/markdown": "^0.45.0"
+    "@blognami/main": "^0.46.0",
+    "@blognami/tags": "^0.46.0",
+    "@blognami/database": "^0.46.0",
+    "@blognami/markdown": "^0.46.0"
   },
   "repository": {
     "type": "git",
