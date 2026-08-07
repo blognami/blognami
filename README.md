@@ -23,13 +23,13 @@ Read the full story: [Why Blognami](https://jodysalt.com/why-blognami).
 Create a new Blognami blog:
 
 ```bash
-npx blognami generate-project --name my-blog --with blognami
+npx blognami generate-project my-blog
 cd my-blog
 npx blognami initialize-database
 npx blognami start-server
 ```
 
-Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser.
+Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser and sign in as `admin@example.com` — new projects are seeded with an admin account, and in development the one-time password is printed to the server's console.
 
 ## Architecture
 
@@ -109,6 +109,7 @@ npm install
 ```bash
 npm run start        # Start demo project at http://127.0.0.1:3000
 npm run watch        # Start with auto-reload on file changes
+npm run start:docs   # Start the framework docs site
 ```
 
 ### Testing
