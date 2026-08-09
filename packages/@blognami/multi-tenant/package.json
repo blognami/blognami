@@ -1,13 +1,13 @@
 {
   "type": "module",
   "name": "@blognami/multi-tenant",
-  "version": "0.46.0",
+  "version": "0.47.0",
   "license": "MIT",
   "exports": {
     ".": "./lib/index.js"
   },
   "dependencies": {
-    "blognami": "^0.46.0"
+    "blognami": "^0.47.0"
   },
   "repository": {
     "type": "git",
