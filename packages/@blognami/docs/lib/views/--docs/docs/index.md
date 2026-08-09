@@ -5,13 +5,13 @@ menu:
 ---
 # Introduction
 
-A modern, lightweight JavaScript web framework for building fast, scalable applications with minimal configuration. The source lives on [GitHub](https://github.com/blognami/blognami).
+Blognami is a blogging app you actually own and can hack on, all the way down. It's built on its own general-purpose JavaScript web framework — and when you outgrow the blogging defaults, you can strip it back to that framework and build whatever you want. The source lives on [GitHub](https://github.com/blognami/blognami).
 
 ## Quick Start
 
 ```bash
-npx blognami generate-project my-app
-cd my-app
+npx blognami@latest generate-project my-blog
+cd my-blog
 npx blognami initialize-database
 npx blognami start-server
 ```
@@ -31,23 +31,18 @@ npx blognami start-server
 - **Zero to Production Fast** - From generate-project to deployed application in minutes, not hours.
 - **Batteries Included** - Authentication, database migrations, background jobs, email, and multi-tenancy built in.
 
-## Framework & Platform
+## App & Framework
 
-The **Blognami platform** and the **Blognami framework** are designed to benefit each other:
+The **Blognami app** and the **Blognami framework** are designed to benefit each other:
 
-- The **platform** showcases the framework's capabilities and ensures every framework feature solves real-world problems
+- The **app** proves the framework — every framework feature exists because the app needed it to solve a real-world problem
 - The **framework** stays lean and focused because it's tested against actual production needs, not just demo apps
-- You get a framework that's both flexible for custom applications and proven in production
+- You get a blogging app that's fully hackable, and a framework that's proven in production when you strip back to it
 
 When you build with Blognami, you're building on a foundation that's already running real businesses.
 
-## Try the Platform
+## Let us host it for you
 
-Experience [blognami.com](https://blognami.com), a full-featured blogging platform — or generate your own:
+Want a Blognami blog without running a server? [blognami.com](https://blognami.com/pricing) will host it for you — sign up and start writing in minutes.
 
-```bash
-npx blognami generate-project my-blog
-cd my-blog
-npx blognami initialize-database
-npx blognami start-server
-```
+Prefer to run it yourself? See the Quick Start above.

@@ -61,7 +61,7 @@ export default {
             await this.sendMail({
                 to: email,
                 subject: 'Welcome!',
-                text: ({ line }) => line('Welcome to our platform!')
+                text: ({ line }) => line('Welcome to our blog!')
             });
         });
 
