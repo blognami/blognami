@@ -8,6 +8,8 @@ test.describe('Guest - Tag page', () => {
   setupGuestTests();
 
   test.beforeEach(async ({ page, helpers }) => {
+    // The Tags section is collapsed by default, so expand it before clicking
+    await page.getByTestId("sidebar").getByTestId("tags").getByRole("button", { name: "Tags" }).click();
     await page.getByTestId("sidebar").getByText("Excepturi Corporis").click();
     await helpers.waitForPageToBeIdle();
     await expect(page.getByTestId("main").locator("h2").first()).toContainText("Excepturi Corporis");

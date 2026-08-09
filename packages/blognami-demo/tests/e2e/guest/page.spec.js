@@ -8,6 +8,8 @@ test.describe('Guest - Basic page', () => {
   setupGuestTests();
 
   test.beforeEach(async ({ page, helpers }) => {
+    // The Top section is collapsed by default, so expand it before clicking
+    await page.getByTestId("sidebar").getByTestId("top").getByRole("button", { name: "Top" }).click();
     await page.getByTestId("sidebar").getByText("Osinski Extensions").click();
     await helpers.waitForPageToBeIdle();
     await expect(page.getByTestId("main").locator("h1")).toContainText("Osinski Extensions");

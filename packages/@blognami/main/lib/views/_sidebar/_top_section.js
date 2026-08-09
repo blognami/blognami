@@ -26,6 +26,7 @@ export default {
         );
         await this.applyPlaceholders(body);
         const sections = {};
+        const counts = {};
         let currentSection = 'Top';
         for(const child of body.children) {
             if(child.type === 'h2') {
@@ -34,9 +35,11 @@ export default {
             }
             sections[currentSection] ??= [];
             if(child.type == 'ul'){
+                const items = this.extractListItems(child);
+                counts[currentSection] = (counts[currentSection] || 0) + this.countLinks(items);
                 sections[currentSection].push(
                     this.renderView('_sidebar/_link_group', {
-                        children: this.extractListItems(child)
+                        children: items
                     })
                 );
                 continue;
@@ -51,11 +54,18 @@ export default {
                 this.renderView('_sidebar/_section', {
                     label,
                     testId: this.inflector.dasherize(label),
+                    count: counts[label],
                     body
                 })
             );
         }
         return out;
+    },
+
+    countLinks(items){
+        return (items || []).reduce(
+            (total, item) => total + (item.url ? 1 : 0) + this.countLinks(item.children), 0
+        );
     },
 
     extractSlugFromHref(href){
