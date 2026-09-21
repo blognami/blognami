@@ -76,6 +76,8 @@ export default {
         const host = forwardedHost || headers.host || baseUrl.host;
         const proto = forwardedProto || baseUrl.protocol.replace(/:$/, '');
         const _url = new URL(url, `${proto}://${host}`);
+        // Behind a proxy that drops x-forwarded-proto, assume https; only loopback keeps the listener's http.
+        if(!forwardedProto && !['localhost', '127.0.0.1', '[::1]'].includes(_url.hostname)) _url.protocol = 'https:';
 
         const urlParams = {};
         _url.searchParams.forEach((value, key) => {
