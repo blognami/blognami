@@ -20,7 +20,9 @@ export default {
 
     // Start forwarding process (non-blocking)
     const mainProcess = spawn('stripe', [
-      'listen', '--forward-to', 'localhost:3000/_actions/guest/stripe_webhook'
+      'listen',
+      '--events', 'customer.subscription.created,customer.subscription.deleted',
+      '--forward-to', 'localhost:3000/_actions/guest/stripe_webhook'
     ], { stdio: 'inherit' });
 
     console.log('Stripe forwarding started');
