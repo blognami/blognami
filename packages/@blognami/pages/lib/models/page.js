@@ -2,6 +2,7 @@
 export default {
     meta(){
         this.include('pageable');
+        this.include('sitemappable');
         this.include('revisable');
         
         this.belongsTo('user');
@@ -13,6 +14,11 @@ export default {
             if(this.published && !this.publishedAt){
                 this.publishedAt = new Date();
             }
+        });
+
+        this.scope('usedAsSitemappable', function(enabled = false){
+            if(!enabled) return;
+            return this.where({ published: true, access: 'public' });
         });
 
         this.trackRevisionsFor('body');

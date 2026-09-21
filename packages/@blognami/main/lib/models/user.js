@@ -4,6 +4,7 @@ import * as crypto from 'crypto';
 export default {
     meta(){
         this.include('pageable');
+        this.include('sitemappable');
 
         this.hasMany('sessions');
         this.hasMany('posts');
