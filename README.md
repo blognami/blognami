@@ -3,9 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub stars](https://img.shields.io/github/stars/blognami/blognami?style=social)](https://github.com/blognami/blognami/stargazers)
 
-**Blognami** is an open-source, passwordless blogging platform for people who just want to write. Compose in Markdown, distraction-free, and publish — there's no password to manage and no admin sprawl to fight.
+**Blognami** is an open-source, passwordless blogging app you actually own and can hack on, all the way down. Compose in Markdown, distraction-free, and publish — there's no password to manage and no admin sprawl to fight.
 
-It's built on the **Blognami framework**, a full-stack JavaScript framework developed in the same monorepo, in parallel with the app it powers. This repository contains the complete codebase for both.
+It's built on the **Blognami framework**, a general-purpose full-stack JavaScript framework developed in the same monorepo, in parallel with the app it powers. When you outgrow the blogging defaults, you can strip it back to that framework and build whatever you want. This repository contains the complete codebase for both.
 
 ## Why Blognami?
 
@@ -23,13 +23,15 @@ Read the full story: [Why Blognami](https://jodysalt.com/why-blognami).
 Create a new Blognami blog:
 
 ```bash
-npx blognami generate-project my-blog
+npx blognami@latest generate-project my-blog
 cd my-blog
 npx blognami initialize-database
 npx blognami start-server
 ```
 
 Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser and sign in as `admin@example.com` — new projects are seeded with an admin account, and in development the one-time password is printed to the server's console.
+
+Prefer not to run a server? [blognami.com](https://blognami.com/pricing) will host a Blognami blog for you.
 
 ## Architecture
 
@@ -48,7 +50,7 @@ Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser and 
 └──────────────────────────────────────┘
 ```
 
-**Blognami** is both the ready-to-use blogging application and the underlying framework that provides the runtime, database layer, CLI tooling, view system, passwordless auth, and extensibility. **Haberdash** is the small shared base both Blognami and its sibling agent-orchestration framework, **Kraal**, are built on.
+**Blognami** is both the ready-to-use blogging application and the underlying framework that provides the runtime, database layer, CLI tooling, view system, passwordless auth, and extensibility. **Haberdash** is the small shared base both Blognami and its sibling sandboxing tool, **Kraal**, are built on.
 
 ## Package Overview
 
@@ -81,7 +83,7 @@ Then visit [http://127.0.0.1:3000/](http://127.0.0.1:3000/) in your browser and 
 | Package | Description |
 |---------|-------------|
 | [haberdash](./packages/haberdash) | Shared base framework for Blognami and Kraal |
-| [kraal](./packages/kraal) | Agent-orchestration framework built on Haberdash |
+| [kraal](./packages/kraal) | Docker sandboxing tool built on Haberdash |
 
 ### Apps & Sites
 
@@ -130,10 +132,13 @@ The Blognami CLI ships with each project. Outside a project, `generate-project` 
 ```bash
 npx blognami list-commands      # List every registered command
 npx blognami start-server       # Run the development server
+npx blognami start-repl         # Open an interactive REPL with the app loaded
 npx blognami generate-view      # Create a new view
 npx blognami generate-model     # Create a new model
+npx blognami generate-migration # Create a new database migration
 npx blognami generate-command   # Create a new command
 npx blognami generate-service   # Create a new service
+npx blognami generate-job       # Create a new background job
 npx blognami migrate-database   # Run pending database migrations
 npx blognami list-views         # List all registered views
 npx blognami list-services      # List all registered services
