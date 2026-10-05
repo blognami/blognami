@@ -4,7 +4,9 @@ export default {
     },
 
     async render(tableAdaptable, options = {}){
-        let { title, search } = options;
+        let { title, search, filters = [] } = options;
+
+        filters = filters.map(({ name, options }) => ({ name, options, value: this.params[name] ?? options[0]?.value }));
 
         const tableAdapter = await tableAdaptable.toTableAdapter({
             q: this.params.q,
@@ -20,6 +22,7 @@ export default {
         return this.renderView('_blognami/_table', {
             title,
             search,
+            filters,
             columns,
             rows,
             pageCount,
