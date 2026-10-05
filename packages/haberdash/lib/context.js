@@ -22,6 +22,9 @@ export const Context = Class.extend('context').include({
     fork(){
         const out = this.constructor.new();
         out.assignProps({ parent: this, root: this?.root });
+        if(this._serviceInterceptors){
+            out._serviceInterceptors = { ...this._serviceInterceptors };
+        }
         return out;
     },
 

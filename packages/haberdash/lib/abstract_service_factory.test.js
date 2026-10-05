@@ -38,3 +38,12 @@ test('a Consumerable resolves this.params through the inherited service', () => 
         assert.deepEqual(Consumer.new(context).params, { branch: 'foo' });
     });
 });
+
+test('a Consumerable in a forked context resolves an interceptor registered on the parent', () => {
+    ServiceFactory.register('greeter', { create(){ return () => 'real'; } });
+    return Context.new().run(context => {
+        context._serviceInterceptors = { greeter: () => () => 'intercepted' };
+        assert.equal(Consumer.new(context).greeter(), 'intercepted');
+        assert.equal(Consumer.new(context.fork()).greeter(), 'intercepted');
+    });
+});
