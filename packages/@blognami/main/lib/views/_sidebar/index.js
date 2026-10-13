@@ -48,8 +48,10 @@ export const styles = ({ colors, breakpointFor, remify }) => `
 export const decorators = {
     root(){
         const { pathname } = this.document.url;
+        let matched = false;
         this.findAll('a[href]').forEach(link => {
             if(link.attributes.href !== pathname) return;
+            matched = true;
             link.attributes['data-active'] = 'true';
             // Expand ancestors of the active link, but not the active link's own
             // branch — only links reached through a nested list count.
@@ -64,6 +66,19 @@ export const decorators = {
                 }
             }
         });
+
+        // With no active link, open the first section so the sidebar shows links.
+        // `find` searches breadth-first, so walk the root's children in order to
+        // get the first section in document order (an admin's editable area
+        // nests the top sections one level deeper than the rest).
+        const firstSection = !matched && this.children
+            .map(child => child.is('div[data-collapsed]') ? child : child.find('div[data-collapsed]'))
+            .find(Boolean);
+        if(firstSection){
+            firstSection.attributes['data-collapsed'] = 'false';
+            const toggle = firstSection.find('[aria-expanded]');
+            if(toggle) toggle.attributes['aria-expanded'] = 'true';
+        }
 
         const applyFilter = value => {
             const query = `${value}`.trim().toLowerCase();

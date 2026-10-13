@@ -8,8 +8,8 @@ test.describe('Admin - Basic page', () => {
   setupAdminTests();
 
   test.beforeEach(async ({ page, helpers }) => {
-    // The Top section is collapsed by default, so expand it before clicking
-    await page.getByTestId("sidebar").getByTestId("top").getByRole("button", { name: "Top" }).click();
+    // No sidebar link matches the home page, so the first (Top) section opens on load
+    await expect(page.getByTestId("sidebar").getByTestId("top")).toHaveAttribute("data-collapsed", "false");
     await page.getByTestId("sidebar").getByText("Osinski Extensions").click();
     await helpers.waitForPageToBeIdle();
     await expect(page.getByTestId("main").locator("h1")).toContainText("Osinski Extensions");
