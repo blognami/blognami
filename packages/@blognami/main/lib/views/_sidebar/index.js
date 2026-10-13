@@ -102,12 +102,15 @@ export const decorators = {
 
 export default {
     async render(){
-        const sections = await this.menus.content || [];
+        const { section = 'blog' } = this.params;
+        const sections = await this.menus[section] || [];
+
+        if(section !== 'blog' && sections.length === 0) return '';
 
         return this.renderHtml`
             <aside class="${this.cssClasses.root}" data-test-id="sidebar">
                 <input type="search" class="${this.cssClasses.filterInput}" placeholder="Filter…" aria-label="Filter navigation" data-test-id="sidebar-filter" autocomplete="off">
-                ${this.renderView('_sidebar/_top_section')}
+                ${section === 'blog' ? this.renderView('_sidebar/_top_section') : ''}
                 ${sections.map(section =>
                     this.renderView('_sidebar/_link_group_section', section)
                 )}

@@ -3,13 +3,13 @@ export default {
         this.addHook('initializeMenus', async function(){
             if(!await this.featureFlags.docs) return;
 
-            this.addMenuItem('user', {
+            this.addMenuItem('sections', {
                 label: 'Docs',
                 url: '/docs',
                 displayOrder: 4
             });
 
-            this.addMenuItem('content', {
+            this.addMenuItem('docs', {
                 label: 'Getting Started',
                 displayOrder: 1
             });

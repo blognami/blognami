@@ -293,7 +293,7 @@ export default {
             }
 
             for(const [path, viewName] of Object.entries(normalizedViewMap)) {
-                const { menu } = View.for(viewName).annotations || {};
+                const { menu, section } = View.for(viewName).annotations || {};
                 if(menu) {
                     const menuPath = [...menu.path];
                     const label = menuPath.pop();
@@ -304,7 +304,7 @@ export default {
                     if(menu.displayOrder !== undefined) {
                         menuItem.displayOrder = menu.displayOrder;
                     }
-                    out.push(['content', ...menuPath, menuItem]);
+                    out.push([section ?? 'blog', ...menuPath, menuItem]);
                 }
             }
             View.cache[cacheKey] = out;

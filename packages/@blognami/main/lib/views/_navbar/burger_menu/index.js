@@ -41,17 +41,22 @@ export const styles = ({ colors, shadow, breakpointFor, remify }) => `
 
 export default {
     async render(){
+        const { section } = this.params;
+        const sectionItems = await this.menus.sections || [];
+        const sectionMenuItems = section ? await this.menus[section] || [] : [];
         const userItems = await this.menus.user || [];
-        const contentItems = await this.menus.content || [];
 
         return this.renderHtml`
             <blognami-modal height="full">
                 <div class="${this.cssClasses.root}">
-                    ${userItems.map(item =>
+                    ${sectionItems.map(item =>
                         this.renderView('_navbar/burger_menu/_link_group_section', item)
                     )}
-                    ${this.renderView('_navbar/burger_menu/_top_section')}
-                    ${contentItems.map(item =>
+                    ${section === 'blog' ? this.renderView('_navbar/burger_menu/_top_section') : ''}
+                    ${sectionMenuItems.map(item =>
+                        this.renderView('_navbar/burger_menu/_link_group_section', item)
+                    )}
+                    ${userItems.map(item =>
                         this.renderView('_navbar/burger_menu/_link_group_section', item)
                     )}
                 </div>

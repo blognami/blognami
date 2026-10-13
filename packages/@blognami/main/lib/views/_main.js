@@ -34,7 +34,8 @@ export const styles = ({ breakpointFor, remify }) => `
 
 export default {
     async render(){
-        const { sidebar = this.renderView('_sidebar') } = this.params;
+        const { section } = this.params;
+        const sidebar = await (this.params.sidebar ?? this.renderView('_sidebar', { section }));
         const body = await this.params.body;
 
         const virtualDom = await this.parseHtml(body);

@@ -1,12 +1,14 @@
 
 export default {
     meta(){
-        this.addHook('render', function(){
-            return this.renderView('_navbar');
+        this.addHook('render', function({ section } = {}){
+            return this.renderView('_navbar', { section });
         })
     },
 
     render(){
-        return this.runHook('render');
+        const { section } = this.params;
+
+        return this.runHook('render', { args: [{ section }] });
     }
 }

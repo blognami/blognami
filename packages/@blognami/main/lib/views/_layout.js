@@ -15,15 +15,15 @@ export const styles = ({ colors }) => `
 
 export default {
    async render(){
-        const { meta = [], body, sidebar } = this.params;
+        const { meta = [], body, sidebar, section = 'blog' } = this.params;
 
         return this.renderView('_blognami/_shell', {
             meta,
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">
-                    ${this.renderView('_header')}
+                    ${this.renderView('_header', { section: sidebar === '' ? undefined : section })}
 
-                    ${this.renderView('_main', { body, sidebar })}
+                    ${this.renderView('_main', { body, sidebar, section })}
 
                     ${this.renderView('_footer')}
                 </div>

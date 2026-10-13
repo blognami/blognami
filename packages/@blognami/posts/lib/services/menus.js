@@ -25,7 +25,7 @@ export default {
                 const count = await this.database.posts.where({ tags: { name: tag.name } }).count();
                 const badgeText = count === 1 ? '1 post' : `${count} posts`;
 
-                this.addMenuItem('content', 'Tags', {
+                this.addMenuItem('blog', 'Tags', {
                     label: tag.name,
                     url: `/${tag.slug}`,
                     placeholder: '/_placeholders/tag',

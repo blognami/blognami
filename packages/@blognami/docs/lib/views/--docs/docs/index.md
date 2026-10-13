@@ -1,4 +1,5 @@
 ---
+section: docs
 menu:
     path: ["Getting Started", "Introduction"]
     displayOrder: 1

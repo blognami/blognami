@@ -48,7 +48,8 @@ export const styles = ({ colors, breakpointFor, remify }) => `
 
 export default {
     async render(){
-        const items = await this.menus.user || [];
+        const { section } = this.params;
+        const items = [...(await this.menus.sections || []), ...(await this.menus.user || [])];
 
         return this.renderHtml`
             <header class="${this.cssClasses.root}" id="blognami-scroll-top" data-test-id="navbar">
@@ -73,7 +74,7 @@ export default {
                                 `;
                             })}
                         </ul>
-                        ${this.renderView('_navbar/_burger_link')}
+                        ${this.renderView('_navbar/_burger_link', { section })}
                     </nav>
                 </div>
             </header>

@@ -1,4 +1,5 @@
 ---
+section: docs
 menu:
     path: ["Commands", "generate-project"]
 ---

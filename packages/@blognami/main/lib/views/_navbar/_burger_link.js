@@ -32,8 +32,11 @@ export const styles = ({ colors, breakpointFor, remify }) => `
 
 export default {
     render(){
+        const { section } = this.params;
+        const href = section ? `/_navbar/burger_menu?section=${encodeURIComponent(section)}` : '/_navbar/burger_menu';
+
         return this.renderHtml`
-            <a class="${this.cssClasses.root}" href="/_navbar/burger_menu" target="_overlay" data-test-id="navbar-burger">
+            <a class="${this.cssClasses.root}" href="${href}" target="_overlay" data-test-id="navbar-burger">
                 <span></span>
                 <span></span>
                 <span></span>
