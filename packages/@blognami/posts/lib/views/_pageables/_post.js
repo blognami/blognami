@@ -130,12 +130,12 @@ export default {
 
                     ${this.renderView('_meta_bar', {
                         body: this.renderHtml`
-                            By <a href="/${postUser.slug}" data-placeholder="/_placeholders/user">${postUser.name}</a>
+                            By <a href="/${postUser.slug}">${postUser.name}</a>
 
                             ${async () => {
                                 if(await post.tags.count() > 0) return this.renderHtml`
                                     in
-                                    ${post.tags.all().map(({ slug, name }, i) => this.renderHtml`${i > 0 ? ', ' : ''}<a href="/${slug}" data-placeholder="/_placeholders/tag"><em>${name}</em></a>`)}
+                                    ${post.tags.all().map(({ slug, name }, i) => this.renderHtml`${i > 0 ? ', ' : ''}<a href="/${slug}"><em>${name}</em></a>`)}
                                 `;
                             }}
                             ${(() => {
@@ -235,7 +235,7 @@ export default {
                         <div class="${this.cssClasses.navigationPrevious}">
                             ${(() => {
                                 if(previousPost) return this.renderHtml`
-                                    <a class="${this.cssClasses.navigationLink}" href="/${previousPost.slug}" data-placeholder="/_placeholders/post" data-test-id="previous-post">
+                                    <a class="${this.cssClasses.navigationLink}" href="/${previousPost.slug}" data-test-id="previous-post">
                                         <span class="${this.cssClasses.navigationLabel}">Previous post</span>
                                         <h4 class="${this.cssClasses.navigationTitle}">${previousPost.title}</h4>
                                     </a>
@@ -248,7 +248,7 @@ export default {
                         <div class="${this.cssClasses.navigationNext}">
                             ${(() => {
                                 if(nextPost) return this.renderHtml`
-                                    <a class="${this.cssClasses.navigationLink}" href="/${nextPost.slug}" data-placeholder="/_placeholders/post" data-test-id="next-post">
+                                    <a class="${this.cssClasses.navigationLink}" href="/${nextPost.slug}" data-test-id="next-post">
                                         <span class="${this.cssClasses.navigationLabel}">Next post</span>
                                         <h4 class="${this.cssClasses.navigationTitle}">${nextPost.title}</h4>
                                     </a>

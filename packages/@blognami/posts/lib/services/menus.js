@@ -28,7 +28,6 @@ export default {
                 this.addMenuItem('blog', 'Tags', {
                     label: tag.name,
                     url: `/${tag.slug}`,
-                    placeholder: '/_placeholders/tag',
                     badge: badgeText
                 });
             }

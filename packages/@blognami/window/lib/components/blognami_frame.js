@@ -15,6 +15,9 @@ Component.register('blognami-frame', {
         }
         
         if(loadOnInit) this.on('init', () => this.load());
+
+        const { defaultPlaceholder } = this.params;
+        if(defaultPlaceholder && this.document) this.document.preload(normalizeUrl(defaultPlaceholder, this.frame ? this.frame.url : window.location));
     },
 
     isFrame: true,
@@ -34,6 +37,10 @@ Component.register('blognami-frame', {
             url,
             this.url
         );
+    },
+
+    get defaultPlaceholder(){
+        return this.params.defaultPlaceholder;
     },
 
     status: 'complete',

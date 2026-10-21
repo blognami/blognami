@@ -6,6 +6,7 @@ export default {
             this.addMenuItem('sections', {
                 label: 'Docs',
                 url: '/docs',
+                placeholder: '/_placeholders/document?section=docs',
                 displayOrder: 4
             });
 

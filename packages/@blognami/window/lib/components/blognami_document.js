@@ -23,6 +23,10 @@ Component.register('blognami-document', {
     initialize(...args){    
         this.constructor.for('blognami-frame').prototype.initialize.call(this, ...args);
 
+        const overlayDefaultPlaceholder = this.head.find('meta[name="blognami-overlay-default-placeholder"]')?.params.content;
+        if(overlayDefaultPlaceholder) this.preload(normalizeUrl(overlayDefaultPlaceholder, this.url));
+        this.preloadDefaultPlaceholder();
+
         window.onpopstate = (event) => {
             this.load(event.state || window.location, { replace: true });
         };
@@ -75,6 +79,10 @@ Component.register('blognami-document', {
         return this.head.find('meta[name="blognami-load-cache-namespace"]')?.params.content ?? 'default';
     },
 
+    get defaultPlaceholder(){
+        return this.head.find('meta[name="blognami-default-placeholder"]')?.params.content;
+    },
+
     get globalStyles(){
         if(!this._globalStyles){
             try {
@@ -118,6 +126,8 @@ Component.register('blognami-document', {
             await this.constructor.for('blognami-frame').prototype.load.call(this, url, options);
         }
 
+        this.preloadDefaultPlaceholder();
+
         if(!this.url.hash) return;
 
         const targetElement = this.document.find(this.url.hash);
@@ -132,6 +142,12 @@ Component.register('blognami-document', {
         }
     
         window.scrollTo(0, scrollY);
+    },
+
+    preloadDefaultPlaceholder(){
+        if(this.defaultPlaceholder){
+            this.preload(normalizeUrl(this.defaultPlaceholder, this.url));
+        }
     },
 
     async preload(url){

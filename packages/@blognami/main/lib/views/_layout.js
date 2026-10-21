@@ -18,7 +18,10 @@ export default {
         const { meta = [], body, sidebar, section = 'blog' } = this.params;
 
         return this.renderView('_blognami/_shell', {
-            meta,
+            meta: [
+                ...meta,
+                { tagName: 'meta', name: 'blognami-default-placeholder', content: `/_placeholders/document?section=${section}` }
+            ],
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">
                     ${this.renderView('_header', { section: sidebar === '' ? undefined : section })}

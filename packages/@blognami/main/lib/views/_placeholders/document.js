@@ -21,11 +21,13 @@ export const styles = ({ breakpointFor, remify }) => `
     }
 `;
 
-const rem = px => `${px / 16}rem`;
-
 export default {
+    convertPixelsToRem(px){
+        return `${px / 16}rem`;
+    },
+
     render(){
-        const line = (width, height) => this.renderHtml`<blognami-skeleton width="${width}" height="${rem(height)}"></blognami-skeleton>`;
+        const line = (width, height) => this.renderHtml`<blognami-skeleton width="${width}" height="${this.convertPixelsToRem(height)}"></blognami-skeleton>`;
 
         const paragraph = (...widths) => this.renderHtml`
             <div class="${this.cssClasses.paragraph}">
@@ -34,7 +36,8 @@ export default {
         `;
 
         return this.renderView('_layout', {
-            meta: [{ title: "Loading post..." }],
+            section: this.params.section,
+            meta: [{ title: "Loading..." }],
             body: this.renderHtml`
                 <section>
                     ${this.renderView('_meta_bar', {

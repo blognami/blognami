@@ -42,7 +42,7 @@ Component.register('blognami-form', {
             const currentHash = JSON.stringify(valuesToWatch.call(this));
             if(frame._previousHash == currentHash) return;
             frame._previousHash = currentHash;
-            loadFrame.call(this, { target, method: 'PATCH', url: action });
+            loadFrame.call(this, { target, method: 'PATCH', url: action, placeholderUrl: '' });
         }, 100);
     },
 

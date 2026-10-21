@@ -25,7 +25,7 @@ export default {
                 <section>
                     ${this.renderView('_meta_bar', {
                         body: this.renderHtml`
-                            By <a href="/${pageUser.slug}" data-placeholder="/_placeholders/user">${pageUser.name}</a>
+                            By <a href="/${pageUser.slug}">${pageUser.name}</a>
                             —
                             <time datetime="${this.formatDate(page.publishedAt, 'yyyy-MM-dd')}" data-test-id="page-published-at">${this.formatDate(page.publishedAt)}</time>
                         `

@@ -22,8 +22,7 @@ export default {
             body: this.renderRedirect({
                 url: `/_actions/guest/newsletter_subscription_holding_page?action=poll&subscribableId=${encodeURIComponent(subscribableId)}&userId=${encodeURIComponent(userId)}&returnUrl=${encodeURIComponent(returnUrl)}`,
                 method: 'post',
-                target: '_overlay',
-                placeholder: '/_placeholders/overlay'
+                target: '_overlay'
             })
         });
     }

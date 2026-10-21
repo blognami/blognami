@@ -32,7 +32,7 @@ export const styles = ({ colors, remify }) => `
 
 export default {
     render(){
-        const { url, target, label, testId, preload, activeHighlight, isPrimary, primaryColor } = this.params;
+        const { url, target, label, testId, preload, activeHighlight, isPrimary, primaryColor, placeholder } = this.params;
 
         const isActive = activeHighlight !== false && this.initialParams._url.pathname === url;
 
@@ -50,6 +50,7 @@ export default {
             target: target,
             'data-test-id': testId,
             'data-preload': preload ? 'true' : null,
+            'data-placeholder': placeholder || null,
             body: label
         });
     }

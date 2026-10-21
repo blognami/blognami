@@ -28,7 +28,9 @@ export function loadFrame({ confirm, target, method, url, placeholderUrl, values
     let frame;
     
     if(target == '_overlay'){
-        frame = this.document.descendants.find(node => node.is('body')).append(`<blognami-overlay load-on-init="false"></blognami-overlay>`).pop();
+        const defaultPlaceholder = this.document.head.find('meta[name="blognami-overlay-default-placeholder"]')?.params.content;
+        const defaultPlaceholderAttribute = defaultPlaceholder ? ` default-placeholder="${defaultPlaceholder.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"` : '';
+        frame = this.document.descendants.find(node => node.is('body')).append(`<blognami-overlay load-on-init="false"${defaultPlaceholderAttribute}></blognami-overlay>`).pop();
         frame._parent = this;
         this._overlayChild = frame;
     } else if(target) {
@@ -44,6 +46,7 @@ export function loadFrame({ confirm, target, method, url, placeholderUrl, values
         return;
     }
 
+    if(placeholderUrl === undefined) placeholderUrl = frame.defaultPlaceholder;
     if(placeholderUrl) placeholderUrl = normalizeUrl(placeholderUrl, this.frame.url);
 
     if(method.match(/POST|PUT|PATCH/i)){

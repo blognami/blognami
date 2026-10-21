@@ -173,6 +173,7 @@ export default {
         { tagName: 'meta', charset: 'utf-8' },
         { tagName: 'meta', name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { tagName: 'meta', name: 'blognami-load-cache-namespace', content: 'guest' },
+        { tagName: 'meta', name: 'blognami-overlay-default-placeholder', content: '/_placeholders/overlay' },
     ],
 
     mergeMeta(meta){
