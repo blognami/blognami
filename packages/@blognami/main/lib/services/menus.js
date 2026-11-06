@@ -58,26 +58,26 @@ export default {
             }
 
             this.addMenuItem('user', {
-                label: user.name,
+                label: 'Account',
                 testId: 'your-account',
                 displayOrder: 300
             });
 
-            this.addMenuItem('user', user.name, {
+            this.addMenuItem('user', 'Account', {
                 label: 'Profile',
                 url: `/${user.slug}`,
                 target: '_top',
                 testId: 'profile'
             });
 
-            this.addMenuItem('user', user.name, {
+            this.addMenuItem('user', 'Account', {
                 label: 'Notification preferences',
                 url: '/_actions/user/edit_user_notification_preferences',
                 target: '_overlay',
                 testId: 'edit-user-notification-preferences'
             });
 
-            this.addMenuItem('user', user.name, {
+            this.addMenuItem('user', 'Account', {
                 label: 'Sign out',
                 url: '/_actions/guest/sign_out',
                 target: '_overlay',
@@ -94,7 +94,7 @@ export default {
                     `Are you sure you want to cancel your subscription? You will lose access to members only content.`
                 );
 
-                this.addMenuItem('user', user.name, {
+                this.addMenuItem('user', 'Account', {
                     label: `Cancel newsletter subscription (${isPaid ? 'paid' : 'free'})`,
                     url: `/_actions/user/unsubscribe?subscribableId=${await this.database.newsletter.id}`,
                     target: '_overlay',

@@ -8,7 +8,7 @@ export function describeNavbar(role) {
         await expect(page.getByTestId("navbar").getByTestId("find")).toContainText("Find");
         await expect(page.getByTestId("navbar").getByTestId("add")).toContainText("Add");
         await expect(page.getByTestId("navbar").getByTestId("settings")).toContainText("Settings");
-        await expect(page.getByTestId("navbar").getByTestId("your-account")).toContainText("Admin");
+        await expect(page.getByTestId("navbar").getByTestId("your-account")).toContainText("Account");
       } else {
         await expect(page.getByTestId("navbar").getByTestId("sign-in")).toContainText("Sign in");
       }
