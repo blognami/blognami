@@ -5,6 +5,35 @@ export const styles = ({ colors, breakpointFor, remify }) => `
         text-align: right;
     }
 
+    .featured-image {
+        display: block;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+        margin-bottom: ${remify(20)};
+    }
+
+    .meta-featured-image {
+        width: ${remify(64)};
+        height: ${remify(36)};
+        object-fit: cover;
+        vertical-align: middle;
+    }
+
+    .byline-blog {
+        display: inline-flex;
+        align-items: center;
+        gap: ${remify(6)};
+        vertical-align: middle;
+    }
+
+    .byline-logo {
+        width: ${remify(20)};
+        height: ${remify(20)};
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
     .navigation {
         padding-top: ${remify(32)};
         margin-top: ${remify(80)};
@@ -76,7 +105,13 @@ export default {
         const { post } = this.params;
 
         const postUser = await post.user;
-    
+
+        const logoImage = await this.database.site.logoImage;
+
+        const featuredImage = await post.featuredImage;
+
+        const siteTitle = await this.database.site.title;
+
         const previousPost = await this.database.posts.where({ idNe: post.id, publishedAtLt: post.publishedAt }).orderBy('publishedAt', 'desc').first();
     
         const nextPost = await  this.database.posts.where({ idNe: post.id, publishedAtGt: post.publishedAt }).orderBy('publishedAt', 'asc').first();
@@ -93,6 +128,12 @@ export default {
         const meta = [];
         meta.push({ title: post.metaTitle || post.title });
         if(post.metaDescription) meta.push({ name: 'description', content: post.metaDescription });
+        if(featuredImage){
+            const content = new URL(`/${featuredImage.slug}`, this.initialParams._url).href;
+            meta.push({ property: 'og:image', content });
+            meta.push({ name: 'twitter:image', content });
+            meta.push({ name: 'twitter:card', content: 'summary_large_image' });
+        }
 
         const userHasAccess = post.access == 'public' || await this.database.newsletter.isSubscribed(user, { tier: post.access });
 
@@ -128,8 +169,19 @@ export default {
                         `;
                     }}
 
+                    ${(() => {
+                        if(featuredImage) return this.renderHtml`
+                            <img class="${this.cssClasses.featuredImage}" src="/${featuredImage.slug}" alt="" data-test-id="post-featured-image">
+                        `;
+                    })()}
+
                     ${this.renderView('_meta_bar', {
                         body: this.renderHtml`
+                            ${(() => {
+                                if(logoImage) return this.renderHtml`
+                                    <a class="${this.cssClasses.bylineBlog}" href="/" data-test-id="post-byline-blog"><img class="${this.cssClasses.bylineLogo}" src="/${logoImage.slug}" alt="${siteTitle}" data-test-id="post-byline-logo"> ${siteTitle}</a> ·
+                                `;
+                            })()}
                             By <a href="/${postUser.slug}">${postUser.name}</a>
 
                             ${async () => {
@@ -185,6 +237,7 @@ export default {
                                                     <p><b>Meta description:</b> ${post.metaDescription}</p>
                                                     <p><b>Slug:</b> ${post.slug}</p>
                                                     <p><b>Enable comments:</b> ${post.enableComments ? 'true' : 'false'}</p>
+                                                    <p><b>Featured image:</b> ${featuredImage ? this.renderHtml`<img class="${this.cssClasses.metaFeaturedImage}" src="/${featuredImage.slug}" alt="" data-test-id="post-meta-featured-image">` : 'none'}</p>
                                                 `,
                                                 linkTestId: "edit-post-meta",
                                                 bodyTestId: "post-meta"

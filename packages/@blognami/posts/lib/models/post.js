@@ -8,8 +8,10 @@ export default {
         this.include('tagable');
         this.include('commentable');
         this.include('revisable');
-        
+        this.include('imageable');
+
         this.belongsTo('user');
+        this.belongsTo('featuredImage', { collectionName: 'images' });
 
         this.mustNotBeBlank('userId');
         this.mustNotBeBlank('title');
@@ -20,12 +22,27 @@ export default {
             }
         });
 
+        this.addHook('beforeDelete', async function(){
+            if(!this.featuredImageId) return;
+            const featuredImage = await this.database.images.where({ id: this.featuredImageId }).first();
+            if(featuredImage) await featuredImage.delete();
+        });
+
         this.scope('usedAsSitemappable', function(enabled = false){
             if(!enabled) return;
             return this.where({ published: true, access: 'public' });
         });
 
         this.trackRevisionsFor('body');
+        this.addImageField('featured');
+    },
+
+    set featured(file){
+        this.buildPendingImage('featured', file);
+    },
+
+    set removeFeatured(value){
+        this._removeFeatured = `${value}` == 'true';
     },
 
     get readingMinutes(){

@@ -5,7 +5,20 @@ export const styles = ({ colors, fonts, breakpointFor, remify }) => `
     }
 
     .post-link {
-        display: block;
+        display: flex;
+        gap: ${remify(24)};
+    }
+
+    .post-text {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .post-thumbnail {
+        flex-shrink: 0;
+        width: ${remify(64)};
+        height: ${remify(64)};
+        object-fit: cover;
     }
 
     .post-link:hover {
@@ -74,6 +87,11 @@ export const styles = ({ colors, fonts, breakpointFor, remify }) => `
         .post + .post {
             margin-top: ${remify(80)};
         }
+
+        .post-thumbnail {
+            width: ${remify(84)};
+            height: ${remify(84)};
+        }
     }
 `;
 
@@ -81,29 +99,43 @@ export default {
     async render(){
         const { posts, compact = false, loadMoreUrl } = this.params;
 
+        const allPosts = await posts.all();
+        const featuredImageIds = allPosts.map(post => post.featuredImageId).filter(id => id);
+        const images = featuredImageIds.length > 0
+            ? await this.database.images.where({ id: featuredImageIds }).all()
+            : [];
+        const imageById = new Map(images.map(image => [image.id, image]));
+
         return  this.renderHtml`
             <div class="${compact ? this.cssClasses.compact :  ''}">
-                ${this.params.posts.all().map(({ slug, title, excerptFromBody, readingMinutes, publishedAt } ) => this.renderHtml`
+                ${allPosts.map(({ slug, title, excerptFromBody, readingMinutes, publishedAt, featuredImageId } ) => this.renderHtml`
                     <article class="${this.cssClasses.post}">
                         <a class="${this.cssClasses.postLink}" href="/${slug}">
-                            <header class="${this.cssClasses.postHeader}">
-                                <h2 class="${this.cssClasses.postTitle}">${title}</h2>
-                            </header>
+                            <div class="${this.cssClasses.postText}">
+                                <header class="${this.cssClasses.postHeader}">
+                                    <h2 class="${this.cssClasses.postTitle}">${title}</h2>
+                                </header>
             
-                            <div class="${this.cssClasses.postExcerpt}">${excerptFromBody}</div>
+                                <div class="${this.cssClasses.postExcerpt}">${excerptFromBody}</div>
             
-                            <footer class="${this.cssClasses.postMeta}">
-                                ${() => {
-                                    if(publishedAt) return this.renderHtml`
-                                        <time class="${this.cssClasses.postDate}" datetime="${this.formatDate(publishedAt, 'yyyy-MM-dd')}" data-test-id="post-published-at">${this.formatDate(publishedAt)}</time>
-                                        —
-                                    `;
-                                }}
+                                <footer class="${this.cssClasses.postMeta}">
+                                    ${() => {
+                                        if(publishedAt) return this.renderHtml`
+                                            <time class="${this.cssClasses.postDate}" datetime="${this.formatDate(publishedAt, 'yyyy-MM-dd')}" data-test-id="post-published-at">${this.formatDate(publishedAt)}</time>
+                                            —
+                                        `;
+                                    }}
                                 
-                                <span class="${this.cssClasses.postMetaWrapper}">
-                                    <span class="${this.cssClasses.postDuration}">${readingMinutes} min read</span>
-                                </span>
-                            </footer>
+                                    <span class="${this.cssClasses.postMetaWrapper}">
+                                        <span class="${this.cssClasses.postDuration}">${readingMinutes} min read</span>
+                                    </span>
+                                </footer>
+                            </div>
+
+                            ${() => {
+                                const image = imageById.get(featuredImageId);
+                                if(image) return this.renderHtml`<img class="${this.cssClasses.postThumbnail}" src="/${image.slug}" alt="" data-test-id="post-thumbnail">`;
+                            }}
                         </a>
                     </article>
                 `)}
