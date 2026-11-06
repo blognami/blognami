@@ -13,18 +13,23 @@ export const styles = ({ colors, remify }) => `
     .icon {
         width: ${remify(32)};
         height: ${remify(32)};
-        color: ${colors.semantic.accent};
+        border-radius: 50%;
+        object-fit: cover;
     }
 `;
 
 export default {
     async render(){
         this.title = await this.database.site.title;
+        this.logoImage = await this.database.site.logoImage;
 
         await this.runHook('beforeRender');
 
         return this.renderHtml`
             <a href="/" class="${this.cssClasses.root}" data-test-id="title">
+                ${this.logoImage ? this.renderHtml`
+                    <img class="${this.cssClasses.icon}" src="/${this.logoImage.slug}" alt="${this.title}">
+                ` : undefined}
                 ${this.title}
             </a>
         `;

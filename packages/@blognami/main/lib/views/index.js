@@ -9,9 +9,15 @@ export default {
 
         const isAdmin = user?.role == 'admin';
 
+        const site = await this.database.site;
+
         const meta = [];
-        meta.push({ title: home.metaTitle || await this.database.site.title });
-        if(home.metaDescription) meta.push({ name: 'description', content: home.metaDescription });
+        meta.push({ title: home.metaTitle || site.title });
+        const description = home.metaDescription || site.description;
+        if(description){
+            meta.push({ name: 'description', content: description });
+            meta.push({ property: 'og:description', content: description });
+        }
 
         const body = isAdmin ? this.renderView('_tabs', {
             tabs: [
@@ -38,6 +44,7 @@ export default {
 
         return this.renderView('_layout', {
             meta,
+            banner: this.renderView('_cover_banner'),
             body
         });
     }

@@ -8,6 +8,9 @@ export default {
     meta(){
         this.include('singleton');
         this.include('revisable');
+        this.include('imageable');
+        this.belongsTo('logoImage', { collectionName: 'images' });
+        this.belongsTo('coverImage', { collectionName: 'images' });
 
         this.addHook('beforeInsert', function(){
             if(this.salt) return;
@@ -15,6 +18,24 @@ export default {
         });
 
         this.trackRevisionsFor('navigation');
+        this.addImageField('logo');
+        this.addImageField('cover');
+    },
+
+    set logo(file){
+        this.buildPendingImage('logo', file);
+    },
+
+    set removeLogo(value){
+        this._removeLogo = `${value}` == 'true';
+    },
+
+    set cover(file){
+        this.buildPendingImage('cover', file);
+    },
+
+    set removeCover(value){
+        this._removeCover = `${value}` == 'true';
     },
 
     async generatePassword(salt){

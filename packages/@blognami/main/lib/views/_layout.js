@@ -15,7 +15,7 @@ export const styles = ({ colors }) => `
 
 export default {
    async render(){
-        const { title, meta = [], body, sidebar, section = 'blog' } = this.params;
+        const { title, meta = [], body, sidebar, banner, section = 'blog' } = this.params;
 
         return this.renderView('_blognami/_shell', {
             meta: [
@@ -26,6 +26,8 @@ export default {
             body: this.renderHtml`
                 <div class="${this.cssClasses.root}">
                     ${this.renderView('_header', { section: sidebar === '' ? undefined : section })}
+
+                    ${banner}
 
                     ${this.renderView('_main', { body, sidebar, section })}
 
