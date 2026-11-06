@@ -23,27 +23,36 @@ export default {
                 await this.database.site.navigation
             )
         );
+        const preamble = [];
         const sections = {};
-        let currentSection = 'Top';
+        let currentSection = null;
         for(const child of body.children) {
             if(child.type === 'h2') {
                 currentSection = child.text;
                 continue;
             }
-            sections[currentSection] ??= [];
+            let target = preamble;
+            if(currentSection !== null){
+                target = sections[currentSection] ??= [];
+            }
             if(child.type == 'ul'){
-                sections[currentSection].push(
+                target.push(
                     this.renderView('_navbar/burger_menu/_link_group', {
                         children: this.extractListItems(child)
                     })
                 );
                 continue;
             }
-            sections[currentSection].push(
+            target.push(
                 this.renderHtml(child)
             );
         }
         const out = [];
+        if(preamble.length){
+            out.push(this.renderHtml`
+                <div>${preamble}</div>
+            `);
+        }
         for(const [ label, body ] of Object.entries(sections)){
             out.push(
                 this.renderView('_navbar/burger_menu/_section', { label, body })

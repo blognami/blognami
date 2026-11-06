@@ -78,11 +78,11 @@ export default {
         const { label, body, testId, count } = this.params;
 
         return this.renderHtml`
-            <div class="${this.cssClasses.root}" ${testId ? this.renderHtml`data-test-id="${testId}"` : ''} data-collapsed="true">
+            <div class="${this.cssClasses.root}" ${testId ? this.renderHtml`data-test-id="${testId}"` : ''} data-collapsed="false">
                 <h2 class="${this.cssClasses.label}"><button
                     type="button"
                     class="${this.cssClasses.collapseToggle}"
-                    aria-expanded="false"
+                    aria-expanded="true"
                 ><svg class="${this.cssClasses.chevron}" width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>${label}</span>${count ? this.renderHtml`<span class="${this.cssClasses.count}" aria-hidden="true">${count}</span>` : ''}</button></h2>
                 <div class="${this.cssClasses.body}">${body}</div>
             </div>

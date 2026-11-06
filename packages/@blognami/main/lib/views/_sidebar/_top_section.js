@@ -1,4 +1,19 @@
 
+export const styles = ({ colors, remify }) => `
+    .preamble > p {
+        margin: ${remify(2)} 0 ${remify(6)};
+        padding: ${remify(2)} ${remify(6)};
+        font-size: ${remify(14)};
+        line-height: 1.55;
+        color: ${colors.gray[700]};
+        text-wrap: pretty;
+    }
+
+    .preamble[data-filter-hidden="true"] {
+        display: none;
+    }
+`;
+
 export default {
     async render(){
         let user;
@@ -24,30 +39,41 @@ export default {
                 await this.database.site.navigation
             )
         );
+        const preamble = [];
         const sections = {};
         const counts = {};
-        let currentSection = 'Top';
+        let currentSection = null;
         for(const child of body.children) {
             if(child.type === 'h2') {
                 currentSection = child.text;
                 continue;
             }
-            sections[currentSection] ??= [];
+            let target = preamble;
+            if(currentSection !== null){
+                target = sections[currentSection] ??= [];
+            }
             if(child.type == 'ul'){
                 const items = this.extractListItems(child);
-                counts[currentSection] = (counts[currentSection] || 0) + this.countLinks(items);
-                sections[currentSection].push(
+                if(currentSection !== null){
+                    counts[currentSection] = (counts[currentSection] || 0) + this.countLinks(items);
+                }
+                target.push(
                     this.renderView('_sidebar/_link_group', {
                         children: items
                     })
                 );
                 continue;
             }
-            sections[currentSection].push(
+            target.push(
                 this.renderHtml(child)
             );
         }
         const out = [];
+        if(preamble.length){
+            out.push(this.renderHtml`
+                <div class="${this.cssClasses.preamble}" data-test-id="top">${preamble}</div>
+            `);
+        }
         for(const [ label, body ] of Object.entries(sections)){
             out.push(
                 this.renderView('_sidebar/_section', {

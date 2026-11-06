@@ -77,7 +77,6 @@ export function describeNavbar(role) {
 export function describeSidebar(role) {
   test.describe("sidebar", () => {
     test(`should have the correct contents`, async ({ page, helpers }) => {
-      await expect(page.getByTestId("sidebar").getByTestId("top")).toContainText("Top");
       await expect(page.getByTestId("sidebar").getByTestId("top")).toContainText("Provident itaque iste.");
 
       await expect(page.getByTestId("sidebar").getByTestId("tags")).toContainText("Tags");

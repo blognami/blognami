@@ -145,7 +145,7 @@ export default {
                     const hasChildren = link.children && link.children.length > 0;
 
                     return this.renderHtml`
-                        <li${hasChildren ? this.renderHtml` data-collapsed="true"` : ''}>
+                        <li${hasChildren ? this.renderHtml` data-collapsed="false"` : ''}>
                             ${() => {
                                 if (url) {
                                     const anchor = this.renderHtml`<a href="${url}" class="${this.cssClasses.link}"${link.placeholder ? this.renderHtml` data-placeholder="${link.placeholder}"` : ''}>
@@ -158,7 +158,7 @@ export default {
                                         <button
                                             type="button"
                                             class="${this.cssClasses.collapseToggle} ${this.cssClasses.chevronButton}"
-                                            aria-expanded="false"
+                                            aria-expanded="true"
                                             aria-label="Toggle ${label}"
                                         >${this.renderChevron()}</button>
                                     </div>`;
@@ -167,7 +167,7 @@ export default {
                                     return this.renderHtml`<button
                                         type="button"
                                         class="${this.cssClasses.link} ${this.cssClasses.collapseToggle} ${this.cssClasses.toggleRow}"
-                                        aria-expanded="false"
+                                        aria-expanded="true"
                                     >
                                         <span class="${this.cssClasses.linkLabel}">${label}</span>
                                         <span class="${this.cssClasses.rowEnd}">

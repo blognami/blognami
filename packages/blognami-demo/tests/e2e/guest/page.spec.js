@@ -8,8 +8,7 @@ test.describe('Guest - Basic page', () => {
   setupGuestTests();
 
   test.beforeEach(async ({ page, helpers }) => {
-    // No sidebar link matches the home page, so the first (Top) section opens on load
-    await expect(page.getByTestId("sidebar").getByTestId("top")).toHaveAttribute("data-collapsed", "false");
+    await expect(page.getByTestId("sidebar").getByText("Osinski Extensions")).toBeVisible();
     await page.getByTestId("sidebar").getByText("Osinski Extensions").click();
     await helpers.waitForPageToBeIdle();
     await expect(page.getByTestId("main").locator("h1")).toContainText("Osinski Extensions");

@@ -1,3 +1,4 @@
+const FILTER_LINK_THRESHOLD = 15;
 
 export const styles = ({ colors, breakpointFor, remify }) => `
     .root {
@@ -48,42 +49,15 @@ export const styles = ({ colors, breakpointFor, remify }) => `
 export const decorators = {
     root(){
         const { pathname } = this.document.url;
-        let matched = false;
         this.findAll('a[href]').forEach(link => {
             if(link.attributes.href !== pathname) return;
-            matched = true;
             link.attributes['data-active'] = 'true';
-            // Expand ancestors of the active link, but not the active link's own
-            // branch — only links reached through a nested list count.
-            let sawList = false;
-            for(const ancestor of link.parents){
-                if(ancestor.node === this.node) break;
-                if(ancestor.is('ul')) sawList = true;
-                if(sawList && ancestor.is('[data-collapsed]')){
-                    ancestor.attributes['data-collapsed'] = 'false';
-                    const toggle = ancestor.find('[aria-expanded]');
-                    if(toggle) toggle.attributes['aria-expanded'] = 'true';
-                }
-            }
         });
-
-        // With no active link, open the first section so the sidebar shows links.
-        // `find` searches breadth-first, so walk the root's children in order to
-        // get the first section in document order (an admin's editable area
-        // nests the top sections one level deeper than the rest).
-        const firstSection = !matched && this.children
-            .map(child => child.is('div[data-collapsed]') ? child : child.find('div[data-collapsed]'))
-            .find(Boolean);
-        if(firstSection){
-            firstSection.attributes['data-collapsed'] = 'false';
-            const toggle = firstSection.find('[aria-expanded]');
-            if(toggle) toggle.attributes['aria-expanded'] = 'true';
-        }
 
         const applyFilter = value => {
             const query = `${value}`.trim().toLowerCase();
             this.attributes['data-filtering'] = query ? 'true' : 'false';
-            const sections = this.findAll('div[data-collapsed]');
+            const sections = this.findAll('div[data-collapsed], [data-test-id="top"]');
             const branches = this.findAll('li');
             if(!query){
                 [...sections, ...branches].forEach(item => item.attributes['data-filter-hidden'] = 'false');
@@ -99,7 +73,7 @@ export const decorators = {
                 [branch, ...branch.findAll('li')].forEach(item => item.attributes['data-filter-hidden'] = 'false');
                 for(const ancestor of branch.parents){
                     if(ancestor.node === this.node) break;
-                    if(ancestor.is('li') || ancestor.is('div[data-collapsed]')){
+                    if(ancestor.is('li') || ancestor.is('div[data-collapsed]') || ancestor.is('[data-test-id="top"]')){
                         ancestor.attributes['data-filter-hidden'] = 'false';
                     }
                 }
@@ -116,15 +90,35 @@ export const decorators = {
 };
 
 export default {
+    countLinks(items){
+        return (items || []).reduce(
+            (total, item) => total + (item.url ? 1 : 0) + this.countLinks(item.children), 0
+        );
+    },
+
+    countAnchors(node){
+        return (node.type === 'a' && node.attributes.href ? 1 : 0)
+            + (node.children || []).reduce((total, child) => total + this.countAnchors(child), 0);
+    },
+
     async render(){
         const { section = 'blog' } = this.params;
         const sections = await this.menus[section] || [];
 
         if(section !== 'blog' && sections.length === 0) return '';
 
+        let linkCount = sections.reduce((total, section) => total + this.countLinks(section.children), 0);
+        if(section === 'blog'){
+            linkCount += this.countAnchors(await this.parseHtml(
+                await this.renderMarkdown(await this.database.site.navigation)
+            ));
+        }
+
         return this.renderHtml`
             <aside class="${this.cssClasses.root}" data-test-id="sidebar">
-                <input type="search" class="${this.cssClasses.filterInput}" placeholder="Filter…" aria-label="Filter navigation" data-test-id="sidebar-filter" autocomplete="off">
+                ${linkCount >= FILTER_LINK_THRESHOLD ? this.renderHtml`
+                    <input type="search" class="${this.cssClasses.filterInput}" placeholder="Filter…" aria-label="Filter navigation" data-test-id="sidebar-filter" autocomplete="off">
+                ` : ''}
                 ${section === 'blog' ? this.renderView('_sidebar/_top_section') : ''}
                 ${sections.map(section =>
                     this.renderView('_sidebar/_link_group_section', section)
