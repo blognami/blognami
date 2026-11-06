@@ -97,7 +97,8 @@ class PageHelpers {
     await this.page.locator('[name="cardExpiry"]').fill('12/34');
     await this.page.locator('[name="cardCvc"]').fill('123');
     await this.page.locator('[name="billingName"]').fill(billingName);
-    await this.page.locator('[name="billingPostalCode"]').fill('12345');
+    await this.page.locator('[name="billingCountry"]').selectOption('GB');
+    await this.page.locator('[name="billingPostalCode"]').fill('W1A 1AA');
     await this.page.getByRole('button', { name: /subscribe|pay/i }).click();
 
     await this.page.waitForURL(/127\.0\.0\.1:3000/, { timeout: 60000 });
