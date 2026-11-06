@@ -70,7 +70,7 @@ export const styles = ({ remify }) => `
         font-weight: normal;
         padding: 1em;
         margin: 0;
-        line-height: 0;
+        line-height: 1.5;
         border: ${remify(1)} solid #dbdbdb;
     }
 
