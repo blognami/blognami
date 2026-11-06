@@ -15,10 +15,11 @@ export const styles = ({ colors }) => `
 
 export default {
    async render(){
-        const { meta = [], body, sidebar, section = 'blog' } = this.params;
+        const { title, meta = [], body, sidebar, section = 'blog' } = this.params;
 
         return this.renderView('_blognami/_shell', {
             meta: [
+                ...(title ? [{ title }] : []),
                 ...meta,
                 { tagName: 'meta', name: 'blognami-default-placeholder', content: `/_placeholders/document?section=${section}` }
             ],

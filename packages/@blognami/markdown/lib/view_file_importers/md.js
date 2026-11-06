@@ -4,6 +4,8 @@ import Yaml from 'js-yaml';
 
 import { View } from 'blognami';
 
+import { titleFromMarkdown } from './title_from_markdown.js';
+
 View.FileImporter.register('md', {
     async importFile(){
         let extractParamsPromise;
@@ -33,8 +35,11 @@ View.FileImporter.register('md', {
             },
 
             async extractParams(){
-                return { 
-                    ...frontMatter, 
+                const hasTitle = frontMatter.title || frontMatter.meta?.some(entry => entry?.title);
+                const title = hasTitle ? undefined : await titleFromMarkdown(body);
+                return {
+                    ...frontMatter,
+                    ...(title ? { title } : {}),
                     body: this.renderView('_blognami/_content', {
                         body: this.renderMarkdown(body, { allowHtml: true })
                     })

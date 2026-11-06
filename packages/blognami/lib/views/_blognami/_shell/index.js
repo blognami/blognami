@@ -156,6 +156,8 @@ export default {
 
         await this.runHook('beforeRender');
 
+        if(!this.hasTitle()) this.meta.push({ title: this.initialParams._url.hostname });
+
         return this.renderHtml`
             <!DOCTYPE html>
             <html lang="${language}">
@@ -175,6 +177,10 @@ export default {
         { tagName: 'meta', name: 'blognami-load-cache-namespace', content: 'guest' },
         { tagName: 'meta', name: 'blognami-overlay-default-placeholder', content: '/_placeholders/overlay' },
     ],
+
+    hasTitle(){
+        return this.mergeMeta(this.meta).some(({ tagName, body }) => tagName == 'title' && `${body ?? ''}`.trim() != '');
+    },
 
     mergeMeta(meta){
         let out = {};
