@@ -5,6 +5,7 @@ on: push
 jobs:
   test:
     name: Test
+    if: ${{ !startsWith(github.event.head_commit.message, 'docs:') }}
     runs-on: ubuntu-latest
     services:
       mysql:
@@ -13,12 +14,56 @@ jobs:
           MYSQL_ALLOW_EMPTY_PASSWORD: yes
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        # The data directory lives in memory: the tests drop and recreate the schema hundreds of times, and InnoDB DDL on disk is what makes that slow.
+        options: --tmpfs /var/lib/mysql --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     strategy:
       matrix:
         node: [22.x, 24.x]
         database-adapter: [mysql, sqlite]
         tenancy: [single, multi]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: npm install
+      - name: Relax MySQL durability
+        if: ${{ matrix.database-adapter == 'mysql' }}
+        run: mysql -h 127.0.0.1 -u root -e "SET GLOBAL innodb_flush_log_at_trx_commit = 0; SET GLOBAL sync_binlog = 0;"
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} JOB_PROCESSING=distributed npm run test:unit
+        env:
+          CI: true
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} JOB_PROCESSING=distributed npm run test:services
+        env:
+          CI: true
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} JOB_PROCESSING=distributed npm run test:models
+        env:
+          CI: true
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} JOB_PROCESSING=distributed npm run test:cli
+        env:
+          CI: true
+
+  e2e:
+    name: E2E ${{ matrix.shard }}
+    if: ${{ !startsWith(github.event.head_commit.message, 'docs:') }}
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --tmpfs /var/lib/mysql --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [22.x, 24.x]
+        database-adapter: [mysql, sqlite]
+        tenancy: [single, multi]
+        # Each shard is a whole run against its own server and database; Playwright splits the tests between them.
+        shard: [1/4, 2/4, 3/4, 4/4]
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node }}
@@ -34,7 +79,10 @@ jobs:
           echo "deb [signed-by=/usr/share/keyrings/stripe.gpg] https://packages.stripe.dev/stripe-cli-debian-local stable main" | sudo tee -a /etc/apt/sources.list.d/stripe.list
           sudo apt update
           sudo apt install stripe
-      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} JOB_PROCESSING=distributed npm run test
+      - name: Relax MySQL durability
+        if: ${{ matrix.database-adapter == 'mysql' }}
+        run: mysql -h 127.0.0.1 -u root -e "SET GLOBAL innodb_flush_log_at_trx_commit = 0; SET GLOBAL sync_binlog = 0;"
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} JOB_PROCESSING=distributed npm run test:e2e -- --shard=${{ matrix.shard }}
         env:
           CI: true
           STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}
@@ -42,15 +90,13 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report-${{ matrix.node }}-${{ matrix.database-adapter }}-${{ matrix.tenancy }}
+          name: playwright-report-${{ matrix.node }}-${{ matrix.database-adapter }}-${{ matrix.tenancy }}-shard-${{ strategy.job-index }}
           path: packages/blognami-demo/playwright-report/
           retention-days: 30
       - name: Archive Playwright test results
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-test-results-${{ matrix.node }}-${{ matrix.database-adapter }}-${{ matrix.tenancy }}
+          name: playwright-test-results-${{ matrix.node }}-${{ matrix.database-adapter }}-${{ matrix.tenancy }}-shard-${{ strategy.job-index }}
           path: packages/blognami-demo/test-results/
           retention-days: 30
-
-

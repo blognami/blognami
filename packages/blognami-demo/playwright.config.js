@@ -9,8 +9,8 @@ process.env.TENANCY ??= 'multi';
  */
 export default defineConfig({
   testDir: './tests/e2e',
-  /* Run tests in files in parallel */
-  fullyParallel: false,
+  /* Lets a shard boundary fall between any two tests rather than only between files, so the shards balance; workers stays at 1, so nothing runs concurrently. */
+  fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
