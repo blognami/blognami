@@ -45,7 +45,7 @@ jobs:
           CI: true
 
   e2e:
-    name: E2E ${{ matrix.shard }}
+    name: E2E ${{ matrix.shard }} (${{ matrix.node }}, ${{ matrix.database-adapter }}, ${{ matrix.tenancy }})
     if: ${{ !startsWith(github.event.head_commit.message, 'docs:') }}
     runs-on: ubuntu-latest
     services:
