@@ -82,7 +82,7 @@ jobs:
       - name: Relax MySQL durability
         if: ${{ matrix.database-adapter == 'mysql' }}
         run: mysql -h 127.0.0.1 -u root -e "SET GLOBAL innodb_flush_log_at_trx_commit = 0; SET GLOBAL sync_binlog = 0;"
-      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} JOB_PROCESSING=distributed npm run test:e2e -- --shard=${{ matrix.shard }}
+      - run: DATABASE_ADAPTER=${{ matrix.database-adapter }} TENANCY=${{ matrix.tenancy }} JOB_PROCESSING=distributed npm run test:e2e --workspace blognami-demo -- --shard=${{ matrix.shard }}
         env:
           CI: true
           STRIPE_API_KEY: ${{secrets.STRIPE_API_KEY}}
