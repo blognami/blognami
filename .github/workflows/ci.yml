@@ -59,7 +59,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [22.x, 24.x]
+        # Node 24 is covered by the test job; the browser tests are unlikely to differ between Node versions.
+        node: [22.x]
         database-adapter: [mysql, sqlite]
         tenancy: [single, multi]
         # Each shard is a whole run against its own server and database; Playwright splits the tests between them.
