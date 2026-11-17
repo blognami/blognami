@@ -84,6 +84,7 @@ export default {
                         ['data-test-id']: 'subscribe-now-button',
                     });
                 }}
+                ${this.runHook('renderFooter')}
             </aside>
         `;
     }

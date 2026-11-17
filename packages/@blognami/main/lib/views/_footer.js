@@ -65,7 +65,7 @@ export default {
                         })}
                     </div>
                     <div class="${this.cssClasses.poweredBy}">
-                        <a class="${this.cssClasses.link}" href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>
+                        <a class="${this.cssClasses.link}" href="https://blognami.com/" target="_blank" rel="noopener">Powered by Blognami</a>${this.runHook('renderPoweredBy')}
                     </div>
                 </div>
             </footer>
