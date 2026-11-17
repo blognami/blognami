@@ -98,5 +98,5 @@ export default {
 
 - Synchronous (no `await` needed)
 - Value determined at build time
-- Uses Blognami's conditional compilation (`blognami-if-client`)
+- Uses Blognami's conditional compilation (`blognami-if(client)`)
 - Zero runtime overhead

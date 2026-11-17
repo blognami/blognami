@@ -76,6 +76,9 @@ build/static/
 '/posts/123'  → 'posts/123.html'
 ```
 
+### Shell Assets
+The shell's asset files it writes (`window.js`, `styles.css`, `service_worker.js`) are built by `@blognami/bundler`, or, outside `development` and `test`, read from the prebuilt files `bundle-static-assets` writes.
+
 ### Content Type Handling
 - **HTML pages** - Saved with `.html` extension
 - **CSS files** - Saved with `.css` extension  
@@ -117,3 +120,4 @@ cd build/static && python3 -m http.server 8000
 - **`start-server`** - Start development server to preview before generating
 - **`generate-project`** - Create projects with `@blognami/static-site` dependency
 - **`generate-view`** - Add new pages that will be included in static generation
+- **`bundle-static-assets`** - Prebuild the shell's assets for production

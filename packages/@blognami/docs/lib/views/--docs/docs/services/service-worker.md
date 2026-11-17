@@ -23,13 +23,13 @@ The `serviceWorker` service runs in the browser's service worker context, interc
 
 ## Examples
 
-### Service Worker Bundle
+### Client Service Worker Bundle
 
 ```javascript
-// View to serve service worker JS
+// View to serve the client service worker's JS
 export default {
     async render() {
-        const { js } = await this.bundler.build('serviceWorker');
+        const { js } = await this.jsBundler.build('clientServiceWorker');
         return [200, {
             'content-type': 'text/javascript'
         }, [
@@ -100,5 +100,5 @@ The service worker automatically:
 
 - Requires HTTPS in production
 - Automatically registered when supported
-- Included in `serviceWorker` bundle target
+- Included in the `clientServiceWorker` bundle, the one the browser runs as the client service worker, and in the `serviceWorker` bundle, the server service worker's
 - Uses `version` service for cache invalidation

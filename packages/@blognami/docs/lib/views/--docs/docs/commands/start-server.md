@@ -125,3 +125,4 @@ blognami start-server --without-jobs
 - **`start-repl`** - Interactive development environment
 - **`run-job`** - Manually execute jobs
 - **`generate-static-site`** - Generate static files from server routes
+- **`bundle-static-assets`** - Prebuild the assets served outside development and test
