@@ -25,7 +25,7 @@ export default {
 
         const out = await this.renderSections();
 
-        if(isAdmin) return this.renderView('_editable_area', {
+        if(isAdmin && this.params.navigation === undefined) return this.renderView('_editable_area', {
             url: "/_actions/admin/edit_site_navigation",
             body: out
         });
@@ -36,7 +36,7 @@ export default {
     async renderSections(){
         const body = await this.parseHtml(
             await this.renderMarkdown(
-                await this.database.site.navigation
+                this.params.navigation ?? await this.database.site.navigation
             )
         );
         const preamble = [];

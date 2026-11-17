@@ -1,3 +1,5 @@
+const SITE_NAVIGATION_PREVIEW_URL = '/_site_navigation/preview';
+
 export default {
     async render(){
         const site = await this.database.site;
@@ -9,6 +11,7 @@ export default {
                     name: 'navigation',
                     type: '_markdown_editor',
                     overlayLinks: [ { href: `/_actions/admin/revisions?revisableId=${site.id}&name=navigation`, 'data-test-id': 'revisions', body: 'Revisions' } ],
+                    previewUrl: SITE_NAVIGATION_PREVIEW_URL,
                     hasSaveChangesButton: true
                 }
             ]

@@ -364,6 +364,8 @@ export const decorators = {
         }
 
         const previewFrame = this.frame.find('[data-part="editor-preview-pane"] blognami-frame');
+        const { previewUrl } = anchorTextarea.params;
+        if(previewUrl) previewFrame.url = previewUrl;
     
         previewFrame.observe((current) => {
             while(current.parent && current.parent != previewFrame) {
@@ -444,6 +446,14 @@ export const decorators = {
                 editorTextarea.node.selectionStart = position;
                 editorTextarea.node.selectionEnd = position;
                 updateSlashLine();
+            },
+
+            insertValue(value){
+                editorTextarea.value = value;
+                editorTextarea.focus();
+                editorTextarea.node.selectionStart = value.length;
+                editorTextarea.node.selectionEnd = value.length;
+                updateSlashLine();
             }
         });
 
@@ -514,6 +524,12 @@ export const decorators = {
             const { lineNumber } = this.parents.find(n => n.is('[data-line-number]')).params;
 
             this.modal.replaceLine(lineNumber - 1, lineContent);
+        });
+    },
+
+    valueInserter(){
+        this.on('click', () => {
+            this.modal.insertValue(this.params.value);
         });
     }
 };
