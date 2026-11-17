@@ -158,12 +158,12 @@ export default {
                             </td>
                         </tr>
                         <tr>
-                            <td>* item</td>
+                            <td>- item</td>
                             <td>List</td>
                             <td>
                                 <button
                                     class="${this.cssClassesFor('_markdown_editor/modal').lineInserter}" 
-                                    data-line-content="* This is an example of a list item."
+                                    data-line-content="- This is an example of a list item."
                                 >Insert Example</button>
                             </td>
                         </tr>
