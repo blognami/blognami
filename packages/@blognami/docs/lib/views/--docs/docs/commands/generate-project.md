@@ -39,9 +39,10 @@ The `generate-project` command is a **project scaffolding tool** that creates a 
 2. **Package configuration** - Generates `package.json` with ES module settings
 3. **Blognami configuration** - Sets up `blognami.config.js` with database and mail configurations
 4. **Entry point** - Creates `lib/index.js` with imports and initialization
-5. **Documentation** - Generates basic `README.md`
-6. **Dependency installation** - Automatically runs `npm install`
-7. **Project initialization** - Runs `blognami initialize-project` to complete setup
+5. **Agent guide** - Writes a `CLAUDE.md` that imports the Blognami agent guide, `AGENT_GUIDE.md`, from `@blognami/docs`, so Claude Code loads it
+6. **Documentation** - Generates basic `README.md`
+7. **Dependency installation** - Automatically runs `npm install`
+8. **Project initialization** - Runs `blognami initialize-project` to complete setup
 
 ## Generated Project Structure
 
@@ -50,6 +51,7 @@ project-name/
 ├── package.json           # NPM package configuration
 ├── blognami.config.js    # Blognami application configuration  
 ├── README.md              # Basic documentation
+├── CLAUDE.md              # Imports the Blognami agent guide for Claude Code
 ├── lib/
 │   └── index.js          # Main entry point
 ├── development.db        # SQLite database (created after initialization)
@@ -60,6 +62,8 @@ project-name/
 
 ### Automatic Dependency Management
 - Always includes `blognami` as a core dependency
+- Always installs `@blognami/bundler` as a devDependency, which provides `bundle-static-assets` and builds assets on the fly in development
+- Always installs `@blognami/docs` as a devDependency, never a regular one, even when it is named in `--with`; the generated `CLAUDE.md` imports its `AGENT_GUIDE.md` with the line `@node_modules/@blognami/docs/AGENT_GUIDE.md`
 - Accepts additional dependencies via `--with` parameter  
 - Prevents duplicate dependencies in the dependency list
 - Runs `npm install` automatically after generating files

@@ -37,7 +37,7 @@ export default {
       const dependencies = ['blognami', '@blognami/main', '@blognami/pages', '@blognami/posts', '@blognami/tags']
          .filter(dependency => !excluded.has(dependency));
       _with.split(/\s+/).map(dependency => dependency.trim()).filter(Boolean).forEach(dependency => {
-         if(!dependencies.includes(dependency)) dependencies.push(dependency);
+         if(dependency != '@blognami/bundler' && dependency != '@blognami/docs' && !dependencies.includes(dependency)) dependencies.push(dependency);
       });
 
       Object.assign(this, { name, dependencies });
@@ -50,6 +50,8 @@ export default {
          await this.generateBlognamiConfig();
    
          await this.generateLibIndex();
+
+         await this.generateClaudeMd();
 
          this.installDependencies();
 
@@ -158,8 +160,22 @@ export default {
       });
    },
 
+   async generateClaudeMd(){
+      const { generateFile } = this.fsBuilder;
+
+      await generateFile(`CLAUDE.md`, ({ line }) => {
+         line(`# CLAUDE.md`);
+         line();
+         line(`@node_modules/@blognami/docs/AGENT_GUIDE.md`);
+      });
+   },
+
    installDependencies(){
       spawnSync('npm', [ 'install', ...this.dependencies ], {
+         stdio: 'inherit'
+      });
+
+      spawnSync('npm', [ 'install', '--save-dev', '@blognami/bundler', '@blognami/docs' ], {
          stdio: 'inherit'
       });
    },

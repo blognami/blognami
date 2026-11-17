@@ -14,6 +14,11 @@ export default {
                 label: 'Getting Started',
                 displayOrder: 1
             });
+
+            this.addMenuItem('docs', {
+                label: 'Concepts',
+                displayOrder: 2
+            });
         });
     }
 };

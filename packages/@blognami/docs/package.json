@@ -1,5 +1,4 @@
 {
-  "private": true,
   "type": "module",
   "name": "@blognami/docs",
   "version": "0.54.0",
@@ -9,6 +8,13 @@
   },
   "scripts": {
     "start": "blognami start-server --host 127.0.0.1:3002",
-    "reset-database": "blognami reset-database"
+    "reset-database": "blognami reset-database",
+    "test": "npm run test:unit",
+    "test:unit": "cd lib && node --test"
+  },
+  "dependencies": {
+    "@blognami/main": "^0.54.0",
+    "@blognami/markdown": "^0.54.0",
+    "blognami": "^0.54.0"
   }
 }
