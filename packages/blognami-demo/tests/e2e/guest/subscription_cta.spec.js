@@ -142,7 +142,8 @@ test.describe('Guest - End-of-post subscription CTA', () => {
     await expect(page.getByTestId('subscribe-now-button')).toContainText('Upgrade now');
   });
 
-  test('paid subscriber sees no end-of-post CTA on public, free or paid posts', async ({ page, helpers }) => {
+  // TODO: re-enable once completeStripeCheckout works with Stripe's hosted checkout page again
+  test.fixme('paid subscriber sees no end-of-post CTA on public, free or paid posts', async ({ page, helpers }) => {
     test.skip(!STRIPE_ENABLED, 'STRIPE_API_KEY not configured');
 
     await helpers.signIn('admin@example.com');

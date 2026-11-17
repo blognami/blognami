@@ -7,7 +7,8 @@ test.describe('Guest - Stripe newsletter subscription', () => {
   test.skip(!STRIPE_ENABLED, 'STRIPE_API_KEY not configured');
   setupGuestTests();
 
-  test('paid post becomes accessible after subscription', async ({ page, helpers }) => {
+  // TODO: re-enable once completeStripeCheckout works with Stripe's hosted checkout page again
+  test.fixme('paid post becomes accessible after subscription', async ({ page, helpers }) => {
     // Sign in as admin to set up paid content
     await helpers.signIn('admin@example.com');
 

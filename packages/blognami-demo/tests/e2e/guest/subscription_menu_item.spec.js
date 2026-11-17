@@ -116,7 +116,8 @@ test.describe('Guest - Subscribe menu item', () => {
     await expect(subscribeMenuItem(page)).toHaveText('Upgrade');
   });
 
-  test('paid subscriber sees no subscribe menu item on the home, post or tag pages', async ({ page, helpers }) => {
+  // TODO: re-enable once completeStripeCheckout works with Stripe's hosted checkout page again
+  test.fixme('paid subscriber sees no subscribe menu item on the home, post or tag pages', async ({ page, helpers }) => {
     test.skip(!STRIPE_ENABLED, 'STRIPE_API_KEY not configured');
 
     await helpers.signIn('admin@example.com');
