@@ -1,0 +1,27 @@
+{
+  "type": "module",
+  "name": "@blognami/cloudflare",
+  "version": "0.55.0",
+  "license": "MIT",
+  "exports": {
+    ".": "./lib/index.js"
+  },
+  "scripts": {
+    "test:unit": "cd lib && node --test --test-concurrency=1"
+  },
+  "dependencies": {
+    "@blognami/blob-store": "^0.55.0",
+    "@blognami/bundler": "^0.55.0",
+    "@blognami/database": "^0.55.0",
+    "blognami": "^0.55.0",
+    "cron-parser": "^4.3.0"
+  },
+  "devDependencies": {
+    "wrangler": "4.160.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/blognami/blognami.git",
+    "directory": "packages/@blognami/cloudflare"
+  }
+}

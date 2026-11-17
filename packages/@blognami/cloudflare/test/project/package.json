@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "name": "cloudflare-fixture",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    ".": "./lib/index.js"
+  }
+}
