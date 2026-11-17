@@ -1,5 +1,6 @@
 
 import '../../lib/index.js';
+import '@blognami/bundler';
 
 import test from 'node:test';
 

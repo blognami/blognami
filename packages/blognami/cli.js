@@ -7,6 +7,7 @@ import { Project } from './lib/project.js';
 import { Command } from './lib/command.js';
 import { importAll } from './lib/import_all.js';
 import { Workspace } from './lib/workspace.js';
+import { importOptionalPackage } from './lib/import_optional_package.js';
 import { ValidationError } from 'haberdash';
 import { inflector } from '@blognami/utils';
 
@@ -16,8 +17,10 @@ import { inflector } from '@blognami/utils';
     const [name, ...args ] = argv.slice(2);
 
     if(entryPath){
-        import(entryPath);
+        await import(entryPath);
     }
+
+    await importOptionalPackage('@blognami/bundler');
 
     await importAll();
 

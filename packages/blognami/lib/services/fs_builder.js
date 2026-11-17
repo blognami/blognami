@@ -10,7 +10,8 @@ export default {
         return {
             generateDir: this.generateDir.bind(this),
             generateFile: this.generateFile.bind(this),
-            inProjectRootDir: this.inProjectRootDir.bind(this)
+            inProjectRootDir: this.inProjectRootDir.bind(this),
+            writeFile: this.writeFile.bind(this)
         };
     },
 
@@ -81,6 +82,16 @@ export default {
                 console.log(chalk.red(`Updating file "${filePath}"`));
                 await promisify(fs.writeFile)(name, data);
             }
+        }
+    },
+
+    // Unlike generateFile, writes the data as given – no Text rendering, no reading or confirming over the existing file.
+    async writeFile(name, data){
+        const matches = name.match(/^(.*)\/([^\/]*)$/);
+        if(matches){
+            await this.generateDir(matches[1], () => this.writeFile(matches[2], data));
+        } else {
+            await promisify(fs.writeFile)(name, data);
         }
     },
 

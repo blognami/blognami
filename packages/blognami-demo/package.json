@@ -23,6 +23,7 @@
     "blognami": "^0.54.0"
   },
   "devDependencies": {
+    "@blognami/bundler": "^0.54.0",
     "@playwright/test": "^1.55.0",
     "@types/node": "^24.5.2",
     "strip-ansi": "^7.1.0"

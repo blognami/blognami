@@ -27,6 +27,7 @@ test(`blognami list-commands`, () => inPackagesDir(() => {
     assert.equal(run(`npx blognami list-commands`).stdout, [
         'The following commands are available:',
         '',
+        '  * bundle-static-assets',
         '  * drop-database',
         '  * generate-command',
         '  * generate-job',
@@ -76,6 +77,7 @@ test(`blognami`, () => inPackagesDir(() => {
     assert.equal(run(`npx blognami`).stdout, [
         'The following commands are available:',
         '',
+        '  * bundle-static-assets',
         '  * drop-database',
         '  * generate-command',
         '  * generate-job',

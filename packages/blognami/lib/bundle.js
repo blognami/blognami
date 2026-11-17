@@ -1,13 +1,7 @@
-
-import { build } from 'esbuild';
-import { promisify } from 'util';
-import { writeFile, readFile } from 'fs';
-import { dirSync } from 'tmp';
 import { fileURLToPath } from 'url';
 
 import { Class } from './class.js';
 import { AbstractImportableRegistry } from 'haberdash';
-import { Project } from './project.js';
 
 export const Bundle = Class.extend().include({
     meta(){
@@ -29,67 +23,50 @@ export const Bundle = Class.extend().include({
                 });
             },
         });
-    },
-
-    async build(options = {}){
-        const { force = false } = options;
-        if(!this.constructor.buildPromise || force){
-            this.constructor.buildPromise = this._build();
-        }
-        return this.constructor.buildPromise;
-    },
-
-    async _build(){
-        const { name: tmpDir, removeCallback: deleteTmpDir } = dirSync({ unsafeCleanup: true });
-        const inFile = `${tmpDir}/in.js`;
-        const outFile = `${tmpDir}/out.js`;
-
-        await promisify(writeFile)(inFile, this.constructor.modules.map((_, i) => `import ${JSON.stringify(`${tmpDir}/module-${i}.js`)};`).join('\n'));
-
-        for(let i = 0; i < this.constructor.modules.length; i++){
-            await promisify(writeFile)(`${tmpDir}/module-${i}.js`, this.constructor.modules[i]);
-        }
-        
-        const { errors } = await build({
-            entryPoints: [inFile],
-            bundle: true,
-            sourcemap: true,
-            outfile: outFile,
-            plugins: [this.plugin],
-            nodePaths: await Project.instance.nodePaths,
-            minify: process.env.NODE_ENV == 'production',
-            logLevel: 'silent'
-        });
-
-        errors.forEach(error => console.error(error));
-
-        const out = {
-            js: (await promisify(readFile)(outFile, 'utf8')).replace(/\/\/#.*?$/m, ''),
-            map: await promisify(readFile)(`${outFile}.map`, 'utf8'),
-        };
-
-        await deleteTmpDir();
-
-        return out;
-    },
-
-    get plugin(){
-        return {
-            name: 'blognami',
-        
-            async setup(build){
-                build.onLoad({ filter: /\.js$/ }, async args => {
-                    const { path } = args;
-                    const contents = await promisify(readFile)(path, 'utf8');
-                    if(!contents.match(/blognami-if-client/)) return;
-                    const alteredContents = contents.replace(/(.*)\/\/\s*blognami-if-client:\s*(.*)/g, '$2 // blognami-if-server: $1');
-                    return { contents: alteredContents, loader: 'js' };
-                });
-            }
-        };
     }
 });
 
-['window', 'serviceWorker'].forEach(environment => {
-    Bundle.addModule(environment, `import ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};`);
+const flags = {
+    window: ['client', 'window'],
+    clientServiceWorker: ['client', 'serviceWorker'],
+    serviceWorker: ['server', 'serviceWorker']
+};
+
+Object.keys(flags).forEach(environment => {
+    Bundle.register(environment, {
+        meta(){
+            this.assignProps({ flags: flags[environment] });
+        }
+    });
+    Bundle.addModule(environment, `import ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};`); // blognami-if(server,service-worker): // kept out: import.meta.url is undefined in a Durable Object, and nothing is bundled there
 });
+
+// The filesystem walk does not run in the server service worker, so each registration is built in statically.
+export function addFileImportsToServiceWorkerBundle(Registry, exportName, registryUrl){
+    Registry.FileImporter.register('js', {
+        meta(){
+            const { importFile } = this.prototype;
+
+            this.include({
+                async importFile(){
+                    await importFile.call(this);
+
+                    const { filePath, relativeFilePathWithoutExtension } = this;
+
+                    if(!this.isExactMatch || !(await import(filePath)).default) return;
+
+                    Bundle.addModule('serviceWorker', `
+                        import { ${exportName} } from ${JSON.stringify(fileURLToPath(registryUrl))};
+                        import { default as _default } from ${JSON.stringify(filePath)};
+                        ${exportName}.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
+                            meta(){
+                                this.filePaths.push(${JSON.stringify(filePath)});
+                                this.include(_default);
+                            }
+                        });
+                    `);
+                }
+            });
+        }
+    });
+}
