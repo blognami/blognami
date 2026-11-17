@@ -537,3 +537,38 @@ test.describe('Admin - Post page', () => {
   describeSidebar('admin');
   describeFooter('admin');
 });
+
+test.describe('Admin - Markdown preview empty state', () => {
+  setupAdminTests();
+
+  test(`should show the empty state in the preview while the body is blank`, async ({ page, helpers }) => {
+    await page.getByTestId("navbar").getByTestId("add").click();
+    await helpers.topPopover().getByTestId("add-post").click();
+    await expect(helpers.topModal()).toContainText("Add post");
+    await helpers.submitForm({ title: "Apple pear" });
+    await expect(page).toHaveURL(/apple-pear/);
+
+    await page.getByTestId("main").getByTestId("edit-post-body").click();
+    await helpers.topModal().locator('textarea[name="body"]').click();
+    const textarea = helpers.topModal().locator('textarea[name="value"]');
+    await textarea.waitFor();
+
+    const emptyState = helpers.topModal().getByTestId("markdown-preview-empty-state");
+    const previewPane = helpers.topModal().locator('[data-part="editor-preview-pane"]');
+    await expect(emptyState).toContainText("This is a markdown editor.");
+    await expect(emptyState).toContainText("Need help? Type /help on a new line anytime.");
+    await expect(emptyState.locator("a, button")).toHaveCount(0);
+
+    await textarea.fill("   \n\n  \n");
+    await helpers.waitForPageToBeIdle();
+    await expect(emptyState).toBeVisible();
+
+    await textarea.fill("Peach plum");
+    await expect(emptyState).not.toBeAttached();
+    await expect(previewPane).toContainText("Peach plum");
+
+    await textarea.fill("");
+    await expect(emptyState).toBeVisible();
+    await expect(previewPane).not.toContainText("Peach plum");
+  });
+});
