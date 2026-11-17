@@ -1,0 +1,13 @@
+name = "database-durable-object-fixture"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+# `nodejs_compat` and `nodejs_compat_v2` are on by default at this date; these turn both off.
+compatibility_flags = ["no_nodejs_compat", "no_nodejs_compat_v2"]
+
+[[durable_objects.bindings]]
+name = "FIXTURE"
+class_name = "Fixture"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Fixture"]

@@ -307,6 +307,12 @@ export const Table = Class.extend('Table').include({
             async sqlite(){
                 const rows = await this.database.run(`select name from sqlite_schema where type ='table' and name not like 'sqlite_%'`);
                 return rows.map(({ name }) => name);
+            },
+
+            async durableObject(){
+                // Also without the tables the runtime keeps: local workerd's and Cloudflare's `_cf_` ones.
+                const rows = await this.database.run(`select name from sqlite_schema where type ='table' and name not like 'sqlite_%' and name != '__miniflare_do_name' and name not glob '_cf_*'`);
+                return rows.map(({ name }) => name);
             }
         });
 

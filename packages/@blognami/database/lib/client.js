@@ -1,8 +1,10 @@
-import mysql from 'mysql2';
-import sqlite from 'sqlite3';
-import { existsSync, unlinkSync } from 'fs';
-
 import { Class, AsyncLock } from '@blognami/utils';
+
+// Imported only by the adapter that uses them; read from an object so no bundler resolves them.
+const specifiers = { mysql: 'mysql2', sqlite: 'sqlite3', fs: 'fs' };
+
+let mysql;
+let sqlite;
 
 const lockAsyncLock = AsyncLock.new();
 const transactionAsyncLock = AsyncLock.new();
@@ -50,6 +52,7 @@ export const Client = Class.extend().include({
                 connectionPromise = this.adapt(this, {
                     async mysql(){
                         const { adapter, database, ...connectionConfig } = this.config;
+                        if(!mysql) mysql = (await import(specifiers.mysql)).default;
                         connection = mysql.createPool({
                             ...connectionConfig,
                             waitForConnections: true,
@@ -68,8 +71,14 @@ export const Client = Class.extend().include({
 
                     async sqlite(){
                         const { filename } = this.config;
+                        if(!sqlite) sqlite = (await import(specifiers.sqlite)).default;
                         connection = new sqlite.Database(filename);
                         connection.configure('busyTimeout', 10000);
+                    },
+
+                    async durableObject(){
+                        // No connection to open, and none kept at module level: each client
+                        // reaches its own object's storage through `this.config.storage`.
                     }
                 });
                 await connectionPromise;
@@ -140,12 +149,49 @@ export const Client = Class.extend().include({
                         async sqlite(){
                             await this.run('pragma locking_mode = exclusive');
                             await this.run('begin exclusive transaction');
+                        },
+
+                        async durableObject(){
+                            // No statement: `sql.exec` refuses `begin`. The outermost `fn` is
+                            // handed to `storage.transaction()` below instead.
                         }
                     });
                 }
 
                 try {
-                    out = await fn();
+                    out = await this.adapt(this, {
+                        mysql(){
+                            return fn();
+                        },
+
+                        sqlite(){
+                            return fn();
+                        },
+
+                        async durableObject(){
+                            if(this.transactionLevel > 1) return fn();
+
+                            let out;
+                            let rolledBack = false;
+                            try {
+                                await this.config.storage.transaction(async () => {
+                                    out = await fn();
+                                    if(this.transactionFailed){
+                                        // An inner transaction threw and `fn` caught it: throw, so
+                                        // the storage rolls back everything `fn` wrote.
+                                        rolledBack = true;
+                                        throw new Error('An inner transaction threw.');
+                                    }
+                                });
+                            } catch(e){
+                                if(!rolledBack) throw e;
+                            } finally {
+                                this.transactionFailed = false;
+                                this.transactionLevel = 1;
+                            }
+                            return out;
+                        }
+                    });
                 } catch(e){
                     if(this.transactionLevel > 0) await this.adapt(this, {
                         async mysql(){
@@ -155,6 +201,12 @@ export const Client = Class.extend().include({
                         async sqlite(){
                             await this.run('rollback');
                             await this.run('pragma locking_mode = normal');
+                        },
+
+                        async durableObject(){
+                            // No statement: the throw leaving `storage.transaction()` rolls back.
+                            // An inner throw may be caught by the outer `fn`, so it is marked.
+                            if(this.transactionLevel > 1) this.transactionFailed = true;
                         }
                     });
                     this.transactionLevel = 0;
@@ -169,6 +221,10 @@ export const Client = Class.extend().include({
                     async sqlite(){
                         await this.run('commit');
                         await this.run('pragma locking_mode = normal');
+                    },
+
+                    async durableObject(){
+                        // No statement: `storage.transaction()` committed when `fn` returned.
                     }
                 });
             });
@@ -181,6 +237,7 @@ export const Client = Class.extend().include({
         await this.withSilence(async () => {
             await this.adapt(this, {
                 async sqlite(){
+                    const { existsSync, unlinkSync } = await import(specifiers.fs);
                     if(existsSync(this.config.filename)){
                         unlinkSync(this.config.filename);
                     }
@@ -190,6 +247,9 @@ export const Client = Class.extend().include({
                         `drop database ${this.config.database}`,
                         { skipSilencePromise: true }
                     );
+                },
+                async durableObject(){
+                    await this.config.storage.deleteAll();
                 }
             });
         });
@@ -253,7 +313,8 @@ export const Client = Class.extend().include({
     adapt(...args){
         const[ alternatives, that ] = args.reverse();
         const { adapter } = this.config;
-        const fn = alternatives[adapter];
+        // A Durable Object's storage is SQLite, so a site's sqlite alternative is right for durableObject too.
+        const fn = alternatives[adapter] || (adapter == 'durableObject' ? alternatives.sqlite : undefined);
         if(!fn) throw new Error(`"${adapter}" adapter not supported.`);
         return fn.call(that);
     },
@@ -299,6 +360,11 @@ export const Client = Class.extend().include({
             },
             async sqlite(){
                 const rows = await this.run(`select name from sqlite_schema where type ='table' and name not like 'sqlite_%'`);
+                return rows.map(({ name }) => name);
+            },
+            async durableObject(){
+                // Also without the tables the runtime keeps: local workerd's and Cloudflare's `_cf_` ones.
+                const rows = await this.run(`select name from sqlite_schema where type ='table' and name not like 'sqlite_%' and name != '__miniflare_do_name' and name not glob '_cf_*'`);
                 return rows.map(({ name }) => name);
             }
         });
@@ -384,6 +450,15 @@ function prepare(query){
                 sqlite(){
                     values.push(value);
                     return '?';
+                },
+
+                durableObject(){
+                    // As sqlite3 binds them: a boolean as the integer 1 or 0, written into the
+                    // query because `sql.exec` binds every number as a real, and a Date as its
+                    // milliseconds.
+                    if(typeof value == 'boolean') return value ? '1' : '0';
+                    values.push(value instanceof Date ? value.getTime() : value);
+                    return '?';
                 }
             });
         }));
@@ -461,7 +536,33 @@ function run(query, values){
                     }
                 });
             });
-        
+
+            if(cache) cache[cacheKey] = out;
+
+            return  [...out];
+        },
+
+        async durableObject(){
+            if(query.match(/^\s*(create|drop|alter|insert|update|delete)/im)){
+                this.cache = {};
+            }
+
+            const cache = query.match(/^\s*select/im) && !query.match(/^\s*(select\s+([\s\S]+?)\s+from\s+sqlite_schema|pragma)/im) ? this.cache : undefined;
+
+            if(cache && cache[cacheKey]) return [...cache[cacheKey]];
+
+            if(!isTest) console.log(`Query: ${query}`);
+
+            // `sql.exec` is synchronous; the cursor is consumed at once, before any await.
+            const out = this.config.storage.sql.exec(query, ...values).toArray();
+
+            // A blob comes back as an ArrayBuffer; sqlite3 gives a Buffer, itself a Uint8Array.
+            for(const row of out){
+                for(const name in row){
+                    if(row[name] instanceof ArrayBuffer) row[name] = new Uint8Array(row[name]);
+                }
+            }
+
             if(cache) cache[cacheKey] = out;
 
             return  [...out];
