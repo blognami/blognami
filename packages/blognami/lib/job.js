@@ -4,6 +4,7 @@ import { inflector } from './inflector.js';
 import { AbstractImportableRegistry } from 'haberdash';
 import { ServiceFactory } from './service_factory.js';
 import { Workspace } from './workspace.js';
+import { addFileImportsToServiceWorkerBundle } from './bundle.js';
 
 export const Job = Class.extend('Job').include({
     meta(){
@@ -41,3 +42,5 @@ export const Job = Class.extend('Job').include({
         console.error(`No such job "${this.constructor.name}" exists.`);
     }
 });
+
+addFileImportsToServiceWorkerBundle(Job, 'Job', import.meta.url);

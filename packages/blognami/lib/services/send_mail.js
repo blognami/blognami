@@ -1,5 +1,5 @@
 
-import { createTransport } from 'nodemailer';
+import { createTransport } from 'nodemailer'; // blognami-if(server,service-worker): const createTransport = undefined;
 import chalk from 'chalk';
 
 export default {

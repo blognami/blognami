@@ -2,6 +2,7 @@
 import { Class } from './class.js';
 import { AbstractCommand } from 'haberdash';
 import { ServiceFactory } from './service_factory.js';
+import { addFileImportsToServiceWorkerBundle } from './bundle.js';
 
 export const Command = Class.extend('Command').include({
     meta(){
@@ -11,3 +12,5 @@ export const Command = Class.extend('Command').include({
 });
 
 Command.binaryName = 'blognami';
+
+addFileImportsToServiceWorkerBundle(Command, 'Command', import.meta.url);

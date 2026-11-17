@@ -1,6 +1,6 @@
 
 import { Class } from '@blognami/utils';
-import { ImportableRegistry } from 'blognami';
+import { ImportableRegistry, addFileImportsToServiceWorkerBundle } from 'blognami';
 
 export const Migration = Class.extend('Migration').include({
     meta(){
@@ -28,3 +28,5 @@ export const Migration = Class.extend('Migration').include({
         this.database = database;
     }
 });
+
+addFileImportsToServiceWorkerBundle(Migration, 'Migration', import.meta.url);

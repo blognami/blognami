@@ -10,6 +10,10 @@ const APP_CHECK_TTL = 5000;
 
 const MARKUP_NODE_TYPE = 'application/vnd.blognami.markup-node+json';
 
+const TIFF_MIME_TYPE = 'image/tiff';
+
+const TIFF_REFUSAL = 'TIFF images are not supported - upload a PNG, JPEG, GIF, SVG, WebP or AVIF image';
+
 export default {
     meta(){
         this.addToClient();
@@ -151,6 +155,28 @@ export default {
                 }
             }
         } catch (error){}
+        return out; // blognami-if(server,service-worker): return this.extractFileParams(out);
+    },
+
+    // Server service worker only: a file reaches the engine as the Node server gives one, but as
+    // uploaded, since nothing there can resize an image or convert a TIFF.
+    async extractFileParams(params){
+        const { fileSize } = (await this.config).server.limits;
+        const out = {};
+        const errors = {};
+        for(const [key, value] of Object.entries(params)){
+            if(!(value instanceof File)){
+                out[key] = value;
+            } else if(value.size > fileSize){
+                errors[key] = `file too large - limit of ${fileSize} bytes has been reached`;
+            } else if(value.type == TIFF_MIME_TYPE){
+                errors[key] = TIFF_REFUSAL;
+            } else {
+                out[key] = { filename: value.name, mimeType: value.type, data: new Uint8Array(await value.arrayBuffer()) };
+            }
+        }
+        // Last, so a field of the same name cannot stand in for it.
+        if(Object.keys(errors).length) out._bodyErrors = errors;
         return out;
     }
 };

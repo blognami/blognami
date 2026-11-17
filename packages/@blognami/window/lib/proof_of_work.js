@@ -1,5 +1,5 @@
 
-import crypto from 'crypto'; // blognami-if-client: const crypto = typeof window != 'undefined' ? window.crypto : self.crypto;
+import crypto from 'crypto'; // blognami-if(client): const crypto = typeof window != 'undefined' ? window.crypto : self.crypto;
 
 import { Class } from './class.js';
 import { Singleton } from './singleton.js';

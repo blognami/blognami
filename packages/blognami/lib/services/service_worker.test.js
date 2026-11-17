@@ -5,6 +5,11 @@ import serviceWorker from './service_worker.js';
 import { MissingResourceError } from '../missing_resource_error.js';
 import { MarkupNode } from 'haberdash/lib/markup_node.js';
 
+const FILE_SIZE_LIMIT = 16;
+
+// Not valid UTF-8, so a pass through text would change them.
+const UPLOADED_BYTES = Uint8Array.from([0x89, 0x50, 0x4e, 0x47, 0xff, 0xfe, 0x00, 0x80]);
+
 // Build a handleFetch `this` from the real service plus per-test overrides, so
 // methods handleFetch calls on itself (e.g. parseAndSerializeIfHtml) are present.
 const handlerContext = (overrides) => ({ ...serviceWorker, ...overrides });
@@ -295,4 +300,84 @@ test("handleFetch - a non-2xx network html fallback is still serialized with its
             assert.equal(node.toString(), '<p>missing</p>');
         }
     );
+});
+
+const multipartRequest = (file) => {
+    const body = new FormData();
+    body.append('title', 'Hello');
+    body.append('featured', file);
+    return new Request(`${origin}/_actions/admin/edit_post_meta`, { method: 'POST', body });
+};
+
+const uploadedFile = ({ bytes = UPLOADED_BYTES, type = 'image/png', name = 'pixel.png' } = {}) => new File([bytes], name, { type });
+
+const serverBodyParams = async (file) => serviceWorker.extractFileParams.call(
+    { config: { server: { limits: { fileSize: FILE_SIZE_LIMIT } } } },
+    await serviceWorker.extractBodyParams(multipartRequest(file))
+);
+
+test("extractFileParams - a file part becomes { filename, mimeType, data } with the bytes intact", async () => {
+    const params = await serverBodyParams(uploadedFile());
+
+    assert.deepEqual(Object.keys(params).sort(), ['featured', 'title']);
+    assert.equal(params.title, 'Hello');
+    assert.deepEqual(Object.keys(params.featured).sort(), ['data', 'filename', 'mimeType']);
+    assert.equal(params.featured.filename, 'pixel.png');
+    assert.equal(params.featured.mimeType, 'image/png');
+    assert.deepEqual(params.featured.data, UPLOADED_BYTES);
+});
+
+test("extractFileParams - a file of exactly the file-size limit is carried", async () => {
+    const params = await serverBodyParams(uploadedFile({ bytes: new Uint8Array(FILE_SIZE_LIMIT) }));
+
+    assert.equal(params.featured.data.length, FILE_SIZE_LIMIT);
+    assert.equal(params._bodyErrors, undefined);
+});
+
+test("extractFileParams - an oversize file sets the size message on its field and is not passed on", async () => {
+    const params = await serverBodyParams(uploadedFile({ bytes: new Uint8Array(FILE_SIZE_LIMIT + 1) }));
+
+    assert.deepEqual(params._bodyErrors, { featured: `file too large - limit of ${FILE_SIZE_LIMIT} bytes has been reached` });
+    assert.equal('featured' in params, false);
+    assert.equal(params.title, 'Hello');
+});
+
+test("extractFileParams - a declared image/tiff sets the TIFF message on its field and is not passed on", async () => {
+    const params = await serverBodyParams(uploadedFile({ type: 'image/tiff', name: 'scan.tiff' }));
+
+    assert.deepEqual(Object.keys(params._bodyErrors), ['featured']);
+    assert.match(params._bodyErrors.featured, /TIFF/);
+    assert.match(params._bodyErrors.featured, /PNG, JPEG, GIF, SVG, WebP or AVIF/);
+    assert.equal('featured' in params, false);
+});
+
+test("extractFileParams - an empty part is no file", async () => {
+    const params = await serverBodyParams('');
+
+    assert.deepEqual(params, { title: 'Hello', featured: '' });
+});
+
+test("extractFileParams - a field named _bodyErrors cannot stand in for a refusal", async () => {
+    const body = new FormData();
+    body.append('featured', uploadedFile({ type: 'image/tiff' }));
+    body.append('_bodyErrors', 'sent');
+    const request = new Request(`${origin}/upload`, { method: 'POST', body });
+
+    const params = await serviceWorker.extractFileParams.call(
+        { config: { server: { limits: { fileSize: FILE_SIZE_LIMIT } } } },
+        await serviceWorker.extractBodyParams(request)
+    );
+
+    assert.deepEqual(Object.keys(params._bodyErrors), ['featured']);
+});
+
+test("extractBodyParams - the client path still gives a file part as the File it was sent as", async () => {
+    const params = await serviceWorker.extractBodyParams(multipartRequest(uploadedFile()));
+
+    assert.deepEqual(Object.keys(params).sort(), ['featured', 'title']);
+    assert.equal(params.title, 'Hello');
+    assert.ok(params.featured instanceof File);
+    assert.equal(params.featured.name, 'pixel.png');
+    assert.equal(params.featured.type, 'image/png');
+    assert.deepEqual(new Uint8Array(await params.featured.arrayBuffer()), UPLOADED_BYTES);
 });

@@ -35,6 +35,4 @@ if (typeof navigator != 'undefined' && "serviceWorker" in navigator) {
     })();
 }
 
-if(typeof window == 'undefined' && typeof addEventListener == 'function'){
-    Workspace.run(function() { return this.serviceWorker.start(); });
-}
+// blognami-if(client,service-worker): Workspace.run(function() { return this.serviceWorker.start(); });

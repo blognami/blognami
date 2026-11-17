@@ -5,6 +5,6 @@ export default {
     },
     
     create(){
-        return false; // blognami-if-client: return true;
+        return false; // blognami-if(client): return true;
     }
 };

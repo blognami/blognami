@@ -30,6 +30,7 @@ export default {
   },
 
   async isConfiguredCorrectly() {
+    // blognami-if(server,service-worker): if(!this.secretKey) return false; // no call to Stripe: in a Durable Object it never returns, and holds the storage transaction it is made in open until the object is reset
     try {
       await this.api.products.list({
         limit: 1,

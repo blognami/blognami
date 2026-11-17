@@ -1,10 +1,10 @@
 
-import http from 'http';
-import Busboy from 'busboy';
+import http from 'http'; // blognami-if(server,service-worker): // kept out: the server service is Node only
+import Busboy from 'busboy'; // blognami-if(server,service-worker): // kept out: the server service is Node only
 import { createHash } from 'crypto';
-import sharp from 'sharp';
+import sharp from 'sharp'; // blognami-if(server,service-worker): // kept out: the server service is Node only
 
-export default {
+export default { // blognami-if(server,service-worker): const server = {
     create(){
         return this.context.root.getOrCreate("server", () => this);
     },
@@ -227,3 +227,5 @@ export default {
         return `"${createHash('sha1').update(JSON.stringify(data)).digest('base64')}"`;
     }
 };
+
+// blognami-if(server,service-worker): export default {};

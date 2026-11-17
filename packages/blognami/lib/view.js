@@ -1,15 +1,20 @@
 
-import { promisify } from 'util'; // blognami-if-client: const promisify = undefined;
-import { readFile } from 'fs'; // blognami-if-client: const readFile = undefined;
-import { default as mimeTypes } from 'mime-types'; // blognami-if-client: const mimeTypes = undefined;
-import * as crypto from 'crypto'; // blognami-if-client: const crypto = undefined;
+import { promisify } from 'util'; // blognami-if(client): const promisify = undefined;
+import { readFile } from 'fs'; // blognami-if(client): const readFile = undefined;
+import { default as mimeTypes } from 'mime-types'; // blognami-if(client): const mimeTypes = undefined;
+import * as crypto from 'crypto'; // blognami-if(client): const crypto = undefined;
+import { fileURLToPath } from 'url'; // blognami-if(client): const fileURLToPath = undefined;
 
 import { Class } from './class.js';
+import { Bundle } from './bundle.js'; // blognami-if(client): const Bundle = undefined;
 import { AbstractImportableRegistry } from 'haberdash';
 import { ServiceFactory } from './service_factory.js';
 import { Annotatable } from 'haberdash';
 import { Hookable } from 'haberdash';
 import { inflector } from '@blognami/utils';
+
+// Internal: a response carrying it names a stored file, URI-encoded, for the Cloudflare Worker to answer with.
+export const STATIC_ASSET_HEADER = 'x-blognami-static-asset';
 
 export const View = Class.extend('View').include({
     meta(){
@@ -77,12 +82,23 @@ export const View = Class.extend('View').include({
                 registry.register(relativeFilePath, {
                     meta(){
                         this.filePaths.push(filePath);
+                        this.isFileBacked = true;
                     },
 
                     render(){
                         return renderFile(filePath);
                     }
                 });
+
+                // The server service worker has no file to read, so the view there names the stored file for the Cloudflare Worker to answer with.
+                Bundle.addModule('serviceWorker', `
+                    import { View, STATIC_ASSET_HEADER } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../index.js`))};
+                    View.register(${JSON.stringify(relativeFilePath)}, {
+                        render(){
+                            return [200, { 'content-type': ${JSON.stringify(contentTypeFor(filePath))}, [STATIC_ASSET_HEADER]: ${JSON.stringify(encodeURI(relativeFilePath))} }, []];
+                        }
+                    });
+                `);
             }
         });
     },
@@ -120,9 +136,11 @@ export const View = Class.extend('View').include({
     }
 });
 
+const contentTypeFor = filePath => mimeTypes.lookup(filePath) || 'application/octet-stream';
+
 const renderFile = async filePath => [
     200,
-    { 'content-type': mimeTypes.lookup(filePath) || 'application/octet-stream' },
+    { 'content-type': contentTypeFor(filePath) },
     [ await promisify(readFile)(filePath) ]
 ];
 

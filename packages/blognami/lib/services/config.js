@@ -15,7 +15,7 @@ export default {
     },
 
     async createConfig(){
-        let out = {};
+        let out = {}; // blognami-if(server,service-worker): let out = (await (await this.project).blognamiConfig) ?? {};
         const candidateConfigFilePath = `${await this.project.rootPath}/blognami.config.js`;
         if(existsSync(candidateConfigFilePath)){
             out = await (await import(candidateConfigFilePath)).default;

@@ -1,7 +1,7 @@
 
 import crypto from 'crypto';
 
-import { ImportableRegistry, Model, Workspace } from 'blognami';
+import { ImportableRegistry, Model, Workspace, addFileImportsToServiceWorkerBundle } from 'blognami';
 import { Table } from "./table.js";
 import { TableReference } from './table_reference.js';
 import { defer } from '@blognami/utils';
@@ -373,3 +373,5 @@ const getAllProps = (o, out = []) => {
     }
     return out;
 };
+
+addFileImportsToServiceWorkerBundle(Row, 'Row', import.meta.url);

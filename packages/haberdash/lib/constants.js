@@ -38,6 +38,6 @@ export const BLOCK_LEVEL_TAGS = [
     'track', 'ul'
 ];
 
-export const IS_SERVER = typeof window == 'undefined' && typeof addEventListener == 'undefined';
+export const IS_SERVER = typeof window == 'undefined' && typeof addEventListener == 'undefined'; // blognami-if(server,service-worker): export const IS_SERVER = true;
 
 export const IS_CLIENT = !IS_SERVER;

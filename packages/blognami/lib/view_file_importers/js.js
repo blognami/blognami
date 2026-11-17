@@ -1,7 +1,7 @@
 
 import { View, createHash } from '../view.js';
-import { Bundle } from '../bundle.js'; // blognami-if-client: const Bundle = undefined;
-import { fileURLToPath } from 'url'; // blognami-if-client: const fileURLToPath = undefined;
+import { Bundle } from '../bundle.js'; // blognami-if(client): const Bundle = undefined;
+import { fileURLToPath } from 'url'; // blognami-if(client): const fileURLToPath = undefined;
 import { inflector } from '../inflector.js';
 import { Theme } from '../theme.js';
 
@@ -21,13 +21,24 @@ View.FileImporter.register('js', {
 
             const addToClient = View.for(relativeFilePathWithoutExtension)._addToClient;
             
-            if(addToClient) Bundle.addModule('serviceWorker', `
+            if(addToClient) Bundle.addModule('clientServiceWorker', `
                 import { View } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
                 import { default as client } from ${JSON.stringify(filePath)};
                 View.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
                     meta(){
                         this.filePaths.push(${JSON.stringify(filePath)});
                         this.include(client);
+                    }
+                });
+            `);
+
+            Bundle.addModule('serviceWorker', `
+                import { View } from ${JSON.stringify(fileURLToPath(`${import.meta.url}/../../index.js`))};
+                import { default as _default } from ${JSON.stringify(filePath)};
+                View.register(${JSON.stringify(relativeFilePathWithoutExtension)}, {
+                    meta(){
+                        this.filePaths.push(${JSON.stringify(filePath)});
+                        this.include(_default);
                     }
                 });
             `);
